@@ -21,10 +21,10 @@ The command reads (does not modify):
 - `.specify/feature.json` to locate the active feature directory.
 - `<feature-dir>/spec.md` as the source spec.
 
-The command writes:
+The command writes (all generated artifacts live under a single `product/` subfolder so they can be read, exported, and shared as a self-contained bundle):
 
-- `<feature-dir>/product-spec.md`
-- `<feature-dir>/checklists/product.md`
+- `<feature-dir>/product/product-spec.md`
+- `<feature-dir>/product/checklist.md`
 
 ## Templates
 
@@ -85,12 +85,14 @@ If any markers are present:
 
 ### Step 4: Handle existing product-spec.md
 
-If `${FEATURE_DIR}/product-spec.md` already exists:
+If `${FEATURE_DIR}/product/product-spec.md` already exists:
 
 - Print the absolute path of the existing file.
 - Ask: `product-spec.md already exists. Overwrite? (yes/no)`
 - On `no` or any non affirmative response, abort with `E_USER_ABORT`. Do not write any files.
-- On `yes`, continue. The existing `product-spec.md` will be replaced byte for byte. The companion `checklists/product.md` is also regenerated; prior tick state is not preserved.
+- On `yes`, continue. The existing `product-spec.md` will be replaced byte for byte. The companion `product/checklist.md` is also regenerated; prior tick state is not preserved.
+
+If `${FEATURE_DIR}/product/` does not exist yet, create it before writing.
 
 ### Step 5: Generate product-spec.md
 
@@ -101,7 +103,7 @@ Read `templates/product-spec-template.md`. Replace every bracketed placeholder w
 1. **English only.** All output is in English.
 2. **No em dash.** The character `—` MUST NOT appear in the output. Use commas, parentheses, colons, semicolons, or sentence breaks. Hyphens (`-`) are allowed.
 3. **Plain English.** Active voice, short sentences, human tone. Avoid AI tells: do not use "delve", "tapestry", "in essence", "navigate the landscape", or similar filler.
-4. **No implementation detail.** No frameworks, languages, APIs, data stores, code, or file paths. The single allowed file path is the link to `spec.md` in the metadata block.
+4. **No implementation detail.** No frameworks, languages, APIs, data stores, code, or file paths. The single allowed file path is the link to `../spec.md` in the metadata block.
 5. **Bullets are short. Prose is full sentences.**
 
 #### Section rules
@@ -140,11 +142,11 @@ Provide exactly one north star metric and at least one supporting metric. Each m
 #### Header metadata
 
 - `Feature` field: the feature directory name (the segment after `specs/` in `FEATURE_DIR`).
-- `Source Spec` field: the literal markdown link `[spec.md](./spec.md)`.
+- `Source Spec` field: the literal markdown link `[spec.md](../spec.md)` (the source spec lives one level above the `product/` folder).
 - `Created` field: today's date in `YYYY-MM-DD`.
 - `Status` field: `Draft`.
 
-### Step 6: Generate checklists/product.md
+### Step 6: Generate product/checklist.md
 
 Read `templates/product-checklist-template.md`. Replace bracketed placeholders:
 
@@ -153,11 +155,11 @@ Read `templates/product-checklist-template.md`. Replace bracketed placeholders:
 
 Leave every checkbox unchecked (`- [ ]`). The user or a reviewer ticks them after manual review.
 
-If `${FEATURE_DIR}/checklists/` does not exist, create it.
+If `${FEATURE_DIR}/product/` does not exist, create it.
 
 ### Step 7: Write files
 
-Write `${FEATURE_DIR}/product-spec.md` and `${FEATURE_DIR}/checklists/product.md`. Both files are written atomically (write to a temp file in the same directory, then rename) to avoid leaving partial output if the process is interrupted.
+Write `${FEATURE_DIR}/product/product-spec.md` and `${FEATURE_DIR}/product/checklist.md`. Both files are written atomically (write to a temp file in the same directory, then rename) to avoid leaving partial output if the process is interrupted.
 
 Files outside the feature directory MUST NOT be modified. Specifically: do not touch `.specify/feature.json`, `.specify/extensions.yml`, `spec.md`, or any sibling feature.
 
@@ -166,8 +168,8 @@ Files outside the feature directory MUST NOT be modified. Specifically: do not t
 Print a short status report to the user:
 
 ```text
-Wrote: <abs path>/product-spec.md
-Wrote: <abs path>/checklists/product.md
+Wrote: <abs path>/product/product-spec.md
+Wrote: <abs path>/product/checklist.md
 Sections populated: 9 mandatory[, 10 (Positioning)][, 11 (Go to Market)]
 Open product questions surfaced: <N>
 ```

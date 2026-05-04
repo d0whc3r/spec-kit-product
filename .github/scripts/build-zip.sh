@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 # Pipeline: build the deterministic release zip.
 #
-# Reads version from extension/extension.yml. Produces dist/product-<version>.zip
-# from the extension/ subtree, with files at the zip root, alphabetical entry
-# order, and file timestamps fixed to the tagged commit's timestamp (or
-# SOURCE_DATE_EPOCH if set).
+# Reads version from extension.yml at the repo root. Produces
+# dist/product-<version>.zip from the repo root, with files at the zip root,
+# alphabetical entry order, and file timestamps fixed to the tagged commit's
+# timestamp (or SOURCE_DATE_EPOCH if set).
+#
+# .extensionignore at the repo root governs which files are excluded from the
+# zip. Files NOT matched by the ignore patterns are included (subject to the
+# allowlist safety check below).
 #
 # After build, unpacks the zip into a temp dir and re-runs validate-manifest.sh
 # against the unpacked tree, to catch packaging bugs that source validation
@@ -13,15 +17,15 @@
 set -e
 
 SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(CDPATH="" cd "$SCRIPT_DIR/.." && pwd)"
+REPO_ROOT="$(CDPATH="" cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$REPO_ROOT"
 
-if [ ! -f extension/extension.yml ]; then
-    echo "[build-zip] FAIL: extension/extension.yml not found" >&2
+if [ ! -f extension.yml ]; then
+    echo "[build-zip] FAIL: extension.yml not found at repo root" >&2
     exit 1
 fi
 
-VERSION=$(awk '/^extension:/{f=1; next} f && /^[a-z]/{f=0} f && /^[[:space:]]+version:/{ sub(/^[[:space:]]+version:[[:space:]]*/, ""); gsub(/"/,""); print; exit }' extension/extension.yml)
+VERSION=$(awk '/^extension:/{f=1; next} f && /^[a-z]/{f=0} f && /^[[:space:]]+version:/{ sub(/^[[:space:]]+version:[[:space:]]*/, ""); gsub(/"/,""); print; exit }' extension.yml)
 if [ -z "$VERSION" ]; then
     echo "[build-zip] FAIL: could not read extension.version" >&2
     exit 1
@@ -48,21 +52,15 @@ mkdir -p dist
 ZIP_PATH="dist/product-${VERSION}.zip"
 rm -f "$ZIP_PATH"
 
-# Stage to a temp dir so file mtimes are uniform and the zip root is the
-# extension subtree (not extension/ itself).
 STAGE=$(mktemp -d)
 trap 'rm -rf "$STAGE"' EXIT
 
-# Build the list of patterns to skip from extension/.extensionignore (if present).
-# Format: one glob per line, '#' comments, blank lines ignored. Patterns match
-# paths relative to extension/ (the zip root).
-IGNORE_FILE="$REPO_ROOT/extension/.extensionignore"
+IGNORE_FILE="$REPO_ROOT/.extensionignore"
 _should_ignore() {
     local rel="$1"
     [ ! -f "$IGNORE_FILE" ] && return 1
     while IFS= read -r pat || [ -n "$pat" ]; do
         case "$pat" in ''|\#*) continue ;; esac
-        # Directory pattern: foo/  -> match foo/ prefix anywhere
         case "$pat" in
             */)
                 local dir="${pat%/}"
@@ -71,12 +69,10 @@ _should_ignore() {
                 esac
                 ;;
             */*)
-                # Path-anchored glob.
                 # shellcheck disable=SC2254
                 case "$rel" in $pat) return 0 ;; esac
                 ;;
             *)
-                # Bare glob: match against basename anywhere in the tree.
                 local base="${rel##*/}"
                 # shellcheck disable=SC2254
                 case "$base" in $pat) return 0 ;; esac
@@ -86,10 +82,12 @@ _should_ignore() {
     return 1
 }
 
-# Copy extension/ contents (not the directory itself) into stage, honoring
-# .extensionignore.
-( cd extension && find . -type f -print0 | sort -z | while IFS= read -r -d '' f; do
+# Walk the repo root, copy non-ignored files into stage.
+( cd "$REPO_ROOT" && find . -type f -print0 | sort -z | while IFS= read -r -d '' f; do
     rel="${f#./}"
+    case "$rel" in
+        .git/*) continue ;;
+    esac
     if _should_ignore "$rel"; then
         echo "[build-zip] skip: $rel"
         continue
@@ -98,10 +96,8 @@ _should_ignore() {
     cp "$rel" "$STAGE/$rel"
 done )
 
-# Normalise mtimes.
 find "$STAGE" -exec touch -d "$TS_ISO" {} +
 
-# Build zip with deterministic ordering. -X drops extra fields (uid/gid).
 ( cd "$STAGE" && find . -type f | LC_ALL=C sort | sed 's|^\./||' | zip -X -q "$REPO_ROOT/$ZIP_PATH" -@ )
 
 if [ ! -f "$ZIP_PATH" ]; then
@@ -116,7 +112,8 @@ trap 'rm -rf "$STAGE" "$VERIFY"' EXIT
 
 "$SCRIPT_DIR/validate-manifest.sh" --root "$VERIFY"
 
-# Allowlist check: the zip MUST contain only files that belong to the extension.
+# Allowlist safety net: the zip MUST contain only files that belong to the
+# extension's runtime surface. If something slips past .extensionignore, fail.
 ALLOWED='^(extension\.yml|README\.md|LICENSE|CHANGELOG\.md|commands/.*|templates/.*|scripts/(bash|powershell)/.*)$'
 EXTRA=$(cd "$VERIFY" && find . -type f | sed 's|^\./||' | grep -Ev "$ALLOWED" || true)
 if [ -n "$EXTRA" ]; then

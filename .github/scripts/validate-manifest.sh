@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
-# Pipeline gate: validate extension/extension.yml.
+# Pipeline gate: validate the repository root extension.yml.
 #
 # Asserts:
 #   - extension.id == "product"
 #   - extension.version == ${GITHUB_REF_NAME#v}  (when GITHUB_REF_NAME is set)
-#   - all required files listed in contracts/package-layout.md exist under extension/
+#   - all required files listed in contracts/package-layout.md exist at the
+#     extension root (which is the repo root in canonical layout)
 #
 # Exits 0 on success, non zero with a clear message on failure.
 #
 # Usage:
-#   validate-manifest.sh                 # validates source tree against optional GITHUB_REF_NAME
+#   validate-manifest.sh                 # validates the repo root against optional GITHUB_REF_NAME
 #   validate-manifest.sh --root <path>   # validates a different root (e.g. an unpacked zip)
 
 set -e
 
-ROOT="extension"
+ROOT="."
 while [ $# -gt 0 ]; do
     case "$1" in
         --root) ROOT="$2"; shift 2 ;;

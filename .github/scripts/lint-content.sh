@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
-# Pipeline: lint extension/**/*.md content.
+# Pipeline: lint extension content (markdown templates and command body).
+#
+# Paths are relative to the repo root, which is the extension root in the
+# canonical layout.
 #
 # Checks:
-#   1. extension/templates/product-spec-template.md contains no em dash.
+#   1. templates/product-spec-template.md contains no em dash.
 #   2. The template contains every canonical section heading in canonical order.
-#   3. extension/commands/speckit.product.spec.md references both templates by
+#   3. commands/speckit.product.spec.md references both templates by
 #      relative path.
 #   4. (Optional) markdownlint pass via markdownlint-cli2 if installed.
 
 set -e
 
 FAIL=0
-TEMPLATE="extension/templates/product-spec-template.md"
-CHECKLIST="extension/templates/product-checklist-template.md"
-COMMAND="extension/commands/speckit.product.spec.md"
+TEMPLATE="templates/product-spec-template.md"
+CHECKLIST="templates/product-checklist-template.md"
+COMMAND="commands/speckit.product.spec.md"
 
 if [ ! -f "$TEMPLATE" ]; then
     echo "[lint-content] FAIL: $TEMPLATE missing" >&2
@@ -67,12 +70,12 @@ fi
 
 # 4. Optional markdownlint pass.
 if command -v markdownlint-cli2 >/dev/null 2>&1; then
-    if ! markdownlint-cli2 'extension/**/*.md' >&2; then
+    if ! markdownlint-cli2 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md' >&2; then
         echo "[lint-content] FAIL: markdownlint-cli2 reported issues" >&2
         FAIL=1
     fi
 elif command -v markdownlint >/dev/null 2>&1; then
-    if ! markdownlint 'extension/**/*.md' >&2; then
+    if ! markdownlint 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md' >&2; then
         echo "[lint-content] FAIL: markdownlint reported issues" >&2
         FAIL=1
     fi

@@ -18,20 +18,6 @@
       },
       "registered_skills": [],
       "installed_at": "2026-05-04T13:05:07.589361+00:00"
-    },
-    "product": {
-      "version": "0.1.0",
-      "source": "dev",
-      "manifest_hash": "sha256:dev-symlink",
-      "enabled": true,
-      "priority": 20,
-      "registered_commands": {
-        "claude": [
-          "speckit.product.spec"
-        ]
-      },
-      "registered_skills": [],
-      "installed_at": "2026-05-04T00:00:00.000000+00:00"
     }
   }
 }

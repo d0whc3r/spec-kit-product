@@ -52,10 +52,10 @@ After any of the three paths, open the project in your AI assistant. The new sla
 
 3. If the source spec contains `[NEEDS CLARIFICATION]` markers, you will see a warning that lists each one and asks you to confirm. On confirm, those markers are surfaced as open product questions inside the generated artifact.
 4. If a `product-spec.md` already exists for this feature, you will be asked to choose **overwrite** or **abort**. Merge or refresh is not available in v1.
-5. On success, you have two new files in your feature directory:
+5. On success, you have two new files inside a `product/` subfolder of your feature directory (the subfolder makes the stakeholder facing output easy to identify, read, export, and share as a self contained bundle):
 
-   - `product-spec.md`, the generated product spec.
-   - `checklists/product.md`, the quality checklist for that spec.
+   - `product/product-spec.md`, the generated product spec.
+   - `product/checklist.md`, the quality checklist for that spec.
 
 ## What You Get
 
@@ -77,7 +77,7 @@ Every spec follows the same structure, in the same order, in English, with no em
 
 ## Validating the Output
 
-1. Open `checklists/product.md` next to the generated spec.
+1. Open `product/checklist.md` next to the generated spec.
 2. Walk the list. Tick each item that holds. The checklist is grouped into Structure, Style, and Content, plus an Optional sections block.
 3. If any Required item fails, edit the spec by hand or rerun the command after fixing the source spec. Required items must all be ticked before the product spec is shared with stakeholders.
 

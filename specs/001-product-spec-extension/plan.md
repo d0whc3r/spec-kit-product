@@ -13,7 +13,7 @@ Distribution follows the documented Spec Kit publishing flow: the extension subt
 
 **Language/Version**: Markdown command files (slash commands), Bash 4+, PowerShell 5+. No new runtime. Release pipeline in YAML (GitHub Actions) plus a small validation script.
 **Primary Dependencies**: Spec Kit (>=0.2.0), Git (optional at install time, required for release), the host AI assistant (Claude Code, Copilot, etc.) for natural language generation, GitHub (release hosting).
-**Storage**: Plain files inside the feature directory (`product-spec.md`, `checklists/product.md`). Distribution artifacts live in GitHub Releases.
+**Storage**: Plain files inside a `product/` subfolder of the feature directory (`product/product-spec.md`, `product/checklist.md`). The subfolder keeps stakeholder facing output identifiable and self contained for export and sharing. Distribution artifacts live in GitHub Releases.
 **Testing**: Manual smoke test against a known good `spec.md`; checklist-based acceptance review of generated output; pipeline self-tests (manifest validation, tag-version match) on every tag push.
 **Target Platform**: Any environment where Spec Kit runs (macOS, Linux, Windows). Cross-platform via parallel Bash and PowerShell helper scripts. Release pipeline runs on `ubuntu-latest`.
 **Project Type**: Spec Kit extension (markdown command files plus optional shell scripts plus templates) packaged as a GitHub release zip.

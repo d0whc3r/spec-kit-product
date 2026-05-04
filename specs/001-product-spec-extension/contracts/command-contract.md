@@ -41,8 +41,9 @@ The command warns and asks the user to confirm, then proceeds, when:
 
 ### On success
 
-- `<feature-dir>/product-spec.md` is created or replaced, populated from the canonical product spec template.
-- `<feature-dir>/checklists/product.md` is created or replaced, populated from the canonical quality checklist template.
+- `<feature-dir>/product/product-spec.md` is created or replaced, populated from the canonical product spec template.
+- `<feature-dir>/product/checklist.md` is created or replaced, populated from the canonical quality checklist template.
+- All generated artifacts live inside the `product/` subfolder so they ship as a self contained bundle for export and sharing.
 - A short status report is printed: paths written, number of sections populated, count of open product questions surfaced.
 
 ### On refusal or warning
@@ -57,9 +58,9 @@ The command warns and asks the user to confirm, then proceeds, when:
 
 ## Side Effects
 
-- Writes to `<feature-dir>/product-spec.md`.
-- Writes to `<feature-dir>/checklists/product.md`.
-- Creates `<feature-dir>/checklists/` if it does not exist.
+- Writes to `<feature-dir>/product/product-spec.md`.
+- Writes to `<feature-dir>/product/checklist.md`.
+- Creates `<feature-dir>/product/` if it does not exist.
 - Does not touch `.specify/feature.json`, `.specify/extensions.yml`, or any file outside the feature directory.
 
 ## Error Codes (informational, for future automation)

@@ -1,7 +1,7 @@
 # Product Spec Quality Checklist: Product Spec Extension for Spec Kit
 
 **Source Spec**: [spec.md](../spec.md)
-**Product Spec**: [product-spec.md](../product-spec.md)
+**Product Spec**: [product-spec.md](./product-spec.md)
 **Created**: 2026-05-04
 
 ## Structure

@@ -26,7 +26,7 @@ jobs:
       - name: Run validate-manifest.sh
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
-        run: bash scripts/validate-manifest.sh
+        run: bash .github/scripts/validate-manifest.sh
 
   validate-catalog:
     name: validate-catalog
@@ -78,7 +78,7 @@ jobs:
       - name: Install markdownlint-cli2
         run: npm install -g markdownlint-cli2
       - name: Run lint-content.sh
-        run: bash scripts/lint-content.sh
+        run: bash .github/scripts/lint-content.sh
 
   build-zip:
     name: build-zip
@@ -95,7 +95,7 @@ jobs:
       - name: Read version
         id: read-version
         run: |
-          VERSION=$(awk '/^extension:/{f=1; next} f && /^[a-z]/{f=0} f && /^[[:space:]]+version:/{ sub(/^[[:space:]]+version:[[:space:]]*/, ""); gsub(/"/,""); print; exit }' extension/extension.yml)
+          VERSION=$(awk '/^extension:/{f=1; next} f && /^[a-z]/{f=0} f && /^[[:space:]]+version:/{ sub(/^[[:space:]]+version:[[:space:]]*/, ""); gsub(/"/,""); print; exit }' extension.yml)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "zip_name=product-${VERSION}.zip" >> "$GITHUB_OUTPUT"
       - name: Build deterministic zip
@@ -104,7 +104,7 @@ jobs:
         run: |
           # Use the tagged commit's timestamp for reproducibility.
           export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct "${{ github.sha }}")
-          bash scripts/build-zip.sh
+          bash .github/scripts/build-zip.sh
       - name: Upload zip artifact
         uses: actions/upload-artifact@v4
         with:
@@ -133,7 +133,7 @@ jobs:
         run: |
           VERSION="${{ needs.build-zip.outputs.version }}"
           # Grab the section between "## [VERSION]" and the next "## [" line.
-          BODY=$(awk -v v="[$VERSION]" '$0 ~ "^## " v {found=1; next} found && /^## \[/ {exit} found {print}' extension/CHANGELOG.md)
+          BODY=$(awk -v v="[$VERSION]" '$0 ~ "^## " v {found=1; next} found && /^## \[/ {exit} found {print}' CHANGELOG.md)
           if [ -z "$BODY" ]; then
             BODY="Release v$VERSION"
           fi
@@ -169,7 +169,7 @@ jobs:
           fetch-depth: 0
       - name: Update catalog.json
         run: |
-          bash scripts/update-catalog.sh \
+          bash .github/scripts/update-catalog.sh \
             "${{ needs.build-zip.outputs.version }}" \
             "${{ needs.publish-release.outputs.download_url }}"
       - name: Commit and push

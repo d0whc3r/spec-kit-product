@@ -20,7 +20,7 @@ The template is grounded in: Amazon Working Backwards (PRFAQ) for the headline, 
 # Product Spec: [FEATURE NAME]
 
 **Feature**: [###-feature-name]
-**Source Spec**: [spec.md](./spec.md)
+**Source Spec**: [spec.md](../spec.md)
 **Created**: [DATE]
 **Status**: Draft
 
@@ -148,4 +148,4 @@ The template is grounded in: Amazon Working Backwards (PRFAQ) for the headline, 
 - Optional sections (10 and 11) appear only when there is real content for them. Empty optional sections are removed from the output, not left as `N/A`.
 - All bracketed placeholders in the template body are replaced with concrete content drawn from the source spec.
 - If the source spec lacks the information needed to populate a mandatory section, the generator must populate that section with an open product question (in section 9) rather than fabricate content.
-- The `[Source Spec]` link in the header is always present and always relative (`./spec.md`).
+- The `[Source Spec]` link in the header is always present and always relative (`../spec.md`, since the generated product spec lives in the `product/` subfolder of the feature directory).

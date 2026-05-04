@@ -1,0 +1,65 @@
+name: prepare-release
+
+# Manual entry point for cutting a release. Bumps the manifest version and
+# CHANGELOG entry coherently, commits as the release bot, then creates and
+# pushes the tag. The tag push triggers .github/workflows/release.yml, which
+# validates, builds the zip, publishes the GitHub Release, and updates
+# catalog.json.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'New semver version (e.g. 0.1.1) — do not include leading v'
+        required: true
+        type: string
+
+env:
+  RELEASE_BOT_NAME: github-actions[bot]
+  RELEASE_BOT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+
+jobs:
+  prepare:
+    name: bump version, commit, tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Refuse if tag already exists
+        run: |
+          if git rev-parse "v${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "[prepare-release] FAIL: tag v${{ inputs.version }} already exists" >&2
+            exit 1
+          fi
+
+      - name: Bump version and CHANGELOG
+        run: bash .github/scripts/bump-version.sh "${{ inputs.version }}"
+
+      - name: Validate manifest reflects the new version
+        env:
+          GITHUB_REF_NAME: v${{ inputs.version }}
+        run: bash .github/scripts/validate-manifest.sh
+
+      - name: Lint content
+        run: bash .github/scripts/lint-content.sh
+
+      - name: Commit, tag, push
+        run: |
+          git config user.name "$RELEASE_BOT_NAME"
+          git config user.email "$RELEASE_BOT_EMAIL"
+          git add extension.yml CHANGELOG.md
+          if git diff --cached --quiet; then
+            echo "[prepare-release] FAIL: no changes staged after bump" >&2
+            exit 1
+          fi
+          git commit -m "chore(release): bump version to ${{ inputs.version }}"
+          git tag "v${{ inputs.version }}"
+          # Push the bump commit to the branch this workflow ran on, then push the tag.
+          git push origin "HEAD:${{ github.ref_name }}"
+          git push origin "v${{ inputs.version }}"
+          echo "[prepare-release] OK: pushed v${{ inputs.version }}; release.yml will fire on the tag"

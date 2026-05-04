@@ -60,7 +60,7 @@ This repository hosts a Spec Kit extension. Files at the repository root form th
 
 ## Phase 3: User Story 1 — Generate product spec from existing technical spec (Priority: P1) 🎯 MVP
 
-**Goal**: A user with a populated `spec.md` runs `/speckit-product-spec` and gets a `product-spec.md` plus a `checklists/product.md` written into the same feature directory, conforming to the canonical templates and style rules.
+**Goal**: A user with a populated `spec.md` runs `/speckit-product-spec` and gets a `product/product-spec.md` plus a `product/checklist.md` written into a `product/` subfolder of the same feature directory, conforming to the canonical templates and style rules. The subfolder makes the stakeholder facing output identifiable and self contained for export and sharing.
 
 **Independent Test**: in a feature directory with a populated `spec.md`, run `/speckit-product-spec`. Verify both files are created, every mandatory section is populated, no implementation details leak in, no em dash appears, every Use Case scenario follows Given/When/Then with one full sentence per keyword, and every `[NEEDS CLARIFICATION]` marker from the source spec is surfaced as an open product question.
 

@@ -1,7 +1,7 @@
 # Product Spec: Product Spec Extension for Spec Kit
 
 **Feature**: 001-product-spec-extension
-**Source Spec**: [spec.md](./spec.md)
+**Source Spec**: [spec.md](../spec.md)
 **Created**: 2026-05-04
 **Status**: Draft
 

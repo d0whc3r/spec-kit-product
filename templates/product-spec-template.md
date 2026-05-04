@@ -1,7 +1,7 @@
 # Product Spec: [FEATURE NAME]
 
 **Feature**: [###-feature-name]
-**Source Spec**: [spec.md](./spec.md)
+**Source Spec**: [spec.md](../spec.md)
 **Created**: [DATE]
 **Status**: Draft
 

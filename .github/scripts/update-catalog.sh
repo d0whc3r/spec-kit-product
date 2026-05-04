@@ -29,9 +29,9 @@ if ! command -v jq >/dev/null 2>&1; then
     exit 1
 fi
 
-REQ_SPECKIT=$(awk '/^requires:/{f=1; next} f && /^[a-z]/{f=0} f && /^[[:space:]]+speckit_version:/{ sub(/^[[:space:]]+speckit_version:[[:space:]]*/, ""); gsub(/"/,""); print; exit }' extension/extension.yml)
+REQ_SPECKIT=$(awk '/^requires:/{f=1; next} f && /^[a-z]/{f=0} f && /^[[:space:]]+speckit_version:/{ sub(/^[[:space:]]+speckit_version:[[:space:]]*/, ""); gsub(/"/,""); print; exit }' extension.yml)
 if [ -z "$REQ_SPECKIT" ]; then
-    echo "[update-catalog] FAIL: requires.speckit_version missing from extension/extension.yml" >&2
+    echo "[update-catalog] FAIL: requires.speckit_version missing from extension.yml" >&2
     exit 1
 fi
 

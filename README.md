@@ -37,10 +37,10 @@ Use this when you need a specific version, or before the catalog has been update
 ```bash
 git clone https://github.com/d0whc3r/spec-kit-product.git
 cd spec-kit-product
-specify extension add --dev ./extension
+specify extension add --dev "$(pwd)"
 ```
 
-Use this when you are iterating on the extension itself, or when you need to run the command before any release exists. The CLI registers the extension under `.specify/extensions/product/` and adds an entry under `.specify/extensions/.registry`.
+The repo root IS the extension root in the canonical Spec Kit layout, so `--dev` points directly at the cloned directory. Use this when you are iterating on the extension itself, or when you need to run the command before any release exists. The CLI registers the extension under `.specify/extensions/product/` of the target project and adds an entry under `.specify/extensions/.registry`.
 
 ### Manual copy fallback (advanced)
 
@@ -56,8 +56,10 @@ After install, the slash command is available as:
 
 Run it from any working directory inside a Spec Kit project. The command reads the active feature pointer at `.specify/feature.json` and writes:
 
-- `<feature-dir>/product-spec.md`
-- `<feature-dir>/checklists/product.md`
+- `<feature-dir>/product/product-spec.md`
+- `<feature-dir>/product/checklist.md`
+
+All generated artifacts live under a single `product/` subfolder so they can be read, exported, and shared as a self-contained bundle without dragging engineering scaffolding along.
 
 If `product-spec.md` already exists, the command prompts for overwrite or abort. There is no merge in v1.
 
@@ -71,7 +73,7 @@ The generated `product-spec.md` enforces:
 4. All mandatory sections (1 through 9) appear in the canonical order.
 5. No implementation detail (no frameworks, languages, APIs, data stores, code, or file paths beyond the link to `spec.md`).
 
-The paired `checklists/product.md` verifies all of the above.
+The paired `product/checklist.md` verifies all of the above.
 
 ## Troubleshooting
 
