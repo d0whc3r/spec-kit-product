@@ -17,6 +17,8 @@ FAIL=0
 TEMPLATE="templates/product-spec-template.md"
 CHECKLIST="templates/product-checklist-template.md"
 COMMAND="commands/speckit.product.spec.md"
+INFO_TEMPLATE="templates/product-info-template.md"
+INFO_COMMAND="commands/speckit.product.info.md"
 
 if [ ! -f "$TEMPLATE" ]; then
     echo "[lint-content] FAIL: $TEMPLATE missing" >&2
@@ -80,6 +82,79 @@ elif command -v markdownlint >/dev/null 2>&1; then
         FAIL=1
     fi
 fi
+
+if [ "$FAIL" -ne 0 ]; then
+    exit 1
+fi
+
+# --- product-info-template.md checks ---
+
+if [ ! -f "$INFO_TEMPLATE" ]; then
+    echo "[lint-content] FAIL: $INFO_TEMPLATE missing" >&2
+    exit 1
+fi
+
+# 5. No em dash in the info template.
+if grep -q "—" "$INFO_TEMPLATE"; then
+    echo "[lint-content] FAIL: em dash found in $INFO_TEMPLATE" >&2
+    grep -n "—" "$INFO_TEMPLATE" >&2
+    FAIL=1
+fi
+
+# 6. Canonical headings in order for product-info-template.md.
+INFO_HEADINGS=(
+    "## 1. Headline"
+    "## 2. What is Changing"
+    "## 3. Out of Scope"
+)
+
+LAST_LINE=0
+for h in "${INFO_HEADINGS[@]}"; do
+    LINE=$(grep -nF "$h" "$INFO_TEMPLATE" | head -n 1 | cut -d: -f1)
+    if [ -z "$LINE" ]; then
+        echo "[lint-content] FAIL: missing canonical heading in $INFO_TEMPLATE: $h" >&2
+        FAIL=1
+        continue
+    fi
+    if [ "$LINE" -le "$LAST_LINE" ]; then
+        echo "[lint-content] FAIL: heading out of canonical order in $INFO_TEMPLATE: $h (line $LINE, previous at $LAST_LINE)" >&2
+        FAIL=1
+    fi
+    LAST_LINE="$LINE"
+done
+
+# Optional Section 4 (Risks) must appear after Section 3 if present.
+RISKS_LINE=$(grep -nF "## 4. Risks" "$INFO_TEMPLATE" | head -n 1 | cut -d: -f1)
+if [ -n "$RISKS_LINE" ] && [ "$RISKS_LINE" -le "$LAST_LINE" ]; then
+    echo "[lint-content] FAIL: ## 4. Risks is out of order in $INFO_TEMPLATE (line $RISKS_LINE, previous at $LAST_LINE)" >&2
+    FAIL=1
+fi
+[ -n "$RISKS_LINE" ] && LAST_LINE="$RISKS_LINE"
+
+# Optional Section 5 (Open Questions) must appear last if present.
+OPT_LINE=$(grep -nF "## 5. Open Questions" "$INFO_TEMPLATE" | head -n 1 | cut -d: -f1)
+if [ -n "$OPT_LINE" ] && [ "$OPT_LINE" -le "$LAST_LINE" ]; then
+    echo "[lint-content] FAIL: ## 5. Open Questions is out of order in $INFO_TEMPLATE (line $OPT_LINE, previous at $LAST_LINE)" >&2
+    FAIL=1
+fi
+
+# 7. Info command references the info template.
+if [ ! -f "$INFO_COMMAND" ]; then
+    echo "[lint-content] FAIL: $INFO_COMMAND missing" >&2
+    FAIL=1
+elif ! grep -q "templates/product-info-template.md" "$INFO_COMMAND"; then
+    echo "[lint-content] FAIL: $INFO_COMMAND does not reference templates/product-info-template.md" >&2
+    FAIL=1
+fi
+
+# 8. No banned AI-tell phrases in the info template.
+BANNED_PHRASES=("delve" "tapestry" "in essence" "navigate the landscape" "seamless" "intuitive")
+for phrase in "${BANNED_PHRASES[@]}"; do
+    if grep -qi "$phrase" "$INFO_TEMPLATE"; then
+        echo "[lint-content] FAIL: banned phrase \"$phrase\" found in $INFO_TEMPLATE" >&2
+        FAIL=1
+    fi
+done
 
 if [ "$FAIL" -ne 0 ]; then
     exit 1

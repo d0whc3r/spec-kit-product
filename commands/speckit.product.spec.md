@@ -1,10 +1,10 @@
 ---
-description: "Generate a product oriented product-spec.md and quality checklist from the current feature's spec.md"
+description: "Generate a product oriented spec.md and quality checklist from the current feature's spec.md"
 ---
 
 # Generate Product Spec
 
-Derive a stakeholder facing `product-spec.md` from the populated `spec.md` of the active feature, and write a paired quality checklist. The artifact follows Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain English, with strict style rules.
+Derive a stakeholder facing `product/spec.md` from the populated `spec.md` of the active feature, and write a paired quality checklist. The artifact follows Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain English, with strict style rules.
 
 ## User Input
 
@@ -23,7 +23,7 @@ The command reads (does not modify):
 
 The command writes (all generated artifacts live under a single `product/` subfolder so they can be read, exported, and shared as a self-contained bundle):
 
-- `<feature-dir>/product/product-spec.md`
+- `<feature-dir>/product/spec.md`
 - `<feature-dir>/product/checklist.md`
 
 ## Templates
@@ -79,22 +79,22 @@ Scan `spec.md` for occurrences of `[NEEDS CLARIFICATION` (case sensitive prefix)
 If any markers are present:
 
 - List each marker, one per line, with file location.
-- Ask the user: `Surface these as open product questions in product-spec.md? (yes/no)`
+- Ask the user: `Surface these as open product questions in product/spec.md? (yes/no)`
 - On `no` or any non affirmative response, abort with no files written.
-- On `yes`, continue. Each marker MUST appear as a bullet under "Open product questions" in Section 9 of the generated `product-spec.md`. Never silently resolve a marker.
+- On `yes`, continue. Each marker MUST appear as a bullet under "Open product questions" in Section 9 of the generated `product/spec.md`. Never silently resolve a marker.
 
-### Step 4: Handle existing product-spec.md
+### Step 4: Handle existing spec.md in product/
 
-If `${FEATURE_DIR}/product/product-spec.md` already exists:
+If `${FEATURE_DIR}/product/spec.md` already exists:
 
 - Print the absolute path of the existing file.
-- Ask: `product-spec.md already exists. Overwrite? (yes/no)`
+- Ask: `product/spec.md already exists. Overwrite? (yes/no)`
 - On `no` or any non affirmative response, abort with `E_USER_ABORT`. Do not write any files.
-- On `yes`, continue. The existing `product-spec.md` will be replaced byte for byte. The companion `product/checklist.md` is also regenerated; prior tick state is not preserved.
+- On `yes`, continue. The existing `product/spec.md` will be replaced byte for byte. The companion `product/checklist.md` is also regenerated; prior tick state is not preserved.
 
 If `${FEATURE_DIR}/product/` does not exist yet, create it before writing.
 
-### Step 5: Generate product-spec.md
+### Step 5: Generate product/spec.md
 
 Read `templates/product-spec-template.md`. Replace every bracketed placeholder with concrete content drawn from `spec.md`. Apply the following rules without exception.
 
@@ -150,7 +150,7 @@ Provide exactly one north star metric and at least one supporting metric. Each m
 
 Read `templates/product-checklist-template.md`. Replace bracketed placeholders:
 
-- `[FEATURE NAME]`: the feature title used in `product-spec.md` Section 1 heading.
+- `[FEATURE NAME]`: the feature title used in `product/spec.md` Section 1 heading.
 - `[DATE]`: today's date in `YYYY-MM-DD`.
 
 Leave every checkbox unchecked (`- [ ]`). The user or a reviewer ticks them after manual review.
@@ -159,7 +159,7 @@ If `${FEATURE_DIR}/product/` does not exist, create it.
 
 ### Step 7: Write files
 
-Write `${FEATURE_DIR}/product/product-spec.md` and `${FEATURE_DIR}/product/checklist.md`. Both files are written atomically (write to a temp file in the same directory, then rename) to avoid leaving partial output if the process is interrupted.
+Write `${FEATURE_DIR}/product/spec.md` and `${FEATURE_DIR}/product/checklist.md`. Both files are written atomically (write to a temp file in the same directory, then rename) to avoid leaving partial output if the process is interrupted.
 
 Files outside the feature directory MUST NOT be modified. Specifically: do not touch `.specify/feature.json`, `.specify/extensions.yml`, `spec.md`, or any sibling feature.
 
@@ -168,7 +168,7 @@ Files outside the feature directory MUST NOT be modified. Specifically: do not t
 Print a short status report to the user:
 
 ```text
-Wrote: <abs path>/product/product-spec.md
+Wrote: <abs path>/product/spec.md
 Wrote: <abs path>/product/checklist.md
 Sections populated: 9 mandatory[, 10 (Positioning)][, 11 (Go to Market)]
 Open product questions surfaced: <N>
@@ -188,7 +188,7 @@ Use the codes from `command-contract.md`: `E_NO_PROJECT`, `E_NO_POINTER`, `E_BAD
 
 ## Idempotence
 
-Two consecutive runs against the same `spec.md`, with the user choosing overwrite on the second run, produce a `product-spec.md` whose content is byte identical except for the `Created` field if the date has rolled over.
+Two consecutive runs against the same `spec.md`, with the user choosing overwrite on the second run, produce a `product/spec.md` whose content is byte identical except for the `Created` field if the date has rolled over.
 
 The command never modifies `spec.md`.
 

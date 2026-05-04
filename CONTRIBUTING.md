@@ -29,7 +29,7 @@ The CLI installs the extension under `.specify/extensions/product/` of the targe
 The slash command is a markdown prompt at `commands/speckit.product.spec.md`. Edit it, then dogfood:
 
 1. Run `/speckit-product-spec` against any feature in this repo or another Spec Kit project.
-2. Walk the generated `product/product-spec.md` through `product/checklist.md`. Any failed Required item is an iteration signal on the prompt.
+2. Walk the generated `product/spec.md` through `product/checklist.md`. Any failed Required item is an iteration signal on the prompt.
 3. Repeat until the first generation passes the checklist on a representative spec.
 
 When iterating on the templates (`templates/*.md`), keep them in sync with the contracts under `specs/001-product-spec-extension/contracts/`. The contract files are the reviewable source of truth; the runtime files are deployed copies.

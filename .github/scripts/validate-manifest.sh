@@ -85,8 +85,10 @@ REQUIRED=(
     "$ROOT/README.md"
     "$ROOT/LICENSE"
     "$ROOT/commands/speckit.product.spec.md"
+    "$ROOT/commands/speckit.product.info.md"
     "$ROOT/templates/product-spec-template.md"
     "$ROOT/templates/product-checklist-template.md"
+    "$ROOT/templates/product-info-template.md"
 )
 
 MISSING=0

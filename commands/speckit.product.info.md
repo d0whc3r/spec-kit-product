@@ -1,0 +1,169 @@
+---
+description: "Generate a short, stakeholder-readable info.md from the current feature's spec.md"
+---
+
+# Generate Product Info
+
+Derive a stakeholder-facing `product/info.md` from the populated `spec.md` of the active feature. The artifact is a single-page plain-language summary that answers "what is changing and why" for a non-technical reader. It follows the same style rules as `/speckit-product-spec`: English only, no em dash, plain English, active voice, full sentences, no implementation detail, and no AI-tell filler phrases.
+
+## User Input
+
+```text
+$ARGUMENTS
+```
+
+You **MUST** consider the user input before proceeding (if not empty). The user MAY pass `--feature-dir <path>` to override the pointer in `.specify/feature.json`.
+
+## Inputs
+
+The command reads (does not modify):
+
+- `.specify/feature.json` to locate the active feature directory.
+- `<feature-dir>/spec.md` as the source spec.
+
+The command writes:
+
+- `<feature-dir>/product/info.md`
+
+The command never modifies `product/spec.md`, `plan.md`, `tasks.md`, `checklist.md`, `.specify/feature.json`, `.specify/extensions.yml`, or any file outside the resolved feature directory.
+
+## Templates
+
+The command MUST read the following template from the installed extension and use it verbatim as the structural skeleton of the output. Do NOT invent additional sections. Do NOT reorder sections.
+
+- Product info template: `templates/product-info-template.md` (relative to this command's extension root).
+
+When this extension is installed under `.specify/extensions/product/`, the absolute path is:
+
+- `.specify/extensions/product/templates/product-info-template.md`
+
+## Execution
+
+### Step 1: Resolve the feature directory
+
+Run the cross-platform helper:
+
+- **Bash**: `.specify/extensions/product/scripts/bash/resolve-feature-dir.sh [--feature-dir "<path>"]`
+- **PowerShell**: `.specify/extensions/product/scripts/powershell/resolve-feature-dir.ps1 [-FeatureDir "<path>"]`
+
+The script prints an absolute path on stdout, or exits non-zero with one of `E_NO_PROJECT`, `E_NO_POINTER`, `E_BAD_POINTER`. Surface the script's stderr verbatim to the user and stop on any non-zero exit code.
+
+Capture the printed path as `FEATURE_DIR`.
+
+### Step 2: Verify spec.md
+
+Refuse to proceed when:
+
+1. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `/speckit-specify` first.
+2. **E_PLACEHOLDERS**: `spec.md` still contains literal placeholders from the Spec Kit `spec-template.md`. Detect these by looking for any of the following exact bracketed strings as substrings of the file (case sensitive):
+   - `[FEATURE NAME]`
+   - `[Brief Title]`
+   - `[Describe this user journey in plain language]`
+   - `[#]` (in the form `### User Story [#]`)
+   - `[Describe the specific behavior in detail]`
+   - `[Describe the user interaction]`
+   - `[Describe what the user observes]`
+   - Any line that is exactly `### User Story [#] - [Brief Title] (Priority: PX)`.
+
+   These are unfilled template scaffolding. Refuse with a single line per detected placeholder, using the refusal format below.
+
+   **Important distinction**: `[NEEDS CLARIFICATION: ...]` markers are NOT placeholders. They are intentional questions left by the spec author and are handled in Step 3.
+
+3. **E_LANGUAGE**: `spec.md` is not written in English. Detect non-English content by sampling the prose paragraphs (skip code fences and metadata) and checking that the dominant language is English. If the dominant language is not English, refuse with a single line naming the detected language. Do not auto-translate.
+
+### Step 3: Surface clarification markers
+
+Scan `spec.md` for occurrences of `[NEEDS CLARIFICATION` (case-sensitive prefix). For each occurrence, capture the full marker text and its surrounding sentence as context.
+
+If any markers are present:
+
+- List each marker, one per line, with file location.
+- Ask the user: `Surface these as open questions in product/info.md? (yes/no)`
+- On `no` or any non-affirmative response, abort with `E_USER_ABORT` and write nothing.
+- On `yes`, continue. Each marker MUST appear as a bullet under Section 5 (Open Questions) of the generated `product/info.md`. Never silently resolve a marker.
+
+### Step 4: Handle existing info.md in product/
+
+If `${FEATURE_DIR}/product/info.md` already exists:
+
+- Print the absolute path of the existing file.
+- Ask: `product/info.md already exists. Overwrite? (yes/no)`
+- On `no` or any non-affirmative response, abort with `E_USER_ABORT`. Do not write any files.
+- On `yes`, continue. The existing `product/info.md` will be replaced byte for byte.
+
+If `${FEATURE_DIR}/product/` does not exist yet, create it before writing.
+
+### Step 5: Generate product/info.md
+
+Read `templates/product-info-template.md`. Replace every bracketed placeholder with concrete content drawn from `spec.md`. Apply the following rules without exception.
+
+#### Style rules (enforced)
+
+1. **English only.** All output is in English.
+2. **No em dash.** The character `—` MUST NOT appear in the output. Use commas, parentheses, colons, semicolons, or sentence breaks. Hyphens (`-`) are allowed.
+3. **Plain English.** Active voice, short sentences, human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb without a concrete object), "robust" (without a measurable target).
+4. **No implementation detail.** No frameworks, languages, APIs, data stores, code, or file paths. The single allowed file path is the link to `../spec.md` in the metadata block.
+5. **Bullets are short. Prose is full sentences.**
+
+#### Section rules
+
+- **Mandatory sections (1 through 3)**: always present, in canonical order, populated. If the source spec lacks information for a mandatory section, do NOT fabricate. Populate the section with what is known, and add a precise question to Section 5.
+- **Optional section (4 Risks)**: include ONLY when the spec contains concrete risk signals: dependencies at risk, architectural constraints, assumptions that might be wrong, or integration points likely to break. Apply the pre-mortem lens: imagine the feature shipped and failed, then name the two to four most likely causes drawn from the spec. Do not emit generic risk platitudes. Remove the entire section when the spec has no meaningful risk signals.
+- **Optional section (5 Open Questions)**: include ONLY when at least one `[NEEDS CLARIFICATION]` marker was surfaced AND the user confirmed at the prompt. Do not emit an empty Section 5. Do not write `N/A`. Remove the entire heading and its contents when not used.
+
+#### Header metadata
+
+- `Feature` field: the feature directory name (the segment after `specs/` in `FEATURE_DIR`).
+- `Source Spec` field: the literal markdown link `[spec.md](../spec.md)`.
+- `Created` field: today's date in `YYYY-MM-DD`.
+- `Status` field: `Draft`.
+
+#### Section guidance
+
+- **Section 1 (Headline)**: one paragraph, two to four sentences. State who this is for, what is changing for them, and the new outcome they can reach. No internal jargon, no feature lists, no implementation detail.
+- **Section 2 (What is Changing)**: two to five short bullets, or one short paragraph. State customer-observable differences after the feature ships. Each bullet is a single sentence ending with a period.
+- **Section 3 (Out of Scope)**: a short scannable list of what is explicitly not included, even though a reasonable reader might expect it. Always populate it. Each item is one short sentence with a one-phrase reason.
+- **Section 4 (Risks, optional)**: pre-mortem analysis. Imagine the feature shipped and quietly failed six months from now. What caused it? Two to four bullets, each naming one concrete risk drawn from the spec and its consequence. Prioritise: technical or architectural impact (integration points, data model assumptions, dependency on another team's work, performance constraints), followed by delivery risks (scope creep, unclear ownership, missing prerequisite). Skip generic risks. If the spec has nothing that signals real risk, omit the section entirely.
+- **Section 5 (Open Questions, optional)**: each confirmed `[NEEDS CLARIFICATION]` marker becomes one bullet as a single-sentence question.
+
+### Step 6: Write the file atomically
+
+Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `info.md`. This avoids leaving partial output if the process is interrupted. Create `${FEATURE_DIR}/product/` if it does not exist.
+
+### Step 7: Print a status report
+
+```text
+Wrote: <abs path>/product/info.md
+Sections populated: 3 mandatory[, 4 (Risks)][, 5 (Open Questions)]
+Open product questions surfaced: <N>
+```
+
+The `4 (Risks)` segment appears only when Section 4 is present. The `5 (Open Questions)` segment appears only when Section 5 is present. `<N>` is the count of `[NEEDS CLARIFICATION]` markers surfaced. If no markers were present, `<N>` is `0`.
+
+## Refusal Output Format
+
+On any refusal, print exactly one line of the form:
+
+```text
+[product-info] <CODE>: <human readable remediation>
+```
+
+When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholder.
+
+## Error Codes
+
+| Code | Condition |
+|------|-----------|
+| E_NO_PROJECT | No `.specify/` directory in any ancestor of the working directory. |
+| E_NO_POINTER | `.specify/feature.json` missing and `--feature-dir` not provided. |
+| E_BAD_POINTER | Feature directory in the pointer does not exist. |
+| E_NO_SPEC | `spec.md` missing in the feature directory. |
+| E_PLACEHOLDERS | `spec.md` still contains template placeholders. |
+| E_LANGUAGE | `spec.md` is not in English. |
+| E_USER_ABORT | User chose abort at the overwrite prompt or declined to surface clarifications. |
+
+## Idempotence
+
+Two consecutive runs against the same `spec.md`, with the user choosing overwrite on the second run, produce a `product/info.md` whose content is byte-identical except for the `Created` field if the date has rolled over.
+
+The command never modifies `spec.md`.

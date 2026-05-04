@@ -1,7 +1,7 @@
 # Product Spec Quality Checklist: [FEATURE NAME]
 
 **Source Spec**: [spec.md](../spec.md)
-**Product Spec**: [product-spec.md](./product-spec.md)
+**Product Spec**: [spec.md](./spec.md)
 **Created**: [DATE]
 
 ## Structure

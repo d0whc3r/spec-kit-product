@@ -3,7 +3,7 @@ schema_version: "1.0"
 extension:
   id: product
   name: "Product Spec Extension"
-  version: "0.1.0"
+  version: "0.2.0"
   description: "Generates a product oriented spec from an existing technical spec.md, following Working Backwards, Jobs to Be Done, Gherkin BDD, and Lean PRD conventions."
   author: spec-kit-product contributors
   repository: https://github.com/d0whc3r/spec-kit-product
@@ -17,6 +17,9 @@ provides:
     - name: speckit.product.spec
       file: commands/speckit.product.spec.md
       description: "Generate a product spec and quality checklist from the current feature's spec.md"
+    - name: speckit.product.info
+      file: commands/speckit.product.info.md
+      description: "Generate a short, stakeholder-readable product-info.md from the current feature's spec.md"
 
 tags:
   - product
