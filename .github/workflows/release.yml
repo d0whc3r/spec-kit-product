@@ -19,8 +19,6 @@ jobs:
   validate-manifest:
     name: validate-manifest
     runs-on: ubuntu-latest
-    # Skip on commits authored by the release bot to prevent recursive triggers.
-    if: github.event_name != 'push' || github.event.head_commit.author.name != 'github-actions[bot]'
     steps:
       - uses: actions/checkout@v4
       - name: Run validate-manifest.sh
@@ -72,7 +70,6 @@ jobs:
     name: lint-content
     runs-on: ubuntu-latest
     needs: validate-manifest
-    if: github.event_name != 'push' || github.event.head_commit.author.name != 'github-actions[bot]'
     steps:
       - uses: actions/checkout@v4
       - name: Install markdownlint-cli2

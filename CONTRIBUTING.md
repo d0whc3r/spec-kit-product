@@ -52,11 +52,29 @@ ls dist/
 
 ## Cutting a Release
 
-1. Bump `extension.yml#extension.version` (semver).
-2. Add a `## [X.Y.Z] - YYYY-MM-DD` section to `CHANGELOG.md` with release notes.
-3. Commit on the default branch.
-4. Tag: `git tag vX.Y.Z && git push origin vX.Y.Z`.
-5. The release pipeline runs the six gated jobs (validate, lint, build, publish, update catalog). If any gate fails, fix the underlying issue and retag with the next patch version. Re-tagging an already-released version is forbidden by the pipeline.
+The recommended path is the **prepare-release** workflow, which keeps `extension.yml`, `CHANGELOG.md`, and the git tag coherent in a single step.
+
+1. Make sure the work you want to ship is on the default branch and CI is green.
+2. Add the release notes for the upcoming version under the `## [Unreleased]` section of `CHANGELOG.md` (commit them as part of normal feature work, not at release time).
+3. From the repo's GitHub Actions tab, run the **prepare-release** workflow with `version: X.Y.Z` (semver, no `v` prefix).
+4. The workflow will:
+   - Refuse if the tag `vX.Y.Z` already exists.
+   - Bump `extension.yml#extension.version` to `X.Y.Z`.
+   - Promote the `## [Unreleased]` section in `CHANGELOG.md` to `## [X.Y.Z] - <today>` and seed a new empty `## [Unreleased]` section.
+   - Validate the manifest and lint content.
+   - Commit `chore(release): bump version to X.Y.Z` as the release bot.
+   - Create and push tag `vX.Y.Z`.
+5. The tag push fires the **release** workflow (validate, lint, build zip, publish GitHub Release, update catalog). If any gate fails, push a fix and rerun **prepare-release** with the next patch version. Re-tagging an already-released version is forbidden.
+
+If you need to bump locally instead, run:
+
+```bash
+bash .github/scripts/bump-version.sh X.Y.Z
+git add extension.yml CHANGELOG.md
+git commit -m "chore(release): bump version to X.Y.Z"
+git tag vX.Y.Z
+git push origin HEAD vX.Y.Z
+```
 
 ## Branch Naming
 

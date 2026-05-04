@@ -76,12 +76,14 @@ if [ -n "${GITHUB_REF_NAME:-}" ]; then
     fi
 fi
 
-# Required files at the root of $ROOT (zip root or extension/ subtree).
+# Required files at the root of $ROOT (zip root or repo root).
+# CHANGELOG.md lives at the repo root for release-note extraction and version
+# bumps, but is excluded from the release zip via .extensionignore (matching
+# the bundled `git` extension's layout). It is therefore not required here.
 REQUIRED=(
     "$ROOT/extension.yml"
     "$ROOT/README.md"
     "$ROOT/LICENSE"
-    "$ROOT/CHANGELOG.md"
     "$ROOT/commands/speckit.product.spec.md"
     "$ROOT/templates/product-spec-template.md"
     "$ROOT/templates/product-checklist-template.md"
