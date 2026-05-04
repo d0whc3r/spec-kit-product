@@ -147,13 +147,88 @@ An optional **Open Questions** section (Section 5) appears if the source spec co
 | `[product-info] E_LANGUAGE: ...` | `spec.md` is not in English. | Translate `spec.md` to English first. The command does not auto-translate. |
 | `[product-info] E_USER_ABORT: ...` | You answered "no" at the overwrite or clarification prompt. | Re-run when ready. |
 
+---
+
+## /speckit-product-plan
+
+`/speckit-product-plan` is a sibling command to `/speckit-product-spec` and `/speckit-product-info`. It reads the engineering `plan.md` produced by `/speckit-plan` and generates a high-level, product-oriented `product/plan.md` that answers "how are we building this?" for product managers, engineering leads, and cross-functional reviewers.
+
+The output uses Shape Up appetite framing for phases, a NOW/NEXT/LATER delivery view, C4 container-level component descriptions, and condensed ADR (Architecture Decision Record) summaries for key decisions. Technical terms appear with a plain-language gloss on their first use. No code, no file paths, no detailed task breakdowns.
+
+### Prerequisites
+
+- Spec Kit `>=0.2.0` initialized in the current project.
+- The `product` extension installed at version `>=0.3.0`.
+- A feature directory under `specs/` with a populated `plan.md` (run `/speckit-plan` first if needed).
+
+### Install or upgrade
+
+```bash
+specify extension add product
+# upgrade:
+specify extension upgrade product
+```
+
+After the install, `/speckit-product-spec`, `/speckit-product-info`, and `/speckit-product-plan` are all available.
+
+### Invoke
+
+```text
+/speckit-product-plan
+```
+
+Run it from any working directory inside a Spec Kit project. To target a specific feature, pass the override:
+
+```text
+/speckit-product-plan --feature-dir specs/<feature-dir>
+```
+
+The command reads:
+
+- `<feature-dir>/plan.md` (required)
+- `<feature-dir>/spec.md` (optional, used for supplementary context)
+
+The command writes:
+
+- `<feature-dir>/product/plan.md`
+
+The `product/` subfolder is created if it does not exist. `plan.md` and `spec.md` are never modified.
+
+### Output
+
+The generated file contains three mandatory sections and up to four optional sections:
+
+**Mandatory**:
+1. **Summary** - one paragraph: what is being built, why now, and the main approach.
+2. **Delivery Phases** - three bands: NOW (current phases), NEXT (natural follow-on, not a commitment), LATER (explicitly deferred work).
+3. **Out of Scope** - a short, scannable list of what is deliberately excluded.
+
+**Optional** (included only when the source plan has relevant content):
+4. **Component Overview** - main system parts this feature adds, modifies, or depends on at the container level.
+5. **Key Technical Decisions** - condensed ADR format: Decision, Why, Trade-off.
+6. **Risks** - pre-mortem lens: two to four concrete risks drawn from the plan.
+7. **Open Questions** - open items or marked assumptions from the plan.
+
+### Error codes
+
+| Code | Cause | Fix |
+|------|-------|-----|
+| `E_NO_PROJECT` | Running outside a Spec Kit project. | `cd` into a project with `.specify/`, or run `specify init` first. |
+| `E_NO_POINTER` | No active feature recorded and `--feature-dir` not passed. | Run `/speckit-plan` first, or pass `--feature-dir <path>`. |
+| `E_NO_PLAN` | Feature directory has no `plan.md`. | Run `/speckit-plan` to generate the engineering plan first. |
+| `E_PLACEHOLDERS` | `plan.md` still contains unfilled template placeholders. | Fill in or regenerate `plan.md` before running this command. |
+| `E_LANGUAGE` | `plan.md` is not in English. | Translate `plan.md` to English first. The command does not auto-translate. |
+| `E_USER_ABORT` | You answered "no" at the overwrite prompt. | Re-run when ready. |
+
 ## Related Files
 
 - `commands/speckit.product.spec.md`: the `/speckit-product-spec` slash command body.
 - `commands/speckit.product.info.md`: the `/speckit-product-info` slash command body.
+- `commands/speckit.product.plan.md`: the `/speckit-product-plan` slash command body.
 - `templates/product-spec-template.md`: the canonical output template for `/speckit-product-spec`.
 - `templates/product-checklist-template.md`: the canonical quality checklist template.
 - `templates/product-info-template.md`: the canonical output template for `/speckit-product-info`.
+- `templates/product-plan-template.md`: the canonical output template for `/speckit-product-plan`.
 - `scripts/bash/resolve-feature-dir.sh` and `scripts/powershell/resolve-feature-dir.ps1`: cross-platform feature directory resolver.
 
 ## License
