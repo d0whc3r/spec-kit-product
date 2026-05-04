@@ -1,0 +1,12 @@
+# Build artifacts
+dist/
+
+# Editor and OS metadata
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.tmp
+
+# Dependency caches (none expected, but defensive)
+node_modules/

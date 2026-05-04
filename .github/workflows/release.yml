@@ -1,0 +1,185 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+# The release-bot identity used by the update-catalog job. Defining it once at
+# the workflow level keeps it consistent with the recursive-trigger guard.
+env:
+  RELEASE_BOT_NAME: github-actions[bot]
+  RELEASE_BOT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+
+jobs:
+  validate-manifest:
+    name: validate-manifest
+    runs-on: ubuntu-latest
+    # Skip on commits authored by the release bot to prevent recursive triggers.
+    if: github.event_name != 'push' || github.event.head_commit.author.name != 'github-actions[bot]'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run validate-manifest.sh
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: bash scripts/validate-manifest.sh
+
+  validate-catalog:
+    name: validate-catalog
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Block edits to pipeline-owned fields in catalog.json
+        run: |
+          set -e
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          if ! git diff --name-only "$BASE_SHA"...HEAD | grep -q '^catalog.json$'; then
+            echo "[validate-catalog] catalog.json not modified, skipping"
+            exit 0
+          fi
+          # Compare base vs head copies of catalog.json on the pipeline-owned fields only.
+          git show "$BASE_SHA:catalog.json" > /tmp/catalog.base.json
+          for field in version download_url updated_at created_at; do
+            BASE_VAL=$(jq -r ".$field // \"\"" /tmp/catalog.base.json)
+            HEAD_VAL=$(jq -r ".$field // \"\"" catalog.json)
+            if [ "$BASE_VAL" != "$HEAD_VAL" ]; then
+              echo "[validate-catalog] FAIL: PR modifies pipeline-owned field '$field' ($BASE_VAL -> $HEAD_VAL)" >&2
+              exit 1
+            fi
+          done
+          BASE_REQ=$(jq -r '.requires.speckit_version // ""' /tmp/catalog.base.json)
+          HEAD_REQ=$(jq -r '.requires.speckit_version // ""' catalog.json)
+          if [ "$BASE_REQ" != "$HEAD_REQ" ]; then
+            echo "[validate-catalog] FAIL: PR modifies pipeline-owned field 'requires.speckit_version'" >&2
+            exit 1
+          fi
+          BASE_ID=$(jq -r '.id // ""' /tmp/catalog.base.json)
+          HEAD_ID=$(jq -r '.id // ""' catalog.json)
+          if [ "$BASE_ID" != "$HEAD_ID" ]; then
+            echo "[validate-catalog] FAIL: PR changes catalog.json#id (always breaking)" >&2
+            exit 1
+          fi
+          echo "[validate-catalog] OK"
+
+  lint-content:
+    name: lint-content
+    runs-on: ubuntu-latest
+    needs: validate-manifest
+    if: github.event_name != 'push' || github.event.head_commit.author.name != 'github-actions[bot]'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install markdownlint-cli2
+        run: npm install -g markdownlint-cli2
+      - name: Run lint-content.sh
+        run: bash scripts/lint-content.sh
+
+  build-zip:
+    name: build-zip
+    runs-on: ubuntu-latest
+    needs: [validate-manifest, lint-content]
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    outputs:
+      version: ${{ steps.read-version.outputs.version }}
+      zip_name: ${{ steps.read-version.outputs.zip_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read version
+        id: read-version
+        run: |
+          VERSION=$(awk '/^extension:/{f=1; next} f && /^[a-z]/{f=0} f && /^[[:space:]]+version:/{ sub(/^[[:space:]]+version:[[:space:]]*/, ""); gsub(/"/,""); print; exit }' extension/extension.yml)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "zip_name=product-${VERSION}.zip" >> "$GITHUB_OUTPUT"
+      - name: Build deterministic zip
+        env:
+          SOURCE_DATE_EPOCH: ${{ github.event.head_commit.timestamp && '' || '' }}
+        run: |
+          # Use the tagged commit's timestamp for reproducibility.
+          export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct "${{ github.sha }}")
+          bash scripts/build-zip.sh
+      - name: Upload zip artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.read-version.outputs.zip_name }}
+          path: dist/${{ steps.read-version.outputs.zip_name }}
+          if-no-files-found: error
+
+  publish-release:
+    name: publish-release
+    runs-on: ubuntu-latest
+    needs: build-zip
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    outputs:
+      download_url: ${{ steps.gh-release.outputs.download_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download zip artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build-zip.outputs.zip_name }}
+          path: dist
+      - name: Extract changelog section for tag
+        id: changelog
+        run: |
+          VERSION="${{ needs.build-zip.outputs.version }}"
+          # Grab the section between "## [VERSION]" and the next "## [" line.
+          BODY=$(awk -v v="[$VERSION]" '$0 ~ "^## " v {found=1; next} found && /^## \[/ {exit} found {print}' extension/CHANGELOG.md)
+          if [ -z "$BODY" ]; then
+            BODY="Release v$VERSION"
+          fi
+          {
+            echo 'body<<EOF'
+            echo "$BODY"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+      - name: Create GitHub Release and attach asset
+        id: gh-release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ needs.build-zip.outputs.version }}"
+          ZIP_NAME="${{ needs.build-zip.outputs.zip_name }}"
+          gh release create "v$VERSION" "dist/$ZIP_NAME" \
+            --title "v$VERSION" \
+            --notes "${{ steps.changelog.outputs.body }}"
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/v$VERSION/$ZIP_NAME"
+          echo "download_url=$DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
+
+  update-catalog:
+    name: update-catalog
+    runs-on: ubuntu-latest
+    needs: [build-zip, publish-release]
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+      - name: Update catalog.json
+        run: |
+          bash scripts/update-catalog.sh \
+            "${{ needs.build-zip.outputs.version }}" \
+            "${{ needs.publish-release.outputs.download_url }}"
+      - name: Commit and push
+        run: |
+          git config user.name "$RELEASE_BOT_NAME"
+          git config user.email "$RELEASE_BOT_EMAIL"
+          git add catalog.json
+          if git diff --cached --quiet; then
+            echo "[update-catalog] no changes to commit"
+            exit 0
+          fi
+          git commit -m "chore(release): catalog v${{ needs.build-zip.outputs.version }}"
+          git push origin "${{ github.event.repository.default_branch }}"

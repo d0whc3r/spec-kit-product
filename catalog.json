@@ -1,0 +1,17 @@
+{
+  "name": "Product Spec Extension",
+  "id": "product",
+  "description": "Generates a product oriented spec from an existing technical spec.md, following Working Backwards, Jobs to Be Done, Gherkin BDD, and Lean PRD conventions.",
+  "author": "spec-kit-product contributors",
+  "version": "",
+  "download_url": "",
+  "repository": "https://github.com/d0whc3r/spec-kit-product",
+  "license": "MIT",
+  "requires": {
+    "speckit_version": ">=0.2.0"
+  },
+  "tags": ["product", "spec", "prd", "documentation"],
+  "verified": false,
+  "created_at": "",
+  "updated_at": ""
+}

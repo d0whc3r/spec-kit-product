@@ -1,0 +1,29 @@
+# Files and patterns excluded from the release zip.
+# Glob patterns, one per line. Lines starting with # are comments.
+# Matched against paths relative to the extension/ root.
+#
+# Required files (kept regardless of this file):
+#   extension.yml, README.md, LICENSE, CHANGELOG.md,
+#   commands/**, templates/**, scripts/{bash,powershell}/**
+
+# This file itself is build metadata, not part of the installed extension.
+.extensionignore
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Editor metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Scratch and temp
+*.tmp
+*.bak
+*.log
+
+# Dependency caches (defensive)
+node_modules/
