@@ -56,7 +56,7 @@ Capture the printed path as `FEATURE_DIR`.
 Refuse to proceed when:
 
 1. **E_NO_PLAN**: `${FEATURE_DIR}/plan.md` does not exist. Tell the user to run `/speckit-plan` first.
-2. **E_PLACEHOLDERS**: `plan.md` still contains literal placeholders from the Spec Kit `plan-template.md`. Detect these by looking for any of the following exact bracketed strings as substrings of the file (case sensitive):
+2. **E_PLACEHOLDERS**: `plan.md` still contains literal placeholders from the plan template. Detect these by looking for any of the following exact bracketed strings as substrings of the file (case sensitive):
    - `[FEATURE]`
    - `[DATE]`
    - `[###-feature-name]`
@@ -101,7 +101,7 @@ Read `templates/product-plan-template.md`. Populate all sections from `plan.md` 
 1. **English only.** All output is in English.
 2. **No em dash.** The character `—` MUST NOT appear in the output. Use commas, parentheses, colons, semicolons, or sentence breaks. Hyphens (`-`) are allowed.
 3. **Plain English.** Active voice, short sentences, human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb without a concrete object), "robust" (without a measurable target).
-4. **No implementation detail.** No frameworks, languages, APIs, data stores, code, or file paths. The only allowed file path is `[plan.md](../plan.md)` in the metadata block.
+4. **No implementation detail.** No frameworks, languages, APIs, data stores, code, or file paths.
 5. **Technical terms glossed on first use.** The following terms must carry a plain-language gloss in parentheses on the same line as their first occurrence: "API" (application programming interface), "CLI" (command-line interface), "SDK" (software development kit), "refactor" (restructure existing code without changing its behavior), "idempotent" (produces the same result when run multiple times), "atomic" (all-or-nothing operation), "schema" (structured definition of data), "linter" (automated style and error checker), "manifest" (declaration file listing components or contents), "hook" (event-triggered extension point), "pipeline" (automated sequence of steps). Subsequent occurrences of the same term require no gloss.
 6. **Bullets are short. Prose is full sentences.**
 7. **No invented content.** Do not invent phases, decisions, or components not present in the source `plan.md`.
@@ -116,8 +116,7 @@ Read `templates/product-plan-template.md`. Populate all sections from `plan.md` 
 
 #### Header metadata
 
-- `Feature` field: the feature directory name (the segment after `specs/` in `FEATURE_DIR`).
-- `Source Plan` field: the literal markdown link `[plan.md](../plan.md)`.
+- `Feature` field: the H1 title of `plan.md` (the text of the first `#` heading, stripped of the `#` prefix and trimmed). If no H1 is present, fall back to the H1 of `spec.md` when available. If neither has an H1, use the feature directory name with any leading numeric prefix and hyphens removed (e.g., `003-my-feature` becomes `My Feature`, capitalised as title case).
 - `Created` field: today's date in `YYYY-MM-DD`.
 - `Status` field: `Draft`.
 

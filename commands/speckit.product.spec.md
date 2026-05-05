@@ -56,7 +56,7 @@ Capture the printed path as `FEATURE_DIR`.
 Refuse to proceed when:
 
 1. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `/speckit-specify` first.
-2. **E_PLACEHOLDERS**: `spec.md` still contains literal placeholders from the Spec Kit `spec-template.md`. Detect these by looking for any of the following exact bracketed strings as substrings of the file (case sensitive):
+2. **E_PLACEHOLDERS**: `spec.md` still contains literal placeholders from the spec template. Detect these by looking for any of the following exact bracketed strings as substrings of the file (case sensitive):
    - `[FEATURE NAME]`
    - `[Brief Title]`
    - `[Describe this user journey in plain language]`
@@ -103,7 +103,7 @@ Read `templates/product-spec-template.md`. Replace every bracketed placeholder w
 1. **English only.** All output is in English.
 2. **No em dash.** The character `—` MUST NOT appear in the output. Use commas, parentheses, colons, semicolons, or sentence breaks. Hyphens (`-`) are allowed.
 3. **Plain English.** Active voice, short sentences, human tone. Avoid AI tells: do not use "delve", "tapestry", "in essence", "navigate the landscape", or similar filler.
-4. **No implementation detail.** No frameworks, languages, APIs, data stores, code, or file paths. The single allowed file path is the link to `../spec.md` in the metadata block.
+4. **No implementation detail.** No frameworks, languages, APIs, data stores, code, or file paths.
 5. **Bullets are short. Prose is full sentences.**
 
 #### Section rules
@@ -141,8 +141,7 @@ Provide exactly one north star metric and at least one supporting metric. Each m
 
 #### Header metadata
 
-- `Feature` field: the feature directory name (the segment after `specs/` in `FEATURE_DIR`).
-- `Source Spec` field: the literal markdown link `[spec.md](../spec.md)` (the source spec lives one level above the `product/` folder).
+- `Feature` field: the H1 title of `spec.md` (the text of the first `#` heading, stripped of the `#` prefix and trimmed). If no H1 is present, use the feature directory name with any leading numeric prefix and hyphens removed (e.g., `003-my-feature` becomes `My Feature`, capitalised as title case).
 - `Created` field: today's date in `YYYY-MM-DD`.
 - `Status` field: `Draft`.
 

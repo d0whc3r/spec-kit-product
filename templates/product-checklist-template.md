@@ -1,6 +1,5 @@
 # Product Spec Quality Checklist: [FEATURE NAME]
 
-**Source Spec**: [spec.md](../spec.md)
 **Product Spec**: [spec.md](./spec.md)
 **Created**: [DATE]
 
@@ -28,12 +27,12 @@
 
 ## Content
 
-- [ ] No implementation detail appears in the document (no frameworks, languages, APIs, data stores, code, or file paths other than the cross link to `../spec.md`).
+- [ ] No implementation detail appears in the document (no frameworks, languages, APIs, data stores, code, or file paths).
 - [ ] The Job to Be Done uses an action verb and does not name a solution.
 - [ ] Each Use Case scenario describes behavior, not implementation.
 - [ ] Each metric in Section 8 is measurable and technology agnostic.
 - [ ] Every `[NEEDS CLARIFICATION]` marker present in the source spec is surfaced in Section 9 as an open product question, not silently resolved.
-- [ ] The header contains a working link back to the source spec at `../spec.md`.
+- [ ] The header contains `Feature` and `Created` fields with non-placeholder values.
 
 ## Optional sections
 

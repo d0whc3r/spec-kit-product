@@ -1,7 +1,6 @@
 # Product Plan: [FEATURE NAME]
 
-**Feature**: [###-feature-name]
-**Source Plan**: [plan.md](../plan.md)
+**Feature**: [FEATURE NAME]
 **Created**: [DATE]
 **Status**: Draft
 
