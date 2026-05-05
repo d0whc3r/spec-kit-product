@@ -1,10 +1,10 @@
 ---
-description: "Generate a short, stakeholder-readable info.md from the current feature's spec.md"
+description: "Generate a short, stakeholder-readable info.md from the current feature's spec.md and update the shared quality checklist"
 ---
 
 # Generate Product Info
 
-Derive a stakeholder-facing `product/info.md` from the populated `spec.md` of the active feature. The artifact is a single-page plain-language summary that answers "what is changing and why" for a non-technical reader. It follows the same style rules as `/speckit-product-spec`: English only, no em dash, plain English, active voice, full sentences, no implementation detail, and no AI-tell filler phrases.
+Derive a stakeholder-facing `product/info.md` from the populated `spec.md` of the active feature, then auto-validate and update the `## Info` section of the shared `product/checklist.md`. The artifact is a single-page plain-language summary that answers "what is changing and why" for a non-technical reader. It follows the same style rules as `/speckit-product-spec`: English only, no em dash, plain English, active voice, full sentences, no implementation detail, and no AI-tell filler phrases.
 
 ## User Input
 
@@ -24,8 +24,9 @@ The command reads (does not modify):
 The command writes:
 
 - `<feature-dir>/product/info.md`
+- `<feature-dir>/product/checklist.md` (creates if absent; otherwise updates only the `## Info` section, preserving all other sections)
 
-The command never modifies `product/spec.md`, `plan.md`, `tasks.md`, `checklist.md`, `.specify/feature.json`, `.specify/extensions.yml`, or any file outside the resolved feature directory.
+The command never modifies `product/spec.md`, `plan.md`, `tasks.md`, `.specify/feature.json`, `.specify/extensions.yml`, or any file outside the resolved feature directory.
 
 ## Templates
 
@@ -129,15 +130,66 @@ Read `templates/product-info-template.md`. Replace every bracketed placeholder w
 
 Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `info.md`. This avoids leaving partial output if the process is interrupted. Create `${FEATURE_DIR}/product/` if it does not exist.
 
+### Step 6b: Prepare product/checklist.md
+
+If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
+- Read `templates/product-checklist-template.md`.
+- Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
+- Write the file. All three sections start with the "not yet generated" placeholder state.
+
+If the file **already exists**, read its current content. You will replace only the `## Info` section (between the `## Info` heading and the next `---` horizontal rule) below. All other sections and `## Needs Review` are preserved verbatim.
+
+### Step 6c: Auto-validate and iterate (Info section)
+
+**Goal: all Info checklist items checked. Zero manual items if possible.**
+
+After writing `info.md`, evaluate each item below against the file content. For each failing item that is auto-fixable: rewrite the affected portion of `info.md` in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
+
+| Checklist item | Rule | Auto-fixable? |
+|---|---|---|
+| Section 1 (Headline) present with ≥1 paragraph | `## 1.` heading exists; ≥1 non-empty paragraph before next `##` | Yes |
+| Section 2 (What is Changing) present with ≥1 item | `## 2.` exists; ≥1 bullet or prose paragraph | Yes |
+| Section 3 (Out of Scope) present with ≥1 item | `## 3.` exists; ≥1 bullet | Yes |
+| Section 4 (Risks) present only when source spec has risk signals | If Section 4 is absent and no risk signals detected in `spec.md`: pass. If present and `spec.md` has no risk signals: flag as over-generated. | Yes — remove section if no signals |
+| Section 5 (Open Questions) matches NEEDS CLARIFICATION count | Count of `[NEEDS CLARIFICATION` in source equals bullets in `## 5.`; or both zero | Yes — add missing questions |
+| Sections in canonical order 1–3 (4 and 5 optional) | Heading numbers appear in strictly ascending sequence | Yes — reorder |
+| Written entirely in English | Dominant language of prose is English | No — source was validated in Step 2 |
+| No em dash (`—`) | Character `—` absent from entire file | Yes — replace with comma, colon, or semicolon |
+| No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting", "it should be noted" (case-insensitive) | Yes — rewrite sentence |
+| Bullets are short (≤12 words each) | Every `- ` line contains ≤12 words | Yes — split or shorten |
+| No implementation detail | File does not contain: file extensions (`.js`, `.ts`, `.py`, `.go`, `.java`, `.rb`, `.sql`), HTTP verbs (`GET `, `POST `, `PUT `, `DELETE `), code fences, database names (`PostgreSQL`, `MySQL`, `Redis`, `MongoDB`, `DynamoDB`, `S3`) | Yes — remove or rephrase |
+| Header has non-placeholder Feature and Created | File has `Feature:` and `Created: YYYY-MM-DD` with real values | Yes — set from context |
+
+**Checklist structure for the `## Info` section**: replace the section content with:
+
+```markdown
+## Info (`product/info.md`)
+
+**Validated**: [DATE] · [PASSED]/[TOTAL] items
+
+- [x] ...  (passing items)
+- [ ] ...  (failing items, if any — see ## Needs Review)
+```
+
+**`## Needs Review` section**: rebuild the `## Needs Review` section at the bottom by aggregating all `- [ ]` items from all three sections. Each entry includes a one-sentence explanation of what to look for. If no items remain unchecked, write:
+
+```markdown
+## Needs Review
+
+> All items auto-validated. No manual review required.
+```
+
 ### Step 7: Print a status report
 
 ```text
 Wrote: <abs path>/product/info.md
+Updated: <abs path>/product/checklist.md  §Info
 Sections populated: 3 mandatory[, 4 (Risks)][, 5 (Open Questions)]
 Open product questions surfaced: <N>
+Info checklist: <PASSED>/<TOTAL> auto-validated[, <REMAINING> need manual review]
 ```
 
-The `4 (Risks)` segment appears only when Section 4 is present. The `5 (Open Questions)` segment appears only when Section 5 is present. `<N>` is the count of `[NEEDS CLARIFICATION]` markers surfaced. If no markers were present, `<N>` is `0`.
+The `[, <REMAINING> need manual review]` segment is omitted when all info items pass. `<N>` is the count of `[NEEDS CLARIFICATION]` markers surfaced. If no markers were present, `<N>` is `0`.
 
 ## Refusal Output Format
 

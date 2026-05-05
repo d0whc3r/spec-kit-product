@@ -1,10 +1,10 @@
 ---
-description: "Generate a product oriented spec.md and quality checklist from the current feature's spec.md"
+description: "Generate a product oriented spec.md and update the shared quality checklist from the current feature's spec.md"
 ---
 
 # Generate Product Spec
 
-Derive a stakeholder facing `product/spec.md` from the populated `spec.md` of the active feature, and write a paired quality checklist. The artifact follows Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain English, with strict style rules.
+Derive a stakeholder facing `product/spec.md` from the populated `spec.md` of the active feature, then auto-validate and update the `## Spec` section of the shared `product/checklist.md`. The artifact follows Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain English, with strict style rules.
 
 ## User Input
 
@@ -21,10 +21,10 @@ The command reads (does not modify):
 - `.specify/feature.json` to locate the active feature directory.
 - `<feature-dir>/spec.md` as the source spec.
 
-The command writes (all generated artifacts live under a single `product/` subfolder so they can be read, exported, and shared as a self-contained bundle):
+The command writes:
 
 - `<feature-dir>/product/spec.md`
-- `<feature-dir>/product/checklist.md`
+- `<feature-dir>/product/checklist.md` (creates if absent; otherwise updates only the `## Spec` section, preserving all other sections)
 
 ## Templates
 
@@ -145,50 +145,79 @@ Provide exactly one north star metric and at least one supporting metric. Each m
 - `Created` field: today's date in `YYYY-MM-DD`.
 - `Status` field: `Draft`.
 
-### Step 6: Generate product/checklist.md
+### Step 6: Prepare product/checklist.md
 
-Read `templates/product-checklist-template.md`. Replace bracketed placeholders:
+If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
+- Read `templates/product-checklist-template.md`.
+- Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
+- Write the file. All three sections (`## Info`, `## Spec`, `## Plan`) start with the "not yet generated" placeholder state.
 
-- `[FEATURE NAME]`: the feature title used in `product/spec.md` Section 1 heading.
-- `[DATE]`: today's date in `YYYY-MM-DD`.
+If the file **already exists**, read its current content. You will replace only the `## Spec` section (between the `## Spec` heading and the next `---` horizontal rule) in Step 6b. All other sections and the `## Needs Review` section are preserved verbatim.
 
 If `${FEATURE_DIR}/product/` does not exist, create it.
 
-### Step 6b: Auto-validate checklist against generated spec
+### Step 6b: Auto-validate and iterate (Spec section)
 
-After composing the full text of `product/spec.md` (in memory, before writing), evaluate every checklist item against it. For each item, apply the validation rule below. Mark passing items `- [x]` and failing or indeterminate items `- [ ]`.
+**Goal: all checklist items checked. Zero manual items if possible.**
 
-**Validation rules per item**
+After composing the full text of `product/spec.md` in memory (before writing), run validation pass 1. For each failing item: rewrite the affected portion of the spec in memory to fix it, then re-evaluate. Repeat until all fixable items pass. Only classify an item as requiring manual review when rewriting cannot fix it because the criterion is inherently semantic or subjective.
 
-| Item (keyword match) | Pass condition |
-|---|---|
-| Section 1, Headline, is present | H2 `## 1.` exists and has ≥1 non-empty paragraph |
-| Section 2, Target Users | H2 `## 2.` exists and lists ≥1 persona |
-| Section 3, Problem Statement | H2 `## 3.` exists and contains "When", "I want to", "so I can" in a single sentence |
-| Section 4, Value Proposition | H2 `## 4.` exists and has ≥1 non-empty line of prose |
-| Section 5, Scope | H2 `## 5.` exists and lists ≥1 bullet |
-| Section 6, Out of Scope | H2 `## 6.` exists and lists ≥1 bullet |
-| Section 7, Use Cases | H2 `## 7.` exists and contains ≥1 **Given** / **When** / **Then** block |
-| Section 8, Success Metrics | H2 `## 8.` exists, has exactly one north star metric, and ≥1 supporting metric |
-| Section 9, Risks and Open Product Questions | H2 `## 9.` exists |
-| Sections appear in canonical order | H2 headings numbered 1–9 appear in strictly ascending order |
-| written entirely in English | Dominant language of prose paragraphs is English |
-| no em dash character | The `—` character does not appear anywhere in the file |
-| every Use Case scenario contains exactly one Given, When, Then | Every scenario block under `## 7.` has exactly one `**Given**`, one `**When**`, one `**Then**` line |
-| Every Given, When, and Then line is a full sentence beginning with the keyword | Each `**Given**`/`**When**`/`**Then**` line starts with the keyword (after `**bold**`) and ends with `.` |
-| no implementation detail | The document does not contain any of: framework names, file extension patterns (`.js`, `.ts`, `.py`, etc.), HTTP method verbs (`GET`, `POST`, `PUT`, `DELETE`), database names, or code fences |
-| Job to Be Done uses an action verb | The "When…I want to…so I can…" sentence has an action verb after "I want to" |
-| header contains Feature and Created fields | File starts with lines matching `Feature:` and `Created: YYYY-MM-DD` with non-placeholder values |
-| NEEDS CLARIFICATION markers surfaced | Count of `[NEEDS CLARIFICATION` in source `spec.md` equals count of those markers present in Section 9 of `product/spec.md`; or source has zero markers |
-| If Section 10 present, follows positioning structure | Only checked when `## 10.` is present: sentence contains "For", "who", "this product is a", "that", "unlike", "this product" |
-| If Section 11 present, lists rollout fields | Only checked when `## 11.` is present: contains "audience", "channel", "rollout", and "launch" (case-insensitive) |
+**Validation rules** — apply to the in-memory spec text:
 
-**Indeterminate items** (leave `- [ ]`, do not attempt to validate):
+| Checklist item | Rule | Auto-fixable? |
+|---|---|---|
+| Section 1 present with ≥1 paragraph | `## 1.` heading exists; ≥1 non-empty paragraph follows before next `##` | Yes — add/expand |
+| Section 2 present with ≥1 persona | `## 2.` exists; ≥1 named persona or role listed | Yes — add placeholder persona from source spec |
+| Section 3 contains Job to Be Done | `## 3.` exists; prose contains "When", "I want to", "so I can" in one sentence | Yes — rewrite sentence to canonical form |
+| Section 4 present | `## 4.` exists with ≥1 non-empty prose line | Yes — add/expand |
+| Section 5 lists ≥1 included capability | `## 5.` exists with ≥1 bullet | Yes — add bullet from source spec |
+| Section 6 lists ≥1 excluded capability | `## 6.` exists with ≥1 bullet | Yes — add bullet from source spec |
+| Section 7 contains ≥1 use case | `## 7.` exists; ≥1 `**Given**`/`**When**`/`**Then**` block present | Yes — add scenario from source spec |
+| Section 8 has one north star + ≥1 supporting metric | `## 8.` exists; exactly one item marked or labelled as north star; ≥1 additional metric | Yes — restructure list |
+| Section 9 present | `## 9.` exists | Yes — add section |
+| Sections in canonical order 1–9 | H2 numbers appear in strictly ascending sequence | Yes — reorder |
+| Written entirely in English | Dominant language of prose is English | No — source spec was checked in Step 2; flag if mismatch |
+| No em dash (`—`) | Character `—` absent from entire file | Yes — replace with comma, colon, or semicolon |
+| Every use case has exactly one Given, When, Then | Each scenario block under `## 7.` has exactly one `**Given**`, one `**When**`, one `**Then**` line | Yes — rewrite malformed scenarios |
+| Each Given/When/Then is a full sentence starting with the keyword | Line starts with `**Given**`/`**When**`/`**Then**` and ends with `.` | Yes — rewrite line |
+| No implementation detail | File does not contain: file extensions (`.js`, `.ts`, `.py`, `.go`, `.java`, `.rb`, `.sql`), HTTP verbs (`GET `, `POST `, `PUT `, `DELETE `), code fences (` ``` `), database names (`PostgreSQL`, `MySQL`, `Redis`, `MongoDB`, `DynamoDB`, `S3`) | Yes — remove or rephrase offending lines |
+| No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "it is worth noting", "it should be noted", "as previously mentioned" (case-insensitive) | Yes — rewrite sentence without the phrase |
+| Bullets are short (≤12 words each) | Every `- ` line in the document contains ≤12 words | Yes — split or shorten bullet |
+| Job to Be Done uses an action verb | The word after "I want to " is a verb in base form | Yes — rewrite motivation clause with explicit action verb |
+| Header has non-placeholder Feature and Created | File has `Feature:` line with real text and `Created: YYYY-MM-DD` matching today | Yes — set from context |
+| NEEDS CLARIFICATION markers surfaced | Count of `[NEEDS CLARIFICATION` in source `spec.md` equals count in Section 9; or source count is zero | Yes — add missing markers to Section 9 |
+| Section 10 positioning structure (if present) | Contains "For", "who", "this product is a", "that", "unlike", "this product" | Yes — rewrite to canonical positioning sentence |
+| Section 11 rollout fields (if present) | Contains "audience", "channel", "rollout", "launch" (case-insensitive) | Yes — add missing fields |
+| Each Use Case describes behavior, not implementation | No scenario under `## 7.` mentions: framework names, file paths, HTTP methods, database operations, or code constructs | Yes — rewrite offending scenario lines at customer-observable level |
+| Each metric in Section 8 is tech-agnostic | Metrics do not contain: "p95", "p99", "latency", "throughput", "queue depth", "milliseconds", "bytes", "CPU", "memory", "API response time" | Yes — rephrase to user-facing equivalent (e.g., "time to first result", "task completion rate") |
 
-- "Bullets are short. Prose is in full sentences." — requires stylistic judgment.
-- "Voice is active and human. There are no AI tells." — requires stylistic judgment.
-- "each Use Case scenario describes behavior, not implementation" — requires semantic judgment.
-- "Each metric in Section 8 is measurable and technology agnostic" — requires semantic judgment.
+**Iteration protocol**:
+
+1. Evaluate all items against current in-memory spec text. Record which fail.
+2. For each failing item that is auto-fixable: apply the fix in memory.
+3. Re-evaluate all previously failing items. If any still fail, apply fix again (max 2 additional passes per item to prevent loops).
+4. After final pass, classify remaining failures:
+   - If a fix was applied but the item still fails: mark `- [ ]` in the checklist and record the specific failure reason.
+   - Items that cannot be evaluated (e.g., source spec in English was already confirmed): mark `- [x]`.
+
+**Checklist structure for the `## Spec` section**: replace the section content with:
+
+```markdown
+## Spec (`product/spec.md`)
+
+**Validated**: [DATE] · [PASSED]/[TOTAL] items
+
+- [x] ...  (passing items in the order they appear in the template)
+- [ ] ...  (failing items, if any — see ## Needs Review)
+```
+
+**`## Needs Review` section**: after updating `## Spec`, rebuild the `## Needs Review` section at the bottom of the file by aggregating all `- [ ]` items from all three sections. Each entry must include a one-sentence explanation of what to look for. If no items remain unchecked across all sections, write:
+
+```markdown
+## Needs Review
+
+> All items auto-validated. No manual review required.
+```
 
 ### Step 7: Write files
 
@@ -202,13 +231,13 @@ Print a short status report to the user:
 
 ```text
 Wrote: <abs path>/product/spec.md
-Wrote: <abs path>/product/checklist.md
+Updated: <abs path>/product/checklist.md  §Spec
 Sections populated: 9 mandatory[, 10 (Positioning)][, 11 (Go to Market)]
 Open product questions surfaced: <N>
-Checklist: <PASSED>/<TOTAL> items auto-validated (remaining <REMAINING> require manual review)
+Spec checklist: <PASSED>/<TOTAL> auto-validated[, <REMAINING> need manual review]
 ```
 
-Replace bracketed parts with actual values. The optional section markers are listed only when those sections are present in the output. `<N>` is the number of `[NEEDS CLARIFICATION]` markers surfaced into Section 9. `<PASSED>` is the count of `- [x]` items, `<TOTAL>` is all items, `<REMAINING>` is the count of `- [ ]` items.
+The `[, <REMAINING> need manual review]` segment is omitted when all spec items pass. `<N>` is the number of `[NEEDS CLARIFICATION]` markers surfaced into Section 9.
 
 ## Refusal Output Format
 

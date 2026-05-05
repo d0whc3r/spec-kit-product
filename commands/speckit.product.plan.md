@@ -1,10 +1,10 @@
 ---
-description: "Generate a high-level, product-oriented plan from the current feature's plan.md"
+description: "Generate a high-level, product-oriented plan from the current feature's plan.md and update the shared quality checklist"
 ---
 
 # Generate Product Plan
 
-Derive a stakeholder-facing `product/plan.md` from the populated `plan.md` of the active feature. The artifact answers "how are we building this?" for product managers and cross-functional leads. It uses Shape Up appetite framing for phases, a NOW/NEXT/LATER delivery view, C4 container-level component descriptions, and condensed ADR summaries for key decisions. Technical terms are used but always glossed in plain English on first use. No code, no file paths, no task-level detail.
+Derive a stakeholder-facing `product/plan.md` from the populated `plan.md` of the active feature, then auto-validate and update the `## Plan` section of the shared `product/checklist.md`. The artifact answers "how are we building this?" for product managers and cross-functional leads. It uses Shape Up appetite framing for phases, a NOW/NEXT/LATER delivery view, C4 container-level component descriptions, and condensed ADR summaries for key decisions. Technical terms are used but always glossed in plain English on first use. No code, no file paths, no task-level detail.
 
 ## User Input
 
@@ -25,8 +25,9 @@ The command reads (does not modify):
 The command writes:
 
 - `<feature-dir>/product/plan.md`
+- `<feature-dir>/product/checklist.md` (creates if absent; otherwise updates only the `## Plan` section, preserving all other sections)
 
-The command never modifies `plan.md`, `spec.md`, `tasks.md`, `product/spec.md`, `product/info.md`, `checklist.md`, `.specify/feature.json`, `.specify/extensions.yml`, or any file outside the resolved feature directory.
+The command never modifies `plan.md`, `spec.md`, `tasks.md`, `product/spec.md`, `product/info.md`, `.specify/feature.json`, `.specify/extensions.yml`, or any file outside the resolved feature directory.
 
 ## Templates
 
@@ -137,15 +138,67 @@ Read `templates/product-plan-template.md`. Populate all sections from `plan.md` 
 
 Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `plan.md`. This avoids leaving partial output if the process is interrupted. Create `${FEATURE_DIR}/product/` if it does not exist.
 
+### Step 7b: Prepare product/checklist.md
+
+If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
+- Read `templates/product-checklist-template.md`.
+- Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
+- Write the file. All three sections start with the "not yet generated" placeholder state.
+
+If the file **already exists**, read its current content. You will replace only the `## Plan` section (between the `## Plan` heading and the next `---` horizontal rule) below. All other sections and `## Needs Review` are preserved verbatim.
+
+### Step 7c: Auto-validate and iterate (Plan section)
+
+**Goal: all Plan checklist items checked. Zero manual items if possible.**
+
+After writing `plan.md`, evaluate each item below against the file content. For each failing item that is auto-fixable: rewrite the affected portion of `plan.md` in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
+
+| Checklist item | Rule | Auto-fixable? |
+|---|---|---|
+| Section 1 (Summary) present with ≥1 paragraph | `## 1.` heading exists; 3–5 sentence paragraph before next `##` | Yes |
+| Section 2 (Delivery Phases) has NOW/NEXT/LATER bands | `## 2.` exists; contains "NOW", "NEXT", "LATER" subsections with ≥1 bullet each | Yes — add missing band from source plan |
+| Section 3 (Out of Scope) present with ≥1 item | `## 3.` exists; ≥1 bullet | Yes |
+| Sections in canonical order 1–3 (4–7 optional) | Heading numbers appear in strictly ascending sequence | Yes — reorder |
+| Written entirely in English | Dominant language of prose is English | No — source was validated in Step 2 |
+| No em dash (`—`) | Character `—` absent from entire file | Yes — replace with comma, colon, or semicolon |
+| No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting" (case-insensitive) | Yes — rewrite sentence |
+| Bullets are short (≤12 words each) | Every `- ` line contains ≤12 words | Yes — split or shorten |
+| No code or file paths | File does not contain: code fences, file extension patterns (`.js`, `.ts`, `.py`, `.go`, etc.), absolute or relative paths starting with `/` or `./` | Yes — remove or describe in prose |
+| Technical terms glossed on first use | First occurrence of each term in this set carries a parenthetical gloss: API, CLI, SDK, refactor, idempotent, atomic, schema, linter, manifest, hook, pipeline | Yes — insert gloss after first occurrence |
+| No invented content (phases match source plan) | Section 2 phases correspond to phases identifiable in source `plan.md`; no phase name absent from source | Yes — remove invented phases, consolidate into what source contains |
+| Optional sections present only when source warrants | Section 4 present only if `plan.md` has architecture/component info; Section 5 only if explicit decisions; Section 6 only if concrete risks; Section 7 only if open questions | Yes — remove sections with no source backing |
+| Header has non-placeholder Feature and Created | File has `Feature:` and `Created: YYYY-MM-DD` with real values | Yes — set from context |
+
+**Checklist structure for the `## Plan` section**: replace the section content with:
+
+```markdown
+## Plan (`product/plan.md`)
+
+**Validated**: [DATE] · [PASSED]/[TOTAL] items
+
+- [x] ...  (passing items)
+- [ ] ...  (failing items, if any — see ## Needs Review)
+```
+
+**`## Needs Review` section**: rebuild the `## Needs Review` section at the bottom by aggregating all `- [ ]` items from all three sections. Each entry includes a one-sentence explanation. If no items remain unchecked, write:
+
+```markdown
+## Needs Review
+
+> All items auto-validated. No manual review required.
+```
+
 ### Step 8: Print a status report
 
 ```text
 Wrote: <abs path>/product/plan.md
+Updated: <abs path>/product/checklist.md  §Plan
 Sections populated: Summary, Delivery Phases, Out of Scope[, Component Overview][, Key Technical Decisions][, Risks][, Open Questions]
 Open questions surfaced: <N>
+Plan checklist: <PASSED>/<TOTAL> auto-validated[, <REMAINING> need manual review]
 ```
 
-Only list optional sections that were included. `<N>` is the count of open questions surfaced. If none, `<N>` is `0`.
+The `[, <REMAINING> need manual review]` segment is omitted when all plan items pass. Only list optional sections that were included. `<N>` is the count of open questions surfaced. If none, `<N>` is `0`.
 
 ## Refusal Output Format
 
