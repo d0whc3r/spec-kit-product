@@ -5,73 +5,58 @@
 **Created**: [DATE]
 **Status**: Draft
 
-## 1. Summary
+## Summary
 
-> One to two paragraphs, four to six sentences total. Three parts: why this work exists and what problem it solves, what is being built and for whom, and the high-level approach chosen. No code. No file paths. No time estimates. Technical terms glossed on first use.
+[One paragraph. What is being built, who it is for, and what the main approach is. No code. No file paths. No time estimates. Technical terms glossed on first use.]
 
-[Paragraph here.]
+## Feature Context
 
-## 2. Goals
+**Problem**: [What is broken or missing today, one sentence.]
+**For**: [Who this serves - role or persona, not a user story.]
+**Change**: [What is different for them after this ships, one sentence.]
+**Quality bar**: [The observable standard this must meet - speed, reliability, coverage, or similar. No internal metrics.]
+**Constraints**: [What this must not do or break. Omit if none.]
 
-> Three to six short bullet points. Each goal is one sentence naming a concrete outcome this feature delivers or enables when complete. Goals must be observable - a reader unfamiliar with the project should be able to tell whether each goal was met after the feature ships.
+## Goals
 
-- [Concrete outcome this feature delivers, one sentence ending with a period.]
-- [Concrete outcome this feature delivers, one sentence ending with a period.]
-- [Concrete outcome this feature delivers, one sentence ending with a period.]
+- [Concrete outcome this feature delivers when complete, one sentence.]
+- [Concrete outcome this feature delivers when complete, one sentence.]
+- [Concrete outcome this feature delivers when complete, one sentence.]
 
-## 3. Out of Scope
+## Out of Scope
 
-> A short, scannable list of what is explicitly not included, even though a reasonable reader might expect it. Always populate this section. Each item is one short sentence with a one-phrase reason. Draw from the plan's out-of-scope or exclusions list.
+- [Capability deliberately excluded, one short reason.]
+- [Capability deliberately excluded, one short reason.]
 
-- [Capability deliberately excluded, with one short reason.]
-- [Capability deliberately excluded, with one short reason.]
+## Build Overview
 
-## 4. Architecture Overview *(optional)*
+[One paragraph. How the main parts of the system connect and why this structure was chosen. Plain language - no code, no file names, no framework names.]
 
-> Include this section only when the source plan contains architecture, component, or structural information. Omit the entire section otherwise - do not write "none" or "N/A".
->
-> Two parts: a short narrative paragraph (two to four sentences) describing how the main parts of the system connect and why the structure was chosen, followed by a component list. Each component is one bullet: name, one-sentence responsibility, and whether this feature adds, modifies, or reads from it. C4 container level only - no classes, no functions, no internal wiring.
+- **[Part name]**: [What it does, one sentence. This feature [adds / changes / uses] it.]
+- **[Part name]**: [What it does, one sentence. This feature [adds / changes / uses] it.]
 
-[Narrative paragraph describing the overall structure and how the parts connect.]
+## Key Principles
 
-- **[Component name]**: [What it does, one sentence. This feature [adds / modifies / reads from] it.]
-- **[Component name]**: [What it does, one sentence. This feature [adds / modifies / reads from] it.]
+- **[Principle]**: [The rule and why it matters, one sentence.]
+- **[Principle]**: [The rule and why it matters, one sentence.]
 
-## 5. Key Principles *(optional)*
+## Delivery Phases
 
-> Include this section only when the source plan articulates explicit constraints, guard rails, or core rules that govern how the implementation decisions are made. Omit the entire section otherwise.
->
-> Four to eight bullets. Each principle is one short imperative sentence stating the rule, followed by a one-phrase reason. Principles must be discriminating - they should actively rule out some approaches. A principle that every approach satisfies is not a principle.
+### Phase 1: [Name]
 
-- **[Principle name]**: [The rule in one sentence, followed by a one-phrase reason.]
-- **[Principle name]**: [The rule in one sentence, followed by a one-phrase reason.]
+- [What this phase delivers or enables, one sentence.]
+- [What this phase delivers or enables, one sentence.]
 
-## 6. Delivery Phases
+### Phase 2: [Name]
 
-> One subsection per phase from the source plan, organized as NOW / NEXT / LATER bands. Each phase has a name and two to four outcome bullets. Outcomes describe what is delivered or enabled by the phase - not the tasks to perform. No time estimates, no durations, no appetite framing, no sprint references.
+*Depends on*: Phase 1.
 
-### NOW
+- [What this phase delivers or enables, one sentence.]
+- [What this phase delivers or enables, one sentence.]
 
-#### Phase [N]: [Phase Name]
+## Key Decisions *(optional)*
 
-- [What this phase delivers or enables, one sentence ending with a period.]
-- [What this phase delivers or enables, one sentence ending with a period.]
-- [What this phase delivers or enables, one sentence ending with a period.]
-
-### NEXT
-
-- [What the next planned phase delivers, one sentence.]
-- [What the next planned phase delivers, one sentence.]
-
-### LATER
-
-- [What is deferred and why, one sentence.]
-
-## 7. Key Technical Decisions *(optional)*
-
-> Include this section only when the source plan contains explicit design decisions. Omit the entire section otherwise.
->
-> Each decision uses the condensed ADR (Architecture Decision Record - a short log of a key design choice) format: Decision, Why, Trade-off.
+> Include only when the source plan contains explicit design decisions. Omit the entire section otherwise.
 
 ### [Decision title]
 
@@ -79,45 +64,27 @@
 **Why**: [The plain-language reason, one to two sentences.]
 **Trade-off**: [What was accepted or given up, one sentence.]
 
----
+## Risks and Mitigations *(optional)*
 
-### [Decision title]
+> Include only when the source plan contains concrete risk signals. Omit otherwise.
 
-**Decision**: [What was chosen, one sentence.]
-**Why**: [The plain-language reason, one to two sentences.]
-**Trade-off**: [What was accepted or given up, one sentence.]
+**[Risk]**: [What could go wrong and its consequence, one sentence.]
+*Mitigation*: [What is in place to reduce the impact, one sentence.]
 
-## 8. Risks and Mitigations *(optional)*
+## Divergences and Edge Cases *(optional)*
 
-> Include this section only when the source plan contains concrete risk signals. Apply the pre-mortem lens: imagine this feature shipped and quietly failed - what caused it? Two to four entries. Each entry names one risk and its consequence, then the concrete mitigation in place. Omit generic or speculative risks. Remove the entire section when the source plan has no meaningful risk signals.
+> Include only when the source plan describes scenarios that deviate from the normal flow. Omit otherwise.
 
-**[Risk name]**: [What could go wrong and its consequence, one sentence.]
-*Mitigation*: [What is in place to prevent or reduce the impact, one sentence.]
+- **[Scenario]**: [What the scenario is and how the system handles it, one to two sentences.]
 
-**[Risk name]**: [What could go wrong and its consequence, one sentence.]
-*Mitigation*: [What is in place to prevent or reduce the impact, one sentence.]
+## Validation *(optional)*
 
-## 9. Divergences and Edge Cases *(optional)*
-
-> Include this section only when the source plan explicitly handles scenarios that deviate from the normal flow - unusual inputs, boundary conditions, failure states, or cases where the system behaves differently than a reader would expect. Omit the entire section when the plan does not describe such scenarios.
->
-> Each entry is one sentence naming the scenario and one sentence stating how the system handles it. Plain language only - no error codes, no technical names for handlers or exceptions.
-
-- **[Scenario name]**: [What the scenario is, one sentence. How the system handles it, one sentence.]
-- **[Scenario name]**: [What the scenario is, one sentence. How the system handles it, one sentence.]
-
-## 10. Validation Checks *(optional)*
-
-> Include this section only when the source plan defines explicit acceptance criteria, observable signals, or checks that confirm the feature is working correctly. Omit the entire section when the plan does not specify validation criteria.
->
-> Each item is one sentence describing a concrete, observable condition that confirms a part of the feature is correct. Written from the perspective of someone reviewing the shipped feature, not a developer running tests.
+> Include only when the source plan defines explicit acceptance criteria. Omit otherwise.
 
 - [Observable condition that confirms a part of the feature is correct, one sentence.]
-- [Observable condition that confirms a part of the feature is correct, one sentence.]
 
-## 11. Open Questions *(optional)*
+## Open Questions *(optional)*
 
-> Include this section only when the source plan contains open questions or marked assumptions. Each item becomes one bullet as a single-sentence question. Never silently resolve an open question.
+> Include only when the source plan contains open questions or marked assumptions. Omit otherwise.
 
-- [Open question in one sentence.]
-- [Open question in one sentence.]
+- [Open question, one sentence.]

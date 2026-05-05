@@ -4,7 +4,7 @@ description: "Generate a high-level technical plan from the current feature's pl
 
 # Generate Product Plan
 
-Derive a product-facing `product/plan.md` from the populated `plan.md` of the active feature, then auto-validate and update the `## Plan` section of the shared `product/checklist.md`. The artifact answers "what are we building, how is it structured, and what are the key decisions and risks?" for product managers, engineering leads, and cross-functional reviewers. It uses a goals/scope boundary, a phase-based breakdown of deliverables, a plain-language architecture overview, C4 container-level component descriptions, condensed ADR summaries for key decisions, structured risk-and-mitigation pairs, divergences and edge cases, and observable validation checks. No time estimates, no deadlines, no appetite framing. Technical terms are used but always glossed in plain English on first use. No code, no file paths, no task-level detail.
+Derive a product-facing `product/plan.md` from the populated `plan.md` of the active feature, then auto-validate and update the `## Plan` section of the shared `product/checklist.md`. The artifact answers "what are we building, how is it structured, and what are the key decisions and risks?" for product managers, engineering leads, and cross-functional reviewers. It uses a goals/scope boundary, a phase-based breakdown of deliverables, a plain-language architecture overview, C4 container-level component descriptions, condensed ADR summaries for key decisions, structured risk-and-mitigation pairs, divergences and edge cases, and observable validation checks. The plan is atemporal: no time estimates, no deadlines, no appetite framing, no NOW/NEXT/LATER bands. Phases are ordered and may declare explicit dependencies on prior phases. Technical terms are used but always glossed in plain English on first use. No code, no file paths, no task-level detail.
 
 ## User Input
 
@@ -110,17 +110,18 @@ Read `templates/product-plan-template.md`. Populate all sections from `plan.md` 
 
 #### Section rules
 
-- **Section 1 (Summary)**: always present. One to two paragraphs covering why this work exists, what is being built and for whom, and the high-level approach. Use `spec.md` problem framing when available.
-- **Section 2 (Goals)**: always present. Three to six bullets, each a concrete observable outcome this feature delivers when complete.
-- **Section 3 (Out of Scope)**: always present. A short scannable list of explicitly excluded capabilities, each with a one-phrase reason. Always populate this section - if it feels empty, look harder at the plan's exclusions.
-- **Section 4 (Architecture Overview, optional)**: include only when `plan.md` contains architecture, component, or structural information. A short narrative paragraph describing how the parts connect plus a component bullet list (name, responsibility, adds/modifies/reads). C4 container level only - no classes, no functions.
-- **Section 5 (Key Principles, optional)**: include only when `plan.md` articulates explicit guard rails, constraints, or core rules that govern implementation decisions. Four to eight bullets, each as an imperative rule with a one-phrase reason. Omit the entire section otherwise.
-- **Section 6 (Delivery Phases)**: always present. One subsection per phase, organized in NOW / NEXT / LATER bands. Each phase has a name and two to four outcome bullets describing what is delivered or enabled. No time estimates, no appetite framing.
-- **Section 7 (Key Technical Decisions, optional)**: include only when `plan.md` contains explicit design decisions. Each decision uses the condensed ADR format: Decision, Why, Trade-off. Omit the entire section otherwise.
-- **Section 8 (Risks and Mitigations, optional)**: include only when `plan.md` contains concrete risk signals. Apply the pre-mortem lens: imagine the feature shipped and quietly failed, name two to four concrete causes from the plan. Each entry pairs the risk and its consequence with the concrete mitigation in place. Omit generic or speculative risks. Remove the entire section when the plan has no meaningful risk signals.
-- **Section 9 (Divergences and Edge Cases, optional)**: include only when `plan.md` explicitly describes scenarios that deviate from the normal flow - unusual inputs, boundary conditions, failure states, or cases where the system behaves differently than a reader would expect. Each entry names the scenario and describes how the system handles it in plain language. Omit the entire section when the plan does not describe such scenarios.
-- **Section 10 (Validation Checks, optional)**: include only when `plan.md` defines explicit acceptance criteria, observable signals, or checks that confirm the feature is working correctly. Each item is one observable condition that a reviewer could verify after the feature ships. Omit the entire section when the plan does not specify validation criteria.
-- **Section 11 (Open Questions, optional)**: include only when `plan.md` contains open questions or marked assumptions. Each item becomes one bullet as a single-sentence question. Never silently resolve an open question.
+- **Summary**: always present. One paragraph: what is being built, who it is for, and the main approach. Use `spec.md` problem framing when available. No code, no file paths, no time estimates.
+- **Feature Context**: always present. Six labeled fields (Problem, For, Change, Quality bar, Constraints). Derive from `plan.md` and `spec.md`. Keep each field to one sentence. Omit the Constraints field only when the source has none.
+- **Goals**: always present. Three to six bullets, each a concrete observable outcome this feature delivers when complete.
+- **Out of Scope**: always present. Short list of explicitly excluded capabilities with a one-phrase reason each. Always populate - if it feels empty, look harder at the plan's exclusions.
+- **Build Overview**: always present when `plan.md` contains architecture, component, or structural information. One narrative paragraph describing how the parts connect plus a component bullet list (name, responsibility, adds/changes/uses). C4 container level only - no classes, no functions, no internal wiring. Omit the entire section when the plan has no structural information.
+- **Key Principles**: always present when `plan.md` articulates explicit guard rails, constraints, or core rules. Each bullet names the principle and states the rule with a one-phrase reason. Omit the entire section when the plan has none.
+- **Delivery Phases**: always present. One subsection per phase in source order. Each phase has a name and two to four outcome bullets. When a phase requires a prior phase to be complete, add a `*Depends on*: Phase N.` line immediately after the heading. No time estimates, no appetite framing, no temporal bands.
+- **Key Decisions (optional)**: include only when `plan.md` contains explicit design decisions. Condensed ADR format: Decision, Why, Trade-off. Omit otherwise.
+- **Risks and Mitigations (optional)**: include only when `plan.md` contains concrete risk signals. Pre-mortem lens: two to four entries, each pairing a risk and its consequence with the concrete mitigation. No generic or speculative risks. Omit otherwise.
+- **Divergences and Edge Cases (optional)**: include only when `plan.md` describes scenarios that deviate from the normal flow. Each entry names the scenario and how the system handles it in plain language. Omit otherwise.
+- **Validation (optional)**: include only when `plan.md` defines explicit acceptance criteria or observable signals. Each item is one observable condition a reviewer could verify after shipping. Omit otherwise.
+- **Open Questions (optional)**: include only when `plan.md` contains open questions or marked assumptions. Each becomes one bullet as a single-sentence question. Never silently resolve. Omit otherwise.
 
 #### Header metadata
 
@@ -150,22 +151,22 @@ After writing `product/plan.md`, evaluate each item below against its content. F
 
 | Checklist item | Rule | Auto-fixable? |
 |---|---|---|
-| Section 1 (Summary) present with ≥1 paragraph | `## 1.` heading exists; 4–6 sentence content before next `##` | Yes |
-| Section 2 (Goals) present with ≥3 outcome bullets | `## 2.` heading exists; ≥3 bullet items | Yes - add goals from source plan or spec |
-| Section 3 (Out of Scope) present with ≥1 item | `## 3.` heading exists; ≥1 bullet | Yes |
-| Section 6 (Delivery Phases) has ≥1 phase with ≥1 outcome bullet | `## 6.` exists; ≥1 `###` or `####` subsection with ≥1 bullet | Yes - add phase from source plan |
-| Section 6 contains no time estimates | No occurrence of: "week", "day", "sprint", "appetite", "story point", "deadline", time units, or date-like patterns in `## 6.` | Yes - remove offending text |
-| Sections in canonical order 1–3, 6 (4, 5, 7–11 optional) | Heading numbers appear in strictly ascending sequence | Yes - reorder |
+| Summary present with ≥1 paragraph | `## Summary` heading exists; ≥1 sentence paragraph before next `##` | Yes |
+| Feature Context has all required fields | `## Feature Context` exists; Problem, For, Change, Quality bar fields present and non-placeholder | Yes - derive from source |
+| Goals present with ≥3 outcome bullets | `## Goals` heading exists; ≥3 bullet items | Yes - add from source plan or spec |
+| Out of Scope present with ≥1 item | `## Out of Scope` heading exists; ≥1 bullet | Yes |
+| Delivery Phases present with ≥1 phase and ≥1 bullet | `## Delivery Phases` heading exists; ≥1 `### Phase` subsection with ≥1 bullet | Yes - add phase from source plan |
+| Delivery Phases contain no time estimates or temporal framing | No: "week", "day", "sprint", "appetite", "story point", "deadline", now/next/later as section labels, time units, or date patterns in `## Delivery Phases` | Yes - remove offending text |
 | Written entirely in English | Dominant language of prose is English | No - source was validated in Step 2 |
 | No em dash (`—`) | Character `—` absent from entire file | Yes - replace with comma, colon, or semicolon |
 | No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting" (case-insensitive) | Yes - rewrite sentence |
 | Bullets are short (≤12 words each) | Every `- ` line contains ≤12 words | Yes - split or shorten |
 | No code or file paths | File does not contain: code fences, file extension patterns (`.js`, `.ts`, `.py`, `.go`, etc.), absolute or relative paths starting with `/` or `./` | Yes - remove or describe in prose |
-| No time estimates anywhere in the document | File does not contain time estimates or durations: "week", "day", "sprint", "appetite", "story point", "deadline", or patterns matching digits followed by time units | Yes - remove offending text |
-| Technical terms glossed on first use | First occurrence of each term in the set (API, CLI, SDK, refactor, idempotent, atomic, schema, linter, manifest, hook, pipeline, ADR) carries a parenthetical gloss | Yes - insert gloss after first occurrence |
-| No invented content (phases match source plan) | Section 6 phases correspond to phases identifiable in source `plan.md`; no phase name absent from source | Yes - remove invented phases |
-| Risks paired with mitigations | Section 8, if present, contains both a risk description and a mitigation for each entry | Yes - add mitigation drawn from source plan |
-| Optional sections present only when source warrants | Sections 4, 5, 7, 8, 9, 10, 11 present only when source plan contains the corresponding content | Yes - remove sections with no source backing |
+| No time estimates anywhere in the document | File does not contain: "week", "day", "sprint", "appetite", "story point", "deadline", or digit + time unit patterns | Yes - remove offending text |
+| Technical terms glossed on first use | First occurrence of each term (API, CLI, SDK, refactor, idempotent, atomic, schema, linter, manifest, hook, pipeline, ADR) carries a parenthetical gloss | Yes - insert gloss after first occurrence |
+| No invented content (phases match source plan) | Delivery Phases correspond to phases in source `plan.md`; no phase name absent from source | Yes - remove invented phases |
+| Risks paired with mitigations | Risks and Mitigations section, if present, has both risk+consequence and mitigation for each entry | Yes - add mitigation drawn from source plan |
+| Optional sections present only when source warrants | Key Decisions, Risks and Mitigations, Divergences and Edge Cases, Validation, Open Questions present only when source plan has the corresponding content | Yes - remove sections with no source backing |
 | Header has non-placeholder Feature, Source Plan, and Created | File has `Feature:`, `Source Plan:`, and `Created: YYYY-MM-DD` with real values | Yes - set from context |
 
 **Checklist structure for the `## Plan` section**: replace the section content with:
@@ -192,7 +193,7 @@ After writing `product/plan.md`, evaluate each item below against its content. F
 ```text
 Wrote: <abs path>/product/plan.md
 Updated: <abs path>/product/checklist.md  §Plan
-Sections populated: Summary, Goals, Out of Scope, Delivery Phases[, Architecture Overview][, Key Principles][, Key Technical Decisions][, Risks and Mitigations][, Divergences and Edge Cases][, Validation Checks][, Open Questions]
+Sections populated: Summary, Feature Context, Goals, Out of Scope, Delivery Phases[, Build Overview][, Key Principles][, Key Decisions][, Risks and Mitigations][, Divergences and Edge Cases][, Validation][, Open Questions]
 Open questions surfaced: <N>
 Plan checklist: <PASSED>/<TOTAL> auto-validated[, <REMAINING> need manual review]
 ```
