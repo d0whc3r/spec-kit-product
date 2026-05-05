@@ -1,10 +1,10 @@
 ---
-description: "Generate a high-level, product-oriented plan from the current feature's plan.md and update the shared quality checklist"
+description: "Generate a high-level technical plan from the current feature's plan.md and update the shared quality checklist"
 ---
 
 # Generate Product Plan
 
-Derive a stakeholder-facing `product/plan.md` from the populated `plan.md` of the active feature, then auto-validate and update the `## Plan` section of the shared `product/checklist.md`. The artifact answers "how are we building this?" for product managers and cross-functional leads. It uses Shape Up appetite framing for phases, a NOW/NEXT/LATER delivery view, C4 container-level component descriptions, and condensed ADR summaries for key decisions. Technical terms are used but always glossed in plain English on first use. No code, no file paths, no task-level detail.
+Derive a developer/tech-lead-facing `product/plan.md` from the populated `plan.md` of the active feature, then auto-validate and update the `## Plan` section of the shared `product/checklist.md`. The artifact answers "what are we building and how is it structured?" for developers and technical leads. It uses a phase-based breakdown of deliverables, C4 container-level component descriptions, and condensed ADR summaries for key decisions. No time estimates, no deadlines, no appetite framing. Technical terms are used but always glossed in plain English on first use. No code, no file paths, no task-level detail.
 
 ## User Input
 
@@ -74,7 +74,7 @@ If `${FEATURE_DIR}/spec.md` exists, read it silently for supplementary context: 
 
 ### Step 4: Check for sparse plan
 
-Inspect `plan.md` for identifiable phases (sections named "Phase" or equivalent delivery bands), decisions, or component information. If none are found:
+Inspect `plan.md` for identifiable phases (sections named "Phase" or equivalent groupings), decisions, or component information. If none are found:
 
 - Emit a non-blocking console notice:
   ```
@@ -102,14 +102,15 @@ Read `templates/product-plan-template.md`. Populate all sections from `plan.md` 
 1. **English only.** All output is in English.
 2. **No em dash.** The character `—` MUST NOT appear in the output. Use commas, parentheses, colons, semicolons, or sentence breaks. Hyphens (`-`) are allowed.
 3. **Plain English.** Active voice, short sentences, human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb without a concrete object), "robust" (without a measurable target).
-4. **No implementation detail.** No frameworks, languages, APIs, data stores, code, or file paths.
-5. **Technical terms glossed on first use.** The following terms must carry a plain-language gloss in parentheses on the same line as their first occurrence: "API" (application programming interface), "CLI" (command-line interface), "SDK" (software development kit), "refactor" (restructure existing code without changing its behavior), "idempotent" (produces the same result when run multiple times), "atomic" (all-or-nothing operation), "schema" (structured definition of data), "linter" (automated style and error checker), "manifest" (declaration file listing components or contents), "hook" (event-triggered extension point), "pipeline" (automated sequence of steps). Subsequent occurrences of the same term require no gloss.
-6. **Bullets are short. Prose is full sentences.**
-7. **No invented content.** Do not invent phases, decisions, or components not present in the source `plan.md`.
+4. **No implementation detail.** No frameworks, languages, specific APIs, data stores, code, or file paths.
+5. **No time estimates.** Do not include any durations, deadlines, appetite framing, sprints, story points, or time-box references. The plan describes what is being built and how it is structured, not when.
+6. **Technical terms glossed on first use.** The following terms must carry a plain-language gloss in parentheses on the same line as their first occurrence: "API" (application programming interface), "CLI" (command-line interface), "SDK" (software development kit), "refactor" (restructure existing code without changing its behavior), "idempotent" (produces the same result when run multiple times), "atomic" (all-or-nothing operation), "schema" (structured definition of data), "linter" (automated style and error checker), "manifest" (declaration file listing components or contents), "hook" (event-triggered extension point), "pipeline" (automated sequence of steps). Subsequent occurrences of the same term require no gloss.
+7. **Bullets are short. Prose is full sentences.**
+8. **No invented content.** Do not invent phases, decisions, or components not present in the source `plan.md`.
 
 #### Section rules
 
-- **Mandatory sections (1 through 3)**: always present, in canonical order, populated. Section 1 (Summary), Section 2 (Delivery Phases), Section 3 (Out of Scope).
+- **Mandatory sections (1 through 3)**: always present, in canonical order, populated. Section 1 (Summary), Section 2 (Build Phases), Section 3 (Out of Scope).
 - **Optional section (4 Component Overview)**: include only when `plan.md` contains architecture or component information. Omit the entire section (including heading) otherwise.
 - **Optional section (5 Key Technical Decisions)**: include only when `plan.md` contains explicit design decisions. Omit the entire section otherwise.
 - **Optional section (6 Risks)**: include only when `plan.md` contains concrete risk signals. Apply the pre-mortem lens: imagine the feature shipped and quietly failed, name two to four concrete causes drawn from the plan. Do not emit generic risk platitudes. Omit the entire section when the plan has no meaningful risk signals.
@@ -123,11 +124,8 @@ Read `templates/product-plan-template.md`. Populate all sections from `plan.md` 
 
 #### Section guidance
 
-- **Section 1 (Summary)**: one paragraph, three to five sentences. State what is being built, why it is being built now, and what the main approach is. Use `spec.md` personas and Why Now framing when available. No code, no file paths.
-- **Section 2 (Delivery Phases)**: structured as three bands.
-  - **NOW**: each phase from the engineering plan becomes a subsection. Include the phase name, a rough time-box (appetite), and two to four outcome bullets per phase. Outcomes are things delivered, not tasks performed.
-  - **NEXT**: the natural follow-on capability after this feature ships. One to three short bullets. Not a commitment.
-  - **LATER**: explicitly deferred work drawn from the Out of Scope list. One to three short bullets.
+- **Section 1 (Summary)**: one paragraph, three to five sentences. State what is being built and what the main technical approach is. Use `spec.md` problem framing when available. No code, no file paths, no time estimates.
+- **Section 2 (Build Phases)**: one subsection per phase drawn from the source `plan.md`. Each phase has a name and two to four outcome bullets. Outcomes describe what is delivered or enabled by the phase, not the tasks to perform. No time estimates, no appetite framing, no NOW/NEXT/LATER bands.
 - **Section 3 (Out of Scope)**: a short, scannable list of what is explicitly not included. Always populate this section. Each item is one short sentence with a one-phrase reason. Draw from the plan's out-of-scope or exclusions list.
 - **Section 4 (Component Overview, optional)**: list the main system parts this feature adds, changes, or depends on. Each part is one bullet: name, one-sentence responsibility, and whether this feature adds or modifies it. C4 container level only - no classes, no functions.
 - **Section 5 (Key Technical Decisions, optional)**: each key decision from the plan uses the condensed ADR format: Decision (what was chosen), Why (plain-language reason), Trade-off (what was accepted).
@@ -156,7 +154,8 @@ After writing `product/plan.md`, evaluate each item below against its content. F
 | Checklist item | Rule | Auto-fixable? |
 |---|---|---|
 | Section 1 (Summary) present with ≥1 paragraph | `## 1.` heading exists; 3–5 sentence paragraph before next `##` | Yes |
-| Section 2 (Delivery Phases) has NOW/NEXT/LATER bands | `## 2.` exists; contains "NOW", "NEXT", "LATER" subsections with ≥1 bullet each | Yes — add missing band from source plan |
+| Section 2 (Build Phases) has ≥1 phase with ≥1 outcome bullet | `## 2.` exists; ≥1 `###` subsection with ≥1 bullet | Yes — add phase from source plan |
+| Section 2 contains no time estimates | No occurrence of: "week", "day", "sprint", "appetite", "story point", "deadline", time units (e.g. "2 weeks", "3 days"), or date-like patterns in `## 2.` | Yes — remove offending text |
 | Section 3 (Out of Scope) present with ≥1 item | `## 3.` exists; ≥1 bullet | Yes |
 | Sections in canonical order 1–3 (4–7 optional) | Heading numbers appear in strictly ascending sequence | Yes — reorder |
 | Written entirely in English | Dominant language of prose is English | No — source was validated in Step 2 |
@@ -164,6 +163,7 @@ After writing `product/plan.md`, evaluate each item below against its content. F
 | No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting" (case-insensitive) | Yes — rewrite sentence |
 | Bullets are short (≤12 words each) | Every `- ` line contains ≤12 words | Yes — split or shorten |
 | No code or file paths | File does not contain: code fences, file extension patterns (`.js`, `.ts`, `.py`, `.go`, etc.), absolute or relative paths starting with `/` or `./` | Yes — remove or describe in prose |
+| No time estimates anywhere in the document | File does not contain time estimates or durations: "week", "day", "sprint", "appetite", "story point", "deadline", or patterns matching digits followed by time units | Yes — remove offending text |
 | Technical terms glossed on first use | First occurrence of each term in this set carries a parenthetical gloss: API, CLI, SDK, refactor, idempotent, atomic, schema, linter, manifest, hook, pipeline | Yes — insert gloss after first occurrence |
 | No invented content (phases match source plan) | Section 2 phases correspond to phases identifiable in source `plan.md`; no phase name absent from source | Yes — remove invented phases, consolidate into what source contains |
 | Optional sections present only when source warrants | Section 4 present only if `plan.md` has architecture/component info; Section 5 only if explicit decisions; Section 6 only if concrete risks; Section 7 only if open questions | Yes — remove sections with no source backing |
@@ -193,7 +193,7 @@ After writing `product/plan.md`, evaluate each item below against its content. F
 ```text
 Wrote: <abs path>/product/plan.md
 Updated: <abs path>/product/checklist.md  §Plan
-Sections populated: Summary, Delivery Phases, Out of Scope[, Component Overview][, Key Technical Decisions][, Risks][, Open Questions]
+Sections populated: Summary, Build Phases, Out of Scope[, Component Overview][, Key Technical Decisions][, Risks][, Open Questions]
 Open questions surfaced: <N>
 Plan checklist: <PASSED>/<TOTAL> auto-validated[, <REMAINING> need manual review]
 ```
