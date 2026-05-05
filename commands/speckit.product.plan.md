@@ -27,7 +27,7 @@ The command writes:
 - `<feature-dir>/product/plan.md`
 - `<feature-dir>/product/checklist.md` (creates if absent; otherwise updates only the `## Plan` section, preserving all other sections)
 
-The command never modifies `plan.md`, `spec.md`, `tasks.md`, `product/spec.md`, `product/info.md`, `.specify/feature.json`, `.specify/extensions.yml`, or any file outside the resolved feature directory.
+The command reads (does not modify): `plan.md`, `spec.md`, `tasks.md`, `research.md`, `data-model.md`, and all spec-kit generated files. The only files this command writes are under `${FEATURE_DIR}/product/`.
 
 ## Templates
 
@@ -151,7 +151,7 @@ If the file **already exists**, read its current content. You will replace only 
 
 **Goal: all Plan checklist items checked. Zero manual items if possible.**
 
-After writing `plan.md`, evaluate each item below against the file content. For each failing item that is auto-fixable: rewrite the affected portion of `plan.md` in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
+After writing `product/plan.md`, evaluate each item below against its content. For each failing item that is auto-fixable: rewrite the affected portion of **`product/plan.md`** (the artifact being generated — never the source `plan.md` or `spec.md`) in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
 
 | Checklist item | Rule | Auto-fixable? |
 |---|---|---|
@@ -226,4 +226,4 @@ When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholde
 
 Two consecutive runs against the same `plan.md` and `spec.md`, with the user choosing overwrite on the second run, produce a `product/plan.md` whose content is equivalent except for the `Created` field if the date has rolled over.
 
-The command never modifies `plan.md` or `spec.md`.
+**Source files are READ-ONLY.** The following files MUST NEVER be written, edited, or truncated — they are inputs only: `plan.md`, `spec.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, `.specify/extensions.yml`, and any file outside `${FEATURE_DIR}/product/`. The only files this command may write are `${FEATURE_DIR}/product/plan.md` and `${FEATURE_DIR}/product/checklist.md`.

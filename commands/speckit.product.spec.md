@@ -16,12 +16,7 @@ You **MUST** consider the user input before proceeding (if not empty). The user 
 
 ## Inputs
 
-The command reads (does not modify):
-
-- `.specify/feature.json` to locate the active feature directory.
-- `<feature-dir>/spec.md` as the source spec.
-
-The command writes:
+The command reads (does not modify): `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, and all other spec-kit generated files. The only files this command writes are under `${FEATURE_DIR}/product/`:
 
 - `<feature-dir>/product/spec.md`
 - `<feature-dir>/product/checklist.md` (creates if absent; otherwise updates only the `## Spec` section, preserving all other sections)
@@ -160,7 +155,7 @@ If `${FEATURE_DIR}/product/` does not exist, create it.
 
 **Goal: all checklist items checked. Zero manual items if possible.**
 
-After composing the full text of `product/spec.md` in memory (before writing), run validation pass 1. For each failing item: rewrite the affected portion of the spec in memory to fix it, then re-evaluate. Repeat until all fixable items pass. Only classify an item as requiring manual review when rewriting cannot fix it because the criterion is inherently semantic or subjective.
+After composing the full text of `product/spec.md` in memory (before writing), run validation pass 1. For each failing item: rewrite the affected portion of **`product/spec.md`** (the artifact being generated — never the source `spec.md`) in memory to fix it, then re-evaluate. Repeat until all fixable items pass. Only classify an item as requiring manual review when rewriting cannot fix it because the criterion is inherently semantic or subjective.
 
 **Validation rules** — apply to the in-memory spec text:
 
@@ -223,7 +218,7 @@ After composing the full text of `product/spec.md` in memory (before writing), r
 
 Write `${FEATURE_DIR}/product/spec.md` and `${FEATURE_DIR}/product/checklist.md`. Both files are written atomically (write to a temp file in the same directory, then rename) to avoid leaving partial output if the process is interrupted.
 
-Files outside the feature directory MUST NOT be modified. Specifically: do not touch `.specify/feature.json`, `.specify/extensions.yml`, `spec.md`, or any sibling feature.
+**Source files are READ-ONLY.** The following files MUST NEVER be written, edited, or truncated — they are inputs only: `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, `.specify/extensions.yml`, and any file outside `${FEATURE_DIR}/product/`. The only files this command may write are `${FEATURE_DIR}/product/spec.md` and `${FEATURE_DIR}/product/checklist.md`.
 
 ### Step 8: Status report
 
