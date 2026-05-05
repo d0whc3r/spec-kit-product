@@ -152,9 +152,43 @@ Read `templates/product-checklist-template.md`. Replace bracketed placeholders:
 - `[FEATURE NAME]`: the feature title used in `product/spec.md` Section 1 heading.
 - `[DATE]`: today's date in `YYYY-MM-DD`.
 
-Leave every checkbox unchecked (`- [ ]`). The user or a reviewer ticks them after manual review.
-
 If `${FEATURE_DIR}/product/` does not exist, create it.
+
+### Step 6b: Auto-validate checklist against generated spec
+
+After composing the full text of `product/spec.md` (in memory, before writing), evaluate every checklist item against it. For each item, apply the validation rule below. Mark passing items `- [x]` and failing or indeterminate items `- [ ]`.
+
+**Validation rules per item**
+
+| Item (keyword match) | Pass condition |
+|---|---|
+| Section 1, Headline, is present | H2 `## 1.` exists and has ≥1 non-empty paragraph |
+| Section 2, Target Users | H2 `## 2.` exists and lists ≥1 persona |
+| Section 3, Problem Statement | H2 `## 3.` exists and contains "When", "I want to", "so I can" in a single sentence |
+| Section 4, Value Proposition | H2 `## 4.` exists and has ≥1 non-empty line of prose |
+| Section 5, Scope | H2 `## 5.` exists and lists ≥1 bullet |
+| Section 6, Out of Scope | H2 `## 6.` exists and lists ≥1 bullet |
+| Section 7, Use Cases | H2 `## 7.` exists and contains ≥1 **Given** / **When** / **Then** block |
+| Section 8, Success Metrics | H2 `## 8.` exists, has exactly one north star metric, and ≥1 supporting metric |
+| Section 9, Risks and Open Product Questions | H2 `## 9.` exists |
+| Sections appear in canonical order | H2 headings numbered 1–9 appear in strictly ascending order |
+| written entirely in English | Dominant language of prose paragraphs is English |
+| no em dash character | The `—` character does not appear anywhere in the file |
+| every Use Case scenario contains exactly one Given, When, Then | Every scenario block under `## 7.` has exactly one `**Given**`, one `**When**`, one `**Then**` line |
+| Every Given, When, and Then line is a full sentence beginning with the keyword | Each `**Given**`/`**When**`/`**Then**` line starts with the keyword (after `**bold**`) and ends with `.` |
+| no implementation detail | The document does not contain any of: framework names, file extension patterns (`.js`, `.ts`, `.py`, etc.), HTTP method verbs (`GET`, `POST`, `PUT`, `DELETE`), database names, or code fences |
+| Job to Be Done uses an action verb | The "When…I want to…so I can…" sentence has an action verb after "I want to" |
+| header contains Feature and Created fields | File starts with lines matching `Feature:` and `Created: YYYY-MM-DD` with non-placeholder values |
+| NEEDS CLARIFICATION markers surfaced | Count of `[NEEDS CLARIFICATION` in source `spec.md` equals count of those markers present in Section 9 of `product/spec.md`; or source has zero markers |
+| If Section 10 present, follows positioning structure | Only checked when `## 10.` is present: sentence contains "For", "who", "this product is a", "that", "unlike", "this product" |
+| If Section 11 present, lists rollout fields | Only checked when `## 11.` is present: contains "audience", "channel", "rollout", and "launch" (case-insensitive) |
+
+**Indeterminate items** (leave `- [ ]`, do not attempt to validate):
+
+- "Bullets are short. Prose is in full sentences." — requires stylistic judgment.
+- "Voice is active and human. There are no AI tells." — requires stylistic judgment.
+- "each Use Case scenario describes behavior, not implementation" — requires semantic judgment.
+- "Each metric in Section 8 is measurable and technology agnostic" — requires semantic judgment.
 
 ### Step 7: Write files
 
@@ -171,9 +205,10 @@ Wrote: <abs path>/product/spec.md
 Wrote: <abs path>/product/checklist.md
 Sections populated: 9 mandatory[, 10 (Positioning)][, 11 (Go to Market)]
 Open product questions surfaced: <N>
+Checklist: <PASSED>/<TOTAL> items auto-validated (remaining <REMAINING> require manual review)
 ```
 
-Replace bracketed parts with actual values. The optional section markers are listed only when those sections are present in the output. `<N>` is the number of `[NEEDS CLARIFICATION]` markers surfaced into Section 9.
+Replace bracketed parts with actual values. The optional section markers are listed only when those sections are present in the output. `<N>` is the number of `[NEEDS CLARIFICATION]` markers surfaced into Section 9. `<PASSED>` is the count of `- [x]` items, `<TOTAL>` is all items, `<REMAINING>` is the count of `- [ ]` items.
 
 ## Refusal Output Format
 
