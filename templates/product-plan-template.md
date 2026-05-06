@@ -60,16 +60,20 @@
 
 ### [Decision title]
 
+**Context**: [What problem or constraint forced a choice, one sentence.]
+**Options considered**: [The two or three alternatives that were on the table, brief sentence or list.]
 **Decision**: [What was chosen, one sentence.]
-**Why**: [The plain-language reason, one to two sentences.]
-**Trade-off**: [What was accepted or given up, one sentence.]
+**Consequence**: [What this enables and what it forecloses, one sentence.]
 
 ## Risks and Mitigations *(optional)*
 
 > Include only when the source plan contains concrete risk signals. Omit otherwise.
 
-**[Risk]**: [What could go wrong and its consequence, one sentence.]
-*Mitigation*: [What is in place to reduce the impact, one sentence.]
+**[Risk title]**
+- **What could go wrong**: [Description and consequence, one sentence.]
+- **Probability**: [Low / Medium / High]
+- **Impact**: [Low / Medium / High]
+- **Mitigation**: [What is in place to reduce the impact, one sentence.]
 
 ## Divergences and Edge Cases *(optional)*
 

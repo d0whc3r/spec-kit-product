@@ -104,6 +104,8 @@ Read `templates/product-spec-template.md`. Replace every bracketed placeholder w
 #### Section rules
 
 - **Mandatory sections (Headline, Target Users and Personas, Problem Statement, Value Proposition, Scope, Out of Scope, Use Cases, Success Metrics, Risks and Open Product Questions)**: always present, in canonical order, populated. If the source spec lacks information for a mandatory section, do NOT fabricate. Instead, populate the section with what is known, and add a precise open product question to the Risks and Open Product Questions section.
+- **Optional section (Glossary)**: include ONLY when the spec uses domain-specific or technical terms that a non-technical stakeholder may not know. Each bullet is a term and its one-sentence plain-language definition. Place this section between Headline and Target Users and Personas. Omit entirely when no vocabulary gap exists.
+- **Optional section (Assumptions)**: include ONLY when the source spec contains explicit assumptions about user behavior, market conditions, or technical context that stakeholders should validate. Each bullet states an assumption and the condition that would invalidate it. Place this section between Problem Statement and Value Proposition. Omit when no material assumptions exist.
 - **Optional sections (Positioning, Go to Market and Rollout)**: include ONLY when the source spec contains real content for them. Do not emit empty optional sections. Do not write `N/A`. Remove the entire section heading when not used.
 
 #### Use Case rules (Use Cases section)
@@ -170,7 +172,7 @@ After composing the full text of `product/spec.md` in memory (before writing), r
 | Use Cases contains ≥1 use case | `## Use Cases` exists; ≥1 `**Given**`/`**When**`/`**Then**` block present | Yes — add scenario from source spec |
 | Success Metrics has one north star + ≥1 supporting metric | `## Success Metrics` exists; exactly one item marked or labelled as north star; ≥1 additional metric | Yes — restructure list |
 | Risks and Open Product Questions present | `## Risks and Open Product Questions` exists | Yes — add section |
-| Sections in canonical order | Mandatory H2 headings appear in canonical sequence | Yes — reorder |
+| Sections in canonical order | H2 headings appear in canonical sequence: Headline, [Glossary], Target Users and Personas, Problem Statement, [Assumptions], Value Proposition, Scope, Out of Scope, Use Cases, Success Metrics, Risks and Open Product Questions, [Positioning], [Go to Market and Rollout] — brackets indicate optional | Yes — reorder |
 | Written entirely in English | Dominant language of prose is English | No — source spec was checked in Step 2; flag if mismatch |
 | No em dash (`—`) | Character `—` absent from entire file | Yes — replace with comma, colon, or semicolon |
 | Every use case has exactly one Given, When, Then | Each scenario block under `## Use Cases` has exactly one `**Given**`, one `**When**`, one `**Then**` line | Yes — rewrite malformed scenarios |
@@ -185,6 +187,8 @@ After composing the full text of `product/spec.md` in memory (before writing), r
 | Go to Market rollout fields (if present) | Contains "audience", "channel", "rollout", "launch" (case-insensitive) | Yes — add missing fields |
 | Each Use Case describes behavior, not implementation | No scenario under `## Use Cases` mentions: framework names, file paths, HTTP methods, database operations, or code constructs | Yes — rewrite offending scenario lines at customer-observable level |
 | Each metric in Success Metrics is tech-agnostic | Metrics do not contain: "p95", "p99", "latency", "throughput", "queue depth", "milliseconds", "bytes", "CPU", "memory", "API response time" | Yes — rephrase to user-facing equivalent (e.g., "time to first result", "task completion rate") |
+| Glossary present only when terms require definition | If Glossary section present: each bullet is a bold term followed by a one-sentence plain-language definition. If absent: no domain-specific terms in the document require definition for a non-technical reader | Yes — add missing definitions; remove section if no term gap exists |
+| Assumptions present only when source has material assumptions | If Assumptions section present: each bullet states one assumption with a condition that would invalidate it. If absent and source spec contains assumption markers or undeclared dependencies: add the section | Yes — add invalidation clause to entries without one; remove section if source has no assumptions |
 
 **Iteration protocol**:
 
@@ -227,7 +231,7 @@ Print a short status report to the user:
 ```text
 Wrote: <abs path>/product/spec.md
 Updated: <abs path>/product/checklist.md  §Spec
-Sections populated: 9 mandatory[, Positioning][, Go to Market and Rollout]
+Sections populated: 9 mandatory[, Glossary][, Assumptions][, Positioning][, Go to Market and Rollout]
 Open product questions surfaced: <N>
 Spec checklist: <PASSED>/<TOTAL> auto-validated[, <REMAINING> need manual review]
 ```

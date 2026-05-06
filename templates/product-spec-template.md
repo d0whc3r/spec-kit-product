@@ -10,6 +10,13 @@
 
 [One paragraph, three to five sentences, in the voice of a press release summary. State the customer, the problem, and the new outcome they can now reach. No internal jargon. No feature lists.]
 
+## Glossary *(optional)*
+
+> Include this section only when the spec uses domain-specific or technical terms that a non-technical stakeholder may not know. Define each term in one plain sentence. Omit the section entirely when no vocabulary gap exists.
+
+- **[Term]**: [Plain-language definition in one sentence.]
+- **[Term]**: [Plain-language definition in one sentence.]
+
 ## Target Users and Personas
 
 [List the user types this product serves. For each, give a one line description and the single most important thing they care about.]
@@ -26,6 +33,13 @@
 > When [situation], I want to [motivation], so I can [expected outcome].
 
 **Why this matters now**: [Two or three sentences on what changed in the user's world, the market, or the company that makes this the right job to address now.]
+
+## Assumptions *(optional)*
+
+> Include this section when the feature rests on conditions believed true but not yet confirmed. Each assumption is one sentence. State what would need to change to invalidate it. Omit the section when no material assumptions exist.
+
+- [Assumption in one sentence. What would invalidate it.]
+- [Assumption in one sentence. What would invalidate it.]
 
 ## Value Proposition
 
