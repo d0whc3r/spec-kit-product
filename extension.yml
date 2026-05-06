@@ -4,7 +4,7 @@ extension:
   id: product
   name: "Product Spec Extension"
   version: "0.3.0"
-  description: "Generates product-oriented documents from engineering specs and plans, following Working Backwards, Jobs to Be Done, Gherkin BDD, and Lean PRD conventions. Provides /speckit.product.spec, /speckit.product.info, and /speckit.product.plan."
+  description: "Generates product-oriented documents from engineering specs and plans, following Working Backwards, Jobs to Be Done, Gherkin BDD, and Lean PRD conventions. Provides /speckit.product.spec, /speckit.product.info, /speckit.product.plan, and /speckit.product.design."
   author: spec-kit-product contributors
   repository: https://github.com/d0whc3r/spec-kit-product
   license: MIT
@@ -23,11 +23,15 @@ provides:
     - name: speckit.product.plan
       file: commands/speckit.product.plan.md
       description: "Generate a high-level, product-oriented plan from the current feature's plan.md"
+    - name: speckit.product.design
+      file: commands/speckit.product.design.md
+      description: "Generate a high-level technical design document from the current feature's plan.md and spec.md, aimed at tech leads and senior developers"
 
 tags:
   - product
   - spec
   - prd
+  - design
   - documentation
 
 hooks: {}
