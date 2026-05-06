@@ -4,7 +4,7 @@ description: "Generate a high-level technical plan from the current feature's pl
 
 # Generate Product Plan
 
-Derive a product-facing `product/plan.md` from the populated `plan.md` of the active feature, then auto-validate and update the `## Plan` section of the shared `product/checklist.md`. The artifact answers "what are we building, how is it structured, and what are the key decisions and risks?" for product managers, engineering leads, and cross-functional reviewers. It uses a goals/scope boundary, a phase-based breakdown of deliverables, a plain-language architecture overview, C4 container-level component descriptions, condensed ADR summaries for key decisions, structured risk-and-mitigation pairs, divergences and edge cases, and observable validation checks. The plan is atemporal: no time estimates, no deadlines, no appetite framing, no NOW/NEXT/LATER bands. Phases are ordered and may declare explicit dependencies on prior phases. Technical terms are used but always glossed in plain English on first use. No code, no file paths, no task-level detail.
+Derive a product-facing `product/20-plan.md` from the populated `plan.md` of the active feature, then auto-validate and update the `## Plan` section of the shared `product/checklist.md`. The artifact answers "what are we building, how is it structured, and what are the key decisions and risks?" for product managers, engineering leads, and cross-functional reviewers. It uses a goals/scope boundary, a phase-based breakdown of deliverables, a plain-language architecture overview, C4 container-level component descriptions, condensed ADR summaries for key decisions, structured risk-and-mitigation pairs, divergences and edge cases, and observable validation checks. The plan is atemporal: no time estimates, no deadlines, no appetite framing, no NOW/NEXT/LATER bands. Phases are ordered and may declare explicit dependencies on prior phases. Technical terms are used but always glossed in plain English on first use. No code, no file paths, no task-level detail.
 
 ## User Input
 
@@ -24,7 +24,7 @@ The command reads (does not modify):
 
 The command writes:
 
-- `<feature-dir>/product/plan.md`
+- `<feature-dir>/product/20-plan.md`
 - `<feature-dir>/product/checklist.md` (creates if absent; otherwise updates only the `## Plan` section, preserving all other sections)
 
 The command reads (does not modify): `plan.md`, `spec.md`, `tasks.md`, `research.md`, `data-model.md`, and all spec-kit generated files. The only files this command writes are under `${FEATURE_DIR}/product/`.
@@ -82,18 +82,18 @@ Inspect `plan.md` for identifiable phases (sections named "Phase" or equivalent 
   ```
 - Continue with generation. Do not abort.
 
-### Step 5: Handle existing product/plan.md
+### Step 5: Handle existing product/20-plan.md
 
-If `${FEATURE_DIR}/product/plan.md` already exists:
+If `${FEATURE_DIR}/product/20-plan.md` already exists:
 
 - Print the absolute path of the existing file.
-- Ask: `product/plan.md already exists. Overwrite? (yes/no)`
+- Ask: `product/20-plan.md already exists. Overwrite? (yes/no)`
 - On `no` or any non-affirmative response, abort with `E_USER_ABORT`. Do not write any files.
-- On `yes`, continue. The existing `product/plan.md` will be replaced.
+- On `yes`, continue. The existing `product/20-plan.md` will be replaced.
 
 If `${FEATURE_DIR}/product/` does not exist yet, create it before writing.
 
-### Step 6: Generate product/plan.md
+### Step 6: Generate product/20-plan.md
 
 Read `templates/product-plan-template.md`. Populate all sections from `plan.md` (and `spec.md` when available). Apply the following rules without exception.
 
@@ -147,7 +147,7 @@ If the file **already exists**, read its current content. You will replace only 
 
 **Goal: all Plan checklist items checked. Zero manual items if possible.**
 
-After writing `product/plan.md`, evaluate each item below against its content. For each failing item that is auto-fixable: rewrite the affected portion of **`product/plan.md`** (the artifact being generated - never the source `plan.md` or `spec.md`) in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
+After writing `product/20-plan.md`, evaluate each item below against its content. For each failing item that is auto-fixable: rewrite the affected portion of **`product/20-plan.md`** (the artifact being generated - never the source `plan.md` or `spec.md`) in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
 
 | Checklist item | Rule | Auto-fixable? |
 |---|---|---|
@@ -173,7 +173,7 @@ After writing `product/plan.md`, evaluate each item below against its content. F
 **Checklist structure for the `## Plan` section**: replace the section content with:
 
 ```markdown
-## Plan (`product/plan.md`)
+## Plan (`product/20-plan.md`)
 
 **Validated**: [DATE] · [PASSED]/[TOTAL] items
 
@@ -192,7 +192,7 @@ After writing `product/plan.md`, evaluate each item below against its content. F
 ### Step 8: Print a status report
 
 ```text
-Wrote: <abs path>/product/plan.md
+Wrote: <abs path>/product/20-plan.md
 Updated: <abs path>/product/checklist.md  §Plan
 Sections populated: Summary, Feature Context, Goals, Out of Scope, Delivery Phases[, Build Overview][, Key Principles][, Key Decisions][, Risks and Mitigations][, Divergences and Edge Cases][, Validation][, Open Questions]
 Open questions surfaced: <N>
@@ -225,6 +225,6 @@ When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholde
 
 ## Idempotence
 
-Two consecutive runs against the same `plan.md` and `spec.md`, with the user choosing overwrite on the second run, produce a `product/plan.md` whose content is equivalent except for the `Created` field if the date has rolled over.
+Two consecutive runs against the same `plan.md` and `spec.md`, with the user choosing overwrite on the second run, produce a `product/20-plan.md` whose content is equivalent except for the `Created` field if the date has rolled over.
 
-**Source files are READ-ONLY.** The following files MUST NEVER be written, edited, or truncated - they are inputs only: `plan.md`, `spec.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, `.specify/extensions.yml`, and any file outside `${FEATURE_DIR}/product/`. The only files this command may write are `${FEATURE_DIR}/product/plan.md` and `${FEATURE_DIR}/product/checklist.md`.
+**Source files are READ-ONLY.** The following files MUST NEVER be written, edited, or truncated - they are inputs only: `plan.md`, `spec.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, `.specify/extensions.yml`, and any file outside `${FEATURE_DIR}/product/`. The only files this command may write are `${FEATURE_DIR}/product/20-plan.md` and `${FEATURE_DIR}/product/checklist.md`.

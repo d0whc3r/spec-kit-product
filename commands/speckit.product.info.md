@@ -4,7 +4,7 @@ description: "Generate a short, stakeholder-readable info.md from the current fe
 
 # Generate Product Info
 
-Derive a stakeholder-facing `product/info.md` from the populated `spec.md` of the active feature, then auto-validate and update the `## Info` section of the shared `product/checklist.md`. The artifact is a single-page plain-language summary that answers "what is changing and why" for a non-technical reader. It follows the same style rules as `/speckit-product-spec`: English only, no em dash, plain English, active voice, full sentences, no implementation detail, and no AI-tell filler phrases.
+Derive a stakeholder-facing `product/00-info.md` from the populated `spec.md` of the active feature, then auto-validate and update the `## Info` section of the shared `product/checklist.md`. The artifact is a single-page plain-language summary that answers "what is changing and why" for a non-technical reader. It follows the same style rules as `/speckit-product-spec`: English only, no em dash, plain English, active voice, full sentences, no implementation detail, and no AI-tell filler phrases.
 
 ## User Input
 
@@ -23,7 +23,7 @@ The command reads (does not modify):
 
 The command writes:
 
-- `<feature-dir>/product/info.md`
+- `<feature-dir>/product/00-info.md`
 - `<feature-dir>/product/checklist.md` (creates if absent; otherwise updates only the `## Info` section, preserving all other sections)
 
 The command reads (does not modify): `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, and all spec-kit generated files. The only files this command writes are under `${FEATURE_DIR}/product/`.
@@ -79,22 +79,22 @@ Scan `spec.md` for occurrences of `[NEEDS CLARIFICATION` (case-sensitive prefix)
 If any markers are present:
 
 - List each marker, one per line, with file location.
-- Ask the user: `Surface these as open questions in product/info.md? (yes/no)`
+- Ask the user: `Surface these as open questions in product/00-info.md? (yes/no)`
 - On `no` or any non-affirmative response, abort with `E_USER_ABORT` and write nothing.
-- On `yes`, continue. Each marker MUST appear as a bullet under the Open Questions section of the generated `product/info.md`. Never silently resolve a marker.
+- On `yes`, continue. Each marker MUST appear as a bullet under the Open Questions section of the generated `product/00-info.md`. Never silently resolve a marker.
 
 ### Step 4: Handle existing info.md in product/
 
-If `${FEATURE_DIR}/product/info.md` already exists:
+If `${FEATURE_DIR}/product/00-info.md` already exists:
 
 - Print the absolute path of the existing file.
-- Ask: `product/info.md already exists. Overwrite? (yes/no)`
+- Ask: `product/00-info.md already exists. Overwrite? (yes/no)`
 - On `no` or any non-affirmative response, abort with `E_USER_ABORT`. Do not write any files.
-- On `yes`, continue. The existing `product/info.md` will be replaced byte for byte.
+- On `yes`, continue. The existing `product/00-info.md` will be replaced byte for byte.
 
 If `${FEATURE_DIR}/product/` does not exist yet, create it before writing.
 
-### Step 5: Generate product/info.md
+### Step 5: Generate product/00-info.md
 
 Read `templates/product-info-template.md`. Replace every bracketed placeholder with concrete content drawn from `spec.md`. Apply the following rules without exception.
 
@@ -146,7 +146,7 @@ If the file **already exists**, read its current content. You will replace only 
 
 **Goal: all Info checklist items checked. Zero manual items if possible.**
 
-After writing `product/info.md`, evaluate each item below against its content. For each failing item that is auto-fixable: rewrite the affected portion of **`product/info.md`** (the artifact being generated — never the source `spec.md`) in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
+After writing `product/00-info.md`, evaluate each item below against its content. For each failing item that is auto-fixable: rewrite the affected portion of **`product/00-info.md`** (the artifact being generated — never the source `spec.md`) in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
 
 | Checklist item | Rule | Auto-fixable? |
 |---|---|---|
@@ -169,7 +169,7 @@ After writing `product/info.md`, evaluate each item below against its content. F
 **Checklist structure for the `## Info` section**: replace the section content with:
 
 ```markdown
-## Info (`product/info.md`)
+## Info (`product/00-info.md`)
 
 **Validated**: [DATE] · [PASSED]/[TOTAL] items
 
@@ -188,7 +188,7 @@ After writing `product/info.md`, evaluate each item below against its content. F
 ### Step 7: Print a status report
 
 ```text
-Wrote: <abs path>/product/info.md
+Wrote: <abs path>/product/00-info.md
 Updated: <abs path>/product/checklist.md  §Info
 Sections populated: Overview + Headline + What is Changing + Out of Scope[, Risks][, Open Questions][, References]
 Open product questions surfaced: <N>
@@ -221,6 +221,6 @@ When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholde
 
 ## Idempotence
 
-Two consecutive runs against the same `spec.md`, with the user choosing overwrite on the second run, produce a `product/info.md` whose content is byte-identical except for the `Created` field if the date has rolled over.
+Two consecutive runs against the same `spec.md`, with the user choosing overwrite on the second run, produce a `product/00-info.md` whose content is byte-identical except for the `Created` field if the date has rolled over.
 
-**Source files are READ-ONLY.** The following files MUST NEVER be written, edited, or truncated — they are inputs only: `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, `.specify/extensions.yml`, and any file outside `${FEATURE_DIR}/product/`. The only files this command may write are `${FEATURE_DIR}/product/info.md` and `${FEATURE_DIR}/product/checklist.md`.
+**Source files are READ-ONLY.** The following files MUST NEVER be written, edited, or truncated — they are inputs only: `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, `.specify/extensions.yml`, and any file outside `${FEATURE_DIR}/product/`. The only files this command may write are `${FEATURE_DIR}/product/00-info.md` and `${FEATURE_DIR}/product/checklist.md`.

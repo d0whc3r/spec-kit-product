@@ -5,7 +5,7 @@
 
 ---
 
-## Info (`product/info.md`)
+## Info (`product/00-info.md`)
 
 > Not yet generated. Run `/speckit-product-info` to validate this section.
 
@@ -13,7 +13,7 @@
 
 ---
 
-## Spec (`product/spec.md`)
+## Spec (`product/10-spec.md`)
 
 > Not yet generated. Run `/speckit-product-spec` to validate this section.
 
@@ -21,7 +21,7 @@
 
 ---
 
-## Plan (`product/plan.md`)
+## Plan (`product/20-plan.md`)
 
 > Not yet generated. Run `/speckit-product-plan` to validate this section.
 
@@ -29,7 +29,7 @@
 
 ---
 
-## Design (`product/design.md`)
+## Design (`product/30-design.md`)
 
 > Not yet generated. Run `/speckit-product-design` to validate this section.
 

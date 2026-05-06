@@ -4,7 +4,7 @@ description: "Generate a product oriented spec.md and update the shared quality 
 
 # Generate Product Spec
 
-Derive a stakeholder facing `product/spec.md` from the populated `spec.md` of the active feature, then auto-validate and update the `## Spec` section of the shared `product/checklist.md`. The artifact follows Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain English, with strict style rules.
+Derive a stakeholder facing `product/10-spec.md` from the populated `spec.md` of the active feature, then auto-validate and update the `## Spec` section of the shared `product/checklist.md`. The artifact follows Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain English, with strict style rules.
 
 ## User Input
 
@@ -18,7 +18,7 @@ You **MUST** consider the user input before proceeding (if not empty). The user 
 
 The command reads (does not modify): `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, and all other spec-kit generated files. The only files this command writes are under `${FEATURE_DIR}/product/`:
 
-- `<feature-dir>/product/spec.md`
+- `<feature-dir>/product/10-spec.md`
 - `<feature-dir>/product/checklist.md` (creates if absent; otherwise updates only the `## Spec` section, preserving all other sections)
 
 ## Templates
@@ -74,22 +74,22 @@ Scan `spec.md` for occurrences of `[NEEDS CLARIFICATION` (case sensitive prefix)
 If any markers are present:
 
 - List each marker, one per line, with file location.
-- Ask the user: `Surface these as open product questions in product/spec.md? (yes/no)`
+- Ask the user: `Surface these as open product questions in product/10-spec.md? (yes/no)`
 - On `no` or any non affirmative response, abort with no files written.
-- On `yes`, continue. Each marker MUST appear as a bullet under "Open product questions" in the Risks and Open Product Questions section of the generated `product/spec.md`. Never silently resolve a marker.
+- On `yes`, continue. Each marker MUST appear as a bullet under "Open product questions" in the Risks and Open Product Questions section of the generated `product/10-spec.md`. Never silently resolve a marker.
 
 ### Step 4: Handle existing spec.md in product/
 
-If `${FEATURE_DIR}/product/spec.md` already exists:
+If `${FEATURE_DIR}/product/10-spec.md` already exists:
 
 - Print the absolute path of the existing file.
-- Ask: `product/spec.md already exists. Overwrite? (yes/no)`
+- Ask: `product/10-spec.md already exists. Overwrite? (yes/no)`
 - On `no` or any non affirmative response, abort with `E_USER_ABORT`. Do not write any files.
-- On `yes`, continue. The existing `product/spec.md` will be replaced byte for byte. The companion `product/checklist.md` is also regenerated; prior tick state is not preserved.
+- On `yes`, continue. The existing `product/10-spec.md` will be replaced byte for byte. The companion `product/checklist.md` is also regenerated; prior tick state is not preserved.
 
 If `${FEATURE_DIR}/product/` does not exist yet, create it before writing.
 
-### Step 5: Generate product/spec.md
+### Step 5: Generate product/10-spec.md
 
 Read `templates/product-spec-template.md`. Replace every bracketed placeholder with concrete content drawn from `spec.md`. Apply the following rules without exception.
 
@@ -157,7 +157,7 @@ If `${FEATURE_DIR}/product/` does not exist, create it.
 
 **Goal: all checklist items checked. Zero manual items if possible.**
 
-After composing the full text of `product/spec.md` in memory (before writing), run validation pass 1. For each failing item: rewrite the affected portion of **`product/spec.md`** (the artifact being generated — never the source `spec.md`) in memory to fix it, then re-evaluate. Repeat until all fixable items pass. Only classify an item as requiring manual review when rewriting cannot fix it because the criterion is inherently semantic or subjective.
+After composing the full text of `product/10-spec.md` in memory (before writing), run validation pass 1. For each failing item: rewrite the affected portion of **`product/10-spec.md`** (the artifact being generated — never the source `spec.md`) in memory to fix it, then re-evaluate. Repeat until all fixable items pass. Only classify an item as requiring manual review when rewriting cannot fix it because the criterion is inherently semantic or subjective.
 
 **Validation rules** — apply to the in-memory spec text:
 
@@ -202,7 +202,7 @@ After composing the full text of `product/spec.md` in memory (before writing), r
 **Checklist structure for the `## Spec` section**: replace the section content with:
 
 ```markdown
-## Spec (`product/spec.md`)
+## Spec (`product/10-spec.md`)
 
 **Validated**: [DATE] · [PASSED]/[TOTAL] items
 
@@ -220,16 +220,16 @@ After composing the full text of `product/spec.md` in memory (before writing), r
 
 ### Step 7: Write files
 
-Write `${FEATURE_DIR}/product/spec.md` and `${FEATURE_DIR}/product/checklist.md`. Both files are written atomically (write to a temp file in the same directory, then rename) to avoid leaving partial output if the process is interrupted.
+Write `${FEATURE_DIR}/product/10-spec.md` and `${FEATURE_DIR}/product/checklist.md`. Both files are written atomically (write to a temp file in the same directory, then rename) to avoid leaving partial output if the process is interrupted.
 
-**Source files are READ-ONLY.** The following files MUST NEVER be written, edited, or truncated — they are inputs only: `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, `.specify/extensions.yml`, and any file outside `${FEATURE_DIR}/product/`. The only files this command may write are `${FEATURE_DIR}/product/spec.md` and `${FEATURE_DIR}/product/checklist.md`.
+**Source files are READ-ONLY.** The following files MUST NEVER be written, edited, or truncated — they are inputs only: `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, `.specify/extensions.yml`, and any file outside `${FEATURE_DIR}/product/`. The only files this command may write are `${FEATURE_DIR}/product/10-spec.md` and `${FEATURE_DIR}/product/checklist.md`.
 
 ### Step 8: Status report
 
 Print a short status report to the user:
 
 ```text
-Wrote: <abs path>/product/spec.md
+Wrote: <abs path>/product/10-spec.md
 Updated: <abs path>/product/checklist.md  §Spec
 Sections populated: 9 mandatory[, Glossary][, Assumptions][, Positioning][, Go to Market and Rollout]
 Open product questions surfaced: <N>
@@ -250,7 +250,7 @@ Use the codes from `command-contract.md`: `E_NO_PROJECT`, `E_NO_POINTER`, `E_BAD
 
 ## Idempotence
 
-Two consecutive runs against the same `spec.md`, with the user choosing overwrite on the second run, produce a `product/spec.md` whose content is byte identical except for the `Created` field if the date has rolled over.
+Two consecutive runs against the same `spec.md`, with the user choosing overwrite on the second run, produce a `product/10-spec.md` whose content is byte identical except for the `Created` field if the date has rolled over.
 
 The command never modifies `spec.md`.
 

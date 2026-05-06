@@ -4,7 +4,7 @@ description: "Generate a high-level technical design document from the current f
 
 # Generate Technical Design
 
-Derive a `product/design.md` from the `plan.md` and `spec.md` of the active feature, then auto-validate and update the `## Design` section of the shared `product/checklist.md`. The artifact answers "how are we building this technically?" for tech leads and senior developers. It covers architectural approach, affected modules and layers, data model and API shapes, spec coverage mapping, key technical decisions, testing strategy, and rollout plan. Unlike the product-facing `product/plan.md`, this document is allowed to reference component names, module boundaries, file-level granularity, API surface shapes, and data schemas at a conceptual level. No runnable code, no full ORM definitions, no line-by-line implementation detail.
+Derive a `product/30-design.md` from the `plan.md` and `spec.md` of the active feature, then auto-validate and update the `## Design` section of the shared `product/checklist.md`. The artifact answers "how are we building this technically?" for tech leads and senior developers. It covers architectural approach, affected modules and layers, data model and API shapes, spec coverage mapping, key technical decisions, testing strategy, and rollout plan. Unlike the product-facing `product/plan.md`, this document is allowed to reference component names, module boundaries, file-level granularity, API surface shapes, and data schemas at a conceptual level. No runnable code, no full ORM definitions, no line-by-line implementation detail.
 
 ## User Input
 
@@ -26,10 +26,10 @@ The command reads (does not modify):
 
 The command writes:
 
-- `<feature-dir>/product/design.md`
+- `<feature-dir>/product/30-design.md`
 - `<feature-dir>/product/checklist.md` (creates if absent; otherwise updates only the `## Design` section, preserving all other sections)
 
-**Source files are READ-ONLY.** The following files MUST NEVER be written, edited, or truncated: `plan.md`, `spec.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, `.specify/extensions.yml`, and any file outside `${FEATURE_DIR}/product/`. The only files this command may write are `${FEATURE_DIR}/product/design.md` and `${FEATURE_DIR}/product/checklist.md`.
+**Source files are READ-ONLY.** The following files MUST NEVER be written, edited, or truncated: `plan.md`, `spec.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, `.specify/extensions.yml`, and any file outside `${FEATURE_DIR}/product/`. The only files this command may write are `${FEATURE_DIR}/product/30-design.md` and `${FEATURE_DIR}/product/checklist.md`.
 
 ## Templates
 
@@ -88,18 +88,18 @@ Inspect `plan.md` and `spec.md` for architecture information, component descript
   ```
 - Continue with generation. Do not abort.
 
-### Step 5: Handle existing product/design.md
+### Step 5: Handle existing product/30-design.md
 
-If `${FEATURE_DIR}/product/design.md` already exists:
+If `${FEATURE_DIR}/product/30-design.md` already exists:
 
 - Print the absolute path of the existing file.
-- Ask: `product/design.md already exists. Overwrite? (yes/no)`
+- Ask: `product/30-design.md already exists. Overwrite? (yes/no)`
 - On `no` or any non-affirmative response, abort with `E_USER_ABORT`. Do not write any files.
-- On `yes`, continue. The existing `product/design.md` will be replaced.
+- On `yes`, continue. The existing `product/30-design.md` will be replaced.
 
 If `${FEATURE_DIR}/product/` does not exist yet, create it before writing.
 
-### Step 6: Generate product/design.md
+### Step 6: Generate product/30-design.md
 
 Read `templates/product-design-template.md`. Populate all sections from `plan.md`, `spec.md`, and any optional context files. Apply the following rules without exception.
 
@@ -154,7 +154,7 @@ If the `## Design` section does not exist in the current `checklist.md`, insert 
 
 **Goal: all Design checklist items checked. Zero manual items if possible.**
 
-After writing `product/design.md`, evaluate each item below against its content. For each failing item that is auto-fixable: rewrite the affected portion of **`product/design.md`** in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
+After writing `product/30-design.md`, evaluate each item below against its content. For each failing item that is auto-fixable: rewrite the affected portion of **`product/30-design.md`** in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
 
 | Checklist item | Rule | Auto-fixable? |
 |---|---|---|
@@ -181,7 +181,7 @@ After writing `product/design.md`, evaluate each item below against its content.
 **Checklist structure for the `## Design` section**: replace the section content with:
 
 ```markdown
-## Design (`product/design.md`)
+## Design (`product/30-design.md`)
 
 **Validated**: [DATE] · [PASSED]/[TOTAL] items
 
@@ -200,7 +200,7 @@ After writing `product/design.md`, evaluate each item below against its content.
 ### Step 8: Print a status report
 
 ```text
-Wrote: <abs path>/product/design.md
+Wrote: <abs path>/product/30-design.md
 Updated: <abs path>/product/checklist.md  §Design
 Sections populated: Summary, Technical Context, Architectural Approach, Affected Modules[, Data Design][, API Design][, Spec Coverage][, Key Technical Decisions], Testing Strategy, Rollout and Migration[, Risks and Mitigations][, Open Questions]
 Spec coverage gaps: <N>
@@ -234,4 +234,4 @@ When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholde
 
 ## Idempotence
 
-Two consecutive runs against the same source files, with the user choosing overwrite on the second run, produce a `product/design.md` whose content is equivalent except for the `Created` field if the date has rolled over.
+Two consecutive runs against the same source files, with the user choosing overwrite on the second run, produce a `product/30-design.md` whose content is equivalent except for the `Created` field if the date has rolled over.
