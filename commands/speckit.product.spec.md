@@ -76,7 +76,7 @@ If any markers are present:
 - List each marker, one per line, with file location.
 - Ask the user: `Surface these as open product questions in product/spec.md? (yes/no)`
 - On `no` or any non affirmative response, abort with no files written.
-- On `yes`, continue. Each marker MUST appear as a bullet under "Open product questions" in Section 9 of the generated `product/spec.md`. Never silently resolve a marker.
+- On `yes`, continue. Each marker MUST appear as a bullet under "Open product questions" in the Risks and Open Product Questions section of the generated `product/spec.md`. Never silently resolve a marker.
 
 ### Step 4: Handle existing spec.md in product/
 
@@ -103,10 +103,10 @@ Read `templates/product-spec-template.md`. Replace every bracketed placeholder w
 
 #### Section rules
 
-- **Mandatory sections (1 through 9)**: always present, in canonical order, populated. If the source spec lacks information for a mandatory section, do NOT fabricate. Instead, populate the section with what is known, and add a precise open product question to Section 9.
-- **Optional sections (10 Positioning, 11 Go to Market and Rollout)**: include ONLY when the source spec contains real content for them. Do not emit empty optional sections. Do not write `N/A`. Remove the entire section heading when not used.
+- **Mandatory sections (Headline, Target Users and Personas, Problem Statement, Value Proposition, Scope, Out of Scope, Use Cases, Success Metrics, Risks and Open Product Questions)**: always present, in canonical order, populated. If the source spec lacks information for a mandatory section, do NOT fabricate. Instead, populate the section with what is known, and add a precise open product question to the Risks and Open Product Questions section.
+- **Optional sections (Positioning, Go to Market and Rollout)**: include ONLY when the source spec contains real content for them. Do not emit empty optional sections. Do not write `N/A`. Remove the entire section heading when not used.
 
-#### Use Case rules (Section 7)
+#### Use Case rules (Use Cases section)
 
 Each scenario MUST contain exactly three lines, in this order:
 
@@ -120,7 +120,7 @@ Each line is a single complete sentence ending with a period. Do not bullet sub 
 
 Map source spec User Stories and Acceptance Scenarios into Use Cases by translating the engineering language into customer observable behavior. Drop implementation specifics.
 
-#### Job to Be Done (Section 3)
+#### Job to Be Done (Problem Statement section)
 
 Write the primary job in the Ulwick form, exactly:
 
@@ -130,7 +130,7 @@ When [situation], I want to [motivation], so I can [expected outcome].
 
 Use an action verb. Do NOT name a solution (avoid "When I open the app", "I want to click the button"). Frame the situation, motivation, and outcome at the level the user experiences them.
 
-#### Success Metrics (Section 8)
+#### Success Metrics
 
 Provide exactly one north star metric and at least one supporting metric. Each metric must be measurable and technology agnostic. No system internals (no "p95 latency", no "queue depth"). Acceptable patterns: time to outcome, completion rate, satisfaction signal, retention, adoption.
 
@@ -161,30 +161,30 @@ After composing the full text of `product/spec.md` in memory (before writing), r
 
 | Checklist item | Rule | Auto-fixable? |
 |---|---|---|
-| Section 1 present with ≥1 paragraph | `## 1.` heading exists; ≥1 non-empty paragraph follows before next `##` | Yes — add/expand |
-| Section 2 present with ≥1 persona | `## 2.` exists; ≥1 named persona or role listed | Yes — add placeholder persona from source spec |
-| Section 3 contains Job to Be Done | `## 3.` exists; prose contains "When", "I want to", "so I can" in one sentence | Yes — rewrite sentence to canonical form |
-| Section 4 present | `## 4.` exists with ≥1 non-empty prose line | Yes — add/expand |
-| Section 5 lists ≥1 included capability | `## 5.` exists with ≥1 bullet | Yes — add bullet from source spec |
-| Section 6 lists ≥1 excluded capability | `## 6.` exists with ≥1 bullet | Yes — add bullet from source spec |
-| Section 7 contains ≥1 use case | `## 7.` exists; ≥1 `**Given**`/`**When**`/`**Then**` block present | Yes — add scenario from source spec |
-| Section 8 has one north star + ≥1 supporting metric | `## 8.` exists; exactly one item marked or labelled as north star; ≥1 additional metric | Yes — restructure list |
-| Section 9 present | `## 9.` exists | Yes — add section |
-| Sections in canonical order 1–9 | H2 numbers appear in strictly ascending sequence | Yes — reorder |
+| Headline present with ≥1 paragraph | `## Headline` heading exists; ≥1 non-empty paragraph follows before next `##` | Yes — add/expand |
+| Target Users and Personas present with ≥1 persona | `## Target Users and Personas` exists; ≥1 named persona or role listed | Yes — add placeholder persona from source spec |
+| Problem Statement contains Job to Be Done | `## Problem Statement` exists; prose contains "When", "I want to", "so I can" in one sentence | Yes — rewrite sentence to canonical form |
+| Value Proposition present | `## Value Proposition` exists with ≥1 non-empty prose line | Yes — add/expand |
+| Scope lists ≥1 included capability | `## Scope` exists with ≥1 bullet | Yes — add bullet from source spec |
+| Out of Scope lists ≥1 excluded capability | `## Out of Scope` exists with ≥1 bullet | Yes — add bullet from source spec |
+| Use Cases contains ≥1 use case | `## Use Cases` exists; ≥1 `**Given**`/`**When**`/`**Then**` block present | Yes — add scenario from source spec |
+| Success Metrics has one north star + ≥1 supporting metric | `## Success Metrics` exists; exactly one item marked or labelled as north star; ≥1 additional metric | Yes — restructure list |
+| Risks and Open Product Questions present | `## Risks and Open Product Questions` exists | Yes — add section |
+| Sections in canonical order | Mandatory H2 headings appear in canonical sequence | Yes — reorder |
 | Written entirely in English | Dominant language of prose is English | No — source spec was checked in Step 2; flag if mismatch |
 | No em dash (`—`) | Character `—` absent from entire file | Yes — replace with comma, colon, or semicolon |
-| Every use case has exactly one Given, When, Then | Each scenario block under `## 7.` has exactly one `**Given**`, one `**When**`, one `**Then**` line | Yes — rewrite malformed scenarios |
+| Every use case has exactly one Given, When, Then | Each scenario block under `## Use Cases` has exactly one `**Given**`, one `**When**`, one `**Then**` line | Yes — rewrite malformed scenarios |
 | Each Given/When/Then is a full sentence starting with the keyword | Line starts with `**Given**`/`**When**`/`**Then**` and ends with `.` | Yes — rewrite line |
 | No implementation detail | File does not contain: file extensions (`.js`, `.ts`, `.py`, `.go`, `.java`, `.rb`, `.sql`), HTTP verbs (`GET `, `POST `, `PUT `, `DELETE `), code fences (` ``` `), database names (`PostgreSQL`, `MySQL`, `Redis`, `MongoDB`, `DynamoDB`, `S3`) | Yes — remove or rephrase offending lines |
 | No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "it is worth noting", "it should be noted", "as previously mentioned" (case-insensitive) | Yes — rewrite sentence without the phrase |
 | Bullets are short (≤12 words each) | Every `- ` line in the document contains ≤12 words | Yes — split or shorten bullet |
 | Job to Be Done uses an action verb | The word after "I want to " is a verb in base form | Yes — rewrite motivation clause with explicit action verb |
 | Header has non-placeholder Feature and Created | File has `Feature:` line with real text and `Created: YYYY-MM-DD` matching today | Yes — set from context |
-| NEEDS CLARIFICATION markers surfaced | Count of `[NEEDS CLARIFICATION` in source `spec.md` equals count in Section 9; or source count is zero | Yes — add missing markers to Section 9 |
-| Section 10 positioning structure (if present) | Contains "For", "who", "this product is a", "that", "unlike", "this product" | Yes — rewrite to canonical positioning sentence |
-| Section 11 rollout fields (if present) | Contains "audience", "channel", "rollout", "launch" (case-insensitive) | Yes — add missing fields |
-| Each Use Case describes behavior, not implementation | No scenario under `## 7.` mentions: framework names, file paths, HTTP methods, database operations, or code constructs | Yes — rewrite offending scenario lines at customer-observable level |
-| Each metric in Section 8 is tech-agnostic | Metrics do not contain: "p95", "p99", "latency", "throughput", "queue depth", "milliseconds", "bytes", "CPU", "memory", "API response time" | Yes — rephrase to user-facing equivalent (e.g., "time to first result", "task completion rate") |
+| NEEDS CLARIFICATION markers surfaced | Count of `[NEEDS CLARIFICATION` in source `spec.md` equals count in Risks and Open Product Questions section; or source count is zero | Yes — add missing markers to Risks and Open Product Questions |
+| Positioning structure (if present) | Contains "For", "who", "this product is a", "that", "unlike", "this product" | Yes — rewrite to canonical positioning sentence |
+| Go to Market rollout fields (if present) | Contains "audience", "channel", "rollout", "launch" (case-insensitive) | Yes — add missing fields |
+| Each Use Case describes behavior, not implementation | No scenario under `## Use Cases` mentions: framework names, file paths, HTTP methods, database operations, or code constructs | Yes — rewrite offending scenario lines at customer-observable level |
+| Each metric in Success Metrics is tech-agnostic | Metrics do not contain: "p95", "p99", "latency", "throughput", "queue depth", "milliseconds", "bytes", "CPU", "memory", "API response time" | Yes — rephrase to user-facing equivalent (e.g., "time to first result", "task completion rate") |
 
 **Iteration protocol**:
 
@@ -227,7 +227,7 @@ Print a short status report to the user:
 ```text
 Wrote: <abs path>/product/spec.md
 Updated: <abs path>/product/checklist.md  §Spec
-Sections populated: 9 mandatory[, 10 (Positioning)][, 11 (Go to Market)]
+Sections populated: 9 mandatory[, Positioning][, Go to Market and Rollout]
 Open product questions surfaced: <N>
 Spec checklist: <PASSED>/<TOTAL> auto-validated[, <REMAINING> need manual review]
 ```

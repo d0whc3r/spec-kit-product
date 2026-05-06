@@ -81,7 +81,7 @@ If any markers are present:
 - List each marker, one per line, with file location.
 - Ask the user: `Surface these as open questions in product/info.md? (yes/no)`
 - On `no` or any non-affirmative response, abort with `E_USER_ABORT` and write nothing.
-- On `yes`, continue. Each marker MUST appear as a bullet under Section 5 (Open Questions) of the generated `product/info.md`. Never silently resolve a marker.
+- On `yes`, continue. Each marker MUST appear as a bullet under the Open Questions section of the generated `product/info.md`. Never silently resolve a marker.
 
 ### Step 4: Handle existing info.md in product/
 
@@ -108,9 +108,9 @@ Read `templates/product-info-template.md`. Replace every bracketed placeholder w
 
 #### Section rules
 
-- **Mandatory sections (1 through 3)**: always present, in canonical order, populated. If the source spec lacks information for a mandatory section, do NOT fabricate. Populate the section with what is known, and add a precise question to Section 5.
-- **Optional section (4 Risks)**: include ONLY when the spec contains concrete risk signals: dependencies at risk, architectural constraints, assumptions that might be wrong, or integration points likely to break. Apply the pre-mortem lens: imagine the feature shipped and failed, then name the two to four most likely causes drawn from the spec. Do not emit generic risk platitudes. Remove the entire section when the spec has no meaningful risk signals.
-- **Optional section (5 Open Questions)**: include ONLY when at least one `[NEEDS CLARIFICATION]` marker was surfaced AND the user confirmed at the prompt. Do not emit an empty Section 5. Do not write `N/A`. Remove the entire heading and its contents when not used.
+- **Mandatory sections (Overview, Headline, What is Changing, Out of Scope)**: always present, in canonical order, populated. If the source spec lacks information for a mandatory section, do NOT fabricate. Populate the section with what is known, and add a precise question to the Open Questions section.
+- **Optional section (Risks)**: include ONLY when the spec contains concrete risk signals: dependencies at risk, architectural constraints, assumptions that might be wrong, or integration points likely to break. Apply the pre-mortem lens: imagine the feature shipped and failed, then name the two to four most likely causes drawn from the spec. Do not emit generic risk platitudes. Remove the entire section when the spec has no meaningful risk signals.
+- **Optional section (Open Questions)**: include ONLY when at least one `[NEEDS CLARIFICATION]` marker was surfaced AND the user confirmed at the prompt. Do not emit an empty Open Questions section. Do not write `N/A`. Remove the entire heading and its contents when not used.
 
 #### Header metadata
 
@@ -120,11 +120,12 @@ Read `templates/product-info-template.md`. Replace every bracketed placeholder w
 
 #### Section guidance
 
-- **Section 1 (Headline)**: one paragraph, two to four sentences. State who this is for, what is changing for them, and the new outcome they can reach. No internal jargon, no feature lists, no implementation detail.
-- **Section 2 (What is Changing)**: two to five short bullets, or one short paragraph. State customer-observable differences after the feature ships. Each bullet is a single sentence ending with a period.
-- **Section 3 (Out of Scope)**: a short scannable list of what is explicitly not included, even though a reasonable reader might expect it. Always populate it. Each item is one short sentence with a one-phrase reason.
-- **Section 4 (Risks, optional)**: pre-mortem analysis. Imagine the feature shipped and quietly failed six months from now. What caused it? Two to four bullets, each naming one concrete risk drawn from the spec and its consequence. Prioritise: technical or architectural impact (integration points, data model assumptions, dependency on another team's work, performance constraints), followed by delivery risks (scope creep, unclear ownership, missing prerequisite). Skip generic risks. If the spec has nothing that signals real risk, omit the section entirely.
-- **Section 5 (Open Questions, optional)**: each confirmed `[NEEDS CLARIFICATION]` marker becomes one bullet as a single-sentence question.
+- **Overview**: two to three sentences. State what this feature is expected to be at a high level: the problem it addresses and the nature of the solution. This section answers "what is this feature?" not "what is changing?". No implementation detail, no change-language, no jargon.
+- **Headline**: one paragraph, two to four sentences. State who this is for, what is changing for them, and the new outcome they can reach. No internal jargon, no feature lists, no implementation detail.
+- **What is Changing**: two to five short bullets, or one short paragraph. State customer-observable differences after the feature ships. Each bullet is a single sentence ending with a period.
+- **Out of Scope**: a short scannable list of what is explicitly not included, even though a reasonable reader might expect it. Always populate it. Each item is one short sentence with a one-phrase reason.
+- **Risks (optional)**: pre-mortem analysis. Imagine the feature shipped and quietly failed six months from now. What caused it? Two to four bullets, each naming one concrete risk drawn from the spec and its consequence. Prioritise: technical or architectural impact (integration points, data model assumptions, dependency on another team's work, performance constraints), followed by delivery risks (scope creep, unclear ownership, missing prerequisite). Skip generic risks. If the spec has nothing that signals real risk, omit the section entirely.
+- **Open Questions (optional)**: each confirmed `[NEEDS CLARIFICATION]` marker becomes one bullet as a single-sentence question.
 
 ### Step 6: Write the file atomically
 
@@ -147,12 +148,14 @@ After writing `product/info.md`, evaluate each item below against its content. F
 
 | Checklist item | Rule | Auto-fixable? |
 |---|---|---|
-| Section 1 (Headline) present with ≥1 paragraph | `## 1.` heading exists; ≥1 non-empty paragraph before next `##` | Yes |
-| Section 2 (What is Changing) present with ≥1 item | `## 2.` exists; ≥1 bullet or prose paragraph | Yes |
-| Section 3 (Out of Scope) present with ≥1 item | `## 3.` exists; ≥1 bullet | Yes |
-| Section 4 (Risks) present only when source spec has risk signals | If Section 4 is absent and no risk signals detected in `spec.md`: pass. If present and `spec.md` has no risk signals: flag as over-generated. | Yes — remove section if no signals |
-| Section 5 (Open Questions) matches NEEDS CLARIFICATION count | Count of `[NEEDS CLARIFICATION` in source equals bullets in `## 5.`; or both zero | Yes — add missing questions |
-| Sections in canonical order 1–3 (4 and 5 optional) | Heading numbers appear in strictly ascending sequence | Yes — reorder |
+| Overview present with ≥1 paragraph | `## Overview` heading exists; ≥1 non-empty paragraph before next `##` | Yes |
+| Overview ≤3 sentences | Paragraph under `## Overview` contains at most 3 sentences (ends with `.`, `!`, or `?`) | Yes — condense |
+| Headline present with ≥1 paragraph | `## Headline` heading exists; ≥1 non-empty paragraph before next `##` | Yes |
+| What is Changing present with ≥1 item | `## What is Changing` exists; ≥1 bullet or prose paragraph | Yes |
+| Out of Scope present with ≥1 item | `## Out of Scope` exists; ≥1 bullet | Yes |
+| Risks present only when source spec has risk signals | If Risks section is absent and no risk signals detected in `spec.md`: pass. If present and `spec.md` has no risk signals: flag as over-generated. | Yes — remove section if no signals |
+| Open Questions matches NEEDS CLARIFICATION count | Count of `[NEEDS CLARIFICATION` in source equals bullets in `## Open Questions`; or both zero | Yes — add missing questions |
+| Sections in canonical order (Overview, Headline, What is Changing, Out of Scope; Risks and Open Questions optional last) | Headings appear in canonical sequence | Yes — reorder |
 | Written entirely in English | Dominant language of prose is English | No — source was validated in Step 2 |
 | No em dash (`—`) | Character `—` absent from entire file | Yes — replace with comma, colon, or semicolon |
 | No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting", "it should be noted" (case-insensitive) | Yes — rewrite sentence |
@@ -184,7 +187,7 @@ After writing `product/info.md`, evaluate each item below against its content. F
 ```text
 Wrote: <abs path>/product/info.md
 Updated: <abs path>/product/checklist.md  §Info
-Sections populated: 3 mandatory[, 4 (Risks)][, 5 (Open Questions)]
+Sections populated: Overview + Headline + What is Changing + Out of Scope[, Risks][, Open Questions]
 Open product questions surfaced: <N>
 Info checklist: <PASSED>/<TOTAL> auto-validated[, <REMAINING> need manual review]
 ```
