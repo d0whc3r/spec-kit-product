@@ -6,6 +6,12 @@ The format follows Keep a Changelog. The project adheres to Semantic Versioning.
 
 ## [Unreleased]
 
+### Added
+
+- (none yet)
+
+## [0.0.1] - 2026-05-07
+
 _No unreleased changes._
 
 ## [0.3.0] - TBD
