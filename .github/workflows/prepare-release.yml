@@ -2,9 +2,9 @@ name: prepare-release
 
 # Manual entry point for cutting a release. Bumps the manifest version and
 # CHANGELOG entry coherently, commits as the release bot, then creates and
-# pushes the tag. The tag push triggers .github/workflows/release.yml, which
-# validates, builds the zip, publishes the GitHub Release, and updates
-# catalog.json.
+# pushes the tag. Completion of this workflow triggers release.yml via
+# workflow_run, which validates, builds the zip, publishes the GitHub Release,
+# and updates catalog.json.
 
 on:
   workflow_dispatch:
@@ -24,7 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      actions: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -64,12 +63,3 @@ jobs:
           git push origin "HEAD:${{ github.ref_name }}"
           git push origin "v${{ inputs.version }}"
           echo "[prepare-release] OK: pushed v${{ inputs.version }}"
-
-      - name: Trigger release workflow
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # GITHUB_TOKEN pushes do not trigger on: push: tags: workflows, so we
-          # fire release.yml explicitly via workflow_dispatch with the tag ref.
-          gh workflow run release.yml --ref "refs/tags/v${{ inputs.version }}"
-          echo "[prepare-release] OK: triggered release.yml for refs/tags/v${{ inputs.version }}"

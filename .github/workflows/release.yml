@@ -1,12 +1,10 @@
 name: release
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  workflow_run:
+    workflows: ["prepare-release"]
+    types: [completed]
 
-# The release-bot identity used by the update-catalog job. Defining it once at
-# the workflow level keeps it consistent with the recursive-trigger guard.
 env:
   RELEASE_BOT_NAME: github-actions[bot]
   RELEASE_BOT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
@@ -15,8 +13,11 @@ jobs:
   validate-manifest:
     name: validate-manifest
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
       - name: Run validate-manifest.sh
         run: bash .github/scripts/validate-manifest.sh
 
@@ -26,6 +27,8 @@ jobs:
     needs: validate-manifest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -46,6 +49,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
       - name: Read version
         id: read-version
@@ -54,11 +58,8 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "zip_name=product-${VERSION}.zip" >> "$GITHUB_OUTPUT"
       - name: Build deterministic zip
-        env:
-          SOURCE_DATE_EPOCH: ${{ github.event.head_commit.timestamp && '' || '' }}
         run: |
-          # Use the tagged commit's timestamp for reproducibility.
-          export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct "${{ github.sha }}")
+          export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct "${{ github.event.workflow_run.head_sha }}")
           bash .github/scripts/build-zip.sh
       - name: Upload zip artifact
         uses: actions/upload-artifact@v4
@@ -77,6 +78,8 @@ jobs:
       download_url: ${{ steps.gh-release.outputs.download_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
       - name: Download zip artifact
         uses: actions/download-artifact@v4
         with:
@@ -86,9 +89,6 @@ jobs:
         id: changelog
         run: |
           VERSION="${{ needs.build-zip.outputs.version }}"
-          # Grab the section between "## [VERSION]" and the next "## [" line.
-          # Use index() instead of regex so that [X.Y.Z] is matched literally,
-          # not interpreted as a character class.
           BODY=$(awk -v v="## [$VERSION]" 'index($0, v) == 1 {found=1; next} found && /^## \[/ {exit} found {print}' CHANGELOG.md)
           if [ -z "$BODY" ]; then
             BODY="Release v$VERSION"
