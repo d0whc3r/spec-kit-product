@@ -45,10 +45,13 @@ When this extension is installed under `.specify/extensions/product/`, the absol
 Run speckit's built-in resolver. If the user passed `--feature-dir <path>`, export `SPECIFY_FEATURE_DIRECTORY=<path>` in the environment first (resolve relative paths against the repo root).
 
 - **Bash**:
+
   ```bash
   bash -c 'source .specify/scripts/bash/common.sh && eval "$(get_feature_paths)" && echo "$FEATURE_DIR"'
   ```
+
 - **PowerShell**:
+
   ```powershell
   . .specify/scripts/powershell/common.ps1
   (Get-FeaturePathsEnv).FEATURE_DIR
@@ -141,6 +144,7 @@ Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `info.md`.
 ### Step 6b: Prepare product/checklist.md
 
 If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
+
 - Read `templates/product-checklist-template.md`.
 - Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
 - Write the file. All three sections start with the "not yet generated" placeholder state.
@@ -166,8 +170,8 @@ After writing `product/00-info.md`, evaluate each item below against its content
 | Written entirely in English | Dominant language of prose is English | No — source was validated in Step 2 |
 | No em dash (`—`) | Character `—` absent from entire file | Yes — replace with comma, colon, or semicolon |
 | No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting", "it should be noted" (case-insensitive) | Yes — rewrite sentence |
-| Bullets are short (≤12 words each) | Every `- ` line contains ≤12 words | Yes — split or shorten |
-| No implementation detail | File does not contain: file extensions (`.js`, `.ts`, `.py`, `.go`, `.java`, `.rb`, `.sql`), HTTP verbs (`GET `, `POST `, `PUT `, `DELETE `), code fences, database names (`PostgreSQL`, `MySQL`, `Redis`, `MongoDB`, `DynamoDB`, `S3`) | Yes — remove or rephrase |
+| Bullets are short (≤12 words each) | Every `-` line contains ≤12 words | Yes — split or shorten |
+| No implementation detail | File does not contain: file extensions (`.js`, `.ts`, `.py`, `.go`, `.java`, `.rb`, `.sql`), HTTP verbs (`GET`, `POST`, `PUT`, `DELETE`), code fences, database names (`PostgreSQL`, `MySQL`, `Redis`, `MongoDB`, `DynamoDB`, `S3`) | Yes — remove or rephrase |
 | Header has non-placeholder Feature and Created | File has `Feature:` and `Created: YYYY-MM-DD` with real values | Yes — set from context |
 | References are external URLs only | If References section present: every entry has a plain-language label and an external URL; no entry points to spec-kit artifacts (spec.md, plan.md, tasks.md, or any extension-generated file). If absent and source spec contains external hyperlinks: add the section | Yes — remove entries pointing to internal files; remove section if no external references remain |
 

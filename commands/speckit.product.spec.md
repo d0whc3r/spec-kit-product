@@ -40,10 +40,13 @@ When this extension is installed under `.specify/extensions/product/`, the absol
 Run speckit's built-in resolver. If the user passed `--feature-dir <path>`, export `SPECIFY_FEATURE_DIRECTORY=<path>` in the environment first (resolve relative paths against the repo root).
 
 - **Bash**:
+
   ```bash
   bash -c 'source .specify/scripts/bash/common.sh && eval "$(get_feature_paths)" && echo "$FEATURE_DIR"'
   ```
+
 - **PowerShell**:
+
   ```powershell
   . .specify/scripts/powershell/common.ps1
   (Get-FeaturePathsEnv).FEATURE_DIR
@@ -150,6 +153,7 @@ Provide exactly one north star metric and at least one supporting metric. Each m
 ### Step 6: Prepare product/checklist.md
 
 If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
+
 - Read `templates/product-checklist-template.md`.
 - Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
 - Write the file. All three sections (`## Info`, `## Spec`, `## Plan`) start with the "not yet generated" placeholder state.
@@ -182,9 +186,9 @@ After composing the full text of `product/10-spec.md` in memory (before writing)
 | No em dash (`—`) | Character `—` absent from entire file | Yes — replace with comma, colon, or semicolon |
 | Every use case has exactly one Given, When, Then | Each scenario block under `## Use Cases` has exactly one `**Given**`, one `**When**`, one `**Then**` line | Yes — rewrite malformed scenarios |
 | Each Given/When/Then is a full sentence starting with the keyword | Line starts with `**Given**`/`**When**`/`**Then**` and ends with `.` | Yes — rewrite line |
-| No implementation detail | File does not contain: file extensions (`.js`, `.ts`, `.py`, `.go`, `.java`, `.rb`, `.sql`), HTTP verbs (`GET `, `POST `, `PUT `, `DELETE `), code fences (` ``` `), database names (`PostgreSQL`, `MySQL`, `Redis`, `MongoDB`, `DynamoDB`, `S3`) | Yes — remove or rephrase offending lines |
+| No implementation detail | File does not contain: file extensions (`.js`, `.ts`, `.py`, `.go`, `.java`, `.rb`, `.sql`), HTTP verbs (`GET`, `POST`, `PUT`, `DELETE`), code fences (` ``` `), database names (`PostgreSQL`, `MySQL`, `Redis`, `MongoDB`, `DynamoDB`, `S3`) | Yes — remove or rephrase offending lines |
 | No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "it is worth noting", "it should be noted", "as previously mentioned" (case-insensitive) | Yes — rewrite sentence without the phrase |
-| Bullets are short (≤12 words each) | Every `- ` line in the document contains ≤12 words | Yes — split or shorten bullet |
+| Bullets are short (≤12 words each) | Every `-` line in the document contains ≤12 words | Yes — split or shorten bullet |
 | Job to Be Done uses an action verb | The word after "I want to " is a verb in base form | Yes — rewrite motivation clause with explicit action verb |
 | Header has non-placeholder Feature and Created | File has `Feature:` line with real text and `Created: YYYY-MM-DD` matching today | Yes — set from context |
 | NEEDS CLARIFICATION markers surfaced | Count of `[NEEDS CLARIFICATION` in source `spec.md` equals count in Risks and Open Product Questions section; or source count is zero | Yes — add missing markers to Risks and Open Product Questions |

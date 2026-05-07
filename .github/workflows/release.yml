@@ -70,8 +70,13 @@ jobs:
     needs: validate-manifest
     steps:
       - uses: actions/checkout@v4
-      - name: Install markdownlint-cli2
-        run: npm install -g markdownlint-cli2
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
       - name: Run lint-content.sh
         run: bash .github/scripts/lint-content.sh
 

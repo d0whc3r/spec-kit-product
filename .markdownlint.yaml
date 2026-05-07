@@ -21,3 +21,9 @@ MD036: false
 
 # Allow bare URLs inside code blocks; templates show example URLs.
 MD034: false
+
+# Table pipe alignment style varies across files; disable the style rule.
+MD060: false
+
+# Templates use placeholder link syntax ([Label]: [URL]) that triggers false positives.
+MD053: false

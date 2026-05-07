@@ -70,6 +70,7 @@
 > Include only when the source plan contains concrete risk signals. Omit otherwise.
 
 **[Risk title]**
+
 - **What could go wrong**: [Description and consequence, one sentence.]
 - **Probability**: [Low / Medium / High]
 - **Impact**: [Low / Medium / High]

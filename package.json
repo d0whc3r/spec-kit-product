@@ -1,0 +1,12 @@
+{
+  "name": "spec-kit-product",
+  "private": true,
+  "scripts": {
+    "lint:md": "markdownlint-cli2 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md'",
+    "fix:md": "markdownlint-cli2 --fix 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md'"
+  },
+  "devDependencies": {
+    "markdownlint-cli2": "^0.22.1"
+  },
+  "packageManager": "pnpm@11.0.8"
+}

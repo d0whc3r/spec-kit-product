@@ -48,10 +48,13 @@ When this extension is installed under `.specify/extensions/product/`, the absol
 Run speckit's built-in resolver. If the user passed `--feature-dir <path>`, export `SPECIFY_FEATURE_DIRECTORY=<path>` in the environment first (resolve relative paths against the repo root).
 
 - **Bash**:
+
   ```bash
   bash -c 'source .specify/scripts/bash/common.sh && eval "$(get_feature_paths)" && echo "$FEATURE_DIR"'
   ```
+
 - **PowerShell**:
+
   ```powershell
   . .specify/scripts/powershell/common.ps1
   (Get-FeaturePathsEnv).FEATURE_DIR
@@ -88,9 +91,11 @@ Read the following files silently if they exist. Do not warn or error if absent.
 Inspect `plan.md` and `spec.md` for architecture information, component descriptions, data model details, use cases, and explicit technical decisions. If none are found across both files:
 
 - Emit a non-blocking console notice:
-  ```
+
+  ```text
   [product-design] NOTICE: plan.md and spec.md appear sparse. Output coverage may be limited.
   ```
+
 - Continue with generation. Do not abort.
 
 ### Step 5: Handle existing product/30-design.md
@@ -147,6 +152,7 @@ Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `design.md
 ### Step 7b: Prepare product/checklist.md
 
 If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
+
 - Read `templates/product-checklist-template.md`.
 - Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
 - Write the file. All sections start with the "not yet generated" placeholder state.
@@ -177,7 +183,7 @@ After writing `product/30-design.md`, evaluate each item below against its conte
 | No em dash (`—`) | Character `—` absent from entire file | Yes - replace with comma, colon, or semicolon |
 | No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting" (case-insensitive) | Yes - rewrite sentence |
 | No runnable code | File does not contain language-specific syntax blocks (fenced blocks tagged with a language identifier other than `text`) | Yes - change language tag to `text` or remove |
-| Bullets are short (≤12 words each) | Every `- ` line contains ≤12 words | Yes - split or shorten |
+| Bullets are short (≤12 words each) | Every `-` line contains ≤12 words | Yes - split or shorten |
 | Key Decisions follow required format | Key Decisions section, if present: each entry has Context, Options considered, Decision, Consequences fields | Yes - add missing fields from source |
 | Risks include probability and impact | Risks and Mitigations section, if present: each entry has What could go wrong, Probability (Low/Medium/High), Impact (Low/Medium/High), Mitigation | Yes - add missing fields; default to Medium when source has no signal |
 | Optional sections present only when source warrants | Key Decisions, Risks and Mitigations, Open Questions present only when source has corresponding content | Yes - remove sections with no source backing |

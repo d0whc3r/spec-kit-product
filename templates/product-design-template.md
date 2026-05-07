@@ -14,7 +14,7 @@
 **Affected layers**: [Comma-separated list: e.g. frontend, API layer, data layer, background jobs, infra.]
 **Technical constraints**:
 
-- [Constraint derived from plan.md or spec.md — e.g. latency budget, backward compatibility requirement, approved library policy.]
+- [Constraint derived from plan.md or spec.md: e.g. latency budget, backward compatibility requirement, approved library policy.]
 - [Constraint 2]
 
 ## Architectural Approach
@@ -36,7 +36,7 @@
 
 ```text
 [Entity name]
-- [field]: [type] — [purpose or constraint]
+- [field]: [type] - [purpose or constraint]
 - [field]: [type]
 ```
 
@@ -46,13 +46,13 @@
 
 ## API Design
 
-[Describe endpoint or operation shapes at a conceptual level. Request and response shapes, key error cases, and important constraints. Not a full OpenAPI spec — enough for a tech lead to assess the surface area and spot design issues.]
+[Describe endpoint or operation shapes at a conceptual level. Request and response shapes, key error cases, and important constraints. Not a full OpenAPI spec; enough for a tech lead to assess the surface area and spot design issues.]
 
 ```text
 [METHOD] [/path]
   Request:  [key fields and types]
   Response: [key fields and types]
-  Errors:   [HTTP status or error code] — [meaning]
+  Errors:   [HTTP status or error code]: [meaning]
 ```
 
 ## Spec Coverage
@@ -71,11 +71,13 @@
 
 **Context**: [What constraint or trade-off forced a decision.]
 **Options considered**:
-- [Option A — brief pros and cons]
-- [Option B — brief pros and cons]
+
+- [Option A: brief pros and cons]
+- [Option B: brief pros and cons]
 
 **Decision**: [What was chosen and the primary reason.]
 **Consequences**:
+
 - Positive: [What this enables or simplifies.]
 - Negative: [Trade-off, future debt, or lock-in introduced.]
 
@@ -97,6 +99,7 @@
 > Include only when plan.md or spec.md contains concrete risk signals. Omit otherwise.
 
 **[Risk title]**
+
 - **What could go wrong**: [One sentence including consequence.]
 - **Probability**: [Low / Medium / High]
 - **Impact**: [Low / Medium / High]

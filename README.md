@@ -198,6 +198,7 @@ The `product/` subfolder is created if it does not exist. `plan.md` and `spec.md
 The generated file contains three mandatory sections and up to four optional sections:
 
 **Mandatory**:
+
 1. **Summary** - one paragraph: what is being built, why now, and the main approach.
 2. **Delivery Phases** - three bands: NOW (current phases), NEXT (natural follow-on, not a commitment), LATER (explicitly deferred work).
 3. **Out of Scope** - a short, scannable list of what is deliberately excluded.

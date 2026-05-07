@@ -46,10 +46,13 @@ When this extension is installed under `.specify/extensions/product/`, the absol
 Run speckit's built-in resolver. If the user passed `--feature-dir <path>`, export `SPECIFY_FEATURE_DIRECTORY=<path>` in the environment first (resolve relative paths against the repo root).
 
 - **Bash**:
+
   ```bash
   bash -c 'source .specify/scripts/bash/common.sh && eval "$(get_feature_paths)" && echo "$FEATURE_DIR"'
   ```
+
 - **PowerShell**:
+
   ```powershell
   . .specify/scripts/powershell/common.ps1
   (Get-FeaturePathsEnv).FEATURE_DIR
@@ -82,9 +85,11 @@ If `${FEATURE_DIR}/spec.md` exists, read it silently for supplementary context: 
 Inspect `plan.md` for identifiable phases (sections named "Phase" or equivalent groupings), decisions, component information, risks, and validation criteria. If none are found:
 
 - Emit a non-blocking console notice:
-  ```
+
+  ```text
   [product-plan] NOTICE: plan.md appears sparse. Output coverage may be limited.
   ```
+
 - Continue with generation. Do not abort.
 
 ### Step 5: Handle existing product/20-plan.md
@@ -142,6 +147,7 @@ Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `plan.md`.
 ### Step 7b: Prepare product/checklist.md
 
 If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
+
 - Read `templates/product-checklist-template.md`.
 - Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
 - Write the file. All three sections start with the "not yet generated" placeholder state.
@@ -165,7 +171,7 @@ After writing `product/20-plan.md`, evaluate each item below against its content
 | Written entirely in English | Dominant language of prose is English | No - source was validated in Step 2 |
 | No em dash (`—`) | Character `—` absent from entire file | Yes - replace with comma, colon, or semicolon |
 | No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting" (case-insensitive) | Yes - rewrite sentence |
-| Bullets are short (≤12 words each) | Every `- ` line contains ≤12 words | Yes - split or shorten |
+| Bullets are short (≤12 words each) | Every `-` line contains ≤12 words | Yes - split or shorten |
 | No code or file paths | File does not contain: code fences, file extension patterns (`.js`, `.ts`, `.py`, `.go`, etc.), absolute or relative paths starting with `/` or `./` | Yes - remove or describe in prose |
 | No time estimates anywhere in the document | File does not contain: "week", "day", "sprint", "appetite", "story point", "deadline", or digit + time unit patterns | Yes - remove offending text |
 | Technical terms glossed on first use | First occurrence of each term (API, CLI, SDK, refactor, idempotent, atomic, schema, linter, manifest, hook, pipeline, ADR) carries a parenthetical gloss | Yes - insert gloss after first occurrence |
