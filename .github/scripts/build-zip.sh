@@ -114,7 +114,7 @@ trap 'rm -rf "$STAGE" "$VERIFY"' EXIT
 
 # Allowlist safety net: the zip MUST contain only files that belong to the
 # extension's runtime surface. If something slips past .extensionignore, fail.
-ALLOWED='^(extension\.yml|README\.md|LICENSE|CHANGELOG\.md|commands/.*|templates/.*|scripts/(bash|powershell)/.*)$'
+ALLOWED='^(extension\.yml|README\.md|LICENSE|CHANGELOG\.md|commands/.*|templates/.*)$'
 EXTRA=$(cd "$VERIFY" && find . -type f | sed 's|^\./||' | grep -Ev "$ALLOWED" || true)
 if [ -n "$EXTRA" ]; then
     echo "[build-zip] FAIL: zip contains files outside the allowlist:" >&2

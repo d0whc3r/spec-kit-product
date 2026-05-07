@@ -9,7 +9,7 @@
 #
 # Required files (kept regardless of this file):
 #   extension.yml, README.md, LICENSE, CHANGELOG.md,
-#   commands/**, templates/**, scripts/{bash,powershell}/**
+#   commands/**, templates/**
 
 # This file itself is build metadata, not part of the installed extension.
 .extensionignore

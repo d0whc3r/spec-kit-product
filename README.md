@@ -140,8 +140,7 @@ An optional **Open Questions** section (Section 5) appears if the source spec co
 
 | Symptom | Likely cause | Fix |
 |---------|--------------|-----|
-| `[product-info] E_NO_PROJECT: ...` | Running outside a Spec Kit project. | `cd` into a project with `.specify/`, or run `specify init` first. |
-| `[product-info] E_NO_POINTER: ...` | No active feature recorded and `--feature-dir` not passed. | Run `/speckit-specify` first, or pass `--feature-dir <path>`. |
+| `ERROR: Failed to resolve feature directory` | Running outside a Spec Kit project, or no active feature recorded. | `cd` into a project with `.specify/`, run `/speckit-specify` first, or pass `--feature-dir <path>`. |
 | `[product-info] E_NO_SPEC: ...` | Feature directory has no `spec.md`. | Run `/speckit-specify` to create one. |
 | `[product-info] E_PLACEHOLDERS: ...` | `spec.md` still contains unfilled template scaffolding. | Open `spec.md` and replace the listed placeholders with real content. |
 | `[product-info] E_LANGUAGE: ...` | `spec.md` is not in English. | Translate `spec.md` to English first. The command does not auto-translate. |
@@ -213,8 +212,7 @@ The generated file contains three mandatory sections and up to four optional sec
 
 | Code | Cause | Fix |
 |------|-------|-----|
-| `E_NO_PROJECT` | Running outside a Spec Kit project. | `cd` into a project with `.specify/`, or run `specify init` first. |
-| `E_NO_POINTER` | No active feature recorded and `--feature-dir` not passed. | Run `/speckit-plan` first, or pass `--feature-dir <path>`. |
+| speckit resolution error | Running outside a Spec Kit project, or no active feature recorded. | `cd` into a project with `.specify/`, run `/speckit-plan` first, or pass `--feature-dir <path>`. |
 | `E_NO_PLAN` | Feature directory has no `plan.md`. | Run `/speckit-plan` to generate the engineering plan first. |
 | `E_PLACEHOLDERS` | `plan.md` still contains unfilled template placeholders. | Fill in or regenerate `plan.md` before running this command. |
 | `E_LANGUAGE` | `plan.md` is not in English. | Translate `plan.md` to English first. The command does not auto-translate. |
@@ -286,8 +284,7 @@ Optional sections (References, Glossary, Assumptions) appear when the source pla
 
 | Code | Cause | Fix |
 |------|-------|-----|
-| `E_NO_PROJECT` | Running outside a Spec Kit project. | `cd` into a project with `.specify/`, or run `specify init` first. |
-| `E_NO_POINTER` | No active feature recorded and `--feature-dir` not passed. | Run `/speckit-plan` first, or pass `--feature-dir <path>`. |
+| speckit resolution error | Running outside a Spec Kit project, or no active feature recorded. | `cd` into a project with `.specify/`, run `/speckit-plan` first, or pass `--feature-dir <path>`. |
 | `E_NO_PLAN` | Feature directory has no `plan.md`. | Run `/speckit-plan` to generate the engineering plan first. |
 | `E_NO_SPEC` | Feature directory has no `spec.md`. | Run `/speckit-specify` to create one. |
 | `E_PLACEHOLDERS` | Source files still contain unfilled template placeholders. | Fill in or regenerate the source files before running this command. |
@@ -305,7 +302,6 @@ Optional sections (References, Glossary, Assumptions) appear when the source pla
 - `templates/product-checklist-template.md`: the canonical quality checklist template.
 - `templates/product-info-template.md`: the canonical output template for `/speckit-product-info`.
 - `templates/product-plan-template.md`: the canonical output template for `/speckit-product-plan`.
-- `scripts/bash/resolve-feature-dir.sh` and `scripts/powershell/resolve-feature-dir.ps1`: cross-platform feature directory resolver.
 
 ## License
 

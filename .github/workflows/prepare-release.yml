@@ -42,7 +42,7 @@ jobs:
 
       - name: Validate manifest reflects the new version
         env:
-          GITHUB_REF_NAME: v${{ inputs.version }}
+          RELEASE_VERSION: v${{ inputs.version }}
         run: bash .github/scripts/validate-manifest.sh
 
       - name: Lint content

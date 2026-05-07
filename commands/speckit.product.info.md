@@ -42,14 +42,19 @@ When this extension is installed under `.specify/extensions/product/`, the absol
 
 ### Step 1: Resolve the feature directory
 
-Run the cross-platform helper:
+Run speckit's built-in resolver. If the user passed `--feature-dir <path>`, export `SPECIFY_FEATURE_DIRECTORY=<path>` in the environment first (resolve relative paths against the repo root).
 
-- **Bash**: `.specify/extensions/product/scripts/bash/resolve-feature-dir.sh [--feature-dir "<path>"]`
-- **PowerShell**: `.specify/extensions/product/scripts/powershell/resolve-feature-dir.ps1 [-FeatureDir "<path>"]`
+- **Bash**:
+  ```bash
+  bash -c 'source .specify/scripts/bash/common.sh && eval "$(get_feature_paths)" && echo "$FEATURE_DIR"'
+  ```
+- **PowerShell**:
+  ```powershell
+  . .specify/scripts/powershell/common.ps1
+  (Get-FeaturePathsEnv).FEATURE_DIR
+  ```
 
-The script prints an absolute path on stdout, or exits non-zero with one of `E_NO_PROJECT`, `E_NO_POINTER`, `E_BAD_POINTER`. Surface the script's stderr verbatim to the user and stop on any non-zero exit code.
-
-Capture the printed path as `FEATURE_DIR`.
+Capture the output as `FEATURE_DIR`. If the command exits non-zero, surface its stderr verbatim to the user and stop.
 
 ### Step 2: Verify spec.md
 
@@ -211,9 +216,6 @@ When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholde
 
 | Code | Condition |
 |------|-----------|
-| E_NO_PROJECT | No `.specify/` directory in any ancestor of the working directory. |
-| E_NO_POINTER | `.specify/feature.json` missing and `--feature-dir` not provided. |
-| E_BAD_POINTER | Feature directory in the pointer does not exist. |
 | E_NO_SPEC | `spec.md` missing in the feature directory. |
 | E_PLACEHOLDERS | `spec.md` still contains template placeholders. |
 | E_LANGUAGE | `spec.md` is not in English. |

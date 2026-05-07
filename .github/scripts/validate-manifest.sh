@@ -67,11 +67,23 @@ if [ -z "$EXT_VERSION" ]; then
     exit 1
 fi
 
-# Tag/version equality check, only when running inside a tag-driven workflow.
-if [ -n "${GITHUB_REF_NAME:-}" ]; then
-    EXPECTED="${GITHUB_REF_NAME#v}"
+# Tag/version equality check — only when an explicit version is provided or
+# the workflow is running from a version tag (refs/tags/v*).
+# RELEASE_VERSION is used by prepare-release.yml because GITHUB_REF_NAME is a
+# GitHub Actions built-in that cannot be overridden via step-level env:.
+# GITHUB_REF is used to detect tag-driven runs in release.yml.
+REF_FOR_CHECK="${RELEASE_VERSION:-${GITHUB_REF_NAME:-}}"
+IS_TAG_RUN=0
+if [ -n "${RELEASE_VERSION:-}" ]; then
+    IS_TAG_RUN=1
+elif echo "${GITHUB_REF:-}" | grep -q '^refs/tags/v'; then
+    IS_TAG_RUN=1
+fi
+
+if [ "$IS_TAG_RUN" -eq 1 ]; then
+    EXPECTED="${REF_FOR_CHECK#v}"
     if [ "$EXT_VERSION" != "$EXPECTED" ]; then
-        echo "[validate-manifest] FAIL: version mismatch: tag $GITHUB_REF_NAME, manifest $EXT_VERSION" >&2
+        echo "[validate-manifest] FAIL: version mismatch: tag $REF_FOR_CHECK, manifest $EXT_VERSION" >&2
         exit 1
     fi
 fi
