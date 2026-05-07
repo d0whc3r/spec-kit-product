@@ -1,7 +1,7 @@
 {
   "name": "Product Spec Extension",
   "id": "product",
-  "description": "Generates a product oriented spec from an existing technical spec.md, following Working Backwards, Jobs to Be Done, Gherkin BDD, and Lean PRD conventions.",
+  "description": "Generates product-oriented documents from engineering specs and plans. Provides /speckit-product-spec (PRFAQ/BDD/Lean PRD), /speckit-product-info (stakeholder summary), /speckit-product-plan (Shape Up delivery view), and /speckit-product-design (technical design for tech leads).",
   "author": "spec-kit-product contributors",
   "version": "",
   "download_url": "",
@@ -10,7 +10,7 @@
   "requires": {
     "speckit_version": ">=0.2.0"
   },
-  "tags": ["product", "spec", "prd", "documentation"],
+  "tags": ["product", "spec", "prd", "design", "documentation"],
   "verified": false,
   "created_at": "",
   "updated_at": ""

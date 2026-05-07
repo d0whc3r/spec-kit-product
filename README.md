@@ -220,6 +220,82 @@ The generated file contains three mandatory sections and up to four optional sec
 | `E_LANGUAGE` | `plan.md` is not in English. | Translate `plan.md` to English first. The command does not auto-translate. |
 | `E_USER_ABORT` | You answered "no" at the overwrite prompt. | Re-run when ready. |
 
+---
+
+## /speckit-product-design
+
+`/speckit-product-design` is a sibling command to `/speckit-product-spec`, `/speckit-product-info`, and `/speckit-product-plan`. It derives a technical design document `product/30-design.md` from `plan.md` and `spec.md`, aimed at tech leads and senior developers.
+
+Unlike the product-facing `product/20-plan.md`, this document references component names, module boundaries, file-level granularity, API surface shapes, and data schemas at a conceptual level. No runnable code, no full ORM definitions, no line-by-line implementation detail.
+
+### Prerequisites
+
+- Spec Kit `>=0.2.0` initialized in the current project.
+- The `product` extension installed at version `>=0.3.0`.
+- A feature directory under `specs/` with a populated `plan.md` and `spec.md` (run `/speckit-plan` and `/speckit-specify` first if needed).
+
+### Install or upgrade
+
+```bash
+specify extension add product
+# upgrade:
+specify extension upgrade product
+```
+
+After the install, all four product commands are available.
+
+### Invoke
+
+```text
+/speckit-product-design
+```
+
+Run it from any working directory inside a Spec Kit project. To target a specific feature, pass the override:
+
+```text
+/speckit-product-design --feature-dir specs/<feature-dir>
+```
+
+The command reads:
+
+- `<feature-dir>/plan.md` (required)
+- `<feature-dir>/spec.md` (required)
+- `<feature-dir>/tasks.md` (optional)
+- `<feature-dir>/data-model.md` (optional)
+
+The command writes:
+
+- `<feature-dir>/product/30-design.md`
+- `<feature-dir>/product/checklist.md` (creates if absent; updates only the `## Design` section, preserving all other sections)
+
+### Output
+
+The generated file covers:
+
+1. **Architectural Approach** - main patterns and structural decisions.
+2. **Affected Modules and Layers** - what changes and where in the stack.
+3. **Data Model and API Shapes** - schema and interface shapes at a conceptual level.
+4. **Spec Coverage Mapping** - each acceptance criterion mapped to the component that satisfies it.
+5. **Key Technical Decisions** - condensed ADR format: Decision, Why, Trade-off.
+6. **Testing Strategy** - unit, integration, and contract test targets.
+7. **Rollout Plan** - feature flags, migration steps, and monitoring expectations.
+
+Optional sections (References, Glossary, Assumptions) appear when the source plan has relevant content.
+
+### Error codes
+
+| Code | Cause | Fix |
+|------|-------|-----|
+| `E_NO_PROJECT` | Running outside a Spec Kit project. | `cd` into a project with `.specify/`, or run `specify init` first. |
+| `E_NO_POINTER` | No active feature recorded and `--feature-dir` not passed. | Run `/speckit-plan` first, or pass `--feature-dir <path>`. |
+| `E_NO_PLAN` | Feature directory has no `plan.md`. | Run `/speckit-plan` to generate the engineering plan first. |
+| `E_NO_SPEC` | Feature directory has no `spec.md`. | Run `/speckit-specify` to create one. |
+| `E_PLACEHOLDERS` | Source files still contain unfilled template placeholders. | Fill in or regenerate the source files before running this command. |
+| `E_LANGUAGE` | Source files are not in English. | Translate to English first. The command does not auto-translate. |
+| `E_USER_ABORT` | You answered "no" at the overwrite prompt. | Re-run when ready. |
+
+---
+
 ## Related Files
 
 - `commands/speckit.product.spec.md`: the `/speckit-product-spec` slash command body.
