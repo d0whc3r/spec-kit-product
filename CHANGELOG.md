@@ -1,22 +1,11 @@
-## [0.0.6](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.5...v0.0.6) (2026-05-07)
+# Changelog
 
+## [0.0.6](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.5...v0.0.6) (2026-05-07)
 
 ### Bug Fixes
 
 * **catalog:** add missing fields required by publishing guide ([a42c7d8](https://github.com/d0whc3r/spec-kit-product/commit/a42c7d81ede4c3344aa36e368089b306fba9da64))
 * **manifest:** shorten description, add homepage, remove empty hooks ([b88e0e9](https://github.com/d0whc3r/spec-kit-product/commit/b88e0e9f6de4fd4d962491d6f6195b4386837495))
-
-# Changelog
-
-All notable changes to the Product Spec Extension are documented in this file.
-
-The format follows Keep a Changelog. The project adheres to Semantic Versioning.
-
-## [Unreleased]
-
-### Added
-
-- (none yet)
 
 ## [0.0.5] - 2026-05-07
 
