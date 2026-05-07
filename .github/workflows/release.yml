@@ -17,7 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+      - name: Fetch tags
+        run: git fetch --tags
       - name: Run validate-manifest.sh
         run: bash .github/scripts/validate-manifest.sh
 
@@ -28,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event.repository.default_branch }}
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -49,8 +52,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
+      - name: Fetch tags
+        run: git fetch --tags
       - name: Read version
         id: read-version
         run: |
@@ -59,7 +64,7 @@ jobs:
           echo "zip_name=product-${VERSION}.zip" >> "$GITHUB_OUTPUT"
       - name: Build deterministic zip
         run: |
-          export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct "${{ github.event.workflow_run.head_sha }}")
+          export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct "v${{ steps.read-version.outputs.version }}")
           bash .github/scripts/build-zip.sh
       - name: Upload zip artifact
         uses: actions/upload-artifact@v4
@@ -79,7 +84,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event.repository.default_branch }}
       - name: Download zip artifact
         uses: actions/download-artifact@v4
         with:
