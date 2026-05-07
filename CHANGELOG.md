@@ -10,6 +10,12 @@ The format follows Keep a Changelog. The project adheres to Semantic Versioning.
 
 - (none yet)
 
+## [0.0.5] - 2026-05-07
+
+### Added
+
+- (none yet)
+
 ## [0.0.4] - 2026-05-07
 
 ### Added

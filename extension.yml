@@ -3,7 +3,7 @@ schema_version: "1.0"
 extension:
   id: product
   name: "Product Spec Extension"
-  version: "0.0.4"
+  version: "0.0.5"
   description: "Generates product-oriented documents from engineering specs and plans, following Working Backwards, Jobs to Be Done, Gherkin BDD, and Lean PRD conventions. Provides /speckit.product.spec, /speckit.product.info, /speckit.product.plan, and /speckit.product.design."
   author: spec-kit-product contributors
   repository: https://github.com/d0whc3r/spec-kit-product
