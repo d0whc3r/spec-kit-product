@@ -2,13 +2,11 @@
 # Pipeline: build the deterministic release zip.
 #
 # Reads version from extension.yml at the repo root. Produces
-# dist/product-<version>.zip from the repo root, with files at the zip root,
-# alphabetical entry order, and file timestamps fixed to the tagged commit's
-# timestamp (or SOURCE_DATE_EPOCH if set).
+# dist/product-<version>.zip containing only the extension's runtime surface:
+#   extension.yml, README.md, LICENSE (if present), commands/**, templates/**
 #
-# .extensionignore at the repo root governs which files are excluded from the
-# zip. Files NOT matched by the ignore patterns are included (subject to the
-# allowlist safety check below).
+# Files are ordered alphabetically and timestamped to the tagged commit's
+# timestamp (or SOURCE_DATE_EPOCH if set) for reproducibility.
 #
 # After build, unpacks the zip into a temp dir and re-runs validate-manifest.sh
 # against the unpacked tree, to catch packaging bugs that source validation
@@ -55,45 +53,27 @@ rm -f "$ZIP_PATH"
 STAGE=$(mktemp -d)
 trap 'rm -rf "$STAGE"' EXIT
 
-IGNORE_FILE="$REPO_ROOT/.extensionignore"
-_should_ignore() {
+# Inclusion list: only these paths belong in the extension zip.
+_should_include() {
     local rel="$1"
-    [ ! -f "$IGNORE_FILE" ] && return 1
-    while IFS= read -r pat || [ -n "$pat" ]; do
-        case "$pat" in ''|\#*) continue ;; esac
-        case "$pat" in
-            */)
-                local dir="${pat%/}"
-                case "$rel" in
-                    "$dir"/*|*/"$dir"/*) return 0 ;;
-                esac
-                ;;
-            */*)
-                # shellcheck disable=SC2254
-                case "$rel" in $pat) return 0 ;; esac
-                ;;
-            *)
-                local base="${rel##*/}"
-                # shellcheck disable=SC2254
-                case "$base" in $pat) return 0 ;; esac
-                ;;
-        esac
-    done < "$IGNORE_FILE"
+    case "$rel" in
+        extension.yml)      return 0 ;;
+        README.md)          return 0 ;;
+        LICENSE)            return 0 ;;
+        commands/*)         return 0 ;;
+        templates/*)        return 0 ;;
+    esac
     return 1
 }
 
-# Walk the repo root, copy non-ignored files into stage.
 ( cd "$REPO_ROOT" && find . -type f -print0 | sort -z | while IFS= read -r -d '' f; do
     rel="${f#./}"
-    case "$rel" in
-        .git/*) continue ;;
-    esac
-    if _should_ignore "$rel"; then
+    if _should_include "$rel"; then
+        mkdir -p "$STAGE/$(dirname "$rel")"
+        cp "$rel" "$STAGE/$rel"
+    else
         echo "[build-zip] skip: $rel"
-        continue
     fi
-    mkdir -p "$STAGE/$(dirname "$rel")"
-    cp "$rel" "$STAGE/$rel"
 done )
 
 find "$STAGE" -exec touch -d "$TS_ISO" {} +
@@ -111,15 +91,5 @@ trap 'rm -rf "$STAGE" "$VERIFY"' EXIT
 ( cd "$VERIFY" && unzip -q "$REPO_ROOT/$ZIP_PATH" )
 
 "$SCRIPT_DIR/validate-manifest.sh" --root "$VERIFY"
-
-# Allowlist safety net: the zip MUST contain only files that belong to the
-# extension's runtime surface. If something slips past .extensionignore, fail.
-ALLOWED='^(extension\.yml|README\.md|LICENSE|CHANGELOG\.md|commands/.*|templates/.*)$'
-EXTRA=$(cd "$VERIFY" && find . -type f | sed 's|^\./||' | grep -Ev "$ALLOWED" || true)
-if [ -n "$EXTRA" ]; then
-    echo "[build-zip] FAIL: zip contains files outside the allowlist:" >&2
-    echo "$EXTRA" >&2
-    exit 1
-fi
 
 echo "[build-zip] OK: $ZIP_PATH (version=$VERSION, mtime=$TS_ISO UTC)"
