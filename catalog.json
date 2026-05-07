@@ -1,14 +1,21 @@
 {
   "name": "Product Spec Extension",
   "id": "product",
-  "description": "Generates product-oriented documents from engineering specs and plans. Provides /speckit-product-spec (PRFAQ/BDD/Lean PRD), /speckit-product-info (stakeholder summary), /speckit-product-plan (Shape Up delivery view), and /speckit-product-design (technical design for tech leads).",
+  "description": "Generates PRFAQ, Lean PRD, stakeholder summaries, and technical designs from engineering specs.",
   "author": "spec-kit-product contributors",
   "version": "0.0.5",
   "download_url": "https://github.com/d0whc3r/spec-kit-product/releases/download/v0.0.5/product-0.0.5.zip",
   "repository": "https://github.com/d0whc3r/spec-kit-product",
+  "homepage": "https://github.com/d0whc3r/spec-kit-product",
+  "documentation": "https://github.com/d0whc3r/spec-kit-product/blob/main/README.md",
+  "changelog": "https://github.com/d0whc3r/spec-kit-product/blob/main/CHANGELOG.md",
   "license": "MIT",
   "requires": {
     "speckit_version": ">=0.2.0"
+  },
+  "provides": {
+    "commands": 4,
+    "hooks": 0
   },
   "tags": [
     "product",
