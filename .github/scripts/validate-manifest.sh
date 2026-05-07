@@ -87,10 +87,12 @@ REQUIRED=(
     "$ROOT/commands/speckit.product.spec.md"
     "$ROOT/commands/speckit.product.info.md"
     "$ROOT/commands/speckit.product.plan.md"
+    "$ROOT/commands/speckit.product.design.md"
     "$ROOT/templates/product-spec-template.md"
     "$ROOT/templates/product-checklist-template.md"
     "$ROOT/templates/product-info-template.md"
     "$ROOT/templates/product-plan-template.md"
+    "$ROOT/templates/product-design-template.md"
 )
 
 MISSING=0

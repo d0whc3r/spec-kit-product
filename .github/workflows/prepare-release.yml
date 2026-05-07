@@ -62,4 +62,13 @@ jobs:
           # Push the bump commit to the branch this workflow ran on, then push the tag.
           git push origin "HEAD:${{ github.ref_name }}"
           git push origin "v${{ inputs.version }}"
-          echo "[prepare-release] OK: pushed v${{ inputs.version }}; release.yml will fire on the tag"
+          echo "[prepare-release] OK: pushed v${{ inputs.version }}"
+
+      - name: Trigger release workflow
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # GITHUB_TOKEN pushes do not trigger on: push: tags: workflows, so we
+          # fire release.yml explicitly via workflow_dispatch with the tag ref.
+          gh workflow run release.yml --ref "refs/tags/v${{ inputs.version }}"
+          echo "[prepare-release] OK: triggered release.yml for refs/tags/v${{ inputs.version }}"

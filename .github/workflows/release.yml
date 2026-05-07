@@ -130,7 +130,9 @@ jobs:
         run: |
           VERSION="${{ needs.build-zip.outputs.version }}"
           # Grab the section between "## [VERSION]" and the next "## [" line.
-          BODY=$(awk -v v="[$VERSION]" '$0 ~ "^## " v {found=1; next} found && /^## \[/ {exit} found {print}' CHANGELOG.md)
+          # Use index() instead of regex so that [X.Y.Z] is matched literally,
+          # not interpreted as a character class.
+          BODY=$(awk -v v="## [$VERSION]" 'index($0, v) == 1 {found=1; next} found && /^## \[/ {exit} found {print}' CHANGELOG.md)
           if [ -z "$BODY" ]; then
             BODY="Release v$VERSION"
           fi
