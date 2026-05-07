@@ -19,6 +19,18 @@
       }
     ],
     [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md",
+          "extension.yml",
+          "catalog.json",
+          "README.md"
+        ],
+        "message": "chore(release): catalog v${nextRelease.version}"
+      }
+    ],
+    [
       "@semantic-release/github",
       {
         "assets": [
