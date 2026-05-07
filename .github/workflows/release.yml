@@ -1,9 +1,7 @@
 name: release
 
 on:
-  push:
-    branches:
-      - 'releases/**'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -45,28 +43,3 @@ jobs:
           GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
         run: npx semantic-release
 
-      - name: Commit release files to main
-        env:
-          GIT_AUTHOR_NAME: github-actions[bot]
-          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
-          GIT_COMMITTER_NAME: github-actions[bot]
-          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
-        run: |
-          VERSION=$(awk '/^extension:/{f=1;next} f && /^[a-z]/{f=0} f && /version:/{gsub(/[" ]/,""); sub(/version:/,""); print; exit}' extension.yml)
-          cp CHANGELOG.md /tmp/CHANGELOG.md
-          cp extension.yml /tmp/extension.yml
-          cp catalog.json /tmp/catalog.json
-          cp README.md /tmp/README.md
-          git fetch origin main
-          git checkout main
-          cp /tmp/CHANGELOG.md CHANGELOG.md
-          cp /tmp/extension.yml extension.yml
-          cp /tmp/catalog.json catalog.json
-          cp /tmp/README.md README.md
-          git add CHANGELOG.md extension.yml catalog.json README.md
-          if git diff --cached --quiet; then
-            echo "No changes to sync to main"
-            exit 0
-          fi
-          git commit -m "chore(release): catalog v${VERSION}"
-          git push origin main
