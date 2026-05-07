@@ -1,145 +1,46 @@
 name: release
 
 on:
-  workflow_run:
-    workflows: ["prepare-release"]
-    types: [completed]
+  push:
+    branches:
+      - main
 
-env:
-  RELEASE_BOT_NAME: github-actions[bot]
-  RELEASE_BOT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
-  validate-manifest:
-    name: validate-manifest
+  release:
+    name: semantic-release
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
-      - name: Fetch tags
-        run: git fetch --tags
-      - name: Run validate-manifest.sh
-        run: bash .github/scripts/validate-manifest.sh
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-  lint-content:
-    name: lint-content
-    runs-on: ubuntu-latest
-    needs: validate-manifest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.repository.default_branch }}
       - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: 'pnpm'
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Run lint-content.sh
+
+      - name: Validate manifest
+        run: bash .github/scripts/validate-manifest.sh
+
+      - name: Lint content
         run: bash .github/scripts/lint-content.sh
 
-  build-zip:
-    name: build-zip
-    runs-on: ubuntu-latest
-    needs: [validate-manifest, lint-content]
-    outputs:
-      version: ${{ steps.read-version.outputs.version }}
-      zip_name: ${{ steps.read-version.outputs.zip_name }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.repository.default_branch }}
-          fetch-depth: 0
-      - name: Fetch tags
-        run: git fetch --tags
-      - name: Read version
-        id: read-version
-        run: |
-          VERSION=$(awk '/^extension:/{f=1; next} f && /^[a-z]/{f=0} f && /^[[:space:]]+version:/{ sub(/^[[:space:]]+version:[[:space:]]*/, ""); gsub(/"/,""); print; exit }' extension.yml)
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "zip_name=product-${VERSION}.zip" >> "$GITHUB_OUTPUT"
-      - name: Build deterministic zip
-        run: |
-          export SOURCE_DATE_EPOCH=$(git log -1 --format=%ct "v${{ steps.read-version.outputs.version }}")
-          bash .github/scripts/build-zip.sh
-      - name: Upload zip artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.read-version.outputs.zip_name }}
-          path: dist/${{ steps.read-version.outputs.zip_name }}
-          if-no-files-found: error
-
-  publish-release:
-    name: publish-release
-    runs-on: ubuntu-latest
-    needs: build-zip
-    permissions:
-      contents: write
-    outputs:
-      download_url: ${{ steps.gh-release.outputs.download_url }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.repository.default_branch }}
-      - name: Download zip artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ needs.build-zip.outputs.zip_name }}
-          path: dist
-      - name: Extract changelog section for tag
-        id: changelog
-        run: |
-          VERSION="${{ needs.build-zip.outputs.version }}"
-          BODY=$(awk -v v="## [$VERSION]" 'index($0, v) == 1 {found=1; next} found && /^## \[/ {exit} found {print}' CHANGELOG.md)
-          if [ -z "$BODY" ]; then
-            BODY="Release v$VERSION"
-          fi
-          {
-            echo 'body<<EOF'
-            echo "$BODY"
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-      - name: Create GitHub Release and attach asset
-        id: gh-release
+      - name: Release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION="${{ needs.build-zip.outputs.version }}"
-          ZIP_NAME="${{ needs.build-zip.outputs.zip_name }}"
-          gh release create "v$VERSION" "dist/$ZIP_NAME" \
-            --title "v$VERSION" \
-            --notes "${{ steps.changelog.outputs.body }}"
-          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/v$VERSION/$ZIP_NAME"
-          echo "download_url=$DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
-
-  update-catalog:
-    name: update-catalog
-    runs-on: ubuntu-latest
-    needs: [build-zip, publish-release]
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.repository.default_branch }}
-          fetch-depth: 0
-      - name: Update catalog.json
-        run: |
-          bash .github/scripts/update-catalog.sh \
-            "${{ needs.build-zip.outputs.version }}" \
-            "${{ needs.publish-release.outputs.download_url }}"
-      - name: Commit and push
-        run: |
-          git config user.name "$RELEASE_BOT_NAME"
-          git config user.email "$RELEASE_BOT_EMAIL"
-          git add catalog.json
-          if git diff --cached --quiet; then
-            echo "[update-catalog] no changes to commit"
-            exit 0
-          fi
-          git commit -m "chore(release): catalog v${{ needs.build-zip.outputs.version }}"
-          git push origin "${{ github.event.repository.default_branch }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: npx semantic-release

@@ -6,7 +6,12 @@
     "fix:md": "markdownlint-cli2 --fix 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md'"
   },
   "devDependencies": {
-    "markdownlint-cli2": "^0.22.1"
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^12.0.6",
+    "markdownlint-cli2": "^0.22.1",
+    "semantic-release": "^25.0.3"
   },
   "packageManager": "pnpm@11.0.8"
 }
