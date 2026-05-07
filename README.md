@@ -27,7 +27,7 @@ This resolves the latest release zip from the catalog at `https://github.com/d0w
 ### Path 2: Direct release URL
 
 ```bash
-specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v<version>/product-<version>.zip
+specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.0.1/product-0.0.1.zip
 ```
 
 Use this when you need a specific version, or before the catalog has been updated.
@@ -51,7 +51,7 @@ If you cannot use the CLI, unpack the release zip and copy its contents into `.s
 After install, the slash command is available as:
 
 ```text
-/speckit-product-spec
+/speckit.product.spec
 ```
 
 Run it from any working directory inside a Spec Kit project. The command reads the active feature pointer at `.specify/feature.json` and writes:
@@ -85,14 +85,14 @@ The paired `product/checklist.md` verifies all of the above.
 
 ---
 
-## /speckit-product-info
+## /speckit.product.info
 
-`/speckit-product-info` is a sibling command to `/speckit-product-spec`. It derives a short, stakeholder-readable `product/info.md` from the same `spec.md`. The output is one rendered page or less, in plain English, with no implementation detail, and answers "what is changing and why" for a non-technical reader.
+`/speckit.product.info` is a sibling command to `/speckit.product.spec`. It derives a short, stakeholder-readable `product/info.md` from the same `spec.md`. The output is one rendered page or less, in plain English, with no implementation detail, and answers "what is changing and why" for a non-technical reader.
 
 ### Prerequisites
 
 - Spec Kit `>=0.2.0` initialized in the current project.
-- The `product` extension installed at version `>=0.2.0`.
+- The `product` extension installed at version `>=0.0.5`.
 - A feature directory under `specs/` with a populated `spec.md` (run `/speckit-specify` first if needed).
 
 ### Install or upgrade
@@ -103,18 +103,18 @@ specify extension add product
 specify extension upgrade product
 ```
 
-After the install, both `/speckit-product-spec` and `/speckit-product-info` are available.
+After the install, both `/speckit.product.spec` and `/speckit.product.info` are available.
 
 ### Invoke
 
 ```text
-/speckit-product-info
+/speckit.product.info
 ```
 
 Run it from any working directory inside a Spec Kit project. To target a specific feature, pass the override:
 
 ```text
-/speckit-product-info --feature-dir specs/<feature-dir>
+/speckit.product.info --feature-dir specs/<feature-dir>
 ```
 
 The command writes:
@@ -134,7 +134,7 @@ The generated file contains four mandatory sections in canonical order:
 
 An optional **Open Questions** section (Section 5) appears if the source spec contained `[NEEDS CLARIFICATION]` markers and the user confirmed at the prompt.
 
-`/speckit-product-info` and `/speckit-product-spec` are siblings. They both read the same `spec.md` and write into the same `product/` subfolder. Neither modifies the other's output. A common pattern is to run `/speckit-product-info` early to validate direction with stakeholders, then run `/speckit-product-spec` once direction is confirmed.
+`/speckit.product.info` and `/speckit.product.spec` are siblings. They both read the same `spec.md` and write into the same `product/` subfolder. Neither modifies the other's output. A common pattern is to run `/speckit.product.info` early to validate direction with stakeholders, then run `/speckit.product.spec` once direction is confirmed.
 
 ### Troubleshooting
 
@@ -148,16 +148,16 @@ An optional **Open Questions** section (Section 5) appears if the source spec co
 
 ---
 
-## /speckit-product-plan
+## /speckit.product.plan
 
-`/speckit-product-plan` is a sibling command to `/speckit-product-spec` and `/speckit-product-info`. It reads the engineering `plan.md` produced by `/speckit-plan` and generates a high-level, product-oriented `product/plan.md` that answers "how are we building this?" for product managers, engineering leads, and cross-functional reviewers.
+`/speckit.product.plan` is a sibling command to `/speckit.product.spec` and `/speckit.product.info`. It reads the engineering `plan.md` produced by `/speckit-plan` and generates a high-level, product-oriented `product/plan.md` that answers "how are we building this?" for product managers, engineering leads, and cross-functional reviewers.
 
 The output uses Shape Up appetite framing for phases, a NOW/NEXT/LATER delivery view, C4 container-level component descriptions, and condensed ADR (Architecture Decision Record) summaries for key decisions. Technical terms appear with a plain-language gloss on their first use. No code, no file paths, no detailed task breakdowns.
 
 ### Prerequisites
 
 - Spec Kit `>=0.2.0` initialized in the current project.
-- The `product` extension installed at version `>=0.3.0`.
+- The `product` extension installed at version `>=0.0.5`.
 - A feature directory under `specs/` with a populated `plan.md` (run `/speckit-plan` first if needed).
 
 ### Install or upgrade
@@ -168,18 +168,18 @@ specify extension add product
 specify extension upgrade product
 ```
 
-After the install, `/speckit-product-spec`, `/speckit-product-info`, and `/speckit-product-plan` are all available.
+After the install, `/speckit.product.spec`, `/speckit.product.info`, and `/speckit.product.plan` are all available.
 
 ### Invoke
 
 ```text
-/speckit-product-plan
+/speckit.product.plan
 ```
 
 Run it from any working directory inside a Spec Kit project. To target a specific feature, pass the override:
 
 ```text
-/speckit-product-plan --feature-dir specs/<feature-dir>
+/speckit.product.plan --feature-dir specs/<feature-dir>
 ```
 
 The command reads:
@@ -221,16 +221,16 @@ The generated file contains three mandatory sections and up to four optional sec
 
 ---
 
-## /speckit-product-design
+## /speckit.product.design
 
-`/speckit-product-design` is a sibling command to `/speckit-product-spec`, `/speckit-product-info`, and `/speckit-product-plan`. It derives a technical design document `product/30-design.md` from `plan.md` and `spec.md`, aimed at tech leads and senior developers.
+`/speckit.product.design` is a sibling command to `/speckit.product.spec`, `/speckit.product.info`, and `/speckit.product.plan`. It derives a technical design document `product/30-design.md` from `plan.md` and `spec.md`, aimed at tech leads and senior developers.
 
 Unlike the product-facing `product/20-plan.md`, this document references component names, module boundaries, file-level granularity, API surface shapes, and data schemas at a conceptual level. No runnable code, no full ORM definitions, no line-by-line implementation detail.
 
 ### Prerequisites
 
 - Spec Kit `>=0.2.0` initialized in the current project.
-- The `product` extension installed at version `>=0.3.0`.
+- The `product` extension installed at version `>=0.0.5`.
 - A feature directory under `specs/` with a populated `plan.md` and `spec.md` (run `/speckit-plan` and `/speckit-specify` first if needed).
 
 ### Install or upgrade
@@ -246,13 +246,13 @@ After the install, all four product commands are available.
 ### Invoke
 
 ```text
-/speckit-product-design
+/speckit.product.design
 ```
 
 Run it from any working directory inside a Spec Kit project. To target a specific feature, pass the override:
 
 ```text
-/speckit-product-design --feature-dir specs/<feature-dir>
+/speckit.product.design --feature-dir specs/<feature-dir>
 ```
 
 The command reads:
@@ -296,13 +296,19 @@ Optional sections (References, Glossary, Assumptions) appear when the source pla
 
 ## Related Files
 
-- `commands/speckit.product.spec.md`: the `/speckit-product-spec` slash command body.
-- `commands/speckit.product.info.md`: the `/speckit-product-info` slash command body.
-- `commands/speckit.product.plan.md`: the `/speckit-product-plan` slash command body.
-- `templates/product-spec-template.md`: the canonical output template for `/speckit-product-spec`.
+- `commands/speckit.product.spec.md`: the `/speckit.product.spec` slash command body.
+- `commands/speckit.product.info.md`: the `/speckit.product.info` slash command body.
+- `commands/speckit.product.plan.md`: the `/speckit.product.plan` slash command body.
+- `commands/speckit.product.design.md`: the `/speckit.product.design` slash command body.
+- `templates/product-spec-template.md`: the canonical output template for `/speckit.product.spec`.
 - `templates/product-checklist-template.md`: the canonical quality checklist template.
-- `templates/product-info-template.md`: the canonical output template for `/speckit-product-info`.
-- `templates/product-plan-template.md`: the canonical output template for `/speckit-product-plan`.
+- `templates/product-info-template.md`: the canonical output template for `/speckit.product.info`.
+- `templates/product-plan-template.md`: the canonical output template for `/speckit.product.plan`.
+- `templates/product-design-template.md`: the canonical output template for `/speckit.product.design`.
+
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for repo layout, developer install, and the release pipeline.
 
 ## License
 
