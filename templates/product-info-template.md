@@ -38,12 +38,23 @@
 - [Risk and its consequence in one sentence.]
 - [Risk and its consequence in one sentence.]
 
-## Open Questions *(optional)*
+## Key Decisions *(optional)*
 
-> Include this section only when the source spec contained `[NEEDS CLARIFICATION]` markers AND the user confirmed at the prompt. Each marker becomes one bullet, surfaced as a single-sentence question. Never silently resolved.
+> Include this section only when spec.md contains a populated `## Clarifications` section, or when there are unresolved `[NEEDS CLARIFICATION]` markers that the user confirmed. It surfaces the decisions that shaped this spec so reviewers can validate they still hold, and flags anything still unresolved.
 
-- [Open question in one sentence.]
-- [Open question in one sentence.]
+These decisions were made while writing this spec. Review them to confirm they still reflect the right direction, and flag any that have changed.
+
+**[Short noun phrase naming the decision area]**
+[One sentence stating the decision as a concrete outcome: what was chosen and why it matters. Active voice.]
+*Session: YYYY-MM-DD*
+
+**[Short noun phrase naming the decision area]**
+[One sentence.]
+*Session: YYYY-MM-DD*
+
+> **Still open**: These questions were raised but not yet resolved. They should be answered before this feature is built.
+>
+> - [Open question in one sentence.]
 
 ## References *(optional)*
 
