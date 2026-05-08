@@ -10,7 +10,7 @@
 
 [One paragraph, three to five sentences, in the voice of a press release summary. State the customer, the problem, and the new outcome they can now reach. No internal jargon. No feature lists.]
 
-## Glossary *(optional)*
+## Glossary _(optional)_
 
 > Include this section only when the spec uses domain-specific or technical terms that a non-technical stakeholder may not know. Define each term in one plain sentence. Omit the section entirely when no vocabulary gap exists.
 
@@ -34,7 +34,7 @@
 
 **Why this matters now**: [Two or three sentences on what changed in the user's world, the market, or the company that makes this the right job to address now.]
 
-## Assumptions *(optional)*
+## Assumptions _(optional)_
 
 > Include this section when the feature rests on conditions believed true but not yet confirmed. Each assumption is one sentence. State what would need to change to invalidate it. Omit the section when no material assumptions exist.
 
@@ -109,7 +109,7 @@
 - [Question in one sentence.]
 - [Question in one sentence.]
 
-## Positioning *(optional)*
+## Positioning _(optional)_
 
 > Include this section only when the product has external users or competes with alternatives. Internal tools may omit it.
 
@@ -120,7 +120,7 @@
 **unlike** [primary alternative]
 **this product** [primary point of differentiation].
 
-## Go to Market and Rollout *(optional)*
+## Go to Market and Rollout _(optional)_
 
 > Include this section only when there is a launch motion. Internal tools or background features may omit it.
 

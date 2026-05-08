@@ -23,10 +23,10 @@
 
 ## Affected Modules
 
-| Module / Component | Change | Responsibility |
-|---|---|---|
-| [name] | adds / modifies / removes / uses | [One sentence: what it does and why it changes.] |
-| [name] | adds / modifies / removes / uses | [One sentence.] |
+| Module / Component | Change                           | Responsibility                                   |
+| ------------------ | -------------------------------- | ------------------------------------------------ |
+| [name]             | adds / modifies / removes / uses | [One sentence: what it does and why it changes.] |
+| [name]             | adds / modifies / removes / uses | [One sentence.]                                  |
 
 ## Data Design
 
@@ -59,8 +59,8 @@
 
 > Map each use case from spec.md to the component or operation that implements it. Confirms the design covers the full spec surface.
 
-| Use Case (from spec.md) | Component / Operation | Notes |
-|---|---|---|
+| Use Case (from spec.md)                 | Component / Operation        | Notes                               |
+| --------------------------------------- | ---------------------------- | ----------------------------------- |
 | [Gherkin scenario title or use case ID] | [component name or endpoint] | [key constraint, edge case, or gap] |
 
 ## Key Technical Decisions
@@ -94,7 +94,7 @@
 **Data migration**: [Steps required, reversibility, and risk level. Write "None" if no migration is needed.]
 **Rollback**: [How to revert if something goes wrong after deployment.]
 
-## Risks and Mitigations *(optional)*
+## Risks and Mitigations _(optional)_
 
 > Include only when plan.md or spec.md contains concrete risk signals. Omit otherwise.
 
@@ -105,7 +105,7 @@
 - **Impact**: [Low / Medium / High]
 - **Mitigation**: [What is in place or planned to reduce this risk.]
 
-## Open Questions *(optional)*
+## Open Questions _(optional)_
 
 > Include only when unresolved technical decisions remain. Omit otherwise.
 

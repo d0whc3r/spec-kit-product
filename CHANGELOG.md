@@ -4,8 +4,8 @@
 
 ### Bug Fixes
 
-* **catalog:** add missing fields required by publishing guide ([a42c7d8](https://github.com/d0whc3r/spec-kit-product/commit/a42c7d81ede4c3344aa36e368089b306fba9da64))
-* **manifest:** shorten description, add homepage, remove empty hooks ([b88e0e9](https://github.com/d0whc3r/spec-kit-product/commit/b88e0e9f6de4fd4d962491d6f6195b4386837495))
+- **catalog:** add missing fields required by publishing guide ([a42c7d8](https://github.com/d0whc3r/spec-kit-product/commit/a42c7d81ede4c3344aa36e368089b306fba9da64))
+- **manifest:** shorten description, add homepage, remove empty hooks ([b88e0e9](https://github.com/d0whc3r/spec-kit-product/commit/b88e0e9f6de4fd4d962491d6f6195b4386837495))
 
 ## [0.0.5] - 2026-05-07
 

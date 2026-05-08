@@ -36,12 +36,12 @@ After install, four slash commands become available in your assistant.
 
 ## The Four Commands
 
-| Command | Reads | Writes | Audience |
-|---------|-------|--------|----------|
-| `/speckit-product-info` | `spec.md` | `product/info.md` | Any stakeholder, non-technical |
-| `/speckit-product-spec` | `spec.md` | `product/10-spec.md`, `product/checklist.md` | Product managers, leadership |
-| `/speckit-product-plan` | `plan.md`, `spec.md` | `product/20-plan.md`, `product/checklist.md` | PMs, engineering leads, cross-functional reviewers |
-| `/speckit-product-design` | `plan.md`, `spec.md` | `product/30-design.md`, `product/checklist.md` | Tech leads, senior developers |
+| Command                   | Reads                | Writes                                         | Audience                                           |
+| ------------------------- | -------------------- | ---------------------------------------------- | -------------------------------------------------- |
+| `/speckit-product-info`   | `spec.md`            | `product/info.md`                              | Any stakeholder, non-technical                     |
+| `/speckit-product-spec`   | `spec.md`            | `product/10-spec.md`, `product/checklist.md`   | Product managers, leadership                       |
+| `/speckit-product-plan`   | `plan.md`, `spec.md` | `product/20-plan.md`, `product/checklist.md`   | PMs, engineering leads, cross-functional reviewers |
+| `/speckit-product-design` | `plan.md`, `spec.md` | `product/30-design.md`, `product/checklist.md` | Tech leads, senior developers                      |
 
 None of the commands modify `spec.md` or `plan.md`. All output lands under `product/` inside the active feature directory.
 
@@ -77,6 +77,7 @@ Short, non-technical summary of what is changing and why. One page or less. Run 
 ```
 
 Output sections:
+
 1. Headline — who this is for and what is changing.
 2. What is Changing — two to five customer-observable bullets.
 3. Why Now — two to four sentences on the trigger.
@@ -160,12 +161,12 @@ specs/<feature-dir>/
 
 ## Common Errors
 
-| Code | Cause | Fix |
-|------|-------|-----|
-| `E_NO_PROJECT` | Not inside a Spec Kit project. | `cd` into a project with `.specify/`, or run `specify init`. |
-| `E_NO_POINTER` | No active feature and `--feature-dir` not passed. | Run `/speckit-specify` first, or pass `--feature-dir`. |
-| `E_NO_SPEC` | No `spec.md` in the feature directory. | Run `/speckit-specify` to create one. |
-| `E_NO_PLAN` | No `plan.md` in the feature directory. | Run `/speckit-plan` to generate it. |
-| `E_PLACEHOLDERS` | `spec.md` or `plan.md` still contains unfilled template markers. | Replace all `[PLACEHOLDER]` values with real content. |
-| `E_LANGUAGE` | Source files are not in English. | Translate the source file to English and rerun. |
-| `E_USER_ABORT` | You answered "no" at the overwrite prompt. | Rerun when ready. |
+| Code             | Cause                                                            | Fix                                                          |
+| ---------------- | ---------------------------------------------------------------- | ------------------------------------------------------------ |
+| `E_NO_PROJECT`   | Not inside a Spec Kit project.                                   | `cd` into a project with `.specify/`, or run `specify init`. |
+| `E_NO_POINTER`   | No active feature and `--feature-dir` not passed.                | Run `/speckit-specify` first, or pass `--feature-dir`.       |
+| `E_NO_SPEC`      | No `spec.md` in the feature directory.                           | Run `/speckit-specify` to create one.                        |
+| `E_NO_PLAN`      | No `plan.md` in the feature directory.                           | Run `/speckit-plan` to generate it.                          |
+| `E_PLACEHOLDERS` | `spec.md` or `plan.md` still contains unfilled template markers. | Replace all `[PLACEHOLDER]` values with real content.        |
+| `E_LANGUAGE`     | Source files are not in English.                                 | Translate the source file to English and rerun.              |
+| `E_USER_ABORT`   | You answered "no" at the overwrite prompt.                       | Rerun when ready.                                            |

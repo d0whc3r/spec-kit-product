@@ -49,12 +49,12 @@
 
 ### Phase 2: [Name]
 
-*Depends on*: Phase 1.
+_Depends on_: Phase 1.
 
 - [What this phase delivers or enables, one sentence.]
 - [What this phase delivers or enables, one sentence.]
 
-## Key Decisions *(optional)*
+## Key Decisions _(optional)_
 
 > Include only when the source plan contains explicit design decisions. Omit the entire section otherwise.
 
@@ -65,7 +65,7 @@
 **Decision**: [What was chosen, one sentence.]
 **Consequence**: [What this enables and what it forecloses, one sentence.]
 
-## Risks and Mitigations *(optional)*
+## Risks and Mitigations _(optional)_
 
 > Include only when the source plan contains concrete risk signals. Omit otherwise.
 
@@ -76,19 +76,19 @@
 - **Impact**: [Low / Medium / High]
 - **Mitigation**: [What is in place to reduce the impact, one sentence.]
 
-## Divergences and Edge Cases *(optional)*
+## Divergences and Edge Cases _(optional)_
 
 > Include only when the source plan describes scenarios that deviate from the normal flow. Omit otherwise.
 
 - **[Scenario]**: [What the scenario is and how the system handles it, one to two sentences.]
 
-## Validation *(optional)*
+## Validation _(optional)_
 
 > Include only when the source plan defines explicit acceptance criteria. Omit otherwise.
 
 - [Observable condition that confirms a part of the feature is correct, one sentence.]
 
-## Open Questions *(optional)*
+## Open Questions _(optional)_
 
 > Include only when the source plan contains open questions or marked assumptions. Omit otherwise.
 

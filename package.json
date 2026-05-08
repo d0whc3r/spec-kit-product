@@ -2,15 +2,15 @@
   "name": "spec-kit-product",
   "private": true,
   "scripts": {
-    "lint:md": "markdownlint-cli2 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md'",
-    "fix:md": "markdownlint-cli2 --fix 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md'"
+    "lint": "oxfmt --no-error-on-unmatched-pattern --check",
+    "fix": "oxfmt --no-error-on-unmatched-pattern --write"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^7.1.0",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^12.0.6",
-    "markdownlint-cli2": "^0.22.1",
+    "@semantic-release/github": "^12.0.8",
+    "oxfmt": "^0.48.0",
     "semantic-release": "^25.0.3"
   },
   "packageManager": "pnpm@11.0.8"

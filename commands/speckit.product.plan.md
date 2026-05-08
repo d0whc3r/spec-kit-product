@@ -160,26 +160,26 @@ If the file **already exists**, read its current content. You will replace only 
 
 After writing `product/20-plan.md`, evaluate each item below against its content. For each failing item that is auto-fixable: rewrite the affected portion of **`product/20-plan.md`** (the artifact being generated - never the source `plan.md` or `spec.md`) in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
 
-| Checklist item | Rule | Auto-fixable? |
-|---|---|---|
-| Summary present with ≥1 paragraph | `## Summary` heading exists; ≥1 sentence paragraph before next `##` | Yes |
-| Feature Context has all required fields | `## Feature Context` exists; Problem, For, Change, Quality bar fields present and non-placeholder | Yes - derive from source |
-| Goals present with ≥3 outcome bullets | `## Goals` heading exists; ≥3 bullet items | Yes - add from source plan or spec |
-| Out of Scope present with ≥1 item | `## Out of Scope` heading exists; ≥1 bullet | Yes |
-| Delivery Phases present with ≥1 phase and ≥1 bullet | `## Delivery Phases` heading exists; ≥1 `### Phase` subsection with ≥1 bullet | Yes - add phase from source plan |
-| Delivery Phases contain no time estimates or temporal framing | No: "week", "day", "sprint", "appetite", "story point", "deadline", now/next/later as section labels, time units, or date patterns in `## Delivery Phases` | Yes - remove offending text |
-| Written entirely in English | Dominant language of prose is English | No - source was validated in Step 2 |
-| No em dash (`—`) | Character `—` absent from entire file | Yes - replace with comma, colon, or semicolon |
-| No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting" (case-insensitive) | Yes - rewrite sentence |
-| Bullets are short (≤12 words each) | Every `-` line contains ≤12 words | Yes - split or shorten |
-| No code or file paths | File does not contain: code fences, file extension patterns (`.js`, `.ts`, `.py`, `.go`, etc.), absolute or relative paths starting with `/` or `./` | Yes - remove or describe in prose |
-| No time estimates anywhere in the document | File does not contain: "week", "day", "sprint", "appetite", "story point", "deadline", or digit + time unit patterns | Yes - remove offending text |
-| Technical terms glossed on first use | First occurrence of each term (API, CLI, SDK, refactor, idempotent, atomic, schema, linter, manifest, hook, pipeline, ADR) carries a parenthetical gloss | Yes - insert gloss after first occurrence |
-| No invented content (phases match source plan) | Delivery Phases correspond to phases in source `plan.md`; no phase name absent from source | Yes - remove invented phases |
-| Key Decisions follow mini-ADR format | Key Decisions section, if present: each entry has Context, Options considered, Decision, Consequence fields | Yes - add missing fields from source plan |
-| Risks include probability and impact | Risks and Mitigations section, if present: each entry has What could go wrong, Probability (Low/Medium/High), Impact (Low/Medium/High), and Mitigation fields | Yes - add missing fields; default Probability and Impact to Medium when source plan has no signal |
-| Optional sections present only when source warrants | Key Decisions, Risks and Mitigations, Divergences and Edge Cases, Validation, Open Questions present only when source plan has the corresponding content | Yes - remove sections with no source backing |
-| Header has non-placeholder Feature, Source Plan, and Created | File has `Feature:`, `Source Plan:`, and `Created: YYYY-MM-DD` with real values | Yes - set from context |
+| Checklist item                                                | Rule                                                                                                                                                                                                                | Auto-fixable?                                                                                     |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Summary present with ≥1 paragraph                             | `## Summary` heading exists; ≥1 sentence paragraph before next `##`                                                                                                                                                 | Yes                                                                                               |
+| Feature Context has all required fields                       | `## Feature Context` exists; Problem, For, Change, Quality bar fields present and non-placeholder                                                                                                                   | Yes - derive from source                                                                          |
+| Goals present with ≥3 outcome bullets                         | `## Goals` heading exists; ≥3 bullet items                                                                                                                                                                          | Yes - add from source plan or spec                                                                |
+| Out of Scope present with ≥1 item                             | `## Out of Scope` heading exists; ≥1 bullet                                                                                                                                                                         | Yes                                                                                               |
+| Delivery Phases present with ≥1 phase and ≥1 bullet           | `## Delivery Phases` heading exists; ≥1 `### Phase` subsection with ≥1 bullet                                                                                                                                       | Yes - add phase from source plan                                                                  |
+| Delivery Phases contain no time estimates or temporal framing | No: "week", "day", "sprint", "appetite", "story point", "deadline", now/next/later as section labels, time units, or date patterns in `## Delivery Phases`                                                          | Yes - remove offending text                                                                       |
+| Written entirely in English                                   | Dominant language of prose is English                                                                                                                                                                               | No - source was validated in Step 2                                                               |
+| No em dash (`—`)                                              | Character `—` absent from entire file                                                                                                                                                                               | Yes - replace with comma, colon, or semicolon                                                     |
+| No AI tells                                                   | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting" (case-insensitive) | Yes - rewrite sentence                                                                            |
+| Bullets are short (≤12 words each)                            | Every `-` line contains ≤12 words                                                                                                                                                                                   | Yes - split or shorten                                                                            |
+| No code or file paths                                         | File does not contain: code fences, file extension patterns (`.js`, `.ts`, `.py`, `.go`, etc.), absolute or relative paths starting with `/` or `./`                                                                | Yes - remove or describe in prose                                                                 |
+| No time estimates anywhere in the document                    | File does not contain: "week", "day", "sprint", "appetite", "story point", "deadline", or digit + time unit patterns                                                                                                | Yes - remove offending text                                                                       |
+| Technical terms glossed on first use                          | First occurrence of each term (API, CLI, SDK, refactor, idempotent, atomic, schema, linter, manifest, hook, pipeline, ADR) carries a parenthetical gloss                                                            | Yes - insert gloss after first occurrence                                                         |
+| No invented content (phases match source plan)                | Delivery Phases correspond to phases in source `plan.md`; no phase name absent from source                                                                                                                          | Yes - remove invented phases                                                                      |
+| Key Decisions follow mini-ADR format                          | Key Decisions section, if present: each entry has Context, Options considered, Decision, Consequence fields                                                                                                         | Yes - add missing fields from source plan                                                         |
+| Risks include probability and impact                          | Risks and Mitigations section, if present: each entry has What could go wrong, Probability (Low/Medium/High), Impact (Low/Medium/High), and Mitigation fields                                                       | Yes - add missing fields; default Probability and Impact to Medium when source plan has no signal |
+| Optional sections present only when source warrants           | Key Decisions, Risks and Mitigations, Divergences and Edge Cases, Validation, Open Questions present only when source plan has the corresponding content                                                            | Yes - remove sections with no source backing                                                      |
+| Header has non-placeholder Feature, Source Plan, and Created  | File has `Feature:`, `Source Plan:`, and `Created: YYYY-MM-DD` with real values                                                                                                                                     | Yes - set from context                                                                            |
 
 **Checklist structure for the `## Plan` section**: replace the section content with:
 
@@ -188,8 +188,8 @@ After writing `product/20-plan.md`, evaluate each item below against its content
 
 **Validated**: [DATE] · [PASSED]/[TOTAL] items
 
-- [x] ...  (passing items)
-- [ ] ...  (failing items, if any — see ## Needs Review)
+- [x] ... (passing items)
+- [ ] ... (failing items, if any — see ## Needs Review)
 ```
 
 **`## Needs Review` section**: rebuild the `## Needs Review` section at the bottom by aggregating all `- [ ]` items from all three sections. Each entry includes a one-sentence explanation. If no items remain unchecked, write:
@@ -224,12 +224,12 @@ When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholde
 
 ## Error Codes
 
-| Code | Condition |
-|------|-----------|
-| E_NO_PLAN | `plan.md` missing in the feature directory. Run `/speckit-plan` first. |
-| E_PLACEHOLDERS | `plan.md` still contains template placeholders. |
-| E_LANGUAGE | `plan.md` is not in English. |
-| E_USER_ABORT | User chose abort at the overwrite prompt. |
+| Code           | Condition                                                              |
+| -------------- | ---------------------------------------------------------------------- |
+| E_NO_PLAN      | `plan.md` missing in the feature directory. Run `/speckit-plan` first. |
+| E_PLACEHOLDERS | `plan.md` still contains template placeholders.                        |
+| E_LANGUAGE     | `plan.md` is not in English.                                           |
+| E_USER_ABORT   | User chose abort at the overwrite prompt.                              |
 
 ## Idempotence
 

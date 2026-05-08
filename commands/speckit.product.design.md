@@ -167,27 +167,27 @@ If the `## Design` section does not exist in the current `checklist.md`, insert 
 
 After writing `product/30-design.md`, evaluate each item below against its content. For each failing item that is auto-fixable: rewrite the affected portion of **`product/30-design.md`** in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
 
-| Checklist item | Rule | Auto-fixable? |
-|---|---|---|
-| Summary present with ≥2 sentences | `## Summary` heading exists; ≥2 sentence paragraph before next `##` | Yes |
-| Technical Context has all required fields | `## Technical Context` exists; Current state, Affected layers, Technical constraints fields present and non-placeholder | Yes - derive from source |
-| Architectural Approach present with ≥3 paragraphs | `## Architectural Approach` heading exists; ≥3 non-empty paragraphs | Yes - expand from source |
-| Affected Modules table present with ≥2 rows | `## Affected Modules` heading exists; markdown table with ≥2 data rows | Yes - derive from source |
-| Data Design present when source has data model content | `## Data Design` exists when any source file contains entity/model information | Yes - add from source |
-| API Design present when source has API surface | `## API Design` exists when source describes any API endpoints or operations | Yes - add from source |
-| Spec Coverage table present when spec.md has use cases | `## Spec Coverage` exists when spec.md has Gherkin scenarios or use cases | Yes - derive from spec.md |
-| Spec Coverage has no unaddressed gaps | All rows in Spec Coverage table have a component assigned; "GAP" rows have an explanation | No - requires design decision |
-| Testing Strategy present with all four bullets | `## Testing Strategy` heading exists; Unit, Integration, E2E / BDD, Observability bullets present | Yes - add missing bullets |
-| Rollout and Migration present with all three fields | `## Rollout and Migration` heading exists; Strategy, Data migration, Rollback fields present | Yes - add missing fields |
-| Written entirely in English | Dominant language of prose is English | No - source was validated in Step 2 |
-| No em dash (`—`) | Character `—` absent from entire file | Yes - replace with comma, colon, or semicolon |
-| No AI tells | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting" (case-insensitive) | Yes - rewrite sentence |
-| No runnable code | File does not contain language-specific syntax blocks (fenced blocks tagged with a language identifier other than `text`) | Yes - change language tag to `text` or remove |
-| Bullets are short (≤12 words each) | Every `-` line contains ≤12 words | Yes - split or shorten |
-| Key Decisions follow required format | Key Decisions section, if present: each entry has Context, Options considered, Decision, Consequences fields | Yes - add missing fields from source |
-| Risks include probability and impact | Risks and Mitigations section, if present: each entry has What could go wrong, Probability (Low/Medium/High), Impact (Low/Medium/High), Mitigation | Yes - add missing fields; default to Medium when source has no signal |
-| Optional sections present only when source warrants | Key Decisions, Risks and Mitigations, Open Questions present only when source has corresponding content | Yes - remove sections with no source backing |
-| Header has non-placeholder Feature and Created | File has `Feature:` and `Created: YYYY-MM-DD` with real values | Yes - set from context |
+| Checklist item                                         | Rule                                                                                                                                                                                                                | Auto-fixable?                                                         |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Summary present with ≥2 sentences                      | `## Summary` heading exists; ≥2 sentence paragraph before next `##`                                                                                                                                                 | Yes                                                                   |
+| Technical Context has all required fields              | `## Technical Context` exists; Current state, Affected layers, Technical constraints fields present and non-placeholder                                                                                             | Yes - derive from source                                              |
+| Architectural Approach present with ≥3 paragraphs      | `## Architectural Approach` heading exists; ≥3 non-empty paragraphs                                                                                                                                                 | Yes - expand from source                                              |
+| Affected Modules table present with ≥2 rows            | `## Affected Modules` heading exists; markdown table with ≥2 data rows                                                                                                                                              | Yes - derive from source                                              |
+| Data Design present when source has data model content | `## Data Design` exists when any source file contains entity/model information                                                                                                                                      | Yes - add from source                                                 |
+| API Design present when source has API surface         | `## API Design` exists when source describes any API endpoints or operations                                                                                                                                        | Yes - add from source                                                 |
+| Spec Coverage table present when spec.md has use cases | `## Spec Coverage` exists when spec.md has Gherkin scenarios or use cases                                                                                                                                           | Yes - derive from spec.md                                             |
+| Spec Coverage has no unaddressed gaps                  | All rows in Spec Coverage table have a component assigned; "GAP" rows have an explanation                                                                                                                           | No - requires design decision                                         |
+| Testing Strategy present with all four bullets         | `## Testing Strategy` heading exists; Unit, Integration, E2E / BDD, Observability bullets present                                                                                                                   | Yes - add missing bullets                                             |
+| Rollout and Migration present with all three fields    | `## Rollout and Migration` heading exists; Strategy, Data migration, Rollback fields present                                                                                                                        | Yes - add missing fields                                              |
+| Written entirely in English                            | Dominant language of prose is English                                                                                                                                                                               | No - source was validated in Step 2                                   |
+| No em dash (`—`)                                       | Character `—` absent from entire file                                                                                                                                                                               | Yes - replace with comma, colon, or semicolon                         |
+| No AI tells                                            | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting" (case-insensitive) | Yes - rewrite sentence                                                |
+| No runnable code                                       | File does not contain language-specific syntax blocks (fenced blocks tagged with a language identifier other than `text`)                                                                                           | Yes - change language tag to `text` or remove                         |
+| Bullets are short (≤12 words each)                     | Every `-` line contains ≤12 words                                                                                                                                                                                   | Yes - split or shorten                                                |
+| Key Decisions follow required format                   | Key Decisions section, if present: each entry has Context, Options considered, Decision, Consequences fields                                                                                                        | Yes - add missing fields from source                                  |
+| Risks include probability and impact                   | Risks and Mitigations section, if present: each entry has What could go wrong, Probability (Low/Medium/High), Impact (Low/Medium/High), Mitigation                                                                  | Yes - add missing fields; default to Medium when source has no signal |
+| Optional sections present only when source warrants    | Key Decisions, Risks and Mitigations, Open Questions present only when source has corresponding content                                                                                                             | Yes - remove sections with no source backing                          |
+| Header has non-placeholder Feature and Created         | File has `Feature:` and `Created: YYYY-MM-DD` with real values                                                                                                                                                      | Yes - set from context                                                |
 
 **Checklist structure for the `## Design` section**: replace the section content with:
 
@@ -196,8 +196,8 @@ After writing `product/30-design.md`, evaluate each item below against its conte
 
 **Validated**: [DATE] · [PASSED]/[TOTAL] items
 
-- [x] ...  (passing items)
-- [ ] ...  (failing items, if any — see ## Needs Review)
+- [x] ... (passing items)
+- [ ] ... (failing items, if any — see ## Needs Review)
 ```
 
 **`## Needs Review` section**: rebuild the `## Needs Review` section at the bottom by aggregating all `- [ ]` items from all sections. Each entry includes a one-sentence explanation. If no items remain unchecked, write:
@@ -232,13 +232,13 @@ When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholde
 
 ## Error Codes
 
-| Code | Condition |
-|------|-----------|
-| E_NO_PLAN | `plan.md` missing in the feature directory. Run `/speckit-plan` first. |
-| E_NO_SPEC | `spec.md` missing in the feature directory. Run `/speckit-spec` first. |
-| E_PLACEHOLDERS | A source file still contains template placeholders. |
-| E_LANGUAGE | A source file is not in English. |
-| E_USER_ABORT | User chose abort at the overwrite prompt. |
+| Code           | Condition                                                              |
+| -------------- | ---------------------------------------------------------------------- |
+| E_NO_PLAN      | `plan.md` missing in the feature directory. Run `/speckit-plan` first. |
+| E_NO_SPEC      | `spec.md` missing in the feature directory. Run `/speckit-spec` first. |
+| E_PLACEHOLDERS | A source file still contains template placeholders.                    |
+| E_LANGUAGE     | A source file is not in English.                                       |
+| E_USER_ABORT   | User chose abort at the overwrite prompt.                              |
 
 ## Idempotence
 

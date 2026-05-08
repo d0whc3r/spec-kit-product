@@ -9,7 +9,7 @@
 #   - Canonical section headings present and in order.
 #   - Corresponding command file references the template by relative path.
 #   - No banned AI-tell phrases.
-#   (Optional) markdownlint pass via markdownlint-cli2 if installed.
+#   (Optional) markdown formatting check via oxfmt if installed.
 
 set -e
 
@@ -79,15 +79,10 @@ for phrase in "${BANNED_PHRASES[@]}"; do
     fi
 done
 
-# 4. Optional markdownlint pass.
-if command -v markdownlint-cli2 >/dev/null 2>&1; then
-    if ! markdownlint-cli2 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md' >&2; then
-        echo "[lint-content] FAIL: markdownlint-cli2 reported issues" >&2
-        FAIL=1
-    fi
-elif command -v markdownlint >/dev/null 2>&1; then
-    if ! markdownlint 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md' >&2; then
-        echo "[lint-content] FAIL: markdownlint reported issues" >&2
+# 4. Optional oxfmt pass (check mode).
+if command -v oxfmt >/dev/null 2>&1; then
+    if ! oxfmt --check 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md' >&2; then
+        echo "[lint-content] FAIL: oxfmt reported unformatted markdown files" >&2
         FAIL=1
     fi
 fi

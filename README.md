@@ -138,13 +138,13 @@ An optional **Open Questions** section (Section 5) appears if the source spec co
 
 ### Troubleshooting
 
-| Symptom | Likely cause | Fix |
-|---------|--------------|-----|
+| Symptom                                      | Likely cause                                                       | Fix                                                                                                 |
+| -------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
 | `ERROR: Failed to resolve feature directory` | Running outside a Spec Kit project, or no active feature recorded. | `cd` into a project with `.specify/`, run `/speckit-specify` first, or pass `--feature-dir <path>`. |
-| `[product-info] E_NO_SPEC: ...` | Feature directory has no `spec.md`. | Run `/speckit-specify` to create one. |
-| `[product-info] E_PLACEHOLDERS: ...` | `spec.md` still contains unfilled template scaffolding. | Open `spec.md` and replace the listed placeholders with real content. |
-| `[product-info] E_LANGUAGE: ...` | `spec.md` is not in English. | Translate `spec.md` to English first. The command does not auto-translate. |
-| `[product-info] E_USER_ABORT: ...` | You answered "no" at the overwrite or clarification prompt. | Re-run when ready. |
+| `[product-info] E_NO_SPEC: ...`              | Feature directory has no `spec.md`.                                | Run `/speckit-specify` to create one.                                                               |
+| `[product-info] E_PLACEHOLDERS: ...`         | `spec.md` still contains unfilled template scaffolding.            | Open `spec.md` and replace the listed placeholders with real content.                               |
+| `[product-info] E_LANGUAGE: ...`             | `spec.md` is not in English.                                       | Translate `spec.md` to English first. The command does not auto-translate.                          |
+| `[product-info] E_USER_ABORT: ...`           | You answered "no" at the overwrite or clarification prompt.        | Re-run when ready.                                                                                  |
 
 ---
 
@@ -203,21 +203,17 @@ The generated file contains three mandatory sections and up to four optional sec
 2. **Delivery Phases** - three bands: NOW (current phases), NEXT (natural follow-on, not a commitment), LATER (explicitly deferred work).
 3. **Out of Scope** - a short, scannable list of what is deliberately excluded.
 
-**Optional** (included only when the source plan has relevant content):
-4. **Component Overview** - main system parts this feature adds, modifies, or depends on at the container level.
-5. **Key Technical Decisions** - condensed ADR format: Decision, Why, Trade-off.
-6. **Risks** - pre-mortem lens: two to four concrete risks drawn from the plan.
-7. **Open Questions** - open items or marked assumptions from the plan.
+**Optional** (included only when the source plan has relevant content): 4. **Component Overview** - main system parts this feature adds, modifies, or depends on at the container level. 5. **Key Technical Decisions** - condensed ADR format: Decision, Why, Trade-off. 6. **Risks** - pre-mortem lens: two to four concrete risks drawn from the plan. 7. **Open Questions** - open items or marked assumptions from the plan.
 
 ### Error codes
 
-| Code | Cause | Fix |
-|------|-------|-----|
+| Code                     | Cause                                                              | Fix                                                                                              |
+| ------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
 | speckit resolution error | Running outside a Spec Kit project, or no active feature recorded. | `cd` into a project with `.specify/`, run `/speckit-plan` first, or pass `--feature-dir <path>`. |
-| `E_NO_PLAN` | Feature directory has no `plan.md`. | Run `/speckit-plan` to generate the engineering plan first. |
-| `E_PLACEHOLDERS` | `plan.md` still contains unfilled template placeholders. | Fill in or regenerate `plan.md` before running this command. |
-| `E_LANGUAGE` | `plan.md` is not in English. | Translate `plan.md` to English first. The command does not auto-translate. |
-| `E_USER_ABORT` | You answered "no" at the overwrite prompt. | Re-run when ready. |
+| `E_NO_PLAN`              | Feature directory has no `plan.md`.                                | Run `/speckit-plan` to generate the engineering plan first.                                      |
+| `E_PLACEHOLDERS`         | `plan.md` still contains unfilled template placeholders.           | Fill in or regenerate `plan.md` before running this command.                                     |
+| `E_LANGUAGE`             | `plan.md` is not in English.                                       | Translate `plan.md` to English first. The command does not auto-translate.                       |
+| `E_USER_ABORT`           | You answered "no" at the overwrite prompt.                         | Re-run when ready.                                                                               |
 
 ---
 
@@ -283,14 +279,14 @@ Optional sections (References, Glossary, Assumptions) appear when the source pla
 
 ### Error codes
 
-| Code | Cause | Fix |
-|------|-------|-----|
+| Code                     | Cause                                                              | Fix                                                                                              |
+| ------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
 | speckit resolution error | Running outside a Spec Kit project, or no active feature recorded. | `cd` into a project with `.specify/`, run `/speckit-plan` first, or pass `--feature-dir <path>`. |
-| `E_NO_PLAN` | Feature directory has no `plan.md`. | Run `/speckit-plan` to generate the engineering plan first. |
-| `E_NO_SPEC` | Feature directory has no `spec.md`. | Run `/speckit-specify` to create one. |
-| `E_PLACEHOLDERS` | Source files still contain unfilled template placeholders. | Fill in or regenerate the source files before running this command. |
-| `E_LANGUAGE` | Source files are not in English. | Translate to English first. The command does not auto-translate. |
-| `E_USER_ABORT` | You answered "no" at the overwrite prompt. | Re-run when ready. |
+| `E_NO_PLAN`              | Feature directory has no `plan.md`.                                | Run `/speckit-plan` to generate the engineering plan first.                                      |
+| `E_NO_SPEC`              | Feature directory has no `spec.md`.                                | Run `/speckit-specify` to create one.                                                            |
+| `E_PLACEHOLDERS`         | Source files still contain unfilled template placeholders.         | Fill in or regenerate the source files before running this command.                              |
+| `E_LANGUAGE`             | Source files are not in English.                                   | Translate to English first. The command does not auto-translate.                                 |
+| `E_USER_ABORT`           | You answered "no" at the overwrite prompt.                         | Re-run when ready.                                                                               |
 
 ---
 
