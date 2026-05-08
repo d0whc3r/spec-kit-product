@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.7](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.6...v0.0.7) (2026-05-08)
+
+
+### Bug Fixes
+
+* **format:** Refactor templates to standardize section headings and improve clarity ([f647e49](https://github.com/d0whc3r/spec-kit-product/commit/f647e49847551dda26a9a232068accfc7a35644b))
+
 ## [0.0.6](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.5...v0.0.6) (2026-05-07)
 
 ### Bug Fixes
