@@ -146,7 +146,7 @@ Read `templates/product-info-template.md`. Replace every bracketed placeholder w
 
 ### Step 6: Write the file atomically
 
-Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `info.md`. This avoids leaving partial output if the process is interrupted. Create `${FEATURE_DIR}/product/` if it does not exist.
+Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `00-info.md`. This avoids leaving partial output if the process is interrupted. Create `${FEATURE_DIR}/product/` if it does not exist.
 
 ### Step 6b: Prepare product/checklist.md
 

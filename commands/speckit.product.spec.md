@@ -83,7 +83,7 @@ If any markers are present:
 
 - List each marker, one per line, with file location.
 - Ask the user: `Surface these as open product questions in product/10-spec.md? (yes/no)`
-- On `no` or any non affirmative response, abort with no files written.
+- On `no` or any non affirmative response, abort with `E_USER_ABORT` and write nothing.
 - On `yes`, continue. Each marker MUST appear as a bullet under "Open product questions" in the Risks and Open Product Questions section of the generated `product/10-spec.md`. Never silently resolve a marker.
 
 ### Step 4: Handle existing spec.md in product/
@@ -93,7 +93,7 @@ If `${FEATURE_DIR}/product/10-spec.md` already exists:
 - Print the absolute path of the existing file.
 - Ask: `product/10-spec.md already exists. Overwrite? (yes/no)`
 - On `no` or any non affirmative response, abort with `E_USER_ABORT`. Do not write any files.
-- On `yes`, continue. The existing `product/10-spec.md` will be replaced byte for byte. The companion `product/checklist.md` is also regenerated; prior tick state is not preserved.
+- On `yes`, continue. The existing `product/10-spec.md` will be replaced byte for byte.
 
 If `${FEATURE_DIR}/product/` does not exist yet, create it before writing.
 
@@ -252,10 +252,10 @@ The `[, <REMAINING> need manual review]` segment is omitted when all spec items 
 On any refusal, print exactly one line of the form:
 
 ```text
-[product] <CODE>: <human readable remediation>
+[product-spec] <CODE>: <human readable remediation>
 ```
 
-Use the codes from `command-contract.md`: `E_NO_SPEC`, `E_PLACEHOLDERS`, `E_LANGUAGE`, `E_USER_ABORT`. When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholder. Feature directory resolution failures surface speckit's own error message verbatim (no product error code).
+When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholder. Feature directory resolution failures surface speckit's own error message verbatim (no product-spec error code).
 
 ## Idempotence
 

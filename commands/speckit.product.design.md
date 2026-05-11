@@ -147,7 +147,7 @@ Read `templates/product-design-template.md`. Populate all sections from `plan.md
 
 ### Step 7: Write the file atomically
 
-Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `design.md`. This avoids leaving partial output if the process is interrupted. Create `${FEATURE_DIR}/product/` if it does not exist.
+Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `30-design.md`. This avoids leaving partial output if the process is interrupted. Create `${FEATURE_DIR}/product/` if it does not exist.
 
 ### Step 7b: Prepare product/checklist.md
 
