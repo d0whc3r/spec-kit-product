@@ -1,16 +1,27 @@
 # Product Spec Extension for Spec Kit
 
-A Spec Kit extension that turns a technical `spec.md` into a stakeholder facing `product/spec.md`. Output follows Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain English, with a strict no em dash style.
+A Spec Kit extension that derives four stakeholder-facing artifacts from a technical `spec.md` and `plan.md`. Output follows Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain English, with a strict no em dash style.
 
 ## Overview
 
-`/speckit-specify` produces a `spec.md` that engineers can act on. Product, design, and leadership often need a different shape of the same information: a headline, a Job to Be Done, scope and out of scope, a small number of Gherkin scenarios, and measurable success metrics. This extension generates that artifact in one step, plus a quality checklist that verifies the result against the canonical structure and style.
+`/speckit-specify` and `/speckit-plan` produce `spec.md` and `plan.md` that engineers can act on. Product, design, and leadership often need the same information in a different shape: a headline, a Job to Be Done, scope and out of scope, Gherkin scenarios, delivery phases, and technical decisions explained in plain language. This extension generates four audience-specific artifacts from those source files, each with an auto-validated quality checklist.
+
+| Command                   | Reads                        | Writes                 | Audience                       |
+| ------------------------- | ---------------------------- | ---------------------- | ------------------------------ |
+| `/speckit.product.info`   | `spec.md`                    | `product/00-info.md`   | Any stakeholder, non-technical |
+| `/speckit.product.spec`   | `spec.md`                    | `product/10-spec.md`   | Product managers, leadership   |
+| `/speckit.product.plan`   | `plan.md`, `spec.md`         | `product/20-plan.md`   | PMs, engineering leads         |
+| `/speckit.product.design` | `plan.md`, `spec.md`, others | `product/30-design.md` | Tech leads, senior developers  |
+
+All four commands also update their respective section of the shared `product/checklist.md`.
+
+See [WORKFLOW.md](WORKFLOW.md) for the full input/output flow and recommended order.
 
 ## Source of Truth Contract
 
-`spec.md` is the canonical artifact for the feature. `product/spec.md` is a derived view, regenerated on demand. The command never modifies `spec.md`. If `spec.md` changes, regenerate `product/spec.md` by running the command again and choosing overwrite.
+`spec.md` and `plan.md` are the canonical artifacts for a feature. Everything under `product/` is a derived view, regenerated on demand. No command modifies the source files. If a source file changes, regenerate the corresponding artifact by rerunning the command and choosing overwrite.
 
-`[NEEDS CLARIFICATION]` markers in `spec.md` are surfaced as open product questions in the generated `product/spec.md`, never silently resolved.
+`[NEEDS CLARIFICATION]` markers in `spec.md` are surfaced as open product questions in the generated output, never silently resolved.
 
 ## Install
 
@@ -48,46 +59,50 @@ If you cannot use the CLI, unpack the release zip and copy its contents into `.s
 
 ## Invoke
 
-After install, the slash command is available as:
+After install, all four commands are available. Each reads the active feature pointer at `.specify/feature.json` and writes into the `product/` subfolder of that feature directory.
 
 ```text
+/speckit.product.info
 /speckit.product.spec
+/speckit.product.plan
+/speckit.product.design
 ```
 
-Run it from any working directory inside a Spec Kit project. The command reads the active feature pointer at `.specify/feature.json` and writes:
+To target a specific feature directory, pass `--feature-dir`:
 
-- `<feature-dir>/product/spec.md`
-- `<feature-dir>/product/checklist.md`
+```text
+/speckit.product.spec --feature-dir specs/<feature-dir>
+```
 
-All generated artifacts live under a single `product/` subfolder so they can be read, exported, and shared as a self-contained bundle without dragging engineering scaffolding along.
-
-If `product/spec.md` already exists, the command prompts for overwrite or abort. There is no merge in v1.
+All generated artifacts live under a single `product/` subfolder so they can be read, exported, and shared as a self-contained bundle without dragging engineering scaffolding along. If an output file already exists, the command prompts for overwrite or abort.
 
 ## Style Rules (Summary)
 
-The generated `product/spec.md` enforces:
+The generated artifacts enforce:
 
 1. English only.
 2. No em dash character.
 3. Each Use Case scenario has exactly one Given line, one When line, and one Then line, each a full sentence beginning with the keyword.
-4. All mandatory sections (1 through 9) appear in the canonical order.
-5. No implementation detail (no frameworks, languages, APIs, data stores, code, or file paths beyond the link to `spec.md`).
+4. Mandatory sections appear in canonical order.
+5. No implementation detail (no frameworks, languages, APIs, data stores, code, or file paths).
+6. No AI-tell filler phrases ("delve", "tapestry", "in essence", "seamless", etc.).
+7. Bullets are short (12 words or fewer).
 
-The paired `product/checklist.md` verifies all of the above.
+The shared `product/checklist.md` verifies all of the above and marks items that need manual review.
 
 ## Troubleshooting
 
 - **"feature directory not found"**: ensure `.specify/feature.json` exists and points to a real directory under `specs/`. Run `/speckit-specify` first if you have not yet created a feature.
 - **"spec.md still contains template placeholders"**: open `spec.md` and replace bracketed placeholders such as `[FEATURE NAME]` with concrete content. The command refuses to run on an unfilled spec.
-- **"detected non English content in spec.md"**: v1 is English only. Translate `spec.md` to English and rerun.
-- **"product/spec.md already exists"**: choose overwrite to regenerate, or abort to keep the existing file untouched.
+- **"detected non English content"**: v1 is English only. Translate the source file to English and rerun.
+- **"output file already exists"**: choose overwrite to regenerate, or abort to keep the existing file untouched.
 - **The slash command does not appear**: confirm `.specify/extensions/.registry` lists `product` and that the extension files are present under `.specify/extensions/product/`. Restart your assistant if needed.
 
 ---
 
 ## /speckit.product.info
 
-`/speckit.product.info` is a sibling command to `/speckit.product.spec`. It derives a short, stakeholder-readable `product/info.md` from the same `spec.md`. The output is one rendered page or less, in plain English, with no implementation detail, and answers "what is changing and why" for a non-technical reader.
+`/speckit.product.info` is a sibling command to `/speckit.product.spec`. It derives a short, stakeholder-readable `product/00-info.md` from the same `spec.md`. The output is one rendered page or less, in plain English, with no implementation detail, and answers "what is changing and why" for a non-technical reader.
 
 ### Prerequisites
 
@@ -119,7 +134,8 @@ Run it from any working directory inside a Spec Kit project. To target a specifi
 
 The command writes:
 
-- `<feature-dir>/product/info.md`
+- `<feature-dir>/product/00-info.md`
+- `<feature-dir>/product/checklist.md` (creates if absent; updates only the `## Info` section)
 
 The `product/` subfolder is created if it does not exist.
 
@@ -127,12 +143,18 @@ The `product/` subfolder is created if it does not exist.
 
 The generated file contains four mandatory sections in canonical order:
 
-1. **Headline** — one paragraph stating who this is for and what is changing.
-2. **What is Changing** — two to five short bullets in customer-observable language.
-3. **Why Now** — two to four short sentences explaining the trigger.
+1. **Overview** — two to three sentences on what the feature is and why it exists.
+2. **Headline** — one paragraph stating who this is for and what is changing.
+3. **What is Changing** — two to five short bullets in customer-observable language.
 4. **Out of Scope** — a short scannable list of what is deliberately excluded.
 
-An optional **Open Questions** section (Section 5) appears if the source spec contained `[NEEDS CLARIFICATION]` markers and the user confirmed at the prompt.
+Optional sections appear when the source spec has relevant content:
+
+- **Risks** — pre-mortem analysis when the spec has concrete risk signals.
+- **Key Decisions** — surfaces resolved decisions and still-open questions when `spec.md` contains a `## Clarifications` section or `[NEEDS CLARIFICATION]` markers.
+- **References** — external links worth surfacing to non-technical readers.
+
+The command writes `product/00-info.md` and updates the `## Info` section of `product/checklist.md`.
 
 `/speckit.product.info` and `/speckit.product.spec` are siblings. They both read the same `spec.md` and write into the same `product/` subfolder. Neither modifies the other's output. A common pattern is to run `/speckit.product.info` early to validate direction with stakeholders, then run `/speckit.product.spec` once direction is confirmed.
 
@@ -189,21 +211,32 @@ The command reads:
 
 The command writes:
 
-- `<feature-dir>/product/plan.md`
+- `<feature-dir>/product/20-plan.md`
+- `<feature-dir>/product/checklist.md` (creates if absent; updates only the `## Plan` section)
 
 The `product/` subfolder is created if it does not exist. `plan.md` and `spec.md` are never modified.
 
 ### Output
 
-The generated file contains three mandatory sections and up to four optional sections:
+The generated file has mandatory sections and optional sections included only when the source plan has relevant content.
 
 **Mandatory**:
 
-1. **Summary** - one paragraph: what is being built, why now, and the main approach.
-2. **Delivery Phases** - three bands: NOW (current phases), NEXT (natural follow-on, not a commitment), LATER (explicitly deferred work).
-3. **Out of Scope** - a short, scannable list of what is deliberately excluded.
+1. **Summary** - what is being built, who it is for, and the main approach. No time estimates.
+2. **Feature Context** - Problem, For, Change, Quality bar, Constraints.
+3. **Goals** - three to six concrete observable outcomes.
+4. **Out of Scope** - a short, scannable list of what is deliberately excluded.
+5. **Delivery Phases** - numbered phases in source order, each with outcome bullets. No time estimates, no temporal bands (NOW/NEXT/LATER).
 
-**Optional** (included only when the source plan has relevant content): 4. **Component Overview** - main system parts this feature adds, modifies, or depends on at the container level. 5. **Key Technical Decisions** - condensed ADR format: Decision, Why, Trade-off. 6. **Risks** - pre-mortem lens: two to four concrete risks drawn from the plan. 7. **Open Questions** - open items or marked assumptions from the plan.
+**Optional** (included only when the source plan has relevant content):
+
+6. **Build Overview** - main system parts at C4 container level.
+7. **Key Principles** - explicit guard rails or core rules from the plan.
+8. **Key Decisions** - mini-ADR format: Context, Options considered, Decision, Consequence.
+9. **Risks and Mitigations** - pre-mortem lens with probability, impact, mitigation.
+10. **Divergences and Edge Cases** - scenarios that deviate from the normal flow.
+11. **Validation** - observable conditions a reviewer can verify after shipping.
+12. **Open Questions** - open items or marked assumptions from the plan.
 
 ### Error codes
 
@@ -265,17 +298,28 @@ The command writes:
 
 ### Output
 
-The generated file covers:
+The generated file has mandatory sections and optional sections included only when the source files have relevant content.
 
-1. **Architectural Approach** - main patterns and structural decisions.
-2. **Affected Modules and Layers** - what changes and where in the stack.
-3. **Data Model and API Shapes** - schema and interface shapes at a conceptual level.
-4. **Spec Coverage Mapping** - each acceptance criterion mapped to the component that satisfies it.
-5. **Key Technical Decisions** - condensed ADR format: Decision, Why, Trade-off.
-6. **Testing Strategy** - unit, integration, and contract test targets.
-7. **Rollout Plan** - feature flags, migration steps, and monitoring expectations.
+**Mandatory**:
 
-Optional sections (References, Glossary, Assumptions) appear when the source plan has relevant content.
+1. **Summary** - what is being built technically, layers affected, key architectural approach.
+2. **Technical Context** - current state, affected layers, technical constraints.
+3. **Architectural Approach** - how the solution fits the existing architecture, C4 component level.
+4. **Affected Modules** - table: module, change type, responsibility.
+5. **Testing Strategy** - Unit, Integration, E2E/BDD, Observability bullets.
+6. **Rollout and Migration** - strategy, data migration steps, rollback plan.
+
+**Conditional** (present when the source has the relevant content):
+
+7. **Data Design** - entity shapes and data flow.
+8. **API Design** - request/response shapes and error cases at conceptual level.
+9. **Spec Coverage** - table mapping each spec use case to its implementing component; gaps marked explicitly.
+
+**Optional**:
+
+10. **Key Technical Decisions** - ADR format: Context, Options considered, Decision, Consequences.
+11. **Risks and Mitigations** - pre-mortem lens with probability, impact, mitigation.
+12. **Open Questions** - unresolved technical decisions as single-sentence questions.
 
 ### Error codes
 
