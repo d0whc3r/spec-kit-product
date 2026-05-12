@@ -2,11 +2,10 @@
 
 ## [0.0.8](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.7...v0.0.8) (2026-05-11)
 
-
 ### Bug Fixes
 
-* **commands:** update file naming conventions for generated documents to improve organization ([1f382bd](https://github.com/d0whc3r/spec-kit-product/commit/1f382bd3fa1ae3a22d0ec2006c27ac7b98017c1c))
-* update changelog and README for clarity and consistency; enhance workflow documentation ([d40a4ed](https://github.com/d0whc3r/spec-kit-product/commit/d40a4edd32e3f56455c570d749f58cb8eb2dfa27))
+- **commands:** update file naming conventions for generated documents to improve organization ([1f382bd](https://github.com/d0whc3r/spec-kit-product/commit/1f382bd3fa1ae3a22d0ec2006c27ac7b98017c1c))
+- update changelog and README for clarity and consistency; enhance workflow documentation ([d40a4ed](https://github.com/d0whc3r/spec-kit-product/commit/d40a4edd32e3f56455c570d749f58cb8eb2dfa27))
 
 ## [0.0.7](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.6...v0.0.7) (2026-05-08)
 
