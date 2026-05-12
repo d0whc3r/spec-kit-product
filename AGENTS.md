@@ -82,12 +82,12 @@ This repository ships a Spec Kit extension whose command surface is mirrored
 across multiple AI coding agents. Every public command must exist in all four
 integration surfaces (constitution §V).
 
-| Agent | Skill / Prompt Surface | Manifest |
-|---|---|---|
-| Claude Code | `.claude/skills/<skill-slug>/SKILL.md` | `.specify/integrations/claude.manifest.json` |
+| Agent          | Skill / Prompt Surface                                                | Manifest                                      |
+| -------------- | --------------------------------------------------------------------- | --------------------------------------------- |
+| Claude Code    | `.claude/skills/<skill-slug>/SKILL.md`                                | `.specify/integrations/claude.manifest.json`  |
 | GitHub Copilot | `.github/agents/<name>.agent.md` + `.github/prompts/<name>.prompt.md` | `.specify/integrations/copilot.manifest.json` |
-| OpenAI Codex | manifest-only (no per-skill file) | `.specify/integrations/codex.manifest.json` |
-| Spec Kit core | `commands/speckit.<area>.<verb>.md` (canonical) | `.specify/integrations/speckit.manifest.json` |
+| OpenAI Codex   | manifest-only (no per-skill file)                                     | `.specify/integrations/codex.manifest.json`   |
+| Spec Kit core  | `commands/speckit.<area>.<verb>.md` (canonical)                       | `.specify/integrations/speckit.manifest.json` |
 
 Rules:
 
