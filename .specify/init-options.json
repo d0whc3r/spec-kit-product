@@ -1,9 +1,10 @@
 {
-  "ai": "copilot",
+  "ai": "claude",
+  "ai_skills": true,
   "branch_numbering": "sequential",
-  "context_file": ".github/copilot-instructions.md",
+  "context_file": "CLAUDE.md",
   "here": true,
-  "integration": "copilot",
+  "integration": "claude",
   "script": "sh",
-  "speckit_version": "0.8.6.dev0"
+  "speckit_version": "0.8.9.dev0"
 }
