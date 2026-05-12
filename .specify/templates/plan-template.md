@@ -17,15 +17,14 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Runtime surface**: Markdown only (no executable code per constitution §I)
+**Authoring tooling**: pnpm@11.1.1, oxfmt (`pnpm lint`, `pnpm fix`), semantic-release
+**Command files touched**: [list under `commands/speckit.product.*.md`, or N/A]
+**Template files touched**: [list under `templates/product-*-template.md`, or N/A]
+**Manifests touched**: [list of `.specify/integrations/*.manifest.json` and `extension.yml`, `catalog.json`]
+**Mirror surfaces touched**: [`.claude/skills/...`, `.github/agents/...`, `.github/prompts/...`]
+**Project type**: Spec Kit extension (markdown)
+**Style invariants**: no em dashes, plain English, PRFAQ + JTBD + Gherkin + Lean PRD conventions, `[NEEDS CLARIFICATION]` preserved
 
 ## Constitution Check
 
@@ -56,43 +55,30 @@ specs/[###-feature]/
 -->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+commands/                       Public command surface
+└── speckit.product.<verb>.md   New or modified command (one file per command)
 
-tests/
-├── contract/
-├── integration/
-└── unit/
+templates/                      Output templates
+└── product-<artifact>-template.md   Template consumed by the command
 
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
+.specify/integrations/          Integration manifests (must list every command)
+├── claude.manifest.json
+├── copilot.manifest.json
+├── codex.manifest.json
+└── speckit.manifest.json
 
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
+.claude/skills/<skill-slug>/SKILL.md     Claude mirror
+.github/agents/<name>.agent.md           Copilot agent mirror
+.github/prompts/<name>.prompt.md         Copilot prompt mirror
 
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+extension.yml                   Extension manifest (provides.commands)
+catalog.json                    Catalog entry (provides.commands count)
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: This repository is a Spec Kit extension. New features
+add or modify a command triple (command file + template + manifest entry) and
+**MUST** mirror across all four agent integration surfaces. No new top-level
+directories.
 
 ## Complexity Tracking
 

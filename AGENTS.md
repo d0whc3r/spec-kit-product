@@ -75,3 +75,24 @@ For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
 
 <!-- SPECKIT END -->
+
+## Agent Boundaries
+
+This repository ships a Spec Kit extension whose command surface is mirrored
+across multiple AI coding agents. Every public command must exist in all four
+integration surfaces (constitution §V).
+
+| Agent | Skill / Prompt Surface | Manifest |
+|---|---|---|
+| Claude Code | `.claude/skills/<skill-slug>/SKILL.md` | `.specify/integrations/claude.manifest.json` |
+| GitHub Copilot | `.github/agents/<name>.agent.md` + `.github/prompts/<name>.prompt.md` | `.specify/integrations/copilot.manifest.json` |
+| OpenAI Codex | manifest-only (no per-skill file) | `.specify/integrations/codex.manifest.json` |
+| Spec Kit core | `commands/speckit.<area>.<verb>.md` (canonical) | `.specify/integrations/speckit.manifest.json` |
+
+Rules:
+
+1. Canonical command file lives at `commands/speckit.<area>.<verb>.md`. Mirrors derive from it; they must not diverge in intent.
+2. Adding a command requires updating: the canonical file, all four manifests, every mirror surface, `extension.yml` `provides.commands`, and `catalog.json` `provides.commands` count.
+3. Renaming or removing a command is a breaking change and requires a `feat!:` or `BREAKING CHANGE:` commit per constitution §Governance.
+4. The brownfield extension at `.specify/extensions/brownfield/` follows the same mirror rule via its own commands and the agent surfaces under `.claude/skills/speckit-brownfield-*` and `.github/agents/speckit.brownfield.*`.
+5. All agents must emit output obeying constitution §III: no em dashes, plain English, PRFAQ + JTBD + Gherkin + Lean PRD conventions, `[NEEDS CLARIFICATION]` markers preserved.

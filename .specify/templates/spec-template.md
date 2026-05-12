@@ -126,3 +126,32 @@
 - [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
 - [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
 - [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]
+
+## Extension Command Surface *(mandatory for new commands)*
+
+<!--
+  Required when the feature adds or modifies a public command. Skip with
+  "N/A — internal refactor" only when no command surface changes.
+-->
+
+- **Command name**: `speckit.<area>.<verb>` (must follow naming rule in constitution §IV)
+- **Reads**: [Which source files: `spec.md`, `plan.md`, prior `product/*.md`, none]
+- **Writes**: [Output path under `product/`, e.g., `product/40-faq.md`]
+- **Templates touched**: [List `templates/*-template.md` files used or added]
+- **Overwrite behavior**: prompt before overwrite (see constitution §"Output Location Discipline")
+- **Mirror surfaces**: list the four mirror artifacts that must be added or updated
+  - `.claude/skills/<skill-slug>/SKILL.md`
+  - `.github/agents/<name>.agent.md`
+  - `.github/prompts/<name>.prompt.md`
+  - manifest entries in `claude`, `copilot`, `codex`, `speckit` JSON manifests under `.specify/integrations/`
+
+## Style Compliance *(mandatory)*
+
+Confirm the generated output and any new templates honor the style invariants
+(constitution §III):
+
+- [ ] No em dashes in generated output or templates
+- [ ] Plain English, no marketing language
+- [ ] PRFAQ / JTBD / Gherkin / Lean PRD conventions applied where appropriate
+- [ ] `[NEEDS CLARIFICATION]` markers from source files are surfaced, never resolved
+- [ ] Checklist contribution to `product/checklist.md` is defined

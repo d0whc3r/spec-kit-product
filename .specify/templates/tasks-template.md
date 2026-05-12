@@ -20,10 +20,11 @@ description: "Task list template for feature implementation"
 
 ## Path Conventions
 
-- **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
-- Paths shown below assume single project - adjust based on plan.md structure
+- **Commands**: `commands/speckit.product.<verb>.md`
+- **Templates**: `templates/product-<artifact>-template.md`
+- **Manifests**: `.specify/integrations/{claude,copilot,codex,speckit}.manifest.json`, `extension.yml`, `catalog.json`
+- **Mirrors**: `.claude/skills/<slug>/SKILL.md`, `.github/agents/<name>.agent.md`, `.github/prompts/<name>.prompt.md`
+- This is a markdown-only Spec Kit extension — no `src/` or `tests/` directories exist or should be created.
 
 <!-- 
   ============================================================================
@@ -44,13 +45,13 @@ description: "Task list template for feature implementation"
   ============================================================================
 -->
 
-## Phase 1: Setup (Shared Infrastructure)
+## Phase 1: Setup (Extension Authoring)
 
-**Purpose**: Project initialization and basic structure
+**Purpose**: Prepare the command triple and confirm tooling
 
-- [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
+- [ ] T001 Draft command file at `commands/speckit.product.<verb>.md` (follow constitution §IV naming)
+- [ ] T002 [P] Draft or update template at `templates/product-<artifact>-template.md`
+- [ ] T003 Run `pnpm lint` to confirm baseline passes before edits land
 
 ---
 
@@ -60,16 +61,18 @@ description: "Task list template for feature implementation"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-Examples of foundational tasks (adjust based on your project):
+Examples of foundational tasks (adjust based on your feature):
 
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
+- [ ] T004 Update `extension.yml` `provides.commands` with new entry
+- [ ] T005 Update `catalog.json` `provides.commands` count
+- [ ] T006 [P] Add command to `.specify/integrations/claude.manifest.json`
+- [ ] T007 [P] Add command to `.specify/integrations/copilot.manifest.json`
+- [ ] T008 [P] Add command to `.specify/integrations/codex.manifest.json`
+- [ ] T009 [P] Add command to `.specify/integrations/speckit.manifest.json`
+- [ ] T010 [P] Mirror to `.claude/skills/<slug>/SKILL.md`
+- [ ] T011 [P] Mirror to `.github/agents/<name>.agent.md` and `.github/prompts/<name>.prompt.md`
 
-**Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+**Checkpoint**: Manifests and mirror surfaces in sync — user story work can begin
 
 ---
 
@@ -150,12 +153,13 @@ Examples of foundational tasks (adjust based on your project):
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] TXXX [P] Documentation updates in docs/
-- [ ] TXXX Code cleanup and refactoring
-- [ ] TXXX Performance optimization across all stories
-- [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
-- [ ] TXXX Security hardening
-- [ ] TXXX Run quickstart.md validation
+- [ ] TXXX [P] Update `README.md` if user-facing command surface changed
+- [ ] TXXX [P] Update `WORKFLOW.md` if input/output flow changed
+- [ ] TXXX Run `pnpm lint` and resolve any oxfmt findings
+- [ ] TXXX Verify no em dashes in new commands or templates
+- [ ] TXXX Confirm command, template, manifest parity (constitution §IV)
+- [ ] TXXX Confirm multi-agent mirror complete (constitution §V)
+- [ ] TXXX Conventional-commit message drafted for semantic-release
 
 ---
 
