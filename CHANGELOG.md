@@ -1,5 +1,12 @@
 # Changelog
 
+# [0.1.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.8...v0.1.0) (2026-05-13)
+
+
+### Features
+
+* add prompts for hooks in extension.yml to enhance user interaction ([94ac700](https://github.com/d0whc3r/spec-kit-product/commit/94ac7009f439b8febd23d7dfc8e73052eeb9f64b))
+
 ## [0.0.8](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.7...v0.0.8) (2026-05-11)
 
 ### Bug Fixes
