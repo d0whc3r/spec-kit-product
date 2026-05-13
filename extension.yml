@@ -28,6 +28,23 @@ provides:
       file: commands/speckit.product.design.md
       description: "Generate a high-level technical design document from the current feature's plan.md and spec.md, aimed at tech leads and senior developers"
 
+hooks:
+  after_specify:
+    command: speckit.product.spec
+    optional: true
+    prompt: "Generate a product-facing spec from the new spec.md?"
+    description: "Generate product/10-spec.md (and product/00-info.md) from spec.md"
+  after_clarify:
+    command: speckit.product.spec
+    optional: true
+    prompt: "Regenerate the product spec after clarification?"
+    description: "Update product/10-spec.md from the clarified spec.md"
+  after_plan:
+    command: speckit.product.plan
+    optional: true
+    prompt: "Generate the product-facing plan from plan.md?"
+    description: "Generate product/20-plan.md (and product/30-design.md) from plan.md"
+
 tags:
   - product
   - spec
