@@ -2,17 +2,15 @@
 
 ## [0.1.1](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.0...v0.1.1) (2026-05-25)
 
-
 ### Bug Fixes
 
-* codegraph + deps update ([2bb2d82](https://github.com/d0whc3r/spec-kit-product/commit/2bb2d824ee0aab9ed23f9ac037ff7292b80f39c8))
+- codegraph + deps update ([2bb2d82](https://github.com/d0whc3r/spec-kit-product/commit/2bb2d824ee0aab9ed23f9ac037ff7292b80f39c8))
 
 # [0.1.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.8...v0.1.0) (2026-05-13)
 
-
 ### Features
 
-* add prompts for hooks in extension.yml to enhance user interaction ([94ac700](https://github.com/d0whc3r/spec-kit-product/commit/94ac7009f439b8febd23d7dfc8e73052eeb9f64b))
+- add prompts for hooks in extension.yml to enhance user interaction ([94ac700](https://github.com/d0whc3r/spec-kit-product/commit/94ac7009f439b8febd23d7dfc8e73052eeb9f64b))
 
 ## [0.0.8](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.7...v0.0.8) (2026-05-11)
 
