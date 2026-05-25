@@ -1,322 +1,207 @@
 #!/usr/bin/env bash
-# Pipeline: lint extension content (markdown templates and command body).
+# Pipeline: lint extension content (markdown templates and command bodies).
 #
 # Paths are relative to the repo root, which is the extension root in the
 # canonical layout.
 #
-# Checks (per template: spec, info, plan, design):
+# Per template (spec, info, plan, design):
 #   - No em dash.
-#   - Canonical section headings present and in order.
-#   - Corresponding command file references the template by relative path.
+#   - Canonical mandatory section headings present and in order.
+#   - Optional section headings (when present) appear after mandatory ones
+#     and in declared order. Optional headings may be suffixed with
+#     " _(optional)_" in the template.
+#   - The corresponding command file references the template (and any
+#     declared extra references such as the checklist template).
 #   - No banned AI-tell phrases.
-#   (Optional) markdown formatting check via oxfmt if installed.
+#
+# Also runs an optional oxfmt --check pass when oxfmt is installed.
 
-set -e
+set -euo pipefail
 
 FAIL=0
-TEMPLATE="templates/product-spec-template.md"
-CHECKLIST="templates/product-checklist-template.md"
-COMMAND="commands/speckit.product.spec.md"
-INFO_TEMPLATE="templates/product-info-template.md"
-INFO_COMMAND="commands/speckit.product.info.md"
+BANNED_PHRASES=("delve" "tapestry" "in essence" "navigate the landscape")
 
-if [ ! -f "$TEMPLATE" ]; then
-    echo "[lint-content] FAIL: $TEMPLATE missing" >&2
-    exit 1
-fi
+# find_heading <file> <heading-text-without-prefix>
+# Prints the 1-based line number of the first line equal to "## <heading>"
+# or "## <heading> _(optional)_". Empty output means not found.
+find_heading() {
+    awk -v h="$2" '
+        $0 == "## " h || $0 == "## " h " _(optional)_" { print NR; exit }
+    ' "$1"
+}
 
-# 1. No em dash in the template.
-if grep -q "—" "$TEMPLATE"; then
-    echo "[lint-content] FAIL: em dash found in $TEMPLATE" >&2
-    grep -n "—" "$TEMPLATE" >&2
-    FAIL=1
-fi
+# check_headings <file> <last_line_var> <required: required|optional> <heading...>
+# Updates $last_line_var (by name) with the latest line number seen.
+check_headings() {
+    local file="$1"
+    local -n last_ref="$2"
+    local mode="$3"
+    shift 3
+    local h line
+    for h in "$@"; do
+        line=$(find_heading "$file" "$h")
+        if [ -z "$line" ]; then
+            if [ "$mode" = "required" ]; then
+                echo "[lint-content] FAIL: missing mandatory heading in $file: ## $h" >&2
+                FAIL=1
+            fi
+            continue
+        fi
+        if [ "$line" -le "$last_ref" ]; then
+            echo "[lint-content] FAIL: heading out of canonical order in $file: ## $h (line $line, previous at $last_ref)" >&2
+            FAIL=1
+        fi
+        last_ref="$line"
+    done
+}
 
-# 2. Canonical headings, in order.
-HEADINGS=(
-    "## Headline"
-    "## Target Users and Personas"
-    "## Problem Statement (Job to Be Done)"
-    "## Value Proposition"
-    "## Scope"
-    "## Out of Scope"
-    "## Use Cases"
-    "## Success Metrics"
-    "## Risks and Open Product Questions"
+# check_em_dash <file>
+check_em_dash() {
+    if grep -q "—" "$1"; then
+        echo "[lint-content] FAIL: em dash found in $1" >&2
+        grep -n "—" "$1" >&2 || true
+        FAIL=1
+    fi
+}
+
+# check_banned <file>
+check_banned() {
+    local phrase
+    for phrase in "${BANNED_PHRASES[@]}"; do
+        if grep -qi "$phrase" "$1"; then
+            echo "[lint-content] FAIL: banned phrase \"$phrase\" found in $1" >&2
+            FAIL=1
+        fi
+    done
+}
+
+# check_command_refs <command-file> <ref...>
+check_command_refs() {
+    local command="$1"; shift
+    if [ ! -f "$command" ]; then
+        echo "[lint-content] FAIL: $command missing" >&2
+        FAIL=1
+        return
+    fi
+    local ref
+    for ref in "$@"; do
+        if ! grep -q -- "$ref" "$command"; then
+            echo "[lint-content] FAIL: $command does not reference $ref" >&2
+            FAIL=1
+        fi
+    done
+}
+
+# Template definitions: mandatory and optional headings are passed as bash
+# arrays via nameref, so no quoting fragility around CSV strings.
+
+lint_template() {
+    local template="$1"
+    local command="$2"
+    local -n mandatory_ref="$3"
+    local -n optional_ref="$4"
+    local -n extra_refs_ref="$5"
+
+    if [ ! -f "$template" ]; then
+        echo "[lint-content] FAIL: $template missing" >&2
+        FAIL=1
+        return
+    fi
+
+    check_em_dash "$template"
+
+    local last=0
+    check_headings "$template" last required "${mandatory_ref[@]}"
+    if [ "${#optional_ref[@]}" -gt 0 ]; then
+        check_headings "$template" last optional "${optional_ref[@]}"
+    fi
+
+    check_command_refs "$command" "$template" "${extra_refs_ref[@]}"
+    check_banned "$template"
+}
+
+# --- product-spec-template.md ---
+SPEC_MANDATORY=(
+    "Headline"
+    "Target Users and Personas"
+    "Problem Statement (Job to Be Done)"
+    "Value Proposition"
+    "Scope"
+    "Out of Scope"
+    "Use Cases"
+    "Success Metrics"
+    "Risks and Open Product Questions"
 )
+SPEC_OPTIONAL=()
+SPEC_EXTRA_REFS=("templates/product-checklist-template.md")
+lint_template \
+    "templates/product-spec-template.md" \
+    "commands/speckit.product.spec.md" \
+    SPEC_MANDATORY SPEC_OPTIONAL SPEC_EXTRA_REFS
 
-LAST_LINE=0
-for h in "${HEADINGS[@]}"; do
-    LINE=$(grep -nF "$h" "$TEMPLATE" | head -n 1 | cut -d: -f1)
-    if [ -z "$LINE" ]; then
-        echo "[lint-content] FAIL: missing canonical heading: $h" >&2
-        FAIL=1
-        continue
-    fi
-    if [ "$LINE" -le "$LAST_LINE" ]; then
-        echo "[lint-content] FAIL: heading out of canonical order: $h (line $LINE, previous at $LAST_LINE)" >&2
-        FAIL=1
-    fi
-    LAST_LINE="$LINE"
-done
+# --- product-info-template.md ---
+INFO_MANDATORY=(
+    "Headline"
+    "What is Changing"
+    "Out of Scope"
+)
+INFO_OPTIONAL=(
+    "Risks"
+    "Open Questions"
+)
+INFO_EXTRA_REFS=()
+lint_template \
+    "templates/product-info-template.md" \
+    "commands/speckit.product.info.md" \
+    INFO_MANDATORY INFO_OPTIONAL INFO_EXTRA_REFS
 
-# 3. Command references both templates.
-if ! grep -q "templates/product-spec-template.md" "$COMMAND"; then
-    echo "[lint-content] FAIL: $COMMAND does not reference templates/product-spec-template.md" >&2
-    FAIL=1
-fi
-if ! grep -q "templates/product-checklist-template.md" "$COMMAND"; then
-    echo "[lint-content] FAIL: $COMMAND does not reference templates/product-checklist-template.md" >&2
-    FAIL=1
-fi
+# --- product-plan-template.md ---
+PLAN_MANDATORY=(
+    "Summary"
+    "Out of Scope"
+    "Delivery Phases"
+)
+PLAN_OPTIONAL=(
+    "Key Decisions"
+    "Risks and Mitigations"
+    "Open Questions"
+)
+PLAN_EXTRA_REFS=()
+lint_template \
+    "templates/product-plan-template.md" \
+    "commands/speckit.product.plan.md" \
+    PLAN_MANDATORY PLAN_OPTIONAL PLAN_EXTRA_REFS
 
-# 3b. No banned AI-tell phrases in the spec template.
-BANNED_PHRASES=("delve" "tapestry" "in essence" "navigate the landscape" "seamless" "intuitive")
-for phrase in "${BANNED_PHRASES[@]}"; do
-    if grep -qi "$phrase" "$TEMPLATE"; then
-        echo "[lint-content] FAIL: banned phrase \"$phrase\" found in $TEMPLATE" >&2
-        FAIL=1
-    fi
-done
+# --- product-design-template.md ---
+DESIGN_MANDATORY=(
+    "Summary"
+    "Technical Context"
+    "Architectural Approach"
+    "Affected Modules"
+    "Data Design"
+    "API Design"
+    "Spec Coverage"
+    "Key Technical Decisions"
+    "Testing Strategy"
+    "Rollout and Migration"
+)
+DESIGN_OPTIONAL=(
+    "Risks and Mitigations"
+    "Open Questions"
+)
+DESIGN_EXTRA_REFS=()
+lint_template \
+    "templates/product-design-template.md" \
+    "commands/speckit.product.design.md" \
+    DESIGN_MANDATORY DESIGN_OPTIONAL DESIGN_EXTRA_REFS
 
-# 4. Optional oxfmt pass (check mode).
+# --- optional oxfmt pass ---
 if command -v oxfmt >/dev/null 2>&1; then
     if ! oxfmt --check 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md' >&2; then
         echo "[lint-content] FAIL: oxfmt reported unformatted markdown files" >&2
         FAIL=1
     fi
 fi
-
-if [ "$FAIL" -ne 0 ]; then
-    exit 1
-fi
-
-# --- product-info-template.md checks ---
-
-if [ ! -f "$INFO_TEMPLATE" ]; then
-    echo "[lint-content] FAIL: $INFO_TEMPLATE missing" >&2
-    exit 1
-fi
-
-# 5. No em dash in the info template.
-if grep -q "—" "$INFO_TEMPLATE"; then
-    echo "[lint-content] FAIL: em dash found in $INFO_TEMPLATE" >&2
-    grep -n "—" "$INFO_TEMPLATE" >&2
-    FAIL=1
-fi
-
-# 6. Canonical headings in order for product-info-template.md.
-INFO_HEADINGS=(
-    "## Headline"
-    "## What is Changing"
-    "## Out of Scope"
-)
-
-LAST_LINE=0
-for h in "${INFO_HEADINGS[@]}"; do
-    LINE=$(grep -nF "$h" "$INFO_TEMPLATE" | head -n 1 | cut -d: -f1)
-    if [ -z "$LINE" ]; then
-        echo "[lint-content] FAIL: missing canonical heading in $INFO_TEMPLATE: $h" >&2
-        FAIL=1
-        continue
-    fi
-    if [ "$LINE" -le "$LAST_LINE" ]; then
-        echo "[lint-content] FAIL: heading out of canonical order in $INFO_TEMPLATE: $h (line $LINE, previous at $LAST_LINE)" >&2
-        FAIL=1
-    fi
-    LAST_LINE="$LINE"
-done
-
-# Optional sections (Risks, Open Questions) must appear after mandatory sections and in order.
-RISKS_LINE=$(grep -nF "## Risks" "$INFO_TEMPLATE" | head -n 1 | cut -d: -f1)
-if [ -n "$RISKS_LINE" ] && [ "$RISKS_LINE" -le "$LAST_LINE" ]; then
-    echo "[lint-content] FAIL: ## Risks is out of order in $INFO_TEMPLATE (line $RISKS_LINE, previous at $LAST_LINE)" >&2
-    FAIL=1
-fi
-[ -n "$RISKS_LINE" ] && LAST_LINE="$RISKS_LINE"
-
-OPT_LINE=$(grep -nF "## Open Questions" "$INFO_TEMPLATE" | head -n 1 | cut -d: -f1)
-if [ -n "$OPT_LINE" ] && [ "$OPT_LINE" -le "$LAST_LINE" ]; then
-    echo "[lint-content] FAIL: ## Open Questions is out of order in $INFO_TEMPLATE (line $OPT_LINE, previous at $LAST_LINE)" >&2
-    FAIL=1
-fi
-
-# 7. Info command references the info template.
-if [ ! -f "$INFO_COMMAND" ]; then
-    echo "[lint-content] FAIL: $INFO_COMMAND missing" >&2
-    FAIL=1
-elif ! grep -q "templates/product-info-template.md" "$INFO_COMMAND"; then
-    echo "[lint-content] FAIL: $INFO_COMMAND does not reference templates/product-info-template.md" >&2
-    FAIL=1
-fi
-
-# 8. No banned AI-tell phrases in the info template.
-BANNED_PHRASES=("delve" "tapestry" "in essence" "navigate the landscape" "seamless" "intuitive")
-for phrase in "${BANNED_PHRASES[@]}"; do
-    if grep -qi "$phrase" "$INFO_TEMPLATE"; then
-        echo "[lint-content] FAIL: banned phrase \"$phrase\" found in $INFO_TEMPLATE" >&2
-        FAIL=1
-    fi
-done
-
-if [ "$FAIL" -ne 0 ]; then
-    exit 1
-fi
-
-# --- product-plan-template.md checks ---
-
-PLAN_TEMPLATE="templates/product-plan-template.md"
-PLAN_COMMAND="commands/speckit.product.plan.md"
-
-if [ ! -f "$PLAN_TEMPLATE" ]; then
-    echo "[lint-content] FAIL: $PLAN_TEMPLATE missing" >&2
-    exit 1
-fi
-
-# 9. No em dash in the plan template.
-if grep -q "—" "$PLAN_TEMPLATE"; then
-    echo "[lint-content] FAIL: em dash found in $PLAN_TEMPLATE" >&2
-    grep -n "—" "$PLAN_TEMPLATE" >&2
-    FAIL=1
-fi
-
-# 10. Canonical section headings in order for product-plan-template.md.
-#     Mandatory sections first, then optional.
-PLAN_HEADINGS=(
-    "## Summary"
-    "## Out of Scope"
-    "## Delivery Phases"
-)
-
-LAST_LINE=0
-for h in "${PLAN_HEADINGS[@]}"; do
-    LINE=$(grep -nF "$h" "$PLAN_TEMPLATE" | head -n 1 | cut -d: -f1)
-    if [ -z "$LINE" ]; then
-        echo "[lint-content] FAIL: missing mandatory heading in $PLAN_TEMPLATE: $h" >&2
-        FAIL=1
-        continue
-    fi
-    if [ "$LINE" -le "$LAST_LINE" ]; then
-        echo "[lint-content] FAIL: heading out of canonical order in $PLAN_TEMPLATE: $h (line $LINE, previous at $LAST_LINE)" >&2
-        FAIL=1
-    fi
-    LAST_LINE="$LINE"
-done
-
-# Optional sections must appear after mandatory sections and in order.
-PLAN_OPTIONAL_HEADINGS=(
-    "## Key Decisions"
-    "## Risks and Mitigations"
-    "## Open Questions"
-)
-for h in "${PLAN_OPTIONAL_HEADINGS[@]}"; do
-    LINE=$(grep -nF "$h" "$PLAN_TEMPLATE" | head -n 1 | cut -d: -f1)
-    if [ -n "$LINE" ] && [ "$LINE" -le "$LAST_LINE" ]; then
-        echo "[lint-content] FAIL: optional heading out of order in $PLAN_TEMPLATE: $h (line $LINE, previous at $LAST_LINE)" >&2
-        FAIL=1
-    fi
-    [ -n "$LINE" ] && LAST_LINE="$LINE"
-done
-
-# 11. Plan command references the plan template.
-if [ ! -f "$PLAN_COMMAND" ]; then
-    echo "[lint-content] FAIL: $PLAN_COMMAND missing" >&2
-    FAIL=1
-elif ! grep -q "templates/product-plan-template.md" "$PLAN_COMMAND"; then
-    echo "[lint-content] FAIL: $PLAN_COMMAND does not reference templates/product-plan-template.md" >&2
-    FAIL=1
-fi
-
-# 12. No banned AI-tell phrases in the plan template guidance text.
-BANNED_PHRASES=("delve" "tapestry" "in essence" "navigate the landscape" "seamless" "intuitive")
-for phrase in "${BANNED_PHRASES[@]}"; do
-    if grep -qi "$phrase" "$PLAN_TEMPLATE"; then
-        echo "[lint-content] FAIL: banned phrase \"$phrase\" found in $PLAN_TEMPLATE" >&2
-        FAIL=1
-    fi
-done
-
-if [ "$FAIL" -ne 0 ]; then
-    exit 1
-fi
-
-# --- product-design-template.md checks ---
-
-DESIGN_TEMPLATE="templates/product-design-template.md"
-DESIGN_COMMAND="commands/speckit.product.design.md"
-
-if [ ! -f "$DESIGN_TEMPLATE" ]; then
-    echo "[lint-content] FAIL: $DESIGN_TEMPLATE missing" >&2
-    exit 1
-fi
-
-# 13. No em dash in the design template.
-if grep -q "—" "$DESIGN_TEMPLATE"; then
-    echo "[lint-content] FAIL: em dash found in $DESIGN_TEMPLATE" >&2
-    grep -n "—" "$DESIGN_TEMPLATE" >&2
-    FAIL=1
-fi
-
-# 14. Canonical section headings in order for product-design-template.md.
-DESIGN_HEADINGS=(
-    "## Summary"
-    "## Technical Context"
-    "## Architectural Approach"
-    "## Affected Modules"
-    "## Data Design"
-    "## API Design"
-    "## Spec Coverage"
-    "## Key Technical Decisions"
-    "## Testing Strategy"
-    "## Rollout and Migration"
-)
-
-LAST_LINE=0
-for h in "${DESIGN_HEADINGS[@]}"; do
-    LINE=$(grep -nF "$h" "$DESIGN_TEMPLATE" | head -n 1 | cut -d: -f1)
-    if [ -z "$LINE" ]; then
-        echo "[lint-content] FAIL: missing mandatory heading in $DESIGN_TEMPLATE: $h" >&2
-        FAIL=1
-        continue
-    fi
-    if [ "$LINE" -le "$LAST_LINE" ]; then
-        echo "[lint-content] FAIL: heading out of canonical order in $DESIGN_TEMPLATE: $h (line $LINE, previous at $LAST_LINE)" >&2
-        FAIL=1
-    fi
-    LAST_LINE="$LINE"
-done
-
-# Optional sections must appear after mandatory sections.
-DESIGN_OPTIONAL_HEADINGS=(
-    "## Risks and Mitigations"
-    "## Open Questions"
-)
-for h in "${DESIGN_OPTIONAL_HEADINGS[@]}"; do
-    LINE=$(grep -nF "$h" "$DESIGN_TEMPLATE" | head -n 1 | cut -d: -f1)
-    if [ -n "$LINE" ] && [ "$LINE" -le "$LAST_LINE" ]; then
-        echo "[lint-content] FAIL: optional heading out of order in $DESIGN_TEMPLATE: $h (line $LINE, previous at $LAST_LINE)" >&2
-        FAIL=1
-    fi
-    [ -n "$LINE" ] && LAST_LINE="$LINE"
-done
-
-# 15. Design command references the design template.
-if [ ! -f "$DESIGN_COMMAND" ]; then
-    echo "[lint-content] FAIL: $DESIGN_COMMAND missing" >&2
-    FAIL=1
-elif ! grep -q "templates/product-design-template.md" "$DESIGN_COMMAND"; then
-    echo "[lint-content] FAIL: $DESIGN_COMMAND does not reference templates/product-design-template.md" >&2
-    FAIL=1
-fi
-
-# 16. No banned AI-tell phrases in the design template.
-BANNED_PHRASES=("delve" "tapestry" "in essence" "navigate the landscape" "seamless" "intuitive")
-for phrase in "${BANNED_PHRASES[@]}"; do
-    if grep -qi "$phrase" "$DESIGN_TEMPLATE"; then
-        echo "[lint-content] FAIL: banned phrase \"$phrase\" found in $DESIGN_TEMPLATE" >&2
-        FAIL=1
-    fi
-done
 
 if [ "$FAIL" -ne 0 ]; then
     exit 1

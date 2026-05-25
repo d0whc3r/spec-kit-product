@@ -13,7 +13,7 @@
 #   validate-manifest.sh                 # validates the repo root against optional GITHUB_REF_NAME
 #   validate-manifest.sh --root <path>   # validates a different root (e.g. an unpacked zip)
 
-set -e
+set -euo pipefail
 
 ROOT="."
 while [ $# -gt 0 ]; do
