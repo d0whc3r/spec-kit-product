@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.0...v0.1.1) (2026-05-25)
+
+
+### Bug Fixes
+
+* codegraph + deps update ([2bb2d82](https://github.com/d0whc3r/spec-kit-product/commit/2bb2d824ee0aab9ed23f9ac037ff7292b80f39c8))
+
 # [0.1.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.8...v0.1.0) (2026-05-13)
 
 

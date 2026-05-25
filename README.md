@@ -38,7 +38,7 @@ This resolves the latest release zip from the catalog at `https://github.com/d0w
 ### Path 2: Direct release URL
 
 ```bash
-specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.1.0/product-0.1.0.zip
+specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.1.1/product-0.1.1.zip
 ```
 
 Use this when you need a specific version, or before the catalog has been updated.
