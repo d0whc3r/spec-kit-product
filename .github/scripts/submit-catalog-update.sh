@@ -17,19 +17,26 @@
 #   SUBMIT_DRY_RUN         If "true", print the gh command and exit.
 #
 # Usage:
-#   submit-catalog-update.sh <version> <release_type> <download_url>
+#   submit-catalog-update.sh <version> <release_type> <git_tag>
 
 set -euo pipefail
 
 VERSION="${1:-}"
 RELEASE_TYPE="${2:-}"
-DOWNLOAD_URL="${3:-}"
+GIT_TAG="${3:-}"
 UPSTREAM_REPO="${UPSTREAM_REPO:-github/spec-kit}"
 
-if [ -z "$VERSION" ] || [ -z "$RELEASE_TYPE" ] || [ -z "$DOWNLOAD_URL" ]; then
-    echo "Usage: $0 <version> <release_type> <download_url>" >&2
+if [ -z "$VERSION" ] || [ -z "$RELEASE_TYPE" ] || [ -z "$GIT_TAG" ]; then
+    echo "Usage: $0 <version> <release_type> <git_tag>" >&2
     exit 1
 fi
+
+if [ -z "${GITHUB_REPOSITORY:-}" ]; then
+    echo "[submit-catalog-update] FAIL: GITHUB_REPOSITORY not set" >&2
+    exit 1
+fi
+
+DOWNLOAD_URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/${GIT_TAG}/product-${VERSION}.zip"
 
 if [ -z "${UPSTREAM_SUBMIT_TOKEN:-}" ]; then
     echo "[submit-catalog-update] SKIP: UPSTREAM_SUBMIT_TOKEN not set" >&2
