@@ -65,6 +65,32 @@ The recommended path is the **prepare-release** workflow, which keeps `extension
    - Commit `chore(release): bump version to X.Y.Z` as the release bot.
    - Create and push tag `vX.Y.Z`.
 5. The tag push fires the **release** workflow (validate, lint, build zip, publish GitHub Release, update catalog). If any gate fails, push a fix and rerun **prepare-release** with the next patch version. Re-tagging an already-released version is forbidden.
+6. If the `UPSTREAM_SUBMIT_TOKEN` secret is configured, the release also files an `[Extension Submission]` issue at `github/spec-kit` to update the community catalog. See **Community Catalog Submission** below.
+
+### Community Catalog Submission
+
+The release pipeline can auto-file submission issues at `github/spec-kit` so the community catalog stays in sync with each release. This is opt-in via a repository secret.
+
+**One-time setup:**
+
+1. Create a [fine-grained personal access token](https://github.com/settings/personal-access-tokens/new):
+   - Resource owner: `github`
+   - Repository access: only `github/spec-kit`
+   - Permissions: `Issues: Read and write`
+2. Add it as a repository secret named `UPSTREAM_SUBMIT_TOKEN` (Settings → Secrets and variables → Actions).
+3. File the **first** submission manually via the [Extension Submission form](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml). The CI handles update submissions thereafter.
+
+**What runs on each release:**
+
+`.github/scripts/submit-catalog-update.sh` queries the upstream `catalog.community.json`. If `product` is present it files `Update Product Spec Extension to vX.Y.Z`; if absent it files `Add Product Spec Extension`. It skips silently if `UPSTREAM_SUBMIT_TOKEN` is unset or if an open issue with the same title already exists.
+
+To rehearse locally without filing:
+
+```bash
+SUBMIT_DRY_RUN=true UPSTREAM_SUBMIT_TOKEN=dummy \
+  bash .github/scripts/submit-catalog-update.sh 0.1.2 patch \
+    https://github.com/d0whc3r/spec-kit-product/releases/download/v0.1.2/product-0.1.2.zip
+```
 
 If you need to bump locally instead, run:
 
