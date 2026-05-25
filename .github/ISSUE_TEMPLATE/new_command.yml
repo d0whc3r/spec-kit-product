@@ -1,0 +1,74 @@
+name: New command proposal
+description: Propose a new /speckit.product.* command. Adding a command is a breaking change and requires updates across all agent surfaces.
+title: "feat(command): <command name>"
+labels: ["enhancement", "command", "needs-triage", "breaking"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Adding a command touches the canonical file, all four agent manifests, every mirror surface, `extension.yml`, and `catalog.json`. Read `AGENTS.md` and the constitution before filing.
+
+  - type: input
+    id: command-name
+    attributes:
+      label: Proposed command name
+      placeholder: speckit.product.<area>.<verb>
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: One paragraph. Why does this command need to exist? Which audience is it for?
+    validations:
+      required: true
+
+  - type: textarea
+    id: inputs-outputs
+    attributes:
+      label: Inputs and outputs
+      description: Which files does it read, which file does it write, and what format does it produce?
+      placeholder: |
+        Reads: spec.md, plan.md
+        Writes: product/40-foo.md
+        Format: PRFAQ section followed by Gherkin scenarios
+    validations:
+      required: true
+
+  - type: textarea
+    id: hooks
+    attributes:
+      label: Hook integration
+      description: Should the command be invoked automatically after `specify`, `clarify`, `plan`, or another lifecycle event?
+    validations:
+      required: false
+
+  - type: textarea
+    id: agent-mirrors
+    attributes:
+      label: Agent mirror plan
+      description: Confirm you will update the canonical file and all four mirrors (Claude skill, Copilot agent + prompt, Codex manifest, Spec Kit manifest), plus `extension.yml` and `catalog.json`.
+      value: |
+        - [ ] commands/speckit.product.<area>.<verb>.md (canonical)
+        - [ ] .claude/skills/<slug>/SKILL.md
+        - [ ] .github/agents/<name>.agent.md
+        - [ ] .github/prompts/<name>.prompt.md
+        - [ ] .specify/integrations/claude.manifest.json
+        - [ ] .specify/integrations/copilot.manifest.json
+        - [ ] .specify/integrations/codex.manifest.json
+        - [ ] .specify/integrations/speckit.manifest.json
+        - [ ] extension.yml provides.commands
+        - [ ] catalog.json provides.commands count
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I confirm this command does not duplicate an existing one.
+          required: true
+        - label: I understand a new command is a breaking change requiring a `feat!` or `BREAKING CHANGE` commit.
+          required: true

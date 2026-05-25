@@ -15,7 +15,7 @@
   },
   "provides": {
     "commands": 4,
-    "hooks": 0
+    "hooks": 3
   },
   "tags": ["product", "spec", "prd", "design", "documentation"],
   "verified": false,

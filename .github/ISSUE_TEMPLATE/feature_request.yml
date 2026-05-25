@@ -1,0 +1,72 @@
+name: Feature request
+description: Suggest a new capability, improved output, or quality-of-life change.
+title: "feat: <short summary>"
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feature requests are scoped to the four product artifacts and their generation. For wholly new commands, use the "New command" template instead.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is the user trying to accomplish, and where does the current extension fall short? Frame this as a Job to Be Done, not a solution.
+      placeholder: When I run /speckit.product.spec on a feature with multiple personas, the generated spec collapses them into one section, so leadership cannot see who is affected.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the change in concrete terms. Show the desired output shape if relevant.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you weighed and why you discarded them.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      multiple: true
+      options:
+        - /speckit.product.info
+        - /speckit.product.spec
+        - /speckit.product.plan
+        - /speckit.product.design
+        - Hooks
+        - Templates
+        - Manifest or catalog
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: agent-coverage
+    attributes:
+      label: Agent surfaces touched
+      description: Per constitution §V, command-level changes must mirror across Claude Code, GitHub Copilot, OpenAI Codex, and Spec Kit core. Confirm whether this proposal requires changes to all four, or is documentation-only.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I searched existing issues and discussions and found no duplicate.
+          required: true
+        - label: I read the README and confirmed this is in scope for the extension.
+          required: true
+        - label: The proposal respects the no em dash, plain English style required by the constitution.
+          required: true
