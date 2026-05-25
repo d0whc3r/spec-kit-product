@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "add-community-extension": {
+      "source": "github/spec-kit",
+      "sourceType": "github",
+      "skillPath": ".github/skills/add-community-extension/SKILL.md",
+      "computedHash": "074d140f32a6c1acd297ec8e58f53c5612e1cfa41f22304627efca54a7e220a8"
+    }
+  }
+}
