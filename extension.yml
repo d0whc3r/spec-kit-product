@@ -30,20 +30,32 @@ provides:
 
 hooks:
   after_specify:
-    command: speckit.product.spec
-    optional: true
-    prompt: "Generate a product-facing spec from the new spec.md?"
-    description: "Generate product/10-spec.md (and product/00-info.md) from spec.md"
+    - command: speckit.product.info
+      optional: true
+      prompt: "Generate the stakeholder summary product/00-info.md from the new spec.md?"
+      description: "Generate product/00-info.md from spec.md (recommended first artifact)"
+    - command: speckit.product.spec
+      optional: true
+      prompt: "Generate the full product spec product/10-spec.md from the new spec.md?"
+      description: "Generate product/10-spec.md from spec.md"
   after_clarify:
-    command: speckit.product.spec
-    optional: true
-    prompt: "Regenerate the product spec after clarification?"
-    description: "Update product/10-spec.md from the clarified spec.md"
+    - command: speckit.product.info
+      optional: true
+      prompt: "Regenerate the stakeholder summary after clarification?"
+      description: "Update product/00-info.md from the clarified spec.md"
+    - command: speckit.product.spec
+      optional: true
+      prompt: "Regenerate the full product spec after clarification?"
+      description: "Update product/10-spec.md from the clarified spec.md"
   after_plan:
-    command: speckit.product.plan
-    optional: true
-    prompt: "Generate the product-facing plan from plan.md?"
-    description: "Generate product/20-plan.md (and product/30-design.md) from plan.md"
+    - command: speckit.product.plan
+      optional: true
+      prompt: "Generate the product-facing plan product/20-plan.md from plan.md?"
+      description: "Generate product/20-plan.md from plan.md"
+    - command: speckit.product.design
+      optional: true
+      prompt: "Generate the technical design product/30-design.md from plan.md and spec.md?"
+      description: "Generate product/30-design.md from plan.md and spec.md"
 
 tags:
   - product

@@ -141,47 +141,58 @@ lint_template \
 
 # --- product-info-template.md ---
 INFO_MANDATORY=(
+    "Overview"
     "Headline"
     "What is Changing"
     "Out of Scope"
 )
 INFO_OPTIONAL=(
     "Risks"
-    "Open Questions"
+    "Key Decisions"
+    "References"
 )
-INFO_EXTRA_REFS=()
+INFO_EXTRA_REFS=("templates/product-checklist-template.md")
 lint_template \
     "templates/product-info-template.md" \
     "commands/speckit.product.info.md" \
     INFO_MANDATORY INFO_OPTIONAL INFO_EXTRA_REFS
 
 # --- product-plan-template.md ---
+# Note: "Build Overview" and "Key Principles" are conditional and appear between
+# mandatory headings (Out of Scope and Delivery Phases). The check_headings
+# helper validates one ordered pass, so these two interleaved optionals are not
+# in PLAN_OPTIONAL; they carry the _(optional)_ marker in the template itself.
 PLAN_MANDATORY=(
     "Summary"
+    "Feature Context"
+    "Goals"
     "Out of Scope"
     "Delivery Phases"
 )
 PLAN_OPTIONAL=(
     "Key Decisions"
     "Risks and Mitigations"
+    "Divergences and Edge Cases"
+    "Validation"
     "Open Questions"
 )
-PLAN_EXTRA_REFS=()
+PLAN_EXTRA_REFS=("templates/product-checklist-template.md")
 lint_template \
     "templates/product-plan-template.md" \
     "commands/speckit.product.plan.md" \
     PLAN_MANDATORY PLAN_OPTIONAL PLAN_EXTRA_REFS
 
 # --- product-design-template.md ---
+# Note: "Data Design", "API Design", "Spec Coverage", and "Key Technical
+# Decisions" are conditional and appear between mandatory headings (Affected
+# Modules and Testing Strategy). They are not in DESIGN_OPTIONAL for the same
+# reason as the plan template's interleaved optionals; they carry the
+# _(optional)_ marker in the template itself.
 DESIGN_MANDATORY=(
     "Summary"
     "Technical Context"
     "Architectural Approach"
     "Affected Modules"
-    "Data Design"
-    "API Design"
-    "Spec Coverage"
-    "Key Technical Decisions"
     "Testing Strategy"
     "Rollout and Migration"
 )
@@ -189,7 +200,7 @@ DESIGN_OPTIONAL=(
     "Risks and Mitigations"
     "Open Questions"
 )
-DESIGN_EXTRA_REFS=()
+DESIGN_EXTRA_REFS=("templates/product-checklist-template.md")
 lint_template \
     "templates/product-design-template.md" \
     "commands/speckit.product.design.md" \

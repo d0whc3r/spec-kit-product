@@ -9,10 +9,10 @@ to run them in.
 Spec Kit core               This extension
 ───────────────             ─────────────────────────────────────────────
 
-/speckit-specify ──→ spec.md ──→ /speckit.product.info   → product/00-info.md
+/speckit.specify ──→ spec.md ──→ /speckit.product.info   → product/00-info.md
                              └─→ /speckit.product.spec   → product/10-spec.md
 
-/speckit-plan ──→ plan.md ──→ /speckit.product.plan      → product/20-plan.md
+/speckit.plan ──→ plan.md ──→ /speckit.product.plan      → product/20-plan.md
                          └──→ /speckit.product.design    → product/30-design.md
                                        ↑
                          tasks.md ─────┘ (optional)
@@ -27,16 +27,16 @@ Stop at the level of detail your audience needs. You do not need to run all
 four for every feature.
 
 ```
-1. /speckit-specify         (core)      creates spec.md
+1. /speckit.specify         (core)      creates spec.md
 2. /speckit.product.info                quick stakeholder summary
 3. /speckit.product.spec                full product spec once direction is locked
-   ── run /speckit-plan (core) before continuing ──
+   ── run /speckit.plan (core) before continuing ──
 4. /speckit.product.plan                product-oriented delivery view
 5. /speckit.product.design              technical design for engineers
 ```
 
 `info` and `spec` need only `spec.md`. `plan` and `design` need `plan.md`,
-so run `/speckit-plan` from Spec Kit core first.
+so run `/speckit.plan` from Spec Kit core first.
 
 ## The `product/` folder
 

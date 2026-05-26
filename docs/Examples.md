@@ -133,7 +133,7 @@ period at the end. This is the Gherkin shape the checklist enforces.
 
 ## What `/speckit.product.plan` produces (selected sections)
 
-After `/speckit-plan` produces `plan.md`, `/speckit.product.plan` writes
+After `/speckit.plan` produces `plan.md`, `/speckit.product.plan` writes
 `product/20-plan.md`:
 
 ```markdown
@@ -175,7 +175,7 @@ voice a PM can read aloud.
 
 ## What `/speckit.product.design` produces (selected sections)
 
-`product/30-design.md`, after `/speckit-plan` produced `plan.md`:
+`product/30-design.md`, after `/speckit.plan` produced `plan.md`:
 
 ```markdown
 ## Architectural Approach

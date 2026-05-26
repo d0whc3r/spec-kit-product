@@ -28,7 +28,9 @@
 | [name]             | adds / modifies / removes / uses | [One sentence: what it does and why it changes.] |
 | [name]             | adds / modifies / removes / uses | [One sentence.]                                  |
 
-## Data Design
+## Data Design _(optional)_
+
+> Include only when `plan.md`, `spec.md`, or `data-model.md` contains data model information. Omit the entire section otherwise.
 
 ### Data Model
 
@@ -44,7 +46,9 @@
 
 [How data moves through the system: what triggers creation or mutation, where it persists, what events or messages are emitted downstream.]
 
-## API Design
+## API Design _(optional)_
+
+> Include only when the feature exposes or modifies any API surface. Omit the entire section otherwise.
 
 [Describe endpoint or operation shapes at a conceptual level. Request and response shapes, key error cases, and important constraints. Not a full OpenAPI spec; enough for a tech lead to assess the surface area and spot design issues.]
 
@@ -55,15 +59,15 @@
   Errors:   [HTTP status or error code]: [meaning]
 ```
 
-## Spec Coverage
+## Spec Coverage _(optional)_
 
-> Map each use case from spec.md to the component or operation that implements it. Confirms the design covers the full spec surface.
+> Include only when `spec.md` contains use cases or Gherkin scenarios. Map each use case to the component or operation that implements it. Gaps must be flagged in the Notes column with "GAP".
 
 | Use Case (from spec.md)                 | Component / Operation        | Notes                               |
 | --------------------------------------- | ---------------------------- | ----------------------------------- |
 | [Gherkin scenario title or use case ID] | [component name or endpoint] | [key constraint, edge case, or gap] |
 
-## Key Technical Decisions
+## Key Technical Decisions _(optional)_
 
 > Include one subsection per significant decision. Omit the entire section when plan.md has no explicit design choices.
 

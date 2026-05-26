@@ -7,18 +7,18 @@ Error codes the commands emit, with cause and fix.
 | Code           | Cause                                                      | Fix                                                                |
 | -------------- | ---------------------------------------------------------- | ------------------------------------------------------------------ |
 | `E_NO_PROJECT` | Not inside a Spec Kit project.                             | `cd` into a project with `.specify/`, or run `specify init`.       |
-| `E_NO_POINTER` | No active feature recorded and `--feature-dir` not passed. | Run `/speckit-specify` first, or pass `--feature-dir specs/<dir>`. |
+| `E_NO_POINTER` | No active feature recorded and `--feature-dir` not passed. | Run `/speckit.specify` first, or pass `--feature-dir specs/<dir>`. |
 
 `.specify/feature.json` points to the active feature. If it is missing or
-stale, run any Spec Kit core command on the feature (`/speckit-specify`,
-`/speckit-plan`) to refresh it, or pass `--feature-dir` explicitly.
+stale, run any Spec Kit core command on the feature (`/speckit.specify`,
+`/speckit.plan`) to refresh it, or pass `--feature-dir` explicitly.
 
 ## Source file errors
 
 | Code             | Cause                                                                       | Fix                                                                      |
 | ---------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `E_NO_SPEC`      | Feature directory has no `spec.md`.                                         | Run `/speckit-specify` to create one.                                    |
-| `E_NO_PLAN`      | Feature directory has no `plan.md`.                                         | Run `/speckit-plan` to generate it.                                      |
+| `E_NO_SPEC`      | Feature directory has no `spec.md`.                                         | Run `/speckit.specify` to create one.                                    |
+| `E_NO_PLAN`      | Feature directory has no `plan.md`.                                         | Run `/speckit.plan` to generate it.                                      |
 | `E_PLACEHOLDERS` | Source file still contains unfilled template markers like `[FEATURE NAME]`. | Open the file and replace every bracketed placeholder with real content. |
 | `E_LANGUAGE`     | Source file is not in English.                                              | Translate the source file. The command does not auto-translate.          |
 

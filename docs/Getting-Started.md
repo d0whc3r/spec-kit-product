@@ -55,7 +55,7 @@ ls .specify/extensions/product           # extension files present
 If you do not already have a feature, run the Spec Kit core command first:
 
 ```text
-/speckit-specify
+/speckit.specify
 ```
 
 Fill in the generated `spec.md`. Replace every `[PLACEHOLDER]` with real
@@ -93,7 +93,7 @@ output should be regenerated.
 
 ## Step 5: Generate plan and design artifacts
 
-After you have a Spec Kit `plan.md` for the feature (run `/speckit-plan` from
+After you have a Spec Kit `plan.md` for the feature (run `/speckit.plan` from
 core), you can generate the engineering and technical views:
 
 ```text

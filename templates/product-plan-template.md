@@ -28,14 +28,18 @@
 - [Capability deliberately excluded, one short reason.]
 - [Capability deliberately excluded, one short reason.]
 
-## Build Overview
+## Build Overview _(optional)_
+
+> Include only when the source plan contains architecture, component, or structural information. Omit the entire section otherwise.
 
 [One paragraph. How the main parts of the system connect and why this structure was chosen. Plain language - no code, no file names, no framework names.]
 
 - **[Part name]**: [What it does, one sentence. This feature [adds / changes / uses] it.]
 - **[Part name]**: [What it does, one sentence. This feature [adds / changes / uses] it.]
 
-## Key Principles
+## Key Principles _(optional)_
+
+> Include only when the source plan articulates explicit guard rails, constraints, or core rules. Omit the entire section otherwise.
 
 - **[Principle]**: [The rule and why it matters, one sentence.]
 - **[Principle]**: [The rule and why it matters, one sentence.]

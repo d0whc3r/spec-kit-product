@@ -7,7 +7,7 @@ This document explains how to install the extension, what each command needs as 
 ## Prerequisites
 
 - Spec Kit `>=0.2.0` initialized in your project (`specify init`).
-- A feature directory under `specs/` created by `/speckit-specify`.
+- A feature directory under `specs/` created by `/speckit.specify`.
 - The feature's `spec.md` filled in (no unfilled `[PLACEHOLDER]` markers).
 
 ---
@@ -53,10 +53,10 @@ None of the commands modify `spec.md`, `plan.md`, `tasks.md`, or any other sourc
 Spec Kit core commands                This extension
 ─────────────────────                 ─────────────────────────────────────────────
 
-/speckit-specify ──→ spec.md ──→ /speckit.product.info   → product/00-info.md
+/speckit.specify ──→ spec.md ──→ /speckit.product.info   → product/00-info.md
                              └─→ /speckit.product.spec   → product/10-spec.md
                                                                        │
-/speckit-plan ──→ plan.md ──→ /speckit.product.plan   → product/20-plan.md
+/speckit.plan ──→ plan.md ──→ /speckit.product.plan   → product/20-plan.md
                          └──→ /speckit.product.design → product/30-design.md
                                        ↑
                          tasks.md ─────┘ (optional)
@@ -72,15 +72,15 @@ All four commands also write to:   product/checklist.md
 Run the commands in this sequence as the feature matures. You do not need to run all four — stop at the level of detail your audience needs.
 
 ```
-1. /speckit-specify         (core) — creates spec.md, run this first
+1. /speckit.specify         (core) — creates spec.md, run this first
 2. /speckit.product.info    — quick stakeholder summary to validate direction early
 3. /speckit.product.spec    — full product spec once direction is confirmed
-   ── run /speckit-plan (core) before continuing ──
+   ── run /speckit.plan (core) before continuing ──
 4. /speckit.product.plan    — product-oriented delivery view for PMs and leads
 5. /speckit.product.design  — technical design document for engineers
 ```
 
-`/speckit.product.info` and `/speckit.product.spec` both read only `spec.md` and can be run before any engineering plan exists. `/speckit.product.plan` and `/speckit.product.design` require `plan.md`, so run `/speckit-plan` (Spec Kit core) first.
+`/speckit.product.info` and `/speckit.product.spec` both read only `spec.md` and can be run before any engineering plan exists. `/speckit.product.plan` and `/speckit.product.design` require `plan.md`, so run `/speckit.plan` (Spec Kit core) first.
 
 ---
 
@@ -150,7 +150,7 @@ If `product/10-spec.md` already exists, the command prompts for overwrite or abo
 
 High-level product view of the engineering plan. Describes what is being built and how it is structured, without time estimates or technical jargon. Intended for product managers, engineering leads, and cross-functional reviewers.
 
-**Requires**: `plan.md` — run `/speckit-plan` first.
+**Requires**: `plan.md` — run `/speckit.plan` first.
 
 **Reads**: `plan.md` (required), `spec.md` (supplementary — personas, problem framing)
 **Writes**: `product/20-plan.md`, `product/checklist.md`
@@ -184,7 +184,7 @@ Technical terms are glossed in plain English on first use. No code, no file path
 
 Technical design document for tech leads and senior developers. Goes deeper than the plan: component names, module boundaries, API surface shapes, data schemas at a conceptual level. No runnable code, no full ORM definitions, no line-by-line detail.
 
-**Requires**: `plan.md` and `spec.md` — run `/speckit-plan` and `/speckit-specify` first.
+**Requires**: `plan.md` and `spec.md` — run `/speckit.plan` and `/speckit.specify` first.
 
 **Reads**: `plan.md` (required), `spec.md` (required), `tasks.md` (optional), `data-model.md` (optional)
 **Writes**: `product/30-design.md`, `product/checklist.md`
@@ -238,9 +238,9 @@ specs/<feature-dir>/
 | Code             | Cause                                                            | Fix                                                          |
 | ---------------- | ---------------------------------------------------------------- | ------------------------------------------------------------ |
 | `E_NO_PROJECT`   | Not inside a Spec Kit project.                                   | `cd` into a project with `.specify/`, or run `specify init`. |
-| `E_NO_POINTER`   | No active feature and `--feature-dir` not passed.                | Run `/speckit-specify` first, or pass `--feature-dir`.       |
-| `E_NO_SPEC`      | No `spec.md` in the feature directory.                           | Run `/speckit-specify` to create one.                        |
-| `E_NO_PLAN`      | No `plan.md` in the feature directory.                           | Run `/speckit-plan` to generate it.                          |
+| `E_NO_POINTER`   | No active feature and `--feature-dir` not passed.                | Run `/speckit.specify` first, or pass `--feature-dir`.       |
+| `E_NO_SPEC`      | No `spec.md` in the feature directory.                           | Run `/speckit.specify` to create one.                        |
+| `E_NO_PLAN`      | No `plan.md` in the feature directory.                           | Run `/speckit.plan` to generate it.                          |
 | `E_PLACEHOLDERS` | `spec.md` or `plan.md` still contains unfilled template markers. | Replace all `[PLACEHOLDER]` values with real content.        |
 | `E_LANGUAGE`     | Source files are not in English.                                 | Translate the source file to English and rerun.              |
 | `E_USER_ABORT`   | You answered "no" at the overwrite prompt.                       | Rerun when ready.                                            |

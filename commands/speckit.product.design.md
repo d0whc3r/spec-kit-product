@@ -66,8 +66,8 @@ Capture the output as `FEATURE_DIR`. If the command exits non-zero, surface its 
 
 Refuse to proceed when:
 
-1. **E_NO_PLAN**: `${FEATURE_DIR}/plan.md` does not exist. Tell the user to run `/speckit-plan` first.
-2. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `/speckit-spec` first.
+1. **E_NO_PLAN**: `${FEATURE_DIR}/plan.md` does not exist. Tell the user to run `/speckit.plan` first.
+2. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `/speckit.specify` first.
 3. **E_PLACEHOLDERS**: `plan.md` or `spec.md` still contain literal placeholders from their templates. Detect these by looking for any of the following exact bracketed strings as substrings of either file (case sensitive):
    - `[FEATURE]`
    - `[DATE]`
@@ -145,27 +145,11 @@ Read `templates/product-design-template.md`. Populate all sections from `plan.md
 - `Created` field: today's date in `YYYY-MM-DD`.
 - `Status` field: `Draft`.
 
-### Step 7: Write the file atomically
-
-Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `30-design.md`. This avoids leaving partial output if the process is interrupted. Create `${FEATURE_DIR}/product/` if it does not exist.
-
-### Step 7b: Prepare product/checklist.md
-
-If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
-
-- Read `templates/product-checklist-template.md`.
-- Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
-- Write the file. All sections start with the "not yet generated" placeholder state.
-
-If the file **already exists**, read its current content. You will replace only the `## Design` section (between the `## Design` heading and the next `---` horizontal rule). All other sections and `## Needs Review` are preserved verbatim.
-
-If the `## Design` section does not exist in the current `checklist.md`, insert it between the `## Plan` section and the `## Needs Review` section (or at the end before `## Needs Review`).
-
-### Step 7c: Auto-validate and iterate (Design section)
+### Step 7: Auto-validate and iterate (Design section)
 
 **Goal: all Design checklist items checked. Zero manual items if possible.**
 
-After writing `product/30-design.md`, evaluate each item below against its content. For each failing item that is auto-fixable: rewrite the affected portion of **`product/30-design.md`** in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
+After composing the full text of `product/30-design.md` in memory (before writing), run validation pass 1. For each failing item that is auto-fixable: rewrite the affected portion of the in-memory artifact (never the source files), then re-evaluate. Repeat until all fixable items pass (max 2 additional passes per item to prevent loops). Only classify an item as requiring manual review when rewriting cannot fix it because the criterion is inherently semantic or subjective.
 
 | Checklist item                                         | Rule                                                                                                                                                                                                                | Auto-fixable?                                                         |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
@@ -200,7 +184,7 @@ After writing `product/30-design.md`, evaluate each item below against its conte
 - [ ] ... (failing items, if any — see ## Needs Review)
 ```
 
-**`## Needs Review` section**: rebuild the `## Needs Review` section at the bottom by aggregating all `- [ ]` items from all sections. Each entry includes a one-sentence explanation. If no items remain unchecked, write:
+**`## Needs Review` section**: rebuild the `## Needs Review` section at the bottom by aggregating all `- [ ]` items from all four sections (`## Info`, `## Spec`, `## Plan`, `## Design`). Each entry includes a one-sentence explanation. If no items remain unchecked, write:
 
 ```markdown
 ## Needs Review
@@ -208,7 +192,23 @@ After writing `product/30-design.md`, evaluate each item below against its conte
 > All items auto-validated. No manual review required.
 ```
 
-### Step 8: Print a status report
+### Step 8: Prepare product/checklist.md
+
+If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
+
+- Read `templates/product-checklist-template.md`.
+- Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
+- Stage the file content in memory. All four sections (`## Info`, `## Spec`, `## Plan`, `## Design`) start with the "not yet generated" placeholder state.
+
+If the file **already exists**, read its current content into memory. You will replace only the `## Design` section (between the `## Design` heading and the next `---` horizontal rule) using the results of Step 7. All other sections and the `## Needs Review` section are preserved verbatim.
+
+If the `## Design` section does not exist in the current `checklist.md`, insert it between the `## Plan` section and the `## Needs Review` section (or at the end before `## Needs Review`).
+
+### Step 9: Write files
+
+Write `${FEATURE_DIR}/product/30-design.md` and `${FEATURE_DIR}/product/checklist.md` atomically (write to a temp file in the same directory, then rename) to avoid leaving partial output if the process is interrupted. Create `${FEATURE_DIR}/product/` if it does not exist.
+
+### Step 10: Print a status report
 
 ```text
 Wrote: <abs path>/product/30-design.md
@@ -234,8 +234,8 @@ When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholde
 
 | Code           | Condition                                                              |
 | -------------- | ---------------------------------------------------------------------- |
-| E_NO_PLAN      | `plan.md` missing in the feature directory. Run `/speckit-plan` first. |
-| E_NO_SPEC      | `spec.md` missing in the feature directory. Run `/speckit-spec` first. |
+| E_NO_PLAN      | `plan.md` missing in the feature directory. Run `/speckit.plan` first. |
+| E_NO_SPEC      | `spec.md` missing in the feature directory. Run `/speckit.specify` first. |
 | E_PLACEHOLDERS | A source file still contains template placeholders.                    |
 | E_LANGUAGE     | A source file is not in English.                                       |
 | E_USER_ABORT   | User chose abort at the overwrite prompt.                              |

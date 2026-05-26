@@ -16,10 +16,17 @@ You **MUST** consider the user input before proceeding (if not empty). The user 
 
 ## Inputs
 
-The command reads (does not modify): `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, `.specify/feature.json`, and all other spec-kit generated files. The only files this command writes are under `${FEATURE_DIR}/product/`:
+The command reads (does not modify):
+
+- `.specify/feature.json` to locate the active feature directory.
+- `<feature-dir>/spec.md` as the source spec.
+
+The command writes:
 
 - `<feature-dir>/product/10-spec.md`
 - `<feature-dir>/product/checklist.md` (creates if absent; otherwise updates only the `## Spec` section, preserving all other sections)
+
+The only files this command writes are under `${FEATURE_DIR}/product/`. All other spec-kit artifacts are treated as read-only; see the "Source files are READ-ONLY" guard at the end of this document.
 
 ## Templates
 
@@ -58,7 +65,7 @@ Capture the output as `FEATURE_DIR`. If the command exits non-zero, surface its 
 
 Refuse to proceed when:
 
-1. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `/speckit-specify` first.
+1. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `/speckit.specify` first.
 2. **E_PLACEHOLDERS**: `spec.md` still contains literal placeholders from the spec template. Detect these by looking for any of the following exact bracketed strings as substrings of the file (case sensitive):
    - `[FEATURE NAME]`
    - `[Brief Title]`
@@ -156,7 +163,7 @@ If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
 
 - Read `templates/product-checklist-template.md`.
 - Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
-- Write the file. All three sections (`## Info`, `## Spec`, `## Plan`) start with the "not yet generated" placeholder state.
+- Write the file. All four sections (`## Info`, `## Spec`, `## Plan`, `## Design`) start with the "not yet generated" placeholder state.
 
 If the file **already exists**, read its current content. You will replace only the `## Spec` section (between the `## Spec` heading and the next `---` horizontal rule) in Step 6b. All other sections and the `## Needs Review` section are preserved verbatim.
 
@@ -219,7 +226,7 @@ After composing the full text of `product/10-spec.md` in memory (before writing)
 - [ ] ... (failing items, if any — see ## Needs Review)
 ```
 
-**`## Needs Review` section**: after updating `## Spec`, rebuild the `## Needs Review` section at the bottom of the file by aggregating all `- [ ]` items from all three sections. Each entry must include a one-sentence explanation of what to look for. If no items remain unchecked across all sections, write:
+**`## Needs Review` section**: after updating `## Spec`, rebuild the `## Needs Review` section at the bottom of the file by aggregating all `- [ ]` items from all four sections (`## Info`, `## Spec`, `## Plan`, `## Design`). Each entry must include a one-sentence explanation of what to look for. If no items remain unchecked across all sections, write:
 
 ```markdown
 ## Needs Review

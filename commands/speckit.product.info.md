@@ -4,7 +4,7 @@ description: "Generate a short, stakeholder-readable info.md from the current fe
 
 # Generate Product Info
 
-Derive a stakeholder-facing `product/00-info.md` from the populated `spec.md` of the active feature, then auto-validate and update the `## Info` section of the shared `product/checklist.md`. The artifact is a single-page plain-language summary that answers "what is changing and why" for a non-technical reader. It follows the same style rules as `/speckit-product-spec`: English only, no em dash, plain English, active voice, full sentences, no implementation detail, and no AI-tell filler phrases.
+Derive a stakeholder-facing `product/00-info.md` from the populated `spec.md` of the active feature, then auto-validate and update the `## Info` section of the shared `product/checklist.md`. The artifact is a single-page plain-language summary that answers "what is changing and why" for a non-technical reader. It follows the same style rules as `/speckit.product.spec`: English only, no em dash, plain English, active voice, full sentences, no implementation detail, and no AI-tell filler phrases.
 
 ## User Input
 
@@ -26,7 +26,7 @@ The command writes:
 - `<feature-dir>/product/00-info.md`
 - `<feature-dir>/product/checklist.md` (creates if absent; otherwise updates only the `## Info` section, preserving all other sections)
 
-The command reads (does not modify): `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, and all spec-kit generated files. The only files this command writes are under `${FEATURE_DIR}/product/`.
+The only files this command writes are under `${FEATURE_DIR}/product/`. All other spec-kit artifacts are treated as read-only; see the "Source files are READ-ONLY" guard at the end of this document.
 
 ## Templates
 
@@ -63,7 +63,7 @@ Capture the output as `FEATURE_DIR`. If the command exits non-zero, surface its 
 
 Refuse to proceed when:
 
-1. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `/speckit-specify` first.
+1. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `/speckit.specify` first.
 2. **E_PLACEHOLDERS**: `spec.md` still contains literal placeholders from the spec template. Detect these by looking for any of the following exact bracketed strings as substrings of the file (case sensitive):
    - `[FEATURE NAME]`
    - `[Brief Title]`
@@ -144,25 +144,11 @@ Read `templates/product-info-template.md`. Replace every bracketed placeholder w
 - **Key Decisions (optional)**: open with one sentence: "These decisions were made while writing this spec. Review them to confirm they still reflect the right direction." Then list resolved decisions. Each entry: bold noun-phrase title on its own line (e.g., `**Rollout audience**`), followed by a single sentence that names the choice and gives the reason in plain product language, then `*Session: YYYY-MM-DD*`. If unresolved questions exist, end with the "Still open" blockquote block. Do not fabricate decisions or questions.
 - **References (optional)**: each entry is formatted as `- [Plain-language label]: [URL]`. Only external URLs. Never internal spec-kit files.
 
-### Step 6: Write the file atomically
-
-Write to a temp file inside `${FEATURE_DIR}/product/`, then rename to `00-info.md`. This avoids leaving partial output if the process is interrupted. Create `${FEATURE_DIR}/product/` if it does not exist.
-
-### Step 6b: Prepare product/checklist.md
-
-If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
-
-- Read `templates/product-checklist-template.md`.
-- Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
-- Write the file. All three sections start with the "not yet generated" placeholder state.
-
-If the file **already exists**, read its current content. You will replace only the `## Info` section (between the `## Info` heading and the next `---` horizontal rule) below. All other sections and `## Needs Review` are preserved verbatim.
-
-### Step 6c: Auto-validate and iterate (Info section)
+### Step 6: Auto-validate and iterate (Info section)
 
 **Goal: all Info checklist items checked. Zero manual items if possible.**
 
-After writing `product/00-info.md`, evaluate each item below against its content. For each failing item that is auto-fixable: rewrite the affected portion of **`product/00-info.md`** (the artifact being generated — never the source `spec.md`) in memory, re-evaluate (max 2 extra passes per item). Then update `product/checklist.md` with the results.
+After composing the full text of `product/00-info.md` in memory (before writing), run validation pass 1. For each failing item that is auto-fixable: rewrite the affected portion of the in-memory artifact (never the source `spec.md`), then re-evaluate. Repeat until all fixable items pass (max 2 additional passes per item to prevent loops). Only classify an item as requiring manual review when rewriting cannot fix it because the criterion is inherently semantic or subjective.
 
 | Checklist item                                                    | Rule                                                                                                                                                                                                                                                                    | Auto-fixable?                                                                                    |
 | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
@@ -196,7 +182,7 @@ After writing `product/00-info.md`, evaluate each item below against its content
 - [ ] ... (failing items, if any — see ## Needs Review)
 ```
 
-**`## Needs Review` section**: rebuild the `## Needs Review` section at the bottom by aggregating all `- [ ]` items from all three sections. Each entry includes a one-sentence explanation of what to look for. If no items remain unchecked, write:
+**`## Needs Review` section**: rebuild the `## Needs Review` section at the bottom by aggregating all `- [ ]` items from all four sections (`## Info`, `## Spec`, `## Plan`, `## Design`). Each entry includes a one-sentence explanation of what to look for. If no items remain unchecked, write:
 
 ```markdown
 ## Needs Review
@@ -204,7 +190,21 @@ After writing `product/00-info.md`, evaluate each item below against its content
 > All items auto-validated. No manual review required.
 ```
 
-### Step 7: Print a status report
+### Step 7: Prepare product/checklist.md
+
+If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
+
+- Read `templates/product-checklist-template.md`.
+- Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
+- Stage the file content in memory. All four sections (`## Info`, `## Spec`, `## Plan`, `## Design`) start with the "not yet generated" placeholder state.
+
+If the file **already exists**, read its current content into memory. You will replace only the `## Info` section (between the `## Info` heading and the next `---` horizontal rule) using the results of Step 6. All other sections and the `## Needs Review` section are preserved verbatim.
+
+### Step 8: Write files
+
+Write `${FEATURE_DIR}/product/00-info.md` and `${FEATURE_DIR}/product/checklist.md` atomically (write to a temp file in the same directory, then rename) to avoid leaving partial output if the process is interrupted. Create `${FEATURE_DIR}/product/` if it does not exist.
+
+### Step 9: Print a status report
 
 ```text
 Wrote: <abs path>/product/00-info.md

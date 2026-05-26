@@ -104,7 +104,7 @@ SUBMIT_DRY_RUN=true UPSTREAM_SUBMIT_TOKEN=dummy \
 
 ## Branch Naming
 
-Use feature branches named `NNN-short-description` (sequential numbering, matching the pattern under `specs/`). The bundled `git` extension's `before_specify` hook creates these automatically when you run `/speckit-specify`.
+Use feature branches named `NNN-short-description` (sequential numbering, matching the pattern under `specs/`). The bundled `git` extension's `before_specify` hook creates these automatically when you run `/speckit.specify`.
 
 ## Style Rules for Generated Output
 
