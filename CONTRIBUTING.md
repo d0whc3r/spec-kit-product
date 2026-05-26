@@ -28,8 +28,8 @@ The CLI installs the extension under `.specify/extensions/product/` of the targe
 
 The slash command is a markdown prompt at `commands/speckit.product.spec.md`. Edit it, then dogfood:
 
-1. Run `/speckit-product-spec` against any feature in this repo or another Spec Kit project.
-2. Walk the generated `product/spec.md` through `product/checklist.md`. Any failed Required item is an iteration signal on the prompt.
+1. Run `/speckit.product.spec` against any feature in this repo or another Spec Kit project.
+2. Walk the generated `product/10-spec.md` through `product/checklist.md`. Any failed Required item is an iteration signal on the prompt.
 3. Repeat until the first generation passes the checklist on a representative spec.
 
 When iterating on the templates (`templates/*.md`), keep them in sync with the contracts under `specs/001-product-spec-extension/contracts/`. The contract files are the reviewable source of truth; the runtime files are deployed copies.
@@ -52,20 +52,29 @@ ls dist/
 
 ## Cutting a Release
 
-The recommended path is the **prepare-release** workflow, which keeps `extension.yml`, `CHANGELOG.md`, and the git tag coherent in a single step.
+Releases are automatic. The `release` workflow at `.github/workflows/release.yml` runs `pnpx semantic-release` on every push to `main`. Conventional Commits drive the next version, changelog, and tag.
 
-1. Make sure the work you want to ship is on the default branch and CI is green.
-2. Add the release notes for the upcoming version under the `## [Unreleased]` section of `CHANGELOG.md` (commit them as part of normal feature work, not at release time).
-3. From the repo's GitHub Actions tab, run the **prepare-release** workflow with `version: X.Y.Z` (semver, no `v` prefix).
-4. The workflow will:
-   - Refuse if the tag `vX.Y.Z` already exists.
-   - Bump `extension.yml#extension.version` to `X.Y.Z`.
-   - Promote the `## [Unreleased]` section in `CHANGELOG.md` to `## [X.Y.Z] - <today>` and seed a new empty `## [Unreleased]` section.
-   - Validate the manifest and lint content.
-   - Commit `chore(release): bump version to X.Y.Z` as the release bot.
-   - Create and push tag `vX.Y.Z`.
-5. The tag push fires the **release** workflow (validate, lint, build zip, publish GitHub Release, update catalog). If any gate fails, push a fix and rerun **prepare-release** with the next patch version. Re-tagging an already-released version is forbidden.
-6. If the `UPSTREAM_SUBMIT_TOKEN` secret is configured, the release also files an `[Extension Submission]` issue at `github/spec-kit` to update the community catalog. See **Community Catalog Submission** below.
+1. Write commits using [Conventional Commits](https://www.conventionalcommits.org/). Examples:
+   - `fix: ...` triggers a patch bump.
+   - `feat: ...` triggers a minor bump.
+   - `feat!: ...` or any commit body containing `BREAKING CHANGE:` triggers a major bump.
+   - `chore:`, `docs:`, `refactor:`, `test:`, `ci:` do not trigger a release.
+2. Land your work on `main` with CI green. The release workflow fires on push.
+3. `semantic-release` runs the plugin chain in `.releaserc.json`:
+   - Determine the next version from commits since the last tag.
+   - Generate release notes and prepend them to `CHANGELOG.md`.
+   - Run `.github/scripts/semantic-release-prepare.sh <version>` to bump `extension.yml`, refresh the README direct-install URL, and update `catalog.json`.
+   - Run `.github/scripts/submit-catalog-update.sh` to optionally file an `[Extension Submission]` issue at `github/spec-kit` (see **Community Catalog Submission** below).
+   - Commit `chore(release): catalog v<version>` as `github-actions[bot]` with `CHANGELOG.md`, `extension.yml`, `catalog.json`, and `README.md`.
+   - Create tag `v<version>`, publish a GitHub Release, and attach `dist/product-<version>.zip`.
+4. If no commits since the last tag qualify, semantic-release exits cleanly and nothing is released. Push another qualifying commit to trigger a release.
+5. To rehearse the version decision locally without publishing:
+   ```bash
+   pnpm install
+   pnpx semantic-release --dry-run
+   ```
+
+Re-tagging an already-released version is not supported. Push a qualifying commit so the next patch version is cut.
 
 ### Community Catalog Submission
 
@@ -90,16 +99,6 @@ To rehearse locally without filing:
 SUBMIT_DRY_RUN=true UPSTREAM_SUBMIT_TOKEN=dummy \
   bash .github/scripts/submit-catalog-update.sh 0.1.2 patch \
     https://github.com/d0whc3r/spec-kit-product/releases/download/v0.1.2/product-0.1.2.zip
-```
-
-If you need to bump locally instead, run:
-
-```bash
-bash .github/scripts/bump-version.sh X.Y.Z
-git add extension.yml CHANGELOG.md
-git commit -m "chore(release): bump version to X.Y.Z"
-git tag vX.Y.Z
-git push origin HEAD vX.Y.Z
 ```
 
 ## Branch Naming

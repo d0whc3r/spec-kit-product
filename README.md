@@ -17,6 +17,24 @@ All four commands also update their respective section of the shared `product/ch
 
 See [WORKFLOW.md](WORKFLOW.md) for the full input/output flow and recommended order.
 
+## Documentation
+
+The [`docs/`](docs/) folder is the project wiki. Start at [docs/Home.md](docs/Home.md).
+
+| Page                                                  | When to read                                                       |
+| ----------------------------------------------------- | ------------------------------------------------------------------ |
+| [Getting Started](docs/Getting-Started.md)            | First install, zero to first generated artifact.                   |
+| [Commands](docs/Commands.md)                          | Deep reference for the four `/speckit.product.*` commands.         |
+| [Workflow](docs/Workflow.md)                          | Input and output flow, recommended order, the `product/` layout.   |
+| [Examples](docs/Examples.md)                          | Sample `spec.md` input and the four artifacts it produces.         |
+| [Style Guide](docs/Style-Guide.md)                    | The voice rules every generated artifact enforces.                 |
+| [Troubleshooting](docs/Troubleshooting.md)            | Error codes, refusals, common breakages and their fixes.           |
+| [FAQ](docs/FAQ.md)                                    | Conceptual questions and design rationale.                         |
+| [Architecture](docs/Architecture.md)                  | How the extension is wired across Claude, Copilot, Codex, Spec Kit. |
+| [Contributing](docs/Contributing.md)                  | Repo layout, dev install, release pipeline.                        |
+
+To publish this folder as a GitHub Wiki, see [docs/README.md](docs/README.md).
+
 ## Source of Truth Contract
 
 `spec.md` and `plan.md` are the canonical artifacts for a feature. Everything under `product/` is a derived view, regenerated on demand. No command modifies the source files. If a source file changes, regenerate the corresponding artifact by rerunning the command and choosing overwrite.
@@ -107,7 +125,7 @@ The shared `product/checklist.md` verifies all of the above and marks items that
 ### Prerequisites
 
 - Spec Kit `>=0.2.0` initialized in the current project.
-- The `product` extension installed at version `>=0.0.5`.
+- The `product` extension installed (latest release recommended).
 - A feature directory under `specs/` with a populated `spec.md` (run `/speckit-specify` first if needed).
 
 ### Install or upgrade
@@ -172,14 +190,14 @@ The command writes `product/00-info.md` and updates the `## Info` section of `pr
 
 ## /speckit.product.plan
 
-`/speckit.product.plan` is a sibling command to `/speckit.product.spec` and `/speckit.product.info`. It reads the engineering `plan.md` produced by `/speckit-plan` and generates a high-level, product-oriented `product/plan.md` that answers "how are we building this?" for product managers, engineering leads, and cross-functional reviewers.
+`/speckit.product.plan` is a sibling command to `/speckit.product.spec` and `/speckit.product.info`. It reads the engineering `plan.md` produced by `/speckit-plan` and generates a high-level, product-oriented `product/20-plan.md` that answers "how are we building this?" for product managers, engineering leads, and cross-functional reviewers.
 
-The output uses Shape Up appetite framing for phases, a NOW/NEXT/LATER delivery view, C4 container-level component descriptions, and condensed ADR (Architecture Decision Record) summaries for key decisions. Technical terms appear with a plain-language gloss on their first use. No code, no file paths, no detailed task breakdowns.
+The output uses phase-based delivery in source order, C4 container-level component descriptions, and condensed ADR (Architecture Decision Record) summaries for key decisions. The plan is atemporal: no time estimates, no deadlines, no appetite framing, no NOW/NEXT/LATER bands. Technical terms appear with a plain-language gloss on their first use. No code, no file paths, no detailed task breakdowns.
 
 ### Prerequisites
 
 - Spec Kit `>=0.2.0` initialized in the current project.
-- The `product` extension installed at version `>=0.0.5`.
+- The `product` extension installed (latest release recommended).
 - A feature directory under `specs/` with a populated `plan.md` (run `/speckit-plan` first if needed).
 
 ### Install or upgrade
@@ -259,7 +277,7 @@ Unlike the product-facing `product/20-plan.md`, this document references compone
 ### Prerequisites
 
 - Spec Kit `>=0.2.0` initialized in the current project.
-- The `product` extension installed at version `>=0.0.5`.
+- The `product` extension installed (latest release recommended).
 - A feature directory under `specs/` with a populated `plan.md` and `spec.md` (run `/speckit-plan` and `/speckit-specify` first if needed).
 
 ### Install or upgrade
