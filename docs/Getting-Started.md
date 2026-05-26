@@ -32,7 +32,7 @@ To pin a specific version:
 
 ```bash
 specify extension add product --from \
-  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.1.2/product-0.1.2.zip
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.1.3/product-0.1.3.zip
 ```
 
 Or for local development on the extension itself:
