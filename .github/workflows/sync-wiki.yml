@@ -19,11 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Stage wiki pages (exclude docs/README.md)
-        run: |
-          mkdir -p .wiki-staging
-          cp docs/*.md .wiki-staging/
-          rm -f .wiki-staging/README.md
+      - name: Stage wiki pages
+        run: bash .github/scripts/stage-wiki.sh docs .wiki-staging
 
       - name: Publish to GitHub Wiki
         uses: Andrew-Chen-Wang/github-wiki-action@v4

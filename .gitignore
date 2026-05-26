@@ -1,5 +1,6 @@
 # Build artifacts
 dist/
+.wiki-staging/
 
 # Editor and OS metadata
 .DS_Store

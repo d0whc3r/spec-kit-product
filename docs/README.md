@@ -49,11 +49,25 @@ GitHub renders `_Sidebar.md` and `_Footer.md` automatically as navigation
 chrome. Pages are flat (no nested folders), which is the wiki's required
 structure.
 
-**Automatic sync.** `.github/workflows/sync-wiki.yml` publishes `docs/*.md`
-to the wiki on every push to `main` that touches `docs/`. It can also be
-triggered manually from the Actions tab. This `docs/README.md` is excluded
-from the sync: it documents the publishing process and is only useful when
-browsing the repo, not as a wiki page.
+**Automatic sync.** `.github/workflows/sync-wiki.yml` runs
+`.github/scripts/stage-wiki.sh` to stage `docs/*.md` into `.wiki-staging/`,
+then publishes that staging dir to the wiki on every push to `main` that
+touches `docs/`. It can also be triggered manually from the Actions tab.
+
+The staging script:
+
+- Excludes `docs/README.md` (this file, repo-only meta-doc).
+- Strips `.md` from intra-wiki links (`[Commands](Commands.md)` ->
+  `[Commands](Commands)`) since GitHub Wiki does not resolve the extension.
+- Rewrites `../FILE.md` parent-dir links to absolute repo URLs so they keep
+  working from the wiki.
+
+To rehearse the staged output locally:
+
+```bash
+bash .github/scripts/stage-wiki.sh docs .wiki-staging
+ls .wiki-staging/
+```
 
 **One-time setup.** GitHub does not create the `.wiki.git` repo until the
 wiki has at least one page. Before the first sync, go to Settings →
