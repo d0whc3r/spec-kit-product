@@ -26,7 +26,7 @@ jobs:
           rm -f .wiki-staging/README.md
 
       - name: Publish to GitHub Wiki
-        uses: Andrew-Chen-Wang/github-wiki-action@v4
+        uses: Andrew-Chen-Wang/github-wiki-action@v5
         with:
           path: .wiki-staging/
           token: ${{ secrets.GITHUB_TOKEN }}
