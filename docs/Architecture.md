@@ -78,11 +78,11 @@ The extension declares six hook handlers across three Spec Kit hook events
 in `extension.yml`. Each handler runs optionally after the matching Spec Kit
 core command:
 
-| Hook            | Triggers after     | Suggested commands                                  |
-| --------------- | ------------------ | --------------------------------------------------- |
-| `after_specify` | `/speckit.specify` | `/speckit.product.info`, `/speckit.product.spec`    |
-| `after_clarify` | `/speckit.clarify` | `/speckit.product.info`, `/speckit.product.spec`    |
-| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`, `/speckit.product.design`  |
+| Hook            | Triggers after     | Suggested commands                                 |
+| --------------- | ------------------ | -------------------------------------------------- |
+| `after_specify` | `/speckit.specify` | `/speckit.product.info`, `/speckit.product.spec`   |
+| `after_clarify` | `/speckit.clarify` | `/speckit.product.info`, `/speckit.product.spec`   |
+| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`, `/speckit.product.design` |
 
 Each event registers a list of optional commands. The host agent prompts
 before each one runs and the user can decline any of them; source files

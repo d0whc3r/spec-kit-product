@@ -232,13 +232,13 @@ When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholde
 
 ## Error Codes
 
-| Code           | Condition                                                              |
-| -------------- | ---------------------------------------------------------------------- |
-| E_NO_PLAN      | `plan.md` missing in the feature directory. Run `/speckit.plan` first. |
+| Code           | Condition                                                                 |
+| -------------- | ------------------------------------------------------------------------- |
+| E_NO_PLAN      | `plan.md` missing in the feature directory. Run `/speckit.plan` first.    |
 | E_NO_SPEC      | `spec.md` missing in the feature directory. Run `/speckit.specify` first. |
-| E_PLACEHOLDERS | A source file still contains template placeholders.                    |
-| E_LANGUAGE     | A source file is not in English.                                       |
-| E_USER_ABORT   | User chose abort at the overwrite prompt.                              |
+| E_PLACEHOLDERS | A source file still contains template placeholders.                       |
+| E_LANGUAGE     | A source file is not in English.                                          |
+| E_USER_ABORT   | User chose abort at the overwrite prompt.                                 |
 
 ## Idempotence
 
