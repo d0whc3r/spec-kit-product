@@ -1,0 +1,33 @@
+name: sync-wiki
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - ".github/workflows/sync-wiki.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: publish docs to GitHub Wiki
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stage wiki pages (exclude docs/README.md)
+        run: |
+          mkdir -p .wiki-staging
+          cp docs/*.md .wiki-staging/
+          rm -f .wiki-staging/README.md
+
+      - name: Publish to GitHub Wiki
+        uses: Andrew-Chen-Wang/github-wiki-action@v4
+        with:
+          path: .wiki-staging/
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "docs: sync from ${{ github.sha }}"

@@ -49,9 +49,16 @@ GitHub renders `_Sidebar.md` and `_Footer.md` automatically as navigation
 chrome. Pages are flat (no nested folders), which is the wiki's required
 structure.
 
-If you prefer to keep wiki and repo in sync automatically, add a GitHub
-Actions workflow that pushes `docs/*.md` to the wiki repo on every merge
-to `main`.
+**Automatic sync.** `.github/workflows/sync-wiki.yml` publishes `docs/*.md`
+to the wiki on every push to `main` that touches `docs/`. It can also be
+triggered manually from the Actions tab. This `docs/README.md` is excluded
+from the sync: it documents the publishing process and is only useful when
+browsing the repo, not as a wiki page.
+
+**One-time setup.** GitHub does not create the `.wiki.git` repo until the
+wiki has at least one page. Before the first sync, go to Settings →
+Features → Wikis, enable Wikis, then create any placeholder page from the
+UI. After that the workflow can push unattended.
 
 ## Editing rules
 
