@@ -110,10 +110,10 @@ Renaming or removing a command is a breaking change. Commit prefix must be
 
 ## Reporting issues
 
-| You want to                | Use                                                                                                          |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Report a bug               | [Bug report](https://github.com/d0whc3r/spec-kit-product/issues/new?template=bug_report.yml)                 |
-| Request a feature          | [Feature request](https://github.com/d0whc3r/spec-kit-product/issues/new?template=feature_request.yml)       |
-| Propose a new command      | [New command](https://github.com/d0whc3r/spec-kit-product/issues/new?template=new_command.yml)               |
-| Doc problem                | [Docs issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=docs.yml)                       |
-| Security                   | [Private advisory](https://github.com/d0whc3r/spec-kit-product/security/advisories/new)                      |
+| You want to           | Use                                                                                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| Report a bug          | [Bug report](https://github.com/d0whc3r/spec-kit-product/issues/new?template=bug_report.yml)           |
+| Request a feature     | [Feature request](https://github.com/d0whc3r/spec-kit-product/issues/new?template=feature_request.yml) |
+| Propose a new command | [New command](https://github.com/d0whc3r/spec-kit-product/issues/new?template=new_command.yml)         |
+| Doc problem           | [Docs issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=docs.yml)                 |
+| Security              | [Private advisory](https://github.com/d0whc3r/spec-kit-product/security/advisories/new)                |

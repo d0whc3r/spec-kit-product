@@ -20,7 +20,13 @@
     [
       "@semantic-release/git",
       {
-        "assets": ["CHANGELOG.md", "extension.yml", "catalog.json", "README.md"],
+        "assets": [
+          "CHANGELOG.md",
+          "extension.yml",
+          "catalog.json",
+          "README.md",
+          "docs/Getting-Started.md"
+        ],
         "message": "chore(release): catalog v${nextRelease.version}"
       }
     ],

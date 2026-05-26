@@ -24,9 +24,18 @@ DOWNLOAD_URL="https://github.com/${REPO}/releases/download/v${VERSION}/product-$
 sed -i "s/^  version:.*/  version: \"${VERSION}\"/" extension.yml
 echo "[semantic-release-prepare] OK: extension.yml version → ${VERSION}"
 
-# Update README direct-install URL
-sed -i "s|specify extension add product --from https://.*|specify extension add product --from ${DOWNLOAD_URL}|" README.md
-echo "[semantic-release-prepare] OK: README.md direct-install URL → ${DOWNLOAD_URL}"
+# Bump every pinned release URL across README + wiki + contributor docs.
+# Matches https://github.com/<owner>/<repo>/releases/download/vX.Y.Z/product-X.Y.Z.zip
+# regardless of file or surrounding context.
+URL_PATTERN='https://github\.com/[^/]+/[^/]+/releases/download/v[0-9]+\.[0-9]+\.[0-9]+/product-[0-9]+\.[0-9]+\.[0-9]+\.zip'
+for f in README.md docs/Getting-Started.md; do
+    if grep -qE "$URL_PATTERN" "$f"; then
+        sed -i -E "s|${URL_PATTERN}|${DOWNLOAD_URL}|g" "$f"
+        echo "[semantic-release-prepare] OK: ${f} direct-install URL → ${DOWNLOAD_URL}"
+    else
+        echo "[semantic-release-prepare] WARN: ${f} no pinned URL found, skipped" >&2
+    fi
+done
 
 # Build deterministic zip (reads version from the now-updated extension.yml)
 bash .github/scripts/build-zip.sh

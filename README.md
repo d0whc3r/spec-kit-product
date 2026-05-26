@@ -6,29 +6,29 @@ A Spec Kit extension that derives four stakeholder-facing artifacts from a techn
 
 The full guide lives in the **[project wiki](https://github.com/d0whc3r/spec-kit-product/wiki)**. This README is the front door only.
 
-| Wiki page                                                                                  | When to read                                                       |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
-| [Home](https://github.com/d0whc3r/spec-kit-product/wiki/Home)                              | Overview and reading order.                                        |
-| [Getting Started](https://github.com/d0whc3r/spec-kit-product/wiki/Getting-Started)        | First install, zero to first generated artifact in five minutes.   |
-| [Commands](https://github.com/d0whc3r/spec-kit-product/wiki/Commands)                      | Deep reference for the four `/speckit.product.*` commands.         |
-| [Workflow](https://github.com/d0whc3r/spec-kit-product/wiki/Workflow)                      | Input and output flow, recommended order, the `product/` layout.   |
-| [Examples](https://github.com/d0whc3r/spec-kit-product/wiki/Examples)                      | Sample `spec.md` input and the four artifacts it produces.         |
-| [Style Guide](https://github.com/d0whc3r/spec-kit-product/wiki/Style-Guide)                | The voice rules every generated artifact enforces.                 |
-| [Troubleshooting](https://github.com/d0whc3r/spec-kit-product/wiki/Troubleshooting)        | Error codes, refusals, common breakages and their fixes.           |
-| [FAQ](https://github.com/d0whc3r/spec-kit-product/wiki/FAQ)                                | Conceptual questions and design rationale.                         |
-| [Architecture](https://github.com/d0whc3r/spec-kit-product/wiki/Architecture)              | How the extension is wired across Claude, Copilot, Codex, Spec Kit. |
-| [Contributing](https://github.com/d0whc3r/spec-kit-product/wiki/Contributing)              | Repo layout, dev install, release pipeline.                        |
+| Wiki page                                                                           | When to read                                                     |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [Home](https://github.com/d0whc3r/spec-kit-product/wiki/Home)                       | Overview and reading order.                                      |
+| [Getting Started](https://github.com/d0whc3r/spec-kit-product/wiki/Getting-Started) | First install, zero to first generated artifact in five minutes. |
+| [Commands](https://github.com/d0whc3r/spec-kit-product/wiki/Commands)               | Deep reference for the four `/speckit.product.*` commands.       |
+| [Workflow](https://github.com/d0whc3r/spec-kit-product/wiki/Workflow)               | Input and output flow, recommended order, the `product/` layout. |
+| [Examples](https://github.com/d0whc3r/spec-kit-product/wiki/Examples)               | Sample `spec.md` input and the four artifacts it produces.       |
+| [Style Guide](https://github.com/d0whc3r/spec-kit-product/wiki/Style-Guide)         | The voice rules every generated artifact enforces.               |
+| [Troubleshooting](https://github.com/d0whc3r/spec-kit-product/wiki/Troubleshooting) | Error codes, refusals, common breakages and their fixes.         |
+| [FAQ](https://github.com/d0whc3r/spec-kit-product/wiki/FAQ)                         | Conceptual questions and design rationale.                       |
+| [Architecture](https://github.com/d0whc3r/spec-kit-product/wiki/Architecture)       | How the extension is structured and how it ships.                |
+| [Contributing](https://github.com/d0whc3r/spec-kit-product/wiki/Contributing)       | Repo layout, dev install, release pipeline.                      |
 
 The wiki is generated from [`docs/`](docs/) on every push to `main`. To browse the same content as plain markdown, open the [docs folder](docs/).
 
 ## At a glance
 
-| Command                   | Reads                                | Writes                 | Audience                       |
-| ------------------------- | ------------------------------------ | ---------------------- | ------------------------------ |
-| `/speckit.product.info`   | `spec.md`                            | `product/00-info.md`   | Any stakeholder, non-technical |
-| `/speckit.product.spec`   | `spec.md`                            | `product/10-spec.md`   | Product managers, leadership   |
-| `/speckit.product.plan`   | `plan.md`, `spec.md`                 | `product/20-plan.md`   | PMs, engineering leads         |
-| `/speckit.product.design` | `plan.md`, `spec.md`, optional more  | `product/30-design.md` | Tech leads, senior developers  |
+| Command                   | Reads                               | Writes                 | Audience                       |
+| ------------------------- | ----------------------------------- | ---------------------- | ------------------------------ |
+| `/speckit.product.info`   | `spec.md`                           | `product/00-info.md`   | Any stakeholder, non-technical |
+| `/speckit.product.spec`   | `spec.md`                           | `product/10-spec.md`   | Product managers, leadership   |
+| `/speckit.product.plan`   | `plan.md`, `spec.md`                | `product/20-plan.md`   | PMs, engineering leads         |
+| `/speckit.product.design` | `plan.md`, `spec.md`, optional more | `product/30-design.md` | Tech leads, senior developers  |
 
 All four commands also update their respective section of the shared `product/checklist.md`. No command modifies `spec.md` or `plan.md`.
 

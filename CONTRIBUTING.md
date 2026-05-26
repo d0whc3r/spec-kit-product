@@ -96,9 +96,10 @@ The release pipeline can auto-file submission issues at `github/spec-kit` so the
 To rehearse locally without filing:
 
 ```bash
+VERSION=<x.y.z>  # replace with the version you want to rehearse
 SUBMIT_DRY_RUN=true UPSTREAM_SUBMIT_TOKEN=dummy \
-  bash .github/scripts/submit-catalog-update.sh 0.1.2 patch \
-    https://github.com/d0whc3r/spec-kit-product/releases/download/v0.1.2/product-0.1.2.zip
+  bash .github/scripts/submit-catalog-update.sh "$VERSION" patch \
+    "https://github.com/d0whc3r/spec-kit-product/releases/download/v${VERSION}/product-${VERSION}.zip"
 ```
 
 ## Branch Naming

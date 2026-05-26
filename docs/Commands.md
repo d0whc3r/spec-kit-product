@@ -3,11 +3,11 @@
 Four slash commands. All read from a feature directory under `specs/` and
 write into `product/` inside that directory. None modify the source files.
 
-| Command                                       | Reads                                        | Writes                                           | Audience                       |
-| --------------------------------------------- | -------------------------------------------- | ------------------------------------------------ | ------------------------------ |
-| [`/speckit.product.info`](#speckitproductinfo) | `spec.md`                                    | `product/00-info.md` + checklist                 | Any stakeholder, non-technical |
-| [`/speckit.product.spec`](#speckitproductspec) | `spec.md`                                    | `product/10-spec.md` + checklist                 | Product managers, leadership   |
-| [`/speckit.product.plan`](#speckitproductplan) | `plan.md` (required), `spec.md` (supplementary) | `product/20-plan.md` + checklist             | PMs, engineering leads         |
+| Command                                            | Reads                                                      | Writes                             | Audience                       |
+| -------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------- | ------------------------------ |
+| [`/speckit.product.info`](#speckitproductinfo)     | `spec.md`                                                  | `product/00-info.md` + checklist   | Any stakeholder, non-technical |
+| [`/speckit.product.spec`](#speckitproductspec)     | `spec.md`                                                  | `product/10-spec.md` + checklist   | Product managers, leadership   |
+| [`/speckit.product.plan`](#speckitproductplan)     | `plan.md` (required), `spec.md` (supplementary)            | `product/20-plan.md` + checklist   | PMs, engineering leads         |
 | [`/speckit.product.design`](#speckitproductdesign) | `plan.md`, `spec.md`, optional `tasks.md`, `data-model.md` | `product/30-design.md` + checklist | Tech leads, senior developers  |
 
 Every command accepts `--feature-dir specs/<feature-dir>` to target a specific
@@ -39,13 +39,13 @@ align stakeholders before committing to the full spec.
 
 ### Error codes
 
-| Code             | Meaning                                                   |
-| ---------------- | --------------------------------------------------------- |
-| `E_NO_PROJECT`   | Not inside a Spec Kit project.                            |
-| `E_NO_POINTER`   | No active feature and `--feature-dir` not passed.         |
-| `E_NO_SPEC`      | Feature directory has no `spec.md`.                       |
-| `E_PLACEHOLDERS` | `spec.md` still contains unfilled template placeholders.  |
-| `E_LANGUAGE`     | `spec.md` is not in English.                              |
+| Code             | Meaning                                                     |
+| ---------------- | ----------------------------------------------------------- |
+| `E_NO_PROJECT`   | Not inside a Spec Kit project.                              |
+| `E_NO_POINTER`   | No active feature and `--feature-dir` not passed.           |
+| `E_NO_SPEC`      | Feature directory has no `spec.md`.                         |
+| `E_PLACEHOLDERS` | `spec.md` still contains unfilled template placeholders.    |
+| `E_LANGUAGE`     | `spec.md` is not in English.                                |
 | `E_USER_ABORT`   | You answered "no" at the overwrite or clarification prompt. |
 
 ---
@@ -156,13 +156,13 @@ Mandatory unless marked optional or conditional:
 
 ### Error codes
 
-| Code             | Meaning                                                       |
-| ---------------- | ------------------------------------------------------------- |
-| `E_NO_PLAN`      | Feature directory has no `plan.md`.                           |
-| `E_NO_SPEC`     | Feature directory has no `spec.md`.                           |
-| `E_PLACEHOLDERS` | Source files still contain unfilled template placeholders.    |
-| `E_LANGUAGE`     | Source files are not in English.                              |
-| `E_USER_ABORT`   | You answered "no" at the overwrite prompt.                    |
+| Code             | Meaning                                                    |
+| ---------------- | ---------------------------------------------------------- |
+| `E_NO_PLAN`      | Feature directory has no `plan.md`.                        |
+| `E_NO_SPEC`      | Feature directory has no `spec.md`.                        |
+| `E_PLACEHOLDERS` | Source files still contain unfilled template placeholders. |
+| `E_LANGUAGE`     | Source files are not in English.                           |
+| `E_USER_ABORT`   | You answered "no" at the overwrite prompt.                 |
 
 ---
 
@@ -184,8 +184,8 @@ item is a regenerate signal.
 The extension registers three optional Spec Kit hooks (declared in
 `extension.yml`). The host agent asks before running them.
 
-| Hook              | Triggers after        | Command                  |
-| ----------------- | --------------------- | ------------------------ |
-| `after_specify`   | `/speckit-specify`    | `/speckit.product.spec`  |
-| `after_clarify`   | `/speckit-clarify`    | `/speckit.product.spec`  |
-| `after_plan`      | `/speckit-plan`       | `/speckit.product.plan`  |
+| Hook            | Triggers after     | Command                 |
+| --------------- | ------------------ | ----------------------- |
+| `after_specify` | `/speckit-specify` | `/speckit.product.spec` |
+| `after_clarify` | `/speckit-clarify` | `/speckit.product.spec` |
+| `after_plan`    | `/speckit-plan`    | `/speckit.product.plan` |

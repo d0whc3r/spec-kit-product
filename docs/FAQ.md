@@ -47,11 +47,11 @@ It is the single strongest "AI tell" in modern LLM output. Banning it
 makes the generated text harder to dismiss as AI slop. The rule is enforced
 by the lint script in CI and by the checklist after generation.
 
-## Does the extension work without a host AI agent?
+## Does the extension run by itself?
 
-The commands are markdown prompts. They need a host that understands Spec
-Kit slash commands (Claude Code, Copilot, Codex, or any Spec Kit-aware
-assistant). The release zip itself is portable and platform-agnostic.
+No. The commands are markdown prompts: they need a Spec Kit-aware assistant
+to resolve and execute them. The release zip itself is portable and has no
+runtime of its own.
 
 ## My team writes specs in Spanish. Can the extension help?
 
@@ -69,9 +69,10 @@ the product commands work the same way.
 
 ## Is there a Python or Node API to run these programmatically?
 
-No. The commands run inside the host AI agent. If you need scriptable
-generation, the underlying templates at `templates/product-*-template.md`
-are plain markdown and can be filled by any process you build.
+No. The commands run inside a Spec Kit-aware assistant. If you need
+scriptable generation, the underlying templates at
+`templates/product-*-template.md` are plain markdown and can be filled by
+any process you build.
 
 ## Why is the technical design separate from the product plan?
 
@@ -95,12 +96,12 @@ feature directories, not the extension directory.
 
 ## Where do I report a bug or request a feature?
 
-| You want to                                              | Use                                                                                                          |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Report a bug in this extension                           | [Bug report issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=bug_report.yml)           |
-| Request a feature                                        | [Feature request issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=feature_request.yml) |
-| Propose a new `/speckit.product.*` command               | [New command issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=new_command.yml)         |
-| Doc problem                                              | [Docs issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=docs.yml)                       |
-| Usage question or tip                                    | [Discussions](https://github.com/d0whc3r/spec-kit-product/discussions)                                       |
-| Security vulnerability                                   | [Private security advisory](https://github.com/d0whc3r/spec-kit-product/security/advisories/new)             |
-| Report an issue in Spec Kit core                         | [github/spec-kit](https://github.com/github/spec-kit/issues)                                                 |
+| You want to                                | Use                                                                                                          |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| Report a bug in this extension             | [Bug report issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=bug_report.yml)           |
+| Request a feature                          | [Feature request issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=feature_request.yml) |
+| Propose a new `/speckit.product.*` command | [New command issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=new_command.yml)         |
+| Doc problem                                | [Docs issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=docs.yml)                       |
+| Usage question or tip                      | [Discussions](https://github.com/d0whc3r/spec-kit-product/discussions)                                       |
+| Security vulnerability                     | [Private security advisory](https://github.com/d0whc3r/spec-kit-product/security/advisories/new)             |
+| Report an issue in Spec Kit core           | [github/spec-kit](https://github.com/github/spec-kit/issues)                                                 |

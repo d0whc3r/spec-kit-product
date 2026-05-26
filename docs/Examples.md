@@ -155,14 +155,17 @@ Larger jobs run in the background and are emailed when ready.
 ## Delivery Phases
 
 **Phase 1: Multi-select in the library**
+
 - Users can select more than one dashboard at a time.
 - The selection state survives pagination and filter changes.
 
 **Phase 2: Inline combined export**
+
 - A new action produces a combined document for selections up to fifty.
 - Users choose combined or packaged at export time.
 
 **Phase 3: Queued export for large jobs**
+
 - Selections above fifty are queued, processed in the background, and
   delivered by email.
 ```
@@ -185,12 +188,12 @@ runner and a delivery worker emails the artifact when complete.
 
 ## Affected Modules
 
-| Module                | Change type | Responsibility                                           |
-| --------------------- | ----------- | -------------------------------------------------------- |
-| dashboard-library     | modifies    | Adds multi-select state and bulk action button.          |
-| export-service        | modifies    | Accepts a list of dashboard ids, returns combined output. |
-| job-runner            | uses        | Runs large bulk exports out of band.                     |
-| delivery-mailer       | adds        | New worker that emails completed bulk exports.           |
+| Module            | Change type | Responsibility                                            |
+| ----------------- | ----------- | --------------------------------------------------------- |
+| dashboard-library | modifies    | Adds multi-select state and bulk action button.           |
+| export-service    | modifies    | Accepts a list of dashboard ids, returns combined output. |
+| job-runner        | uses        | Runs large bulk exports out of band.                      |
+| delivery-mailer   | adds        | New worker that emails completed bulk exports.            |
 ```
 
 Component-level detail. No code, no full ORM definitions, no line-by-line
@@ -218,7 +221,7 @@ approach before tasks are cut.
 - [x] Problem Statement in Ulwick format.
 - [x] Use Cases follow Given/When/Then with one line each.
 - [x] No em dash.
-- [ ] No AI tell filler phrases.  ← MANUAL REVIEW REQUIRED
+- [ ] No AI tell filler phrases. ← MANUAL REVIEW REQUIRED
 
 ## Plan
 

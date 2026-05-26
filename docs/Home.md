@@ -7,26 +7,26 @@ English with a strict no em dash style.
 
 ## Start here
 
-| Page                                       | When to read                                                       |
-| ------------------------------------------ | ------------------------------------------------------------------ |
-| [Getting Started](Getting-Started.md)      | First install, zero to first generated artifact in five minutes.   |
-| [Commands](Commands.md)                    | Deep reference for the four `/speckit.product.*` commands.         |
-| [Workflow](Workflow.md)                    | Input and output flow, recommended order, the `product/` layout.   |
-| [Examples](Examples.md)                    | Sample `spec.md` input and the four artifacts it produces.         |
-| [Style Guide](Style-Guide.md)              | The voice rules every generated artifact enforces.                 |
-| [Troubleshooting](Troubleshooting.md)      | Error codes, refusals, common breakages and their fixes.           |
-| [FAQ](FAQ.md)                              | Conceptual questions and design rationale.                         |
-| [Architecture](Architecture.md)            | How the extension is wired across Claude, Copilot, Codex, Spec Kit. |
-| [Contributing](Contributing.md)            | Repo layout, dev install, release pipeline.                        |
+| Page                                  | When to read                                                     |
+| ------------------------------------- | ---------------------------------------------------------------- |
+| [Getting Started](Getting-Started.md) | First install, zero to first generated artifact in five minutes. |
+| [Commands](Commands.md)               | Deep reference for the four `/speckit.product.*` commands.       |
+| [Workflow](Workflow.md)               | Input and output flow, recommended order, the `product/` layout. |
+| [Examples](Examples.md)               | Sample `spec.md` input and the four artifacts it produces.       |
+| [Style Guide](Style-Guide.md)         | The voice rules every generated artifact enforces.               |
+| [Troubleshooting](Troubleshooting.md) | Error codes, refusals, common breakages and their fixes.         |
+| [FAQ](FAQ.md)                         | Conceptual questions and design rationale.                       |
+| [Architecture](Architecture.md)       | How the extension is structured and how it ships.                |
+| [Contributing](Contributing.md)       | Repo layout, dev install, release pipeline.                      |
 
 ## The four commands at a glance
 
-| Command                   | Reads                                | Writes                 | Audience                       |
-| ------------------------- | ------------------------------------ | ---------------------- | ------------------------------ |
-| `/speckit.product.info`   | `spec.md`                            | `product/00-info.md`   | Any stakeholder, non-technical |
-| `/speckit.product.spec`   | `spec.md`                            | `product/10-spec.md`   | Product managers, leadership   |
-| `/speckit.product.plan`   | `plan.md`, `spec.md`                 | `product/20-plan.md`   | PMs, engineering leads         |
-| `/speckit.product.design` | `plan.md`, `spec.md`, optional more  | `product/30-design.md` | Tech leads, senior developers  |
+| Command                   | Reads                               | Writes                 | Audience                       |
+| ------------------------- | ----------------------------------- | ---------------------- | ------------------------------ |
+| `/speckit.product.info`   | `spec.md`                           | `product/00-info.md`   | Any stakeholder, non-technical |
+| `/speckit.product.spec`   | `spec.md`                           | `product/10-spec.md`   | Product managers, leadership   |
+| `/speckit.product.plan`   | `plan.md`, `spec.md`                | `product/20-plan.md`   | PMs, engineering leads         |
+| `/speckit.product.design` | `plan.md`, `spec.md`, optional more | `product/30-design.md` | Tech leads, senior developers  |
 
 All four also update the shared `product/checklist.md`. None of them modify
 `spec.md`, `plan.md`, or any other source file.

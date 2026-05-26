@@ -9,8 +9,7 @@ Five minutes from zero to a generated product artifact.
   specify --version
   ls .specify
   ```
-- A host AI agent: Claude Code, GitHub Copilot, Codex, or any Spec Kit-aware
-  assistant.
+- A Spec Kit-aware assistant that can resolve slash commands.
 - A feature directory under `specs/` with a populated `spec.md` and (for the
   `plan` and `design` commands) a populated `plan.md`.
 
