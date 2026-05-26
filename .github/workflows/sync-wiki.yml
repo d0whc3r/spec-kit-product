@@ -17,13 +17,13 @@ jobs:
     name: publish docs to GitHub Wiki
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Stage wiki pages
         run: bash .github/scripts/stage-wiki.sh docs .wiki-staging
 
       - name: Publish to GitHub Wiki
-        uses: Andrew-Chen-Wang/github-wiki-action@v4
+        uses: Andrew-Chen-Wang/github-wiki-action@v5
         with:
           path: .wiki-staging/
           token: ${{ secrets.GITHUB_TOKEN }}
