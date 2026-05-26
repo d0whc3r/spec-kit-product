@@ -32,10 +32,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Validate manifest
-        run: bash .github/scripts/validate-manifest.sh
+        run: pnpm run validate
+
+      - name: Lint
+        run: pnpm run lint
 
       - name: Lint content
-        run: bash .github/scripts/lint-content.sh
+        run: pnpm run lint:content
 
       - name: Release
         env:
@@ -45,4 +48,4 @@ jobs:
           GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
           GIT_COMMITTER_NAME: github-actions[bot]
           GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
-        run: pnpx semantic-release
+        run: pnpm run release
