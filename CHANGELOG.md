@@ -2,11 +2,10 @@
 
 ## [0.1.3](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.2...v0.1.3) (2026-05-26)
 
-
 ### Bug Fixes
 
-* lint ([b4b9ec1](https://github.com/d0whc3r/spec-kit-product/commit/b4b9ec124af36cf260d5d36050e41a49763c6d34))
-* update docs ([5ab5265](https://github.com/d0whc3r/spec-kit-product/commit/5ab526585aba95279c4dd76088ea043dc87fc40b))
+- lint ([b4b9ec1](https://github.com/d0whc3r/spec-kit-product/commit/b4b9ec124af36cf260d5d36050e41a49763c6d34))
+- update docs ([5ab5265](https://github.com/d0whc3r/spec-kit-product/commit/5ab526585aba95279c4dd76088ea043dc87fc40b))
 
 ## [0.1.2](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.1...v0.1.2) (2026-05-25)
 
