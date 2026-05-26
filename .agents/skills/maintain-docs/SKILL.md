@@ -330,6 +330,13 @@ Do not commit. The user controls commits.
 - Do not silently delete `[NEEDS CLARIFICATION]` markers.
 - Do not introduce em dashes. The lint will catch you and the
   constitution forbids them.
+- Do not reintroduce per-agent surface detail to the wiki. The wiki
+  describes the extension itself, not the integrations that host it.
+  Per-agent mirror surfaces (`.claude/`, `.github/agents/`,
+  `.github/prompts/`), assistant names (Claude Code, Copilot, Codex),
+  and the four-agent boundary rule live in `docs/Contributing.md` and
+  `AGENTS.md`. The wiki may refer generically to "a Spec Kit-aware
+  assistant" when context demands it.
 
 ## References
 

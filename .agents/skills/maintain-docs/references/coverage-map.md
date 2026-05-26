@@ -122,22 +122,28 @@ frequently asked question surfaces in issues that is not yet covered.
 
 ### `docs/Architecture.md`
 
-Documents: repo layout, the four agent surfaces, hooks, release
-pipeline.
+Documents: what the extension is, repo layout, invocation flow, source of
+truth contract, hooks, release pipeline, constitution rules that bind the
+output.
+
+Scope rule: this page describes the extension itself. It does not
+enumerate per-agent mirror surfaces (`.claude/`, `.github/agents/`,
+`.github/prompts/`) or name specific assistants. Mirror surfaces are a
+contributor concern and belong in `docs/Contributing.md` or
+`.specify/memory/constitution.md`, not here.
 
 Asserts:
 
-- The repo layout tree (must include every top-level directory that
-  exists).
-- The four-agent table (Claude Code, Copilot, Codex, Spec Kit core)
-  with paths and manifest filenames.
+- The repo layout tree (must include every top-level directory that the
+  page lists, and must not list directories that don't exist).
 - The hooks table (must match `extension.yml.hooks`).
 - The release pipeline diagram references the actual workflow files
-  under `.github/workflows/`.
+  under `.github/workflows/` and the actual release tooling
+  (`.releaserc.json`, `.github/scripts/semantic-release-prepare.sh`).
 
-Re-check whenever: a top-level directory is added or removed; a manifest
-moves; a workflow under `.github/workflows/` is added or renamed; a
-hook is added or removed.
+Re-check whenever: a top-level directory is added or removed; a workflow
+under `.github/workflows/` is added or renamed; a hook is added or
+removed; the release tooling changes.
 
 ### `docs/Contributing.md`
 
@@ -254,7 +260,8 @@ that might need a touch.
 | `catalog.json` (version, counts)          | `README.md`, `docs/Getting-Started.md`                                                              |
 | `commands/speckit.product.<verb>.md`      | `docs/Commands.md`, `docs/Troubleshooting.md`, `docs/Examples.md`                                   |
 | `templates/<artifact>-template.md`        | `docs/Commands.md` (output sections), `docs/Examples.md` (example bodies)                            |
-| `.specify/integrations/<agent>.manifest.json` | `docs/Architecture.md`, `AGENTS.md`                                                              |
+| `.specify/integrations/<agent>.manifest.json` | `AGENTS.md`, `docs/Contributing.md` (the wiki does not surface per-agent mirrors)                |
 | `.specify/memory/constitution.md`         | `docs/Style-Guide.md`, `docs/FAQ.md`, `docs/Architecture.md`, `AGENTS.md`                            |
 | `.github/workflows/*.yml`                 | `docs/Architecture.md`, `docs/Contributing.md`                                                       |
+| `.releaserc.json`, release scripts        | `docs/Architecture.md`, `docs/Contributing.md`, `CONTRIBUTING.md`                                    |
 | New file at `docs/<Page>.md`              | `docs/Home.md`, `docs/_Sidebar.md`, `docs/README.md`, `README.md` (if linked there)                  |
