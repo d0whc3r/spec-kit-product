@@ -1,9 +1,37 @@
 {
   "name": "spec-kit-product",
+  "version": "0.1.2",
   "private": true,
+  "description": "Generates PRFAQ, Lean PRD, stakeholder summaries, and technical designs from engineering specs.",
+  "keywords": [
+    "design",
+    "documentation",
+    "prd",
+    "prfaq",
+    "product",
+    "spec",
+    "spec-kit",
+    "spec-kit-extension"
+  ],
+  "homepage": "https://github.com/d0whc3r/spec-kit-product",
+  "bugs": {
+    "url": "https://github.com/d0whc3r/spec-kit-product/issues"
+  },
+  "license": "MIT",
+  "author": "spec-kit-product contributors",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d0whc3r/spec-kit-product.git"
+  },
   "scripts": {
     "lint": "oxfmt --no-error-on-unmatched-pattern --check",
-    "fix": "oxfmt --no-error-on-unmatched-pattern --write"
+    "lint:content": "bash .github/scripts/lint-content.sh",
+    "format": "oxfmt --no-error-on-unmatched-pattern --write",
+    "validate": "bash .github/scripts/validate-manifest.sh",
+    "build": "bash .github/scripts/build-zip.sh",
+    "check": "pnpm run validate && pnpm run lint && pnpm run lint:content",
+    "release": "semantic-release",
+    "release:dry": "semantic-release --dry-run"
   },
   "devDependencies": {
     "@semantic-release/changelog": "6.0.3",
@@ -12,6 +40,10 @@
     "@semantic-release/github": "12.0.8",
     "oxfmt": "0.52.0",
     "semantic-release": "25.0.3"
+  },
+  "engines": {
+    "node": ">=24",
+    "pnpm": ">=11"
   },
   "packageManager": "pnpm@11.3.0"
 }
