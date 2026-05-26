@@ -7,6 +7,8 @@ on:
     paths:
       - "docs/**"
       - ".github/workflows/sync-wiki.yml"
+      - ".github/actions/publish-wiki/**"
+      - ".github/scripts/stage-wiki.sh"
   workflow_dispatch:
 
 permissions:
@@ -19,12 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Stage wiki pages
-        run: bash .github/scripts/stage-wiki.sh docs .wiki-staging
-
-      - name: Publish to GitHub Wiki
-        uses: Andrew-Chen-Wang/github-wiki-action@v5
+      - uses: ./.github/actions/publish-wiki
         with:
-          path: .wiki-staging/
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "docs: sync from ${{ github.sha }}"
