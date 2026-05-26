@@ -11,16 +11,16 @@ fastest way to get an answer.
 
 ## Where to ask
 
-| You want to                                              | Use                                                                                                       |
-| -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Report a bug in this extension                           | [Bug report issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=bug_report.yml)        |
+| You want to                                              | Use                                                                                                          |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Report a bug in this extension                           | [Bug report issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=bug_report.yml)           |
 | Request a feature or behavior change                     | [Feature request issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=feature_request.yml) |
-| Propose a new `/speckit.product.*` command               | [New command issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=new_command.yml)      |
-| Point out a documentation problem                        | [Docs issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=docs.yml)                    |
-| Ask a usage question or share a tip                      | [Discussions](https://github.com/d0whc3r/spec-kit-product/discussions)                                    |
-| Report a security vulnerability                          | [Private security advisory](https://github.com/d0whc3r/spec-kit-product/security/advisories/new)          |
-| Report an issue in Spec Kit core itself                  | [github/spec-kit](https://github.com/github/spec-kit/issues)                                              |
-| Report an issue in your AI agent (Claude, Copilot, etc.) | The agent's own support channels                                                                          |
+| Propose a new `/speckit.product.*` command               | [New command issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=new_command.yml)         |
+| Point out a documentation problem                        | [Docs issue](https://github.com/d0whc3r/spec-kit-product/issues/new?template=docs.yml)                       |
+| Ask a usage question or share a tip                      | [Discussions](https://github.com/d0whc3r/spec-kit-product/discussions)                                       |
+| Report a security vulnerability                          | [Private security advisory](https://github.com/d0whc3r/spec-kit-product/security/advisories/new)             |
+| Report an issue in Spec Kit core itself                  | [github/spec-kit](https://github.com/github/spec-kit/issues)                                                 |
+| Report an issue in your AI agent (Claude, Copilot, etc.) | The agent's own support channels                                                                             |
 
 ## Response expectations
 

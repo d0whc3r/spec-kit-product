@@ -5,10 +5,10 @@
 This extension follows semantic versioning. Only the latest minor release line
 receives security fixes. Older releases are left in place but not patched.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 0.1.x   | Yes                |
-| < 0.1   | No                 |
+| Version | Supported |
+| ------- | --------- |
+| 0.1.x   | Yes       |
+| < 0.1   | No        |
 
 ## Threat model in scope
 

@@ -2,10 +2,9 @@
 
 ## [0.1.2](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.1...v0.1.2) (2026-05-25)
 
-
 ### Bug Fixes
 
-* publish ci ([59dc2df](https://github.com/d0whc3r/spec-kit-product/commit/59dc2dff3908d2e9d53e2c17e8c7916d65d9642b))
+- publish ci ([59dc2df](https://github.com/d0whc3r/spec-kit-product/commit/59dc2dff3908d2e9d53e2c17e8c7916d65d9642b))
 
 ## [0.1.1](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.0...v0.1.1) (2026-05-25)
 
