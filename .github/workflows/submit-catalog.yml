@@ -1,8 +1,10 @@
 name: submit-catalog
 
+# Manual fallback only. The automatic submission runs inline at the end of
+# the `release` workflow — the `release: published` event is not used here
+# because semantic-release publishes with the default GITHUB_TOKEN, which
+# does not trigger downstream workflows.
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       tag:
@@ -21,7 +23,7 @@ jobs:
       - name: Resolve tag
         id: tag
         run: |
-          tag="${{ github.event.release.tag_name || inputs.tag }}"
+          tag="${{ inputs.tag }}"
           echo "tag=${tag}" >> "$GITHUB_OUTPUT"
           echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
 

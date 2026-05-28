@@ -109,16 +109,25 @@ release-notes-generator + @semantic-release/changelog prepend to CHANGELOG.md
     bumps extension.yml, catalog.json (download_url + version + updated_at),
     refreshes README direct-install URL, builds dist/product-<version>.zip
     ↓
-@semantic-release/exec → submit-catalog-update.sh
-    files [Extension Submission] issue at github/spec-kit
-    (skipped when UPSTREAM_SUBMIT_TOKEN is unset)
-    ↓
 @semantic-release/git commits chore(release): catalog v<version>
     as github-actions[bot] with CHANGELOG.md, extension.yml, catalog.json, README.md
     ↓
 @semantic-release/github creates tag v<version>, publishes Release,
     attaches product-<version>.zip
+    ↓
+release.yml step → publish-wiki action
+    syncs docs/ to the GitHub wiki
+    ↓
+release.yml step → submit-catalog-update.sh
+    files [Extension Submission] issue at github/spec-kit
+    (skipped when UPSTREAM_SUBMIT_TOKEN is unset)
 ```
+
+The catalog submission runs inline in `release.yml` rather than from a
+`release: published` workflow because semantic-release creates the release
+with the default `GITHUB_TOKEN`, which does not trigger downstream
+workflows. `submit-catalog.yml` remains as a `workflow_dispatch`-only
+fallback for manual reruns.
 
 The pipeline-owned fields in `catalog.json` (`version`, `download_url`,
 `requires.speckit_version`, `updated_at`, `created_at`) are updated by CI

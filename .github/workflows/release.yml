@@ -64,3 +64,13 @@ jobs:
         uses: ./.github/actions/publish-wiki
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Submit upstream catalog issue
+        if: steps.release.outputs.published == 'true'
+        continue-on-error: true
+        env:
+          UPSTREAM_SUBMIT_TOKEN: ${{ secrets.UPSTREAM_SUBMIT_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          version=$(jq -r .version catalog.json)
+          bash .github/scripts/submit-catalog-update.sh "$version" release "v$version"
