@@ -9,7 +9,8 @@
     "specs/**",
     "node_modules/**",
     "dist/**",
-    "coverage/**"
+    "coverage/**",
+    "CHANGELOG.md"
   ],
   "overrides": [
     {

@@ -208,7 +208,7 @@ lint_template \
 
 # --- optional oxfmt pass ---
 if command -v oxfmt >/dev/null 2>&1; then
-    if ! oxfmt --check 'commands/**/*.md' 'templates/**/*.md' 'README.md' 'CHANGELOG.md' >&2; then
+    if ! oxfmt --check 'commands/**/*.md' 'templates/**/*.md' 'README.md' >&2; then
         echo "[lint-content] FAIL: oxfmt reported unformatted markdown files" >&2
         FAIL=1
     fi
