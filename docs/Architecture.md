@@ -74,20 +74,21 @@ constitution-level rule and the checklist enforces it.
 
 ## Hooks
 
-The extension declares six hook handlers across three Spec Kit hook events
-in `extension.yml`. Each handler runs optionally after the matching Spec Kit
+The extension declares three hook handlers in `extension.yml`, one per Spec
+Kit hook event. Each handler runs optionally after the matching Spec Kit
 core command:
 
-| Hook            | Triggers after     | Suggested commands                                 |
-| --------------- | ------------------ | -------------------------------------------------- |
-| `after_specify` | `/speckit.specify` | `/speckit.product.info`, `/speckit.product.spec`   |
-| `after_clarify` | `/speckit.clarify` | `/speckit.product.info`, `/speckit.product.spec`   |
-| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`, `/speckit.product.design` |
+| Hook            | Triggers after     | Command                  |
+| --------------- | ------------------ | ------------------------ |
+| `after_specify` | `/speckit.specify` | `/speckit.product.info`  |
+| `after_clarify` | `/speckit.clarify` | `/speckit.product.info`  |
+| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`  |
 
-Each event registers a list of optional commands. The host agent prompts
-before each one runs and the user can decline any of them; source files
-remain unchanged either way. The order in the list matches the recommended
-workflow: lighter artifact first, fuller artifact second.
+Each hook is `optional: true`. The host agent prompts before the handler
+runs and the user can decline; source files remain unchanged either way.
+The hook surfaces the lightest stakeholder artifact for each event; richer
+artifacts (`/speckit.product.spec`, `/speckit.product.design`) are produced
+on demand by running the matching command.
 
 ## Release pipeline
 

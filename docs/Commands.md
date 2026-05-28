@@ -181,15 +181,17 @@ item is a regenerate signal.
 
 ## Hooks
 
-The extension registers six optional hook handlers across three Spec Kit
-hook events (declared in `extension.yml`). The host agent asks before running
-each handler.
+The extension registers three optional hook handlers, one per Spec Kit hook
+event (declared in `extension.yml`). The host agent asks before running each
+handler.
 
-| Hook            | Triggers after     | Suggested commands (in order)                      |
-| --------------- | ------------------ | -------------------------------------------------- |
-| `after_specify` | `/speckit.specify` | `/speckit.product.info`, `/speckit.product.spec`   |
-| `after_clarify` | `/speckit.clarify` | `/speckit.product.info`, `/speckit.product.spec`   |
-| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`, `/speckit.product.design` |
+| Hook            | Triggers after     | Command                  |
+| --------------- | ------------------ | ------------------------ |
+| `after_specify` | `/speckit.specify` | `/speckit.product.info`  |
+| `after_clarify` | `/speckit.clarify` | `/speckit.product.info`  |
+| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`  |
 
-Each hook is `optional: true`. The host agent prompts before running each
-entry so users can pick the artifacts they want and decline the rest.
+Each hook is `optional: true`. The host agent prompts before running and the
+user can decline. Richer artifacts (`/speckit.product.spec`,
+`/speckit.product.design`) are not auto-prompted; run them explicitly when
+you need them.
