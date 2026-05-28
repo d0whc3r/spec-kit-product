@@ -17,17 +17,18 @@
 #   SUBMIT_DRY_RUN         If "true", print the gh command and exit.
 #
 # Usage:
-#   submit-catalog-update.sh <version> <release_type> <git_tag>
+#   submit-catalog-update.sh <version> [release_type] [git_tag]
+#   release_type defaults to "release"; git_tag defaults to "v<version>".
 
 set -euo pipefail
 
 VERSION="${1:-}"
-RELEASE_TYPE="${2:-}"
-GIT_TAG="${3:-}"
+RELEASE_TYPE="${2:-release}"
+GIT_TAG="${3:-v${VERSION}}"
 UPSTREAM_REPO="${UPSTREAM_REPO:-github/spec-kit}"
 
-if [ -z "$VERSION" ] || [ -z "$RELEASE_TYPE" ] || [ -z "$GIT_TAG" ]; then
-    echo "Usage: $0 <version> <release_type> <git_tag>" >&2
+if [ -z "$VERSION" ]; then
+    echo "Usage: $0 <version> [release_type] [git_tag]" >&2
     exit 1
 fi
 

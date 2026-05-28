@@ -1,0 +1,39 @@
+name: submit-catalog
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (e.g. v0.1.4)"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    name: submit upstream catalog issue
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Resolve tag
+        id: tag
+        run: |
+          tag="${{ github.event.release.tag_name || inputs.tag }}"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.tag.outputs.tag }}
+
+      - name: Submit catalog update
+        env:
+          UPSTREAM_SUBMIT_TOKEN: ${{ secrets.UPSTREAM_SUBMIT_TOKEN }}
+        run: |
+          bash .github/scripts/submit-catalog-update.sh \
+            "${{ steps.tag.outputs.version }}" \
+            "release" \
+            "${{ steps.tag.outputs.tag }}"

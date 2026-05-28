@@ -13,8 +13,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "bash .github/scripts/semantic-release-prepare.sh ${nextRelease.version}",
-        "publishCmd": "bash .github/scripts/submit-catalog-update.sh ${nextRelease.version} ${nextRelease.type} ${nextRelease.gitTag}"
+        "prepareCmd": "bash .github/scripts/semantic-release-prepare.sh ${nextRelease.version}"
       }
     ],
     [
