@@ -1,5 +1,18 @@
 # Changelog
 
+# [0.2.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.4...v0.2.0) (2026-05-28)
+
+
+### Bug Fixes
+
+* clarify ([9cfa37f](https://github.com/d0whc3r/spec-kit-product/commit/9cfa37f177984bb28cb62d3810b97ec80bbb457a))
+* update hook handler counts and descriptions in documentation ([0807566](https://github.com/d0whc3r/spec-kit-product/commit/0807566e591875380fb5fdcfacd2fb19a8aee8a5))
+
+
+### Features
+
+* add GitHub Actions workflow for submitting catalog updates ([4353258](https://github.com/d0whc3r/spec-kit-product/commit/43532587e95ea3e8ab10ad1222a3fb3d5bb26f3e))
+
 ## [0.1.4](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.3...v0.1.4) (2026-05-28)
 
 ### Bug Fixes
