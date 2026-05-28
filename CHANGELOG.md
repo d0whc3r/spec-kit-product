@@ -1,5 +1,17 @@
 # Changelog
 
+# [0.3.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.2.0...v0.3.0) (2026-05-28)
+
+
+### Bug Fixes
+
+* update linting script and changelog formatting ([1f7df94](https://github.com/d0whc3r/spec-kit-product/commit/1f7df940323708e64f057890dd1f0ab0d7aa98f3))
+
+
+### Features
+
+* enhance release workflow to submit upstream catalog issue and update documentation ([7a68b1c](https://github.com/d0whc3r/spec-kit-product/commit/7a68b1c481d4247d77db37539290488f192e0bc2))
+
 # [0.2.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.4...v0.2.0) (2026-05-28)
 
 ### Bug Fixes
