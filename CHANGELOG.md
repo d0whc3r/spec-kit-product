@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.3...v0.1.4) (2026-05-28)
+
+
+### Bug Fixes
+
+* simplify hooks structure in extension.yml ([cba8637](https://github.com/d0whc3r/spec-kit-product/commit/cba86379107f82766e48bd67d5d1c46ccbda9ee7))
+
 ## [0.1.3](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.2...v0.1.3) (2026-05-26)
 
 ### Bug Fixes
