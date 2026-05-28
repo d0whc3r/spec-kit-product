@@ -185,11 +185,11 @@ The extension registers three optional hook handlers, one per Spec Kit hook
 event (declared in `extension.yml`). The host agent asks before running each
 handler.
 
-| Hook            | Triggers after     | Command                  |
-| --------------- | ------------------ | ------------------------ |
-| `after_specify` | `/speckit.specify` | `/speckit.product.info`  |
-| `after_clarify` | `/speckit.clarify` | `/speckit.product.info`  |
-| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`  |
+| Hook            | Triggers after     | Command                 |
+| --------------- | ------------------ | ----------------------- |
+| `after_specify` | `/speckit.specify` | `/speckit.product.info` |
+| `after_clarify` | `/speckit.clarify` | `/speckit.product.info` |
+| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan` |
 
 Each hook is `optional: true`. The host agent prompts before running and the
 user can decline. Richer artifacts (`/speckit.product.spec`,

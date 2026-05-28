@@ -17,13 +17,7 @@
     "commands": 4,
     "hooks": 3
   },
-  "tags": [
-    "product",
-    "spec",
-    "prd",
-    "design",
-    "documentation"
-  ],
+  "tags": ["product", "spec", "prd", "design", "documentation"],
   "verified": false,
   "created_at": "2026-05-07T20:09:54Z",
   "updated_at": "2026-05-28T10:30:07Z"
