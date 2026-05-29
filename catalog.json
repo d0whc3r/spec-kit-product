@@ -22,7 +22,16 @@
     "spec",
     "prd",
     "design",
-    "documentation"
+    "documentation",
+    "prfaq",
+    "jtbd",
+    "lean-prd",
+    "requirements",
+    "product-management",
+    "planning",
+    "stakeholder",
+    "technical-design",
+    "brownfield"
   ],
   "verified": false,
   "created_at": "2026-05-07T20:09:54Z",
