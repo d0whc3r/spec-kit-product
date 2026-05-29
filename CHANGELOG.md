@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/d0whc3r/spec-kit-product/compare/v0.5.2...v0.5.3) (2026-05-29)
+
+
+### Bug Fixes
+
+* update homepage URLs and package manager version in configuration files ([760f67c](https://github.com/d0whc3r/spec-kit-product/commit/760f67c2a5238114a3f5e2127adcdb97bb2443fd))
+
 ## [0.5.2](https://github.com/d0whc3r/spec-kit-product/compare/v0.5.1...v0.5.2) (2026-05-29)
 
 
