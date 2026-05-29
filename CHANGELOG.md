@@ -1,5 +1,17 @@
 # Changelog
 
+# [0.5.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.4.0...v0.5.0) (2026-05-29)
+
+
+### Bug Fixes
+
+* format catalog ([955e371](https://github.com/d0whc3r/spec-kit-product/commit/955e3719ad78d6f21a6ade89624bed070315c90c))
+
+
+### Features
+
+* synchronize versioning across extension.yml and package.json, add pre-commit hook for linting ([9f19caa](https://github.com/d0whc3r/spec-kit-product/commit/9f19caa7e6f953524bfc157b097375e8951dfdbb))
+
 # [0.4.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.3.0...v0.4.0) (2026-05-29)
 
 
