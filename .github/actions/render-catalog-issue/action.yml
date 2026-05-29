@@ -47,3 +47,4 @@ runs:
         name: ${{ inputs.artifact-name }}
         path: ${{ steps.render.outputs.file }}
         if-no-files-found: error
+        retention-days: 7

@@ -82,14 +82,14 @@ The release pipeline keeps the community catalog at `github/spec-kit` in sync by
 
 **What runs on each release:**
 
-`.github/scripts/submit-catalog-update.sh` queries the upstream `catalog.community.json`. If `product` is present the document targets `[Extension]: Update Product Spec Extension to vX.Y.Z`; if absent it targets `[Extension]: Add Product Spec Extension`. The rendered markdown is uploaded as the `upstream-catalog-issue` workflow artifact. No token is required.
+`.github/scripts/submit-catalog-update.sh` queries the upstream `catalog.community.json`. If `product` is present the document targets `[Extension]: Update Product Spec Extension to vX.Y.Z`; if absent it targets `[Extension]: Add Product Spec Extension`. The rendered markdown is uploaded as the `upstream-catalog-issue` workflow artifact, retained for 7 days. No token is required.
 
 **Filing the issue:**
 
 1. Open the finished `release` run in Actions and download the `upstream-catalog-issue` artifact.
 2. Follow the **How to file this issue** steps at the top of the document: open the [Extension Submission form](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml), set the title, and copy each form field from the document's **Issue body** section.
 
-To regenerate the document for an already-released tag, run the `submit-catalog` workflow (`workflow_dispatch`) with that tag and download its artifact.
+To regenerate the document for an already-released tag, run the script locally with that tag (see below). There is no manual CI trigger; the document is only produced automatically by the `release` workflow.
 
 To rehearse locally:
 
