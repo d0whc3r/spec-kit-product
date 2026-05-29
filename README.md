@@ -44,7 +44,7 @@ specify extension add product
 To pin a specific version:
 
 ```bash
-specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.3.0/product-0.3.0.zip
+specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.4.0/product-0.4.0.zip
 ```
 
 For prerequisites and the first-run walkthrough see [Getting Started](https://github.com/d0whc3r/spec-kit-product/wiki/Getting-Started).

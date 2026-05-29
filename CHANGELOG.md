@@ -1,5 +1,18 @@
 # Changelog
 
+# [0.4.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.3.0...v0.4.0) (2026-05-29)
+
+
+### Bug Fixes
+
+* update format ([ae793d5](https://github.com/d0whc3r/spec-kit-product/commit/ae793d502bb8d45751253252b0b70de920d74993))
+
+
+### Features
+
+* enhance documentation with Mermaid diagram integration and clarify catalog submission process ([1bf258e](https://github.com/d0whc3r/spec-kit-product/commit/1bf258e74a9f8380f10a2d91c71d691c4abbd105))
+* update artifact retention policy to 7 days and clarify documentation ([27945d7](https://github.com/d0whc3r/spec-kit-product/commit/27945d77e792443dd1dc36f1fb41fce803fd979b))
+
 # [0.3.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.2.0...v0.3.0) (2026-05-28)
 
 
