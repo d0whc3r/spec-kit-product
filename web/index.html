@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Product Spec Extension for Spec Kit</title>
+    <meta
+      name="description"
+      content="A Spec Kit extension that turns engineering spec.md and plan.md into PRFAQ, Lean PRD, stakeholder summaries, and technical design artifacts."
+    />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="#top">
+          <span class="brand-mark" aria-hidden="true">/</span>
+          <span>Product Spec Extension</span>
+        </a>
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="nav-links"
+          aria-label="Toggle navigation"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#what">What it does</a></li>
+          <li><a href="#commands">Commands</a></li>
+          <li><a href="#start">Get started</a></li>
+          <li><a href="#workflow">Workflow</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li>
+            <a class="nav-cta" href="https://github.com/d0whc3r/spec-kit-product">GitHub</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="container hero-inner">
+          <p class="eyebrow">A Spec Kit extension</p>
+          <h1>Turn your engineering spec into product artifacts stakeholders actually read.</h1>
+          <p class="lede">
+            Product Spec Extension reads the <code>spec.md</code> and <code>plan.md</code> you
+            already have and generates four audience-specific documents: a stakeholder summary, a
+            full product spec, a delivery plan, and a technical design. Each one ships with a
+            quality checklist. Your source files are never modified.
+          </p>
+
+          <div class="install">
+            <label class="install-label" for="install-cmd">Install with Spec Kit</label>
+            <div class="code-copy">
+              <code id="install-cmd">specify extension add product</code>
+              <button class="copy-btn" data-copy="specify extension add product">Copy</button>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#start">Get started</a>
+            <a class="btn btn-ghost" href="https://github.com/d0whc3r/spec-kit-product/wiki"
+              >Read the docs</a
+            >
+          </div>
+
+          <ul class="hero-badges">
+            <li>4 commands</li>
+            <li>Requires Spec Kit &gt;= 0.2.0</li>
+            <li>MIT licensed</li>
+            <li>No em dashes, plain English</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="what">
+        <div class="container">
+          <h2>Why this exists</h2>
+          <p class="section-lede">
+            <code>spec.md</code> is written for engineers. Product managers, leadership, designers,
+            and cross-functional reviewers need the same information in a different shape. Rewriting
+            that by hand for every feature is busywork and drifts from the canonical spec. This
+            extension generates the audience-specific views for you, from the spec you already
+            wrote.
+          </p>
+          <div class="cards cards-3">
+            <article class="card">
+              <h3>Source stays canonical</h3>
+              <p>
+                <code>spec.md</code> and <code>plan.md</code> are read-only to the extension. Every
+                artifact lands under <code>product/</code> in the same feature directory. Regenerate
+                any time the source changes.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Built-in quality checklist</h3>
+              <p>
+                Every command updates a shared <code>checklist.md</code>. A failed Required item is
+                your signal to regenerate, so the output stays trustworthy.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Proven conventions</h3>
+              <p>
+                Output follows Working Backwards (PRFAQ), Jobs to Be Done, Gherkin BDD, and Lean PRD
+                conventions, in plain English with a strict no em dash style.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="commands">
+        <div class="container">
+          <h2>The four commands</h2>
+          <p class="section-lede">
+            Each command stands alone and reads from a feature directory under
+            <code>specs/</code>. Stop at the level of detail your audience needs.
+          </p>
+
+          <div class="table-wrap">
+            <table class="cmd-table">
+              <thead>
+                <tr>
+                  <th>Command</th>
+                  <th>Reads</th>
+                  <th>Writes</th>
+                  <th>Audience</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>/speckit.product.info</code></td>
+                  <td><code>spec.md</code></td>
+                  <td><code>product/00-info.md</code></td>
+                  <td>Any stakeholder, non-technical</td>
+                </tr>
+                <tr>
+                  <td><code>/speckit.product.spec</code></td>
+                  <td><code>spec.md</code></td>
+                  <td><code>product/10-spec.md</code></td>
+                  <td>Product managers, leadership</td>
+                </tr>
+                <tr>
+                  <td><code>/speckit.product.plan</code></td>
+                  <td><code>plan.md</code>, <code>spec.md</code></td>
+                  <td><code>product/20-plan.md</code></td>
+                  <td>PMs, engineering leads</td>
+                </tr>
+                <tr>
+                  <td><code>/speckit.product.design</code></td>
+                  <td><code>plan.md</code>, <code>spec.md</code>, optional more</td>
+                  <td><code>product/30-design.md</code></td>
+                  <td>Tech leads, senior developers</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">
+            All four also update the shared <code>product/checklist.md</code>. None of them modify
+            <code>spec.md</code>, <code>plan.md</code>, or any other source file. Pass
+            <code>--feature-dir specs/&lt;dir&gt;</code> to target a specific feature instead of the
+            active one.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="start">
+        <div class="container">
+          <h2>Get started in five minutes</h2>
+          <ol class="steps">
+            <li>
+              <h3>Install the extension</h3>
+              <p>The recommended install resolves the latest release:</p>
+              <pre><code>specify extension add product</code></pre>
+              <p>To pin a specific version:</p>
+              <pre><code>specify extension add product --from \
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.5.0/product-0.5.0.zip</code></pre>
+            </li>
+            <li>
+              <h3>Create a feature</h3>
+              <p>
+                Run the Spec Kit core command and fill in the generated
+                <code>spec.md</code>. The product commands refuse to run on an unfilled spec.
+              </p>
+              <pre><code>/speckit.specify</code></pre>
+            </li>
+            <li>
+              <h3>Generate your first artifact</h3>
+              <p>
+                Run the lightest command first to validate direction. It writes
+                <code>product/00-info.md</code> and <code>product/checklist.md</code>.
+              </p>
+              <pre><code>/speckit.product.info</code></pre>
+            </li>
+            <li>
+              <h3>Generate the full set</h3>
+              <p>
+                Once direction is confirmed, generate the spec. After you have a Spec Kit
+                <code>plan.md</code> (run <code>/speckit.plan</code>), add the plan and design
+                views.
+              </p>
+              <pre><code>/speckit.product.spec
+/speckit.product.plan
+/speckit.product.design</code></pre>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="workflow">
+        <div class="container">
+          <h2>How it flows</h2>
+          <p class="section-lede">
+            Input flows from the Spec Kit core commands into this extension. No two commands write
+            to the same output file.
+          </p>
+          <pre class="flow"><code>Spec Kit core               This extension
+---------------             -----------------------------------------------
+
+/speckit.specify --> spec.md --> /speckit.product.info   -> product/00-info.md
+                            \--> /speckit.product.spec   -> product/10-spec.md
+
+/speckit.plan --> plan.md --> /speckit.product.plan      -> product/20-plan.md
+                        \---> /speckit.product.design    -> product/30-design.md
+
+All four also write to:    product/checklist.md</code></pre>
+          <p class="note">
+            The <code>product/</code> folder is self-contained. Zip it, attach it to a doc, paste it
+            into a slide deck. No engineering scaffolding needs to travel with it.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="faq">
+        <div class="container">
+          <h2>Frequently asked questions</h2>
+          <div class="faq">
+            <details>
+              <summary>Do I have to run all four commands?</summary>
+              <p>
+                No. Stop at the level of detail your audience needs. A small change that needs only
+                stakeholder buy-in is just
+                <code>/speckit.product.info</code>. A full feature definition is
+                <code>info</code> plus <code>spec</code>. A feature in active build adds
+                <code>plan</code> and <code>design</code>.
+              </p>
+            </details>
+            <details>
+              <summary>Will it modify my spec.md or plan.md?</summary>
+              <p>
+                No. The source files are read-only to this extension. Every artifact lives under
+                <code>product/</code> in the same feature directory. This is enforced by the command
+                body and the constitution.
+              </p>
+            </details>
+            <details>
+              <summary>What happens to [NEEDS CLARIFICATION] markers in spec.md?</summary>
+              <p>
+                They are surfaced in the generated output as open product questions, never silently
+                resolved. The relevant artifact lists them under a "Key Decisions" or "Risks and
+                Open Product Questions" section.
+              </p>
+            </details>
+            <details>
+              <summary>Does the extension run by itself?</summary>
+              <p>
+                No. The commands are Markdown prompts. They need a Spec Kit-aware assistant to
+                resolve and execute them. The release zip is portable and has no runtime of its own.
+              </p>
+            </details>
+            <details>
+              <summary>How do I upgrade the extension?</summary>
+              <p>
+                Run <code>specify extension upgrade product</code>. The CLI fetches the latest
+                catalog entry and replaces the installed copy. Your generated
+                <code>product/*.md</code> files are not touched.
+              </p>
+            </details>
+            <details>
+              <summary>Does this work in a brownfield codebase?</summary>
+              <p>
+                Yes. The bundled brownfield extension helps reverse-engineer specs from existing
+                code. Once you have a <code>spec.md</code>, the product commands work the same way.
+              </p>
+            </details>
+          </div>
+          <p class="note">
+            More answers in the
+            <a href="https://github.com/d0whc3r/spec-kit-product/wiki/FAQ">full FAQ</a>.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-col">
+          <p class="footer-brand">Product Spec Extension</p>
+          <p class="footer-tag">A Spec Kit extension for product artifacts. MIT licensed.</p>
+        </div>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="https://github.com/d0whc3r/spec-kit-product">Repository</a>
+          <a href="https://github.com/d0whc3r/spec-kit-product/wiki">Docs wiki</a>
+          <a href="https://github.com/d0whc3r/spec-kit-product/issues">Issues</a>
+          <a href="https://github.com/d0whc3r/spec-kit-product/discussions">Discussions</a>
+          <a href="https://github.com/github/spec-kit">Spec Kit core</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

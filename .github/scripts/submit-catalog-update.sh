@@ -83,6 +83,33 @@ EXT_CMDS=$(jq -r '.provides.commands' catalog.json)
 EXT_HOOKS=$(jq -r '.provides.hooks' catalog.json)
 EXT_TAGS=$(jq -r '.tags | join(", ")' catalog.json)
 
+# Key Features come from the per-command descriptions in extension.yml (the
+# canonical list; catalog.json only carries the command count). Parsed with awk
+# rather than yq so the renderer needs no extra tooling in CI. One bullet per
+# command, "`/<name>`: <description>".
+if [ -f extension.yml ]; then
+    EXT_FEATURES=$(awk '
+        /^provides:/ { inprov = 1; next }
+        inprov && /^[a-zA-Z]/ { inprov = 0 }
+        inprov && /^[[:space:]]+commands:/ { incmds = 1; next }
+        incmds && /^[[:space:]]{0,2}[a-zA-Z]/ { incmds = 0 }
+        incmds && /name:/ {
+            name = $0
+            sub(/^.*name:[[:space:]]*/, "", name)
+            gsub(/"/, "", name)
+        }
+        incmds && /description:/ {
+            desc = $0
+            sub(/^.*description:[[:space:]]*/, "", desc)
+            gsub(/^"|"$/, "", desc)
+            printf "- `/%s`: %s\n", name, desc
+        }
+    ' extension.yml)
+fi
+if [ -z "${EXT_FEATURES:-}" ]; then
+    EXT_FEATURES="- ${EXT_CMDS} commands under \`/speckit.product.*\`. See ${EXT_DOCS}."
+fi
+
 CATALOG_URL="https://raw.githubusercontent.com/${UPSTREAM_REPO}/main/extensions/catalog.community.json"
 HAS_ENTRY=$(curl -fsSL "$CATALOG_URL" | jq -r --arg id "$EXT_ID" '.extensions[$id] // empty' || echo "")
 
@@ -97,10 +124,11 @@ fi
 NEW_ISSUE_URL="https://github.com/${UPSTREAM_REPO}/issues/new/choose"
 TITLE_QUERY="${TITLE// /+}"
 
-PROPOSED_ENTRY=$(jq --arg v "$VERSION" --arg u "$DOWNLOAD_URL" \
-    '{($id): (. + {version: $v, download_url: $u, verified: false, downloads: 0, stars: 0})}
-     | .[$id] |= del(.created_at, .updated_at)' \
-    --arg id "$EXT_ID" catalog.json)
+# Keep created_at/updated_at: the upstream catalog entries carry them and the
+# submission template's example includes them, so reviewers expect them present.
+PROPOSED_ENTRY=$(jq --arg v "$VERSION" --arg u "$DOWNLOAD_URL" --arg id "$EXT_ID" \
+    '{($id): (. + {version: $v, download_url: $u, verified: false, downloads: 0, stars: 0})}' \
+    catalog.json)
 
 cat >"$OUTPUT_FILE" <<EOF
 # Upstream catalog issue — ${ACTION} ${EXT_NAME} v${VERSION}
@@ -175,6 +203,10 @@ ${EXT_CHANGELOG}
 
 ${EXT_SPECKIT}
 
+### Required Tools (optional)
+
+None. This extension is plain Markdown command and template text. It adds no external tool or runtime dependencies beyond Spec Kit itself.
+
 ### Number of Commands
 
 ${EXT_CMDS}
@@ -187,9 +219,9 @@ ${EXT_HOOKS}
 
 ${EXT_TAGS}
 
-### Release type
+### Key Features
 
-\`${RELEASE_TYPE}\`
+${EXT_FEATURES}
 
 ### Testing Checklist
 
@@ -208,11 +240,41 @@ ${EXT_TAGS}
 - [x] All command files exist and are properly formatted
 - [x] Extension ID follows naming conventions (lowercase-with-hyphens)
 
+### Testing Details
+
+**Tested by the \`${EXT_REPO}\` release pipeline (\`${RELEASE_TYPE}\`):**
+
+- Manifest validation (\`pnpm run validate\`) confirms \`extension.yml\` and \`catalog.json\` agree on version, command count, and hook count.
+- Content lint (\`pnpm run lint:content\`) enforces the output style rules every command must follow.
+- The release archive \`product-${VERSION}.zip\` is built and attached to the GitHub release at tag \`${GIT_TAG}\`.
+- Install is exercised from the published download URL above.
+
+**Test project:** the extension is dogfooded on this repository's own \`specs/*/product/\` artifacts, generated from real \`spec.md\` and \`plan.md\` files.
+
+### Example Usage
+
+\`\`\`bash
+# Install the extension from the release archive
+specify extension add ${EXT_ID} --from ${DOWNLOAD_URL}
+
+# Generate the stakeholder summary from your spec.md
+/speckit.product.info
+
+# Generate the product spec, product plan, and technical design
+/speckit.product.spec
+/speckit.product.plan
+/speckit.product.design
+\`\`\`
+
 ### Proposed Catalog Entry
 
 \`\`\`json
 ${PROPOSED_ENTRY}
 \`\`\`
+
+### Additional Context
+
+Full user documentation lives in the project wiki and website (${EXT_DOCS}). Source repository: ${EXT_REPO}.
 EOF
 
 echo "[submit-catalog-update] OK: wrote ${ACTION} v${VERSION} document to ${OUTPUT_FILE}"

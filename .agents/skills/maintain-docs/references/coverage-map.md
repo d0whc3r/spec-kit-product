@@ -227,6 +227,36 @@ Re-check whenever: the version bumps. The release pipeline edits this
 file; the skill only verifies the top entry version is consistent and
 does not edit it unless explicitly asked.
 
+## Website
+
+### `web/index.html`
+
+Documents: the public, short front door to the extension. A single page
+covering the purpose, the four commands, getting started, the workflow,
+and a FAQ subset. Deployed to GitHub Pages.
+
+Asserts:
+
+- The hero purpose paragraph (matches `extension.yml.extension.description`
+  and the `README.md` lead).
+- The hero badges: command count, `Requires Spec Kit >= 0.2.0`, license.
+- The four-row command table (same command names, reads, writes, and
+  audiences as `docs/Home.md`; HTML form, not byte-equivalent).
+- The install snippets and the pinned release URL (must match the version
+  in `README.md` and `docs/Getting-Started.md`).
+- The `product/` output filenames (`00-info.md`, `10-spec.md`,
+  `20-plan.md`, `30-design.md`, `checklist.md`).
+- The FAQ entries (a subset of `docs/FAQ.md`; must not contradict it).
+- The repository, wiki, issues, and discussions links.
+
+Edit content only. Do not restyle `web/styles.css` or rewrite
+`web/script.js`. `web/README.md` is a repo-only meta-doc about the folder,
+maintained like `docs/README.md`.
+
+Re-check whenever: a command is added or removed; the description in
+`extension.yml` changes; the version bumps; an FAQ answer in
+`docs/FAQ.md` changes in a way the website echoes.
+
 ## Out of scope (do not maintain as user docs)
 
 - `CONTRIBUTING.md` — the contributor home: repo layout, dev install,
@@ -245,11 +275,12 @@ user-facing page that might need a touch.
 
 | Canonical file                            | Pages to re-check                                                                                   |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `extension.yml` (commands/hooks/version)  | `README.md`, `docs/Home.md`, `docs/Commands.md`, `docs/Getting-Started.md`, `docs/Architecture.md`, `CHANGELOG.md` |
-| `extension.yml.extension.description`     | `README.md`, `docs/Home.md`                                                                         |
-| `catalog.json` (version, counts)          | `README.md`, `docs/Getting-Started.md`                                                              |
+| `extension.yml` (commands/hooks/version)  | `README.md`, `docs/Home.md`, `docs/Commands.md`, `docs/Getting-Started.md`, `docs/Architecture.md`, `CHANGELOG.md`, `web/index.html` |
+| `extension.yml.extension.description`     | `README.md`, `docs/Home.md`, `web/index.html`                                                       |
+| `catalog.json` (version, counts)          | `README.md`, `docs/Getting-Started.md`, `web/index.html`                                            |
 | `commands/speckit.product.<verb>.md`      | `docs/Commands.md`, `docs/Troubleshooting.md`, `docs/Examples.md`, `docs/Architecture.md`           |
 | `templates/<artifact>-template.md`        | `docs/Commands.md` (output sections), `docs/Examples.md` (example bodies)                            |
 | `extension.yml.hooks`                     | `docs/Commands.md`, `docs/Architecture.md`, `docs/Workflow.md`                                       |
+| `docs/FAQ.md` (echoed answers)            | `web/index.html` (FAQ subset)                                                                       |
 | `.specify/memory/constitution.md` §III    | `docs/Style-Guide.md`, `docs/FAQ.md` (only the user-visible output style, not governance)            |
 | New file at `docs/<Page>.md`              | `docs/Home.md`, `docs/_Sidebar.md`, `docs/README.md`, `README.md` (if linked there)                  |

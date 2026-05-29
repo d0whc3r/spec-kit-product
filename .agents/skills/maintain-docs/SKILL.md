@@ -1,7 +1,7 @@
 ---
 name: "maintain-docs"
-description: "Keep the user-facing extension docs (the wiki under docs/ plus the root README and CHANGELOG) in sync with what the extension actually does. Invoke whenever someone asks to update the docs, sync the wiki, refresh documentation, audit docs for drift, document a new command, or after any change under commands/, templates/, extension.yml, or catalog.json. Use it before merging structural changes, even if the user only said 'update the docs' in passing. It writes for the person who USES the extension: what each command does, how to run it, what it produces, and how the pieces fit together. It never documents how the repo is built or released; that lives in CONTRIBUTING.md."
-compatibility: "Requires the spec-kit-product repo layout: extension.yml, catalog.json, commands/, templates/, docs/."
+description: "Keep the user-facing extension docs (the wiki under docs/, the public website under web/, plus the root README and CHANGELOG) in sync with what the extension actually does. Invoke whenever someone asks to update the docs, sync the wiki, refresh the website, audit docs for drift, document a new command, or after any change under commands/, templates/, extension.yml, or catalog.json. Use it before merging structural changes, even if the user only said 'update the docs' in passing. It writes for the person who USES the extension: what each command does, how to run it, what it produces, and how the pieces fit together. It never documents how the repo is built or released; that lives in CONTRIBUTING.md."
+compatibility: "Requires the spec-kit-product repo layout: extension.yml, catalog.json, commands/, templates/, docs/, web/."
 metadata:
   author: "spec-kit-product"
   scope: "repo-local"
@@ -9,15 +9,20 @@ metadata:
 
 # Maintain User Docs
 
-Keep the wiki under `docs/` and the user-facing root markdown in sync with
-what the extension actually does for the people who use it. The canonical
-truth lives in code-adjacent files (`extension.yml`, `catalog.json`,
-`commands/`, `templates/`). The wiki is a derived, human-readable view of
-those files. Drift between the two is a bug.
+Keep the wiki under `docs/`, the public website under `web/`, and the
+user-facing root markdown in sync with what the extension actually does for
+the people who use it. The canonical truth lives in code-adjacent files
+(`extension.yml`, `catalog.json`, `commands/`, `templates/`). The wiki and
+the website are both derived, human-readable views of those files. Drift
+between a derived view and a source is a bug.
 
-This skill audits both sides, reports the drift, and edits the docs. It
-never edits the canonical sources. If a doc and a source disagree, the
-source wins.
+The website (`web/`) is the short public front door; the wiki is the
+long-form reference. They draw on the same canonical facts, so they must
+agree with each other as well as with the sources.
+
+This skill audits every side, reports the drift, and edits the docs and the
+website. It never edits the canonical sources. If a doc and a source
+disagree, the source wins.
 
 ## Who these docs are for
 
@@ -57,7 +62,17 @@ templates/*.md     ┘   detector          docs/Workflow.md
                                          README.md      (front door)
                                          WORKFLOW.md    (long-form usage narrative)
                                          CHANGELOG.md   (version coherence only)
+                                         web/index.html (public landing site)
 ```
+
+The website under `web/` is a single hand-authored page (`index.html`,
+`styles.css`, `script.js`) deployed to GitHub Pages. This skill owns its
+**content**, not its visual design: keep the command list, the Command /
+Reads / Writes / Audience table, the install and usage snippets, the
+version pin, the `product/` output filenames, and the repo and wiki links
+in step with the canonical sources and the wiki. Do not redesign the
+layout or restyle it; touch only the text that drifted. `web/README.md`
+explains the folder and is maintained like `docs/README.md`.
 
 `docs/README.md` is a repo-only meta-doc about the `docs/` folder itself
 (it is excluded from the published wiki). Maintain only its reading-order
@@ -161,10 +176,11 @@ bash .agents/skills/maintain-docs/scripts/detect_drift.sh
 ```
 
 It prints a machine-readable report of common drift classes: command
-count mismatch, command names missing from `docs/Commands.md`, hook list
-mismatch between `extension.yml` and the docs, version mismatch across
-`extension.yml` / `catalog.json` / `CHANGELOG.md` / install URLs, em dash
-characters, and broken intra-wiki links.
+count mismatch, command names missing from `docs/Commands.md` or
+`web/index.html`, hook list mismatch between `extension.yml` and the docs,
+version mismatch across `extension.yml` / `catalog.json` / `CHANGELOG.md` /
+install URLs (including the website install URL), em dash characters, and
+broken intra-wiki links.
 
 After the script, do a second-pass semantic audit it cannot do:
 
@@ -178,10 +194,18 @@ After the script, do a second-pass semantic audit it cannot do:
 4. Confirm `docs/_Sidebar.md` lists every page that exists under `docs/`
    and nothing else.
 5. Confirm the "Command / Reads / Writes / Audience" table in `README.md`,
-   `docs/Home.md`, and `docs/Commands.md` is byte-equivalent.
+   `docs/Home.md`, and `docs/Commands.md` is byte-equivalent. The same
+   table appears in `web/index.html` as HTML; it is not byte-equivalent
+   there, but it must list the same command names, reads, writes, and
+   audiences.
 6. Confirm `docs/Examples.md` references the same output filenames the
    templates produce (`00-info.md`, `10-spec.md`, etc.).
-7. **Scope audit.** Scan every in-scope page for out-of-scope content
+7. Confirm `web/index.html` agrees with the wiki on the install and usage
+   snippets, the version pin and `requires.speckit_version` badge, the
+   `product/` output filenames, and the hero and FAQ claims. It is a
+   short subset of the wiki, so it need not cover every page, but nothing
+   it states may contradict the canonical sources.
+8. **Scope audit.** Scan every in-scope page for out-of-scope content
    (release pipeline, CI, `.github/`, dev install, repo tree, the
    four-agent rule, constitution governance). Flag each occurrence. The
    fix is to remove it and, if a reader genuinely needs that information,
@@ -215,16 +239,23 @@ Style rules every edit must obey (from `.specify/memory/constitution.md`
   repo URL to `CONTRIBUTING.md`.
 - Command names in prose are wrapped in backticks.
 - The "Command / Reads / Writes / Audience" table is copied verbatim
-  across `README.md`, `docs/Home.md`, and `docs/Commands.md`.
+  across `README.md`, `docs/Home.md`, and `docs/Commands.md`. The same
+  facts appear in `web/index.html` as an HTML table; keep its rows in
+  step, but it is HTML markup, not a byte copy.
+- The website is content-only for this skill. Edit the text inside
+  `web/index.html`; do not restyle `web/styles.css` or rewrite
+  `web/script.js`.
 
 When you add a new wiki page, also add it to `docs/_Sidebar.md` (correct
 order), the start-here table on `docs/Home.md` if it belongs there, and
-the reading-order list in `docs/README.md`.
+the reading-order list in `docs/README.md`. A new command also needs a
+card or table row on `web/index.html`.
 
-When the version bumps, the wiki touch points are the install URL line in
-`README.md` and the pinned-version snippet in `docs/Getting-Started.md`.
-`catalog.json` and `extension.yml` are canonical and the release pipeline
-owns them; do not edit them here.
+When the version bumps, the touch points are the install URL line in
+`README.md`, the pinned-version snippet in `docs/Getting-Started.md`, and
+the pinned install URL plus the "Requires Spec Kit" badge in
+`web/index.html`. `catalog.json` and `extension.yml` are canonical and the
+release pipeline owns them; do not edit them here.
 
 ### Phase 6: Verify
 

@@ -46,8 +46,9 @@ else
   ok "extension.yml and catalog.json agree on version $ver_ext"
 fi
 
-# install URL pins in README and Getting-Started should match version
-for f in README.md docs/Getting-Started.md; do
+# install URL pins in README, Getting-Started, and the web landing page
+# should match version
+for f in README.md docs/Getting-Started.md web/index.html; do
   if [[ -f "$f" ]]; then
     if grep -qE "releases/download/v[0-9]+\.[0-9]+\.[0-9]+/product-[0-9]+\.[0-9]+\.[0-9]+\.zip" "$f"; then
       pinned=$(grep -oE "releases/download/v[0-9]+\.[0-9]+\.[0-9]+" "$f" \
@@ -207,6 +208,21 @@ for f in docs/*.md *.md; do
 done
 
 ok "intra-wiki link check done"
+
+# ---- 8. web landing page coverage ----------------------------------
+#
+# web/index.html is a derived view of the same canonical sources as the
+# wiki. It must mention every command. The version-pin check above
+# already covers its install URL.
+
+if [[ -f web/index.html ]]; then
+  for name in "${cmd_names[@]}"; do
+    if ! grep -q "/$name\b" web/index.html; then
+      note "web/index.html missing reference to /$name"
+    fi
+  done
+  ok "web/index.html command coverage checked"
+fi
 
 # ---- summary -------------------------------------------------------
 

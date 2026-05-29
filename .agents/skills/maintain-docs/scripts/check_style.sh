@@ -12,11 +12,11 @@ fi
 issues=0
 note() { echo "[style] $*"; issues=$((issues + 1)); }
 
-# 1. em dash anywhere in docs/ or root *.md
+# 1. em dash anywhere in docs/, root *.md, or the web landing page
 while IFS= read -r line; do
   note "$line"
 done < <(grep -nP '\xE2\x80\x94' \
-           docs/*.md *.md 2>/dev/null \
+           docs/*.md *.md web/*.html 2>/dev/null \
            | grep -vE '^CHANGELOG\.md:' || true)
 
 # 2. en dash in prose (allow numeric ranges)
@@ -26,7 +26,7 @@ while IFS= read -r line; do
     note "en dash in prose: $line"
   fi
 done < <(grep -nP '\xE2\x80\x93' \
-           docs/*.md *.md 2>/dev/null || true)
+           docs/*.md *.md web/*.html 2>/dev/null || true)
 
 # 3. trailing whitespace
 while IFS= read -r line; do
