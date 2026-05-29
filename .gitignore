@@ -2,6 +2,7 @@
 dist/
 .wiki-staging/
 upstream-catalog-issue-*.md
+.specify/
 
 # Editor and OS metadata
 .DS_Store

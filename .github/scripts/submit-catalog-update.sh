@@ -275,6 +275,8 @@ ${PROPOSED_ENTRY}
 ### Additional Context
 
 Full user documentation lives on the project website (${EXT_HOMEPAGE}) and the project wiki, with reference docs at ${EXT_DOCS}. Source repository: ${EXT_REPO}.
+
+A complete, real worked example (the Spec Kit inputs and all four generated product artifacts) is committed at ${EXT_REPO}/tree/main/examples so reviewers and users can see exactly what each command reads and writes.
 EOF
 
 echo "[submit-catalog-update] OK: wrote ${ACTION} v${VERSION} document to ${OUTPUT_FILE}"
