@@ -1,6 +1,7 @@
 # Build artifacts
 dist/
 .wiki-staging/
+upstream-catalog-issue-*.md
 
 # Editor and OS metadata
 .DS_Store

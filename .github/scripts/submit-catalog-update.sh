@@ -16,24 +16,46 @@
 #   OUTPUT_FILE    Where to write the document. Defaults to
 #                  "upstream-catalog-issue-v<version>.md" in the cwd.
 #
+# Run locally:
+#   The release pipeline sets VERSION and GITHUB_REPOSITORY for you. Locally,
+#   VERSION defaults to catalog.json .version and GITHUB_REPOSITORY is derived
+#   from the `origin` git remote, so this just works:
+#       bash .github/scripts/submit-catalog-update.sh        # or: pnpm run catalog:issue
+#   The rendered document lands at upstream-catalog-issue-v<version>.md.
+#
 # Usage:
-#   submit-catalog-update.sh <version> [release_type] [git_tag]
-#   release_type defaults to "release"; git_tag defaults to "v<version>".
+#   submit-catalog-update.sh [version] [release_type] [git_tag]
+#   version defaults to catalog.json .version; release_type to "release";
+#   git_tag to "v<version>".
 
 set -euo pipefail
 
-VERSION="${1:-}"
+if [ ! -f catalog.json ]; then
+    echo "[submit-catalog-update] FAIL: catalog.json not found (run from repo root)" >&2
+    exit 1
+fi
+
+VERSION="${1:-$(jq -r .version catalog.json)}"
 RELEASE_TYPE="${2:-release}"
 GIT_TAG="${3:-v${VERSION}}"
 UPSTREAM_REPO="${UPSTREAM_REPO:-github/spec-kit}"
 
-if [ -z "$VERSION" ]; then
-    echo "Usage: $0 <version> [release_type] [git_tag]" >&2
+if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+    echo "Usage: $0 [version] [release_type] [git_tag]" >&2
     exit 1
 fi
 
+# In CI, GitHub sets GITHUB_REPOSITORY. Locally, derive owner/repo from the
+# origin remote (handles both git@host:owner/repo.git and https URLs).
 if [ -z "${GITHUB_REPOSITORY:-}" ]; then
-    echo "[submit-catalog-update] FAIL: GITHUB_REPOSITORY not set" >&2
+    remote_url=$(git remote get-url origin 2>/dev/null || echo "")
+    if [ -n "$remote_url" ]; then
+        GITHUB_REPOSITORY=$(printf '%s' "$remote_url" | sed -E 's#\.git$##; s#^.*[:/]([^/]+/[^/]+)$#\1#')
+    fi
+fi
+
+if [ -z "${GITHUB_REPOSITORY:-}" ]; then
+    echo "[submit-catalog-update] FAIL: GITHUB_REPOSITORY not set and no git remote 'origin' found" >&2
     exit 1
 fi
 
@@ -46,11 +68,6 @@ for tool in jq curl; do
         exit 1
     fi
 done
-
-if [ ! -f catalog.json ]; then
-    echo "[submit-catalog-update] FAIL: catalog.json not found" >&2
-    exit 1
-fi
 
 EXT_ID=$(jq -r '.id' catalog.json)
 EXT_NAME=$(jq -r '.name' catalog.json)
