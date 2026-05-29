@@ -7,7 +7,7 @@ extension:
   description: "Generates PRFAQ, Lean PRD, stakeholder summaries, and technical designs from engineering specs."
   author: spec-kit-product contributors
   repository: https://github.com/d0whc3r/spec-kit-product
-  homepage: https://github.com/d0whc3r/spec-kit-product
+  homepage: https://d0whc3r.github.io/spec-kit-product/
   license: MIT
 
 requires:

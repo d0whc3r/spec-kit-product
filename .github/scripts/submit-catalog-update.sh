@@ -274,7 +274,7 @@ ${PROPOSED_ENTRY}
 
 ### Additional Context
 
-Full user documentation lives in the project wiki and website (${EXT_DOCS}). Source repository: ${EXT_REPO}.
+Full user documentation lives on the project website (${EXT_HOMEPAGE}) and the project wiki, with reference docs at ${EXT_DOCS}. Source repository: ${EXT_REPO}.
 EOF
 
 echo "[submit-catalog-update] OK: wrote ${ACTION} v${VERSION} document to ${OUTPUT_FILE}"
