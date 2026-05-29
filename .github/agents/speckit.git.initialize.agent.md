@@ -1,12 +1,10 @@
 ---
-name: speckit-git-initialize
 description: Initialize a Git repository with an initial commit
-compatibility: Requires spec-kit project structure with .specify/ directory
-metadata:
-  author: github-spec-kit
-  source: git:commands/speckit.git.initialize.md
 ---
 
+
+<!-- Extension: git -->
+<!-- Config: .specify/extensions/git/ -->
 # Initialize Git Repository
 
 Initialize a Git repository in the current project directory if one does not already exist.
