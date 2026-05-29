@@ -3,7 +3,7 @@ schema_version: "1.0"
 extension:
   id: product
   name: "Product Spec Extension"
-  version: "0.5.0"
+  version: "0.5.1"
   description: "Generates PRFAQ, Lean PRD, stakeholder summaries, and technical designs from engineering specs."
   author: spec-kit-product contributors
   repository: https://github.com/d0whc3r/spec-kit-product

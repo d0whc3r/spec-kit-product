@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.1](https://github.com/d0whc3r/spec-kit-product/compare/v0.5.0...v0.5.1) (2026-05-29)
+
+
+### Bug Fixes
+
+* streamline tags formatting in catalog.json ([40b77eb](https://github.com/d0whc3r/spec-kit-product/commit/40b77eb261cf3b6ee1860a266d6418fe3683864b))
+* update deploy action to v5 in GitHub Pages workflow ([089d3bb](https://github.com/d0whc3r/spec-kit-product/commit/089d3bb4f0d16b2e56faf0aba5e203a920f24ff1))
+
 # [0.5.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.4.0...v0.5.0) (2026-05-29)
 
 
