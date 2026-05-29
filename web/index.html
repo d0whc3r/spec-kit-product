@@ -31,8 +31,9 @@
         <ul class="nav-links" id="nav-links">
           <li><a href="#what">What it does</a></li>
           <li><a href="#commands">Commands</a></li>
+          <li><a href="#examples">Examples</a></li>
           <li><a href="#start">Get started</a></li>
-          <li><a href="#workflow">Workflow</a></li>
+          <li><a href="#install-help">Install help</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li>
             <a class="nav-cta" href="https://github.com/d0whc3r/spec-kit-product">GitHub</a>
@@ -54,15 +55,67 @@
           </p>
 
           <div class="install">
-            <label class="install-label" for="install-cmd">Install with Spec Kit</label>
-            <div class="code-copy">
-              <code id="install-cmd">specify extension add product</code>
-              <button class="copy-btn" data-copy="specify extension add product">Copy</button>
+            <div class="install-head">
+              <span class="install-label">Install with Spec Kit</span>
+              <div class="tabs" role="tablist" aria-label="Install method">
+                <button
+                  id="tab-install-direct"
+                  class="tab is-active"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="panel-install-direct"
+                >
+                  Direct install
+                </button>
+                <button
+                  id="tab-install-catalog"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-install-catalog"
+                >
+                  Via catalog
+                </button>
+              </div>
+            </div>
+
+            <div
+              id="panel-install-direct"
+              class="tab-panel is-active"
+              role="tabpanel"
+              aria-labelledby="tab-install-direct"
+            >
+              <pre data-copy><code>specify extension add product \
+  --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.5.3/product-0.5.3.zip</code></pre>
+              <p class="install-hint">
+                Works with zero configuration. This is the most reliable path and the same one you
+                use to pin a version.
+              </p>
+            </div>
+
+            <div
+              id="panel-install-catalog"
+              class="tab-panel"
+              role="tabpanel"
+              aria-labelledby="tab-install-catalog"
+              hidden
+            >
+              <pre data-copy><code>specify extension catalog add \
+  https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json \
+  --name community --install-allowed
+specify extension add product</code></pre>
+              <p class="install-hint">
+                Prefer installing and upgrading by name? Approve the community catalog once, then
+                <code>add</code> and <code>upgrade</code> resolve
+                <code>product</code> automatically. See <a href="#install-help">install help</a> for
+                why this is needed.
+              </p>
             </div>
           </div>
 
           <div class="hero-actions">
             <a class="btn btn-primary" href="#start">Get started</a>
+            <a class="btn btn-ghost" href="#examples">See an example</a>
             <a class="btn btn-ghost" href="https://github.com/d0whc3r/spec-kit-product/wiki"
               >Read the docs</a
             >
@@ -169,17 +222,280 @@
         </div>
       </section>
 
-      <section class="section" id="start">
+      <section class="section" id="examples">
+        <div class="container">
+          <h2>See it in action</h2>
+          <p class="section-lede">
+            One engineering <code>spec.md</code> goes in. Four audience-specific artifacts come out,
+            each with the open clarifications surfaced and the style rules enforced. Below is a
+            worked example for a fictional feature, bulk export of dashboards to PDF.
+          </p>
+
+          <div class="example">
+            <div class="example-input">
+              <div class="example-head">
+                <span class="example-tag">Input</span>
+                <code>specs/001-bulk-export/spec.md</code>
+              </div>
+              <pre data-copy><code># Feature: Bulk Dashboard Export
+
+## Summary
+
+Lumen users currently export one dashboard at a time. Power users on the
+Analytics team build weekly reports by exporting 20+ dashboards manually,
+one PDF at a time. We want a single action that exports any selection of
+dashboards into one combined PDF or a zip of PDFs.
+
+## Acceptance
+
+- A user can select multiple dashboards in the library view.
+- They trigger one export action.
+- They receive a single combined PDF, or a zip of individual PDFs.
+
+## Clarifications
+
+- 2026-04-12: confirmed v1 supports up to 50 dashboards per export.
+  Above that, the export is queued and emailed.
+
+## [NEEDS CLARIFICATION]
+
+- Branding. Should exports use the workspace logo, a Lumen logo, or both?</code></pre>
+            </div>
+
+            <div class="example-output">
+              <div class="example-head">
+                <span class="example-tag example-tag-out">Output</span>
+                <span>Pick a command to see what it generates</span>
+              </div>
+
+              <div class="tabs tabs-wrap" role="tablist" aria-label="Generated artifact">
+                <button
+                  id="tab-ex-info"
+                  class="tab is-active"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="panel-ex-info"
+                >
+                  /speckit.product.info
+                </button>
+                <button
+                  id="tab-ex-spec"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex-spec"
+                >
+                  /speckit.product.spec
+                </button>
+                <button
+                  id="tab-ex-plan"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex-plan"
+                >
+                  /speckit.product.plan
+                </button>
+                <button
+                  id="tab-ex-design"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex-design"
+                >
+                  /speckit.product.design
+                </button>
+                <button
+                  id="tab-ex-checklist"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex-checklist"
+                >
+                  checklist.md
+                </button>
+              </div>
+
+              <div
+                id="panel-ex-info"
+                class="tab-panel is-active"
+                role="tabpanel"
+                aria-labelledby="tab-ex-info"
+              >
+                <p class="example-file">
+                  Writes <code>product/00-info.md</code> for any stakeholder.
+                </p>
+                <pre data-copy><code># Product Info: Bulk Dashboard Export
+
+## Headline
+
+Analytics leads and customer success teams can now export any selection of
+their dashboards in a single action, as one combined PDF or a zip of PDFs.
+What used to take half an hour of manual work now takes one click.
+
+## What is Changing
+
+- Users can select more than one dashboard at a time.
+- A new export action handles the whole selection.
+- Exports of up to 50 dashboards run inline; larger jobs are emailed.
+
+## Key Decisions
+
+> **Still open**: answered before this feature is built.
+>
+> - Should exports use the workspace logo, the Lumen logo, or both?</code></pre>
+                <p class="example-note">
+                  The open clarification is surfaced, not silently resolved.
+                </p>
+              </div>
+
+              <div
+                id="panel-ex-spec"
+                class="tab-panel"
+                role="tabpanel"
+                aria-labelledby="tab-ex-spec"
+                hidden
+              >
+                <p class="example-file">
+                  Writes <code>product/10-spec.md</code> for PMs and leadership.
+                </p>
+                <pre data-copy><code>## Problem Statement (Job to Be Done)
+
+> When I need to share a weekly snapshot of many dashboards with my team
+> or a customer, I want to export the full set in one action, so I can
+> spend my time on analysis instead of clicking export fifty times.
+
+## Use Cases
+
+### Use Case 1: Combined PDF export
+
+**Given** I have selected ten dashboards in the library view.
+**When** I trigger the bulk export action with the combined PDF option.
+**Then** I receive a single PDF containing all ten dashboards in order.</code></pre>
+                <p class="example-note">
+                  Three lines per scenario, each a full sentence. The Gherkin shape the checklist
+                  enforces.
+                </p>
+              </div>
+
+              <div
+                id="panel-ex-plan"
+                class="tab-panel"
+                role="tabpanel"
+                aria-labelledby="tab-ex-plan"
+                hidden
+              >
+                <p class="example-file">
+                  Writes <code>product/20-plan.md</code> for PMs and engineering leads.
+                </p>
+                <pre data-copy><code>## Goals
+
+- Reduce time to produce a weekly multi-dashboard packet from thirty
+  minutes to under one minute for jobs up to fifty dashboards.
+- Cap inline export latency at fifteen seconds at the ninety-fifth
+  percentile for fifty dashboards.
+
+## Delivery Phases
+
+**Phase 1: Multi-select in the library**
+
+- Users can select more than one dashboard at a time.
+
+**Phase 2: Inline combined export**
+
+- A new action produces a combined document for selections up to fifty.</code></pre>
+                <p class="example-note">
+                  No file paths, no code, no time estimates. The voice a PM can read aloud.
+                </p>
+              </div>
+
+              <div
+                id="panel-ex-design"
+                class="tab-panel"
+                role="tabpanel"
+                aria-labelledby="tab-ex-design"
+                hidden
+              >
+                <p class="example-file">
+                  Writes <code>product/30-design.md</code> for tech leads and senior developers.
+                </p>
+                <pre data-copy><code>## Architectural Approach
+
+The bulk export feature extends the existing single-dashboard export path
+by adding a selection-set entry point and a renderer pool. Above a
+configurable limit, the export is enqueued to the background job runner
+and a delivery worker emails the artifact when complete.
+
+## Affected Modules
+
+| Module            | Change type | Responsibility                          |
+| ----------------- | ----------- | --------------------------------------- |
+| dashboard-library | modifies    | Adds multi-select state and bulk button.|
+| export-service    | modifies    | Accepts a list of ids, returns output.  |
+| delivery-mailer   | adds        | New worker that emails completed jobs.  |</code></pre>
+                <p class="example-note">
+                  Component-level detail. No code, no line-by-line implementation.
+                </p>
+              </div>
+
+              <div
+                id="panel-ex-checklist"
+                class="tab-panel"
+                role="tabpanel"
+                aria-labelledby="tab-ex-checklist"
+                hidden
+              >
+                <p class="example-file">
+                  Every command updates its section of the shared <code>product/checklist.md</code>.
+                </p>
+                <pre data-copy><code># Quality Checklist: Bulk Dashboard Export
+
+## Info
+- [x] Headline present.
+- [x] No em dash.
+- [x] No implementation detail.
+
+## Spec
+- [x] Use Cases follow Given/When/Then with one line each.
+- [ ] No AI tell filler phrases. &larr; MANUAL REVIEW REQUIRED
+
+## Plan
+- [x] Delivery Phases present.
+- [x] No time estimates.</code></pre>
+                <p class="example-note">
+                  Items that need a human eye are flagged, not silently passed.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p class="note">
+            Want the full input and every section of every output? See the
+            <a href="https://github.com/d0whc3r/spec-kit-product/wiki/Examples">Examples page</a> in
+            the wiki.
+          </p>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="start">
         <div class="container">
           <h2>Get started in five minutes</h2>
           <ol class="steps">
             <li>
               <h3>Install the extension</h3>
-              <p>The recommended install resolves the latest release:</p>
-              <pre><code>specify extension add product</code></pre>
-              <p>To pin a specific version:</p>
-              <pre><code>specify extension add product --from \
-  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.5.3/product-0.5.3.zip</code></pre>
+              <p>
+                Install directly from the latest release. This needs no catalog setup and is the
+                recommended path:
+              </p>
+              <pre data-copy><code>specify extension add product \
+  --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.5.3/product-0.5.3.zip</code></pre>
+              <p>Confirm it registered:</p>
+              <pre data-copy><code>cat .specify/extensions/.registry   # 'product' entry present
+ls .specify/extensions/product      # extension files present</code></pre>
+              <p class="step-aside">
+                Prefer <code>specify extension add product</code> by name? That needs the community
+                catalog approved first. See <a href="#install-help">install help</a>.
+              </p>
             </li>
             <li>
               <h3>Create a feature</h3>
@@ -187,7 +503,7 @@
                 Run the Spec Kit core command and fill in the generated
                 <code>spec.md</code>. The product commands refuse to run on an unfilled spec.
               </p>
-              <pre><code>/speckit.specify</code></pre>
+              <pre data-copy><code>/speckit.specify</code></pre>
             </li>
             <li>
               <h3>Generate your first artifact</h3>
@@ -195,7 +511,7 @@
                 Run the lightest command first to validate direction. It writes
                 <code>product/00-info.md</code> and <code>product/checklist.md</code>.
               </p>
-              <pre><code>/speckit.product.info</code></pre>
+              <pre data-copy><code>/speckit.product.info</code></pre>
             </li>
             <li>
               <h3>Generate the full set</h3>
@@ -204,7 +520,7 @@
                 <code>plan.md</code> (run <code>/speckit.plan</code>), add the plan and design
                 views.
               </p>
-              <pre><code>/speckit.product.spec
+              <pre data-copy><code>/speckit.product.spec
 /speckit.product.plan
 /speckit.product.design</code></pre>
             </li>
@@ -212,7 +528,7 @@
         </div>
       </section>
 
-      <section class="section section-alt" id="workflow">
+      <section class="section" id="workflow">
         <div class="container">
           <h2>How it flows</h2>
           <p class="section-lede">
@@ -236,10 +552,84 @@ All four also write to:    product/checklist.md</code></pre>
         </div>
       </section>
 
+      <section class="section section-alt" id="install-help">
+        <div class="container">
+          <h2>Install help</h2>
+          <p class="section-lede">
+            If <code>specify extension add product</code> stops with the error below, this is the
+            fix. It is expected behavior, not a broken release.
+          </p>
+
+          <div class="callout callout-error">
+            <p class="callout-title">The error you may see</p>
+            <pre><code>Error: 'product' is available in the 'community' catalog but installation
+is not allowed from that catalog.
+
+To enable installation, add 'product' to an approved catalog
+(install_allowed: true) in .specify/extension-catalogs.yml.</code></pre>
+          </div>
+
+          <p>
+            Spec Kit ships the community catalog as <strong>discovery only</strong>. It carries
+            <code>install_allowed: false</code> by design, so the CLI can list community extensions
+            but will not install one until you opt in. You have two ways to opt in.
+          </p>
+
+          <div class="cards cards-2">
+            <article class="card">
+              <h3>Option A: Direct install (recommended)</h3>
+              <p>
+                Install straight from the release archive. No catalog config, always works, and it
+                is the only way to pin a specific version.
+              </p>
+              <pre data-copy><code>specify extension add product \
+  --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.5.3/product-0.5.3.zip</code></pre>
+              <p class="example-note">
+                To upgrade later, run the same command with a newer version URL.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Option B: Approve the community catalog</h3>
+              <p>
+                Do this once if you want to install and upgrade by name. It adds the catalog with
+                <code>install_allowed: true</code> to <code>.specify/extension-catalogs.yml</code>.
+              </p>
+              <pre data-copy><code>specify extension catalog add \
+  https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json \
+  --name community --install-allowed
+
+specify extension add product
+specify extension upgrade product</code></pre>
+              <p class="example-note">
+                Community extensions are author-maintained and not reviewed by Spec Kit. Review the
+                source before approving a catalog.
+              </p>
+            </article>
+          </div>
+
+          <p class="note">
+            More refusal codes and fixes live in
+            <a href="https://github.com/d0whc3r/spec-kit-product/wiki/Troubleshooting"
+              >Troubleshooting</a
+            >.
+          </p>
+        </div>
+      </section>
+
       <section class="section" id="faq">
         <div class="container">
           <h2>Frequently asked questions</h2>
           <div class="faq">
+            <details>
+              <summary>Why does <code>specify extension add product</code> fail?</summary>
+              <p>
+                The extension lives in Spec Kit's community catalog, which is discovery only and
+                carries <code>install_allowed: false</code>. The CLI can list it but will not
+                install until you opt in. Either install directly with
+                <code>--from &lt;release-zip-url&gt;</code>, or approve the community catalog once.
+                Full steps are in <a href="#install-help">install help</a>.
+              </p>
+            </details>
             <details>
               <summary>Do I have to run all four commands?</summary>
               <p>
@@ -276,9 +666,10 @@ All four also write to:    product/checklist.md</code></pre>
             <details>
               <summary>How do I upgrade the extension?</summary>
               <p>
-                Run <code>specify extension upgrade product</code>. The CLI fetches the latest
-                catalog entry and replaces the installed copy. Your generated
-                <code>product/*.md</code> files are not touched.
+                If you approved the community catalog, run
+                <code>specify extension upgrade product</code>. Otherwise rerun the direct install
+                with the newer release URL. Your generated <code>product/*.md</code> files are not
+                touched.
               </p>
             </details>
             <details>

@@ -1,5 +1,23 @@
 # Frequently Asked Questions
 
+## Why does `specify extension add product` fail with a catalog error?
+
+If you see `'product' is available in the 'community' catalog but installation
+is not allowed from that catalog`, that is expected. Spec Kit ships the
+community catalog as discovery only (`install_allowed: false`), so it can list
+the extension but will not install it until you opt in.
+
+The quickest fix is a direct install:
+
+```bash
+specify extension add product --from \
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.5.3/product-0.5.3.zip
+```
+
+To install and upgrade by name instead, approve the community catalog once. See
+[Troubleshooting](Troubleshooting.md#installation-errors) for both paths in
+full.
+
 ## Why does this extension exist when Spec Kit already produces `spec.md`?
 
 `spec.md` is written for engineers. Product managers, leadership, designers,
@@ -86,13 +104,22 @@ hand-wavy for engineers.
 
 ## How do I upgrade the extension?
 
+If you installed directly with `--from`, rerun the same command with a newer
+release URL:
+
+```bash
+specify extension add product --from \
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.5.3/product-0.5.3.zip
+```
+
+If you approved the community catalog, you can upgrade by name:
+
 ```bash
 specify extension upgrade product
 ```
 
-The CLI fetches the latest catalog entry and replaces the installed copy.
-Your generated `product/*.md` files are not touched; they are in your
-feature directories, not the extension directory.
+Either way, your generated `product/*.md` files are not touched; they are in
+your feature directories, not the extension directory.
 
 ## Where do I report a bug or request a feature?
 

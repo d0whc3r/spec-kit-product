@@ -2,6 +2,49 @@
 
 Error codes the commands emit, with cause and fix.
 
+## Installation errors
+
+### "installation is not allowed from that catalog"
+
+```text
+Error: 'product' is available in the 'community' catalog but installation is
+not allowed from that catalog.
+
+To enable installation, add 'product' to an approved catalog
+(install_allowed: true) in .specify/extension-catalogs.yml.
+```
+
+This is expected behavior, not a broken release. Spec Kit ships the community
+catalog as **discovery only**. It carries `install_allowed: false` by design,
+so the CLI can list community extensions but will not install one until you opt
+in. You have two ways to opt in.
+
+**Option A: install directly (recommended).** No catalog config, always works,
+and it is the only way to pin a specific version:
+
+```bash
+specify extension add product --from \
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.5.3/product-0.5.3.zip
+```
+
+To upgrade later, rerun the same command with a newer version URL.
+
+**Option B: approve the community catalog.** Do this once if you want to
+install and upgrade by name. It adds the catalog with `install_allowed: true`
+to `.specify/extension-catalogs.yml`:
+
+```bash
+specify extension catalog add \
+  https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json \
+  --name community --install-allowed
+
+specify extension add product
+specify extension upgrade product
+```
+
+Community extensions are author-maintained and not reviewed by Spec Kit. Review
+the source before approving a catalog.
+
 ## Project resolution errors
 
 | Code           | Cause                                                      | Fix                                                                |

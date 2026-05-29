@@ -92,6 +92,90 @@ pre code {
   font-size: inherit;
 }
 
+/* Universal copy button injected into every [data-copy] pre by script.js. */
+.pre-wrap {
+  position: relative;
+}
+
+.pre-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 0.15s,
+    background 0.15s,
+    color 0.15s;
+}
+
+.pre-wrap:hover .pre-copy,
+.pre-copy:focus {
+  opacity: 1;
+}
+
+.pre-copy:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.pre-copy.is-copied {
+  opacity: 1;
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* Tabs (install methods, example outputs). */
+.tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.tabs-wrap {
+  margin-bottom: 16px;
+}
+
+.tab {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.tab:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.tab.is-active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.is-active {
+  display: block;
+}
+
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -234,6 +318,16 @@ pre code {
 
 .install {
   margin-bottom: 24px;
+  max-width: 760px;
+}
+
+.install-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .install-label {
@@ -242,44 +336,12 @@ pre code {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-muted);
-  margin-bottom: 8px;
 }
 
-.code-copy {
-  display: flex;
-  align-items: stretch;
-  max-width: 460px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  background: var(--code-bg);
-}
-
-.code-copy code {
-  flex: 1;
-  border: 0;
-  border-radius: 0;
-  background: none;
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  font-size: 0.95rem;
-}
-
-.copy-btn {
-  border: 0;
-  border-left: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-  padding: 0 18px;
-  cursor: pointer;
-  font: inherit;
+.install-hint {
+  margin: 10px 0 0;
   font-size: 0.9rem;
-}
-
-.copy-btn:hover {
-  background: var(--accent);
-  color: #fff;
+  color: var(--text-muted);
 }
 
 .hero-actions {
@@ -375,6 +437,14 @@ pre code {
 
 .cards-3 {
   grid-template-columns: repeat(3, 1fr);
+}
+
+.cards-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card pre {
+  margin: 14px 0 8px;
 }
 
 .card {
@@ -474,6 +544,100 @@ pre code {
 
 .steps pre {
   margin: 0 0 12px;
+}
+
+/* Steps aside note */
+.step-aside {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  border-left: 2px solid var(--border);
+  padding-left: 12px;
+  margin: 0;
+}
+
+/* Example (input -> output) */
+.example {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.example-input,
+.example-output {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.example-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.example-tag {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.example-tag-out {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.example pre {
+  font-size: 0.8rem;
+  margin: 0;
+  max-height: 420px;
+}
+
+.example-file {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.example-note {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Callout */
+.callout {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  background: var(--surface);
+}
+
+.callout-error {
+  border-left: 4px solid #e5534b;
+}
+
+.callout-title {
+  margin: 0 0 12px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.callout pre {
+  margin: 0;
+  font-size: 0.82rem;
 }
 
 /* Flow diagram */
@@ -599,7 +763,12 @@ pre code {
     margin-top: 6px;
   }
 
-  .cards-3 {
+  .cards-3,
+  .cards-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .example {
     grid-template-columns: 1fr;
   }
 

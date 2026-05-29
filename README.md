@@ -37,15 +37,22 @@ All four commands also update their respective section of the shared `product/ch
 
 ## Install
 
-```bash
-specify extension add product
-```
-
-To pin a specific version:
+Install directly from the latest release. This needs no catalog setup and is the recommended path:
 
 ```bash
 specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.5.3/product-0.5.3.zip
 ```
+
+Change the version in the URL to pin a different release.
+
+Want to install by name with `specify extension add product`? That resolves the extension from Spec Kit's community catalog, which ships as discovery only (`install_allowed: false`). Approve it once:
+
+```bash
+specify extension catalog add https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json --name community --install-allowed
+specify extension add product
+```
+
+If `specify extension add product` fails with `installation is not allowed from that catalog`, that is why. See [Troubleshooting](https://github.com/d0whc3r/spec-kit-product/wiki/Troubleshooting#installation-errors).
 
 For prerequisites and the first-run walkthrough see [Getting Started](https://github.com/d0whc3r/spec-kit-product/wiki/Getting-Started).
 

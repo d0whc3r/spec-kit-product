@@ -22,18 +22,29 @@ cd my-project
 
 ## Step 1: Install the extension
 
-The recommended install resolves the latest release from the catalog:
-
-```bash
-specify extension add product
-```
-
-To pin a specific version:
+The recommended install resolves a release directly from the download URL. This
+needs no catalog setup and always works:
 
 ```bash
 specify extension add product --from \
   https://github.com/d0whc3r/spec-kit-product/releases/download/v0.5.3/product-0.5.3.zip
 ```
+
+Change the version in the URL to pin a different release.
+
+Prefer to install and upgrade by name with `specify extension add product`?
+That resolves the extension from Spec Kit's community catalog, which ships as
+discovery only (`install_allowed: false`). Approve it once:
+
+```bash
+specify extension catalog add \
+  https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json \
+  --name community --install-allowed
+specify extension add product
+```
+
+See [Troubleshooting](Troubleshooting.md#installation-errors) for the full
+explanation of the community catalog error.
 
 Confirm install:
 

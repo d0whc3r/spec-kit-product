@@ -6,9 +6,9 @@ dependencies, so the files in this folder are served exactly as they are.
 
 ```
 web/
-├── index.html     single-page site (hero, commands, getting started, workflow, FAQ)
+├── index.html     single-page site (hero, commands, examples, getting started, workflow, install help, FAQ)
 ├── styles.css      all styling, responsive, light and dark
-├── script.js       progressive enhancement (nav toggle, copy buttons)
+├── script.js       progressive enhancement (nav toggle, tabs, copy buttons)
 ├── favicon.svg
 └── README.md       this file
 ```
