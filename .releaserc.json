@@ -23,6 +23,7 @@
           "CHANGELOG.md",
           "extension.yml",
           "catalog.json",
+          "package.json",
           "README.md",
           "docs/Getting-Started.md"
         ],

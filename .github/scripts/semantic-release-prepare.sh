@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Called by semantic-release @exec prepareCmd.
-# Updates extension.yml version, builds the zip, and updates catalog.json.
+# Updates extension.yml + package.json versions, builds the zip, and updates catalog.json.
 #
 # Usage: semantic-release-prepare.sh <version>
 
@@ -23,6 +23,10 @@ DOWNLOAD_URL="https://github.com/${REPO}/releases/download/v${VERSION}/product-$
 # Update extension.yml version field
 sed -i "s/^  version:.*/  version: \"${VERSION}\"/" extension.yml
 echo "[semantic-release-prepare] OK: extension.yml version → ${VERSION}"
+
+# Update package.json version field (keeps it in sync with the extension)
+pnpm pkg set version="${VERSION}"
+echo "[semantic-release-prepare] OK: package.json version → ${VERSION}"
 
 # Bump every pinned release URL across README + wiki + contributor docs.
 # Matches https://github.com/<owner>/<repo>/releases/download/vX.Y.Z/product-X.Y.Z.zip
