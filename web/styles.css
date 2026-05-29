@@ -435,12 +435,14 @@ pre code {
   gap: 20px;
 }
 
+/* minmax(0, 1fr) lets tracks shrink below their content's min size, so a long
+   URL inside a <pre> scrolls within its card instead of widening the grid. */
 .cards-3 {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .cards-2 {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .card pre {
@@ -508,6 +510,7 @@ pre code {
   margin: 0;
   padding: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 28px;
 }
 
@@ -555,33 +558,58 @@ pre code {
   margin: 0;
 }
 
-/* Example (input -> output) */
-.example {
+/* Example (input -> output). Command tabs sit on top and drive the output
+   pane; the input pane stays constant. */
+.example-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.example-tabs {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-alt);
+}
+
+.example-body {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 18px;
+  padding: 20px;
   align-items: start;
 }
 
-.example-input,
-.example-output {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
+.example-arrow {
+  align-self: center;
+  color: var(--accent);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.example-pane {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .example-head {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 14px;
-  font-size: 0.9rem;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
+.example-head code {
+  font-size: 0.78rem;
+}
+
 .example-tag {
-  font-size: 0.72rem;
+  flex: none;
+  font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
@@ -597,21 +625,15 @@ pre code {
   border-color: var(--accent);
 }
 
-.example pre {
+.example-pane pre {
   font-size: 0.8rem;
   margin: 0;
-  max-height: 420px;
-}
-
-.example-file {
-  margin: 0 0 12px;
-  font-size: 0.9rem;
-  color: var(--text-muted);
+  max-height: 380px;
 }
 
 .example-note {
   margin: 12px 0 0;
-  font-size: 0.85rem;
+  font-size: 0.83rem;
   color: var(--text-muted);
   font-style: italic;
 }
@@ -649,6 +671,7 @@ pre code {
 /* FAQ */
 .faq {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
 }
 
@@ -659,14 +682,14 @@ pre code {
   padding: 4px 20px;
 }
 
+/* The title flows as normal text so inline <code> sits naturally; the marker
+   is positioned out of flow rather than as a flex sibling. */
 .faq summary {
   cursor: pointer;
   font-weight: 600;
-  padding: 14px 0;
+  padding: 14px 32px 14px 0;
   list-style: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: relative;
 }
 
 .faq summary::-webkit-details-marker {
@@ -675,6 +698,10 @@ pre code {
 
 .faq summary::after {
   content: "+";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
   color: var(--accent);
   font-size: 1.4rem;
   line-height: 1;
@@ -765,11 +792,17 @@ pre code {
 
   .cards-3,
   .cards-2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .example {
-    grid-template-columns: 1fr;
+  .example-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .example-arrow {
+    transform: rotate(90deg);
+    justify-self: center;
   }
 
   .hero {

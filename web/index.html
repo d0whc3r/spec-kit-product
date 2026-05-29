@@ -231,13 +231,62 @@ specify extension add product</code></pre>
             worked example for a fictional feature, bulk export of dashboards to PDF.
           </p>
 
-          <div class="example">
-            <div class="example-input">
-              <div class="example-head">
-                <span class="example-tag">Input</span>
-                <code>specs/001-bulk-export/spec.md</code>
-              </div>
-              <pre data-copy><code># Feature: Bulk Dashboard Export
+          <div class="example-card">
+            <div class="example-tabs tabs" role="tablist" aria-label="Generated artifact">
+              <button
+                id="tab-ex-info"
+                class="tab is-active"
+                role="tab"
+                aria-selected="true"
+                aria-controls="panel-ex-info"
+              >
+                /speckit.product.info
+              </button>
+              <button
+                id="tab-ex-spec"
+                class="tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="panel-ex-spec"
+              >
+                /speckit.product.spec
+              </button>
+              <button
+                id="tab-ex-plan"
+                class="tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="panel-ex-plan"
+              >
+                /speckit.product.plan
+              </button>
+              <button
+                id="tab-ex-design"
+                class="tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="panel-ex-design"
+              >
+                /speckit.product.design
+              </button>
+              <button
+                id="tab-ex-checklist"
+                class="tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="panel-ex-checklist"
+              >
+                checklist.md
+              </button>
+            </div>
+
+            <div class="example-body">
+              <div class="example-pane">
+                <div class="example-head">
+                  <span class="example-tag">Input</span>
+                  <code>spec.md</code>
+                </div>
+                <pre data-copy><code># Feature: Bulk Dashboard Export
 
 ## Summary
 
@@ -260,72 +309,22 @@ dashboards into one combined PDF or a zip of PDFs.
 ## [NEEDS CLARIFICATION]
 
 - Branding. Should exports use the workspace logo, a Lumen logo, or both?</code></pre>
-            </div>
-
-            <div class="example-output">
-              <div class="example-head">
-                <span class="example-tag example-tag-out">Output</span>
-                <span>Pick a command to see what it generates</span>
               </div>
 
-              <div class="tabs tabs-wrap" role="tablist" aria-label="Generated artifact">
-                <button
-                  id="tab-ex-info"
-                  class="tab is-active"
-                  role="tab"
-                  aria-selected="true"
-                  aria-controls="panel-ex-info"
-                >
-                  /speckit.product.info
-                </button>
-                <button
-                  id="tab-ex-spec"
-                  class="tab"
-                  role="tab"
-                  aria-selected="false"
-                  aria-controls="panel-ex-spec"
-                >
-                  /speckit.product.spec
-                </button>
-                <button
-                  id="tab-ex-plan"
-                  class="tab"
-                  role="tab"
-                  aria-selected="false"
-                  aria-controls="panel-ex-plan"
-                >
-                  /speckit.product.plan
-                </button>
-                <button
-                  id="tab-ex-design"
-                  class="tab"
-                  role="tab"
-                  aria-selected="false"
-                  aria-controls="panel-ex-design"
-                >
-                  /speckit.product.design
-                </button>
-                <button
-                  id="tab-ex-checklist"
-                  class="tab"
-                  role="tab"
-                  aria-selected="false"
-                  aria-controls="panel-ex-checklist"
-                >
-                  checklist.md
-                </button>
-              </div>
+              <div class="example-arrow" aria-hidden="true">&rarr;</div>
 
-              <div
-                id="panel-ex-info"
-                class="tab-panel is-active"
-                role="tabpanel"
-                aria-labelledby="tab-ex-info"
-              >
-                <p class="example-file">
-                  Writes <code>product/00-info.md</code> for any stakeholder.
-                </p>
-                <pre data-copy><code># Product Info: Bulk Dashboard Export
+              <div class="example-pane">
+                <div
+                  id="panel-ex-info"
+                  class="tab-panel is-active"
+                  role="tabpanel"
+                  aria-labelledby="tab-ex-info"
+                >
+                  <div class="example-head">
+                    <span class="example-tag example-tag-out">Output</span>
+                    <code>product/00-info.md</code>
+                  </div>
+                  <pre data-copy><code># Product Info: Bulk Dashboard Export
 
 ## Headline
 
@@ -344,22 +343,23 @@ What used to take half an hour of manual work now takes one click.
 > **Still open**: answered before this feature is built.
 >
 > - Should exports use the workspace logo, the Lumen logo, or both?</code></pre>
-                <p class="example-note">
-                  The open clarification is surfaced, not silently resolved.
-                </p>
-              </div>
+                  <p class="example-note">
+                    The open clarification is surfaced, not silently resolved.
+                  </p>
+                </div>
 
-              <div
-                id="panel-ex-spec"
-                class="tab-panel"
-                role="tabpanel"
-                aria-labelledby="tab-ex-spec"
-                hidden
-              >
-                <p class="example-file">
-                  Writes <code>product/10-spec.md</code> for PMs and leadership.
-                </p>
-                <pre data-copy><code>## Problem Statement (Job to Be Done)
+                <div
+                  id="panel-ex-spec"
+                  class="tab-panel"
+                  role="tabpanel"
+                  aria-labelledby="tab-ex-spec"
+                  hidden
+                >
+                  <div class="example-head">
+                    <span class="example-tag example-tag-out">Output</span>
+                    <code>product/10-spec.md</code>
+                  </div>
+                  <pre data-copy><code>## Problem Statement (Job to Be Done)
 
 > When I need to share a weekly snapshot of many dashboards with my team
 > or a customer, I want to export the full set in one action, so I can
@@ -372,23 +372,24 @@ What used to take half an hour of manual work now takes one click.
 **Given** I have selected ten dashboards in the library view.
 **When** I trigger the bulk export action with the combined PDF option.
 **Then** I receive a single PDF containing all ten dashboards in order.</code></pre>
-                <p class="example-note">
-                  Three lines per scenario, each a full sentence. The Gherkin shape the checklist
-                  enforces.
-                </p>
-              </div>
+                  <p class="example-note">
+                    Three lines per scenario, each a full sentence. The Gherkin shape the checklist
+                    enforces.
+                  </p>
+                </div>
 
-              <div
-                id="panel-ex-plan"
-                class="tab-panel"
-                role="tabpanel"
-                aria-labelledby="tab-ex-plan"
-                hidden
-              >
-                <p class="example-file">
-                  Writes <code>product/20-plan.md</code> for PMs and engineering leads.
-                </p>
-                <pre data-copy><code>## Goals
+                <div
+                  id="panel-ex-plan"
+                  class="tab-panel"
+                  role="tabpanel"
+                  aria-labelledby="tab-ex-plan"
+                  hidden
+                >
+                  <div class="example-head">
+                    <span class="example-tag example-tag-out">Output</span>
+                    <code>product/20-plan.md</code>
+                  </div>
+                  <pre data-copy><code>## Goals
 
 - Reduce time to produce a weekly multi-dashboard packet from thirty
   minutes to under one minute for jobs up to fifty dashboards.
@@ -404,22 +405,23 @@ What used to take half an hour of manual work now takes one click.
 **Phase 2: Inline combined export**
 
 - A new action produces a combined document for selections up to fifty.</code></pre>
-                <p class="example-note">
-                  No file paths, no code, no time estimates. The voice a PM can read aloud.
-                </p>
-              </div>
+                  <p class="example-note">
+                    No file paths, no code, no time estimates. The voice a PM can read aloud.
+                  </p>
+                </div>
 
-              <div
-                id="panel-ex-design"
-                class="tab-panel"
-                role="tabpanel"
-                aria-labelledby="tab-ex-design"
-                hidden
-              >
-                <p class="example-file">
-                  Writes <code>product/30-design.md</code> for tech leads and senior developers.
-                </p>
-                <pre data-copy><code>## Architectural Approach
+                <div
+                  id="panel-ex-design"
+                  class="tab-panel"
+                  role="tabpanel"
+                  aria-labelledby="tab-ex-design"
+                  hidden
+                >
+                  <div class="example-head">
+                    <span class="example-tag example-tag-out">Output</span>
+                    <code>product/30-design.md</code>
+                  </div>
+                  <pre data-copy><code>## Architectural Approach
 
 The bulk export feature extends the existing single-dashboard export path
 by adding a selection-set entry point and a renderer pool. Above a
@@ -433,22 +435,23 @@ and a delivery worker emails the artifact when complete.
 | dashboard-library | modifies    | Adds multi-select state and bulk button.|
 | export-service    | modifies    | Accepts a list of ids, returns output.  |
 | delivery-mailer   | adds        | New worker that emails completed jobs.  |</code></pre>
-                <p class="example-note">
-                  Component-level detail. No code, no line-by-line implementation.
-                </p>
-              </div>
+                  <p class="example-note">
+                    Component-level detail. No code, no line-by-line implementation.
+                  </p>
+                </div>
 
-              <div
-                id="panel-ex-checklist"
-                class="tab-panel"
-                role="tabpanel"
-                aria-labelledby="tab-ex-checklist"
-                hidden
-              >
-                <p class="example-file">
-                  Every command updates its section of the shared <code>product/checklist.md</code>.
-                </p>
-                <pre data-copy><code># Quality Checklist: Bulk Dashboard Export
+                <div
+                  id="panel-ex-checklist"
+                  class="tab-panel"
+                  role="tabpanel"
+                  aria-labelledby="tab-ex-checklist"
+                  hidden
+                >
+                  <div class="example-head">
+                    <span class="example-tag example-tag-out">Output</span>
+                    <code>product/checklist.md</code>
+                  </div>
+                  <pre data-copy><code># Quality Checklist: Bulk Dashboard Export
 
 ## Info
 - [x] Headline present.
@@ -462,9 +465,10 @@ and a delivery worker emails the artifact when complete.
 ## Plan
 - [x] Delivery Phases present.
 - [x] No time estimates.</code></pre>
-                <p class="example-note">
-                  Items that need a human eye are flagged, not silently passed.
-                </p>
+                  <p class="example-note">
+                    Items that need a human eye are flagged, not silently passed.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
