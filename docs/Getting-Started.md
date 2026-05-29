@@ -35,14 +35,6 @@ specify extension add product --from \
   https://github.com/d0whc3r/spec-kit-product/releases/download/v0.3.0/product-0.3.0.zip
 ```
 
-Or for local development on the extension itself:
-
-```bash
-git clone https://github.com/d0whc3r/spec-kit-product.git
-cd spec-kit-product
-specify extension add --dev "$(pwd)"
-```
-
 Confirm install:
 
 ```bash

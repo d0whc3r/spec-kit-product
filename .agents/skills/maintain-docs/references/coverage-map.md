@@ -1,11 +1,15 @@
 # Coverage Map
 
-For each wiki page, the canonical sources it documents and the specific
-facts it asserts. Use this in Phase 2 of `maintain-docs` to figure out
-which sources to re-check when a given page is suspected of drift.
+For each user-facing page, the canonical sources it documents and the
+specific facts it asserts. Use this in Phase 2 of `maintain-docs` to
+figure out which sources to re-check when a page is suspected of drift.
 
 The reverse direction (canonical file → which pages depend on it) is at
 the bottom.
+
+Only user-facing pages appear here. Contributor and tooling docs
+(`CONTRIBUTING.md`, `AGENTS.md`/`CLAUDE.md`) are out of this skill's
+scope and are intentionally absent.
 
 ## Wiki pages
 
@@ -36,6 +40,11 @@ Asserts:
   `extension.yml.extension.version` and `catalog.json.version`).
 - The order of the four commands and what each writes.
 - The example output file paths.
+
+Scope rule: this page covers the user install paths (catalog install and
+pinned-version install). It does not cover the dev install
+(`specify extension add --dev`); that is a contributor step and lives in
+`CONTRIBUTING.md`.
 
 Re-check whenever: version bumps; install paths change;
 `/speckit.product.*` reads/writes change.
@@ -68,8 +77,7 @@ Asserts:
 - The hook trigger points.
 
 Re-check whenever: a new command lands; the artifact naming scheme
-changes (e.g. someone proposes dropping the `00-`/`10-`/`20-`/`30-`
-prefixes).
+changes.
 
 ### `docs/Examples.md`
 
@@ -80,14 +88,15 @@ Asserts:
 - Filenames of derived artifacts match the templates.
 - Section structure of each example matches the current template.
 
-Re-check whenever: `templates/*.md` changes shape. The example bodies
-are illustrative and do not need byte-exact match, but section names,
+Re-check whenever: `templates/*.md` changes shape. The example bodies are
+illustrative and do not need byte-exact match, but section names,
 ordering, and presence of required sections must match the current
 template.
 
 ### `docs/Style-Guide.md`
 
-Documents: the voice rules every generated artifact must enforce.
+Documents: the voice rules every generated artifact follows, written so a
+user understands why the output reads the way it does.
 
 Asserts:
 
@@ -96,8 +105,13 @@ Asserts:
 - PRFAQ / JTBD / Gherkin / Lean PRD conventions.
 - `[NEEDS CLARIFICATION]` markers preserved.
 
-Re-check whenever: `.specify/memory/constitution.md` §III changes, or
-the lint script in `.github/scripts/` changes.
+Scope rule: describe the rules and why they exist. Do not describe how
+the rules are enforced in the repo (the lint script, the release
+pipeline, the "change these files together" coupling). That coupling is a
+contributor concern and lives in `CONTRIBUTING.md`.
+
+Re-check whenever: `.specify/memory/constitution.md` §III changes in a way
+that changes the user-visible output style.
 
 ### `docs/Troubleshooting.md`
 
@@ -112,61 +126,48 @@ Re-check whenever: a command file adds or renames an error code.
 
 ### `docs/FAQ.md`
 
-Documents: conceptual questions and design rationale.
+Documents: conceptual questions and design rationale, from the user's
+point of view.
 
-Asserts: rationale that may reference constitutional rules. Drift here
-is rare; most edits to this page are additive.
+Asserts: rationale that may reference the output style or the
+source-of-truth contract. Drift here is rare; most edits are additive.
 
-Re-check whenever: a constitutional rule is added or relaxed; a
-frequently asked question surfaces in issues that is not yet covered.
+Re-check whenever: a frequently asked question surfaces in issues that is
+not yet covered; the output behavior the FAQ describes changes.
 
 ### `docs/Architecture.md`
 
-Documents: what the extension is, repo layout, invocation flow, source of
-truth contract, hooks, release pipeline, constitution rules that bind the
-output.
+Documents: how the extension works at runtime, for a user who wants to
+understand what happens when they run a command.
 
-Scope rule: this page describes the extension itself. It does not
-enumerate per-agent mirror surfaces (`.claude/`, `.github/agents/`,
-`.github/prompts/`) or name specific assistants. Mirror surfaces are a
-contributor concern and belong in `docs/Contributing.md` or
-`.specify/memory/constitution.md`, not here.
+Scope rule: this page is "how it works", not "how it ships". It covers
+what the extension is (text, no runtime), how a command resolves and what
+it reads and writes, the source-of-truth contract, and the hook events.
+It does **not** cover the repo source tree, the release pipeline,
+`semantic-release`, CI, or constitution governance. Those are contributor
+concerns in `CONTRIBUTING.md`. It also does not enumerate per-agent mirror
+surfaces or name specific assistants; refer generically to "the host
+agent" when needed.
 
 Asserts:
 
-- The repo layout tree (must include every top-level directory that the
-  page lists, and must not list directories that don't exist).
+- The runtime invocation flow (command → prompt → template → output
+  path) matches the actual command and template files.
 - The hooks table (must match `extension.yml.hooks`).
-- The release pipeline diagram references the actual workflow files
-  under `.github/workflows/` and the actual release tooling
-  (`.releaserc.json`, `.github/scripts/semantic-release-prepare.sh`).
+- The source-of-truth contract matches the behavior the commands enforce.
 
-Re-check whenever: a top-level directory is added or removed; a workflow
-under `.github/workflows/` is added or renamed; a hook is added or
-removed; the release tooling changes.
-
-### `docs/Contributing.md`
-
-Documents: repo layout for contributors, dev install, release procedure.
-
-Asserts:
-
-- Dev install command (`specify extension add --dev`).
-- The release procedure steps reference the actual workflow names and
-  versioning rules from the constitution.
-
-Re-check whenever: the dev install command changes; the release pipeline
-changes; the versioning rules in the constitution change.
+Re-check whenever: a command's read/write behavior changes; a hook is
+added or removed; the source-of-truth contract changes.
 
 ### `docs/_Sidebar.md`
 
 Documents: wiki navigation.
 
 Asserts: one bullet per wiki page that exists, in reading order, plus
-external links to Repo / Issues / Discussions.
+external links (Repo / Issues / Discussions, and a Contributing link that
+points to `CONTRIBUTING.md` at the repo root by absolute URL).
 
-Re-check whenever: a wiki page is added or removed; the repo URL
-changes.
+Re-check whenever: a wiki page is added or removed; the repo URL changes.
 
 ### `docs/_Footer.md`
 
@@ -176,13 +177,13 @@ Asserts: copyright and a link back to the repo. Rarely changes.
 
 ### `docs/README.md`
 
-Documents: how to publish the wiki, the file naming rules, the editing
-rules.
+Repo-only meta-doc about the `docs/` folder (excluded from the published
+wiki). Maintain only its reading-order link list so it matches the pages
+that exist, and its editing voice rules. The wiki-publishing mechanics
+(the sync workflow, the staging script) are tooling and live in
+`CONTRIBUTING.md`, not here.
 
-Asserts: the wiki repo URL (`https://github.com/d0whc3r/spec-kit-product.wiki.git`).
-
-Re-check whenever: the repo URL changes; the wiki publishing process
-changes.
+Re-check whenever: a wiki page is added or removed.
 
 ## Root markdown
 
@@ -195,13 +196,25 @@ Asserts:
 
 - Description paragraph (must match `extension.yml.extension.description`
   in intent).
-- The four-row command table (must be byte-equivalent to
-  `docs/Home.md` and `docs/Commands.md`).
+- The four-row command table (must be byte-equivalent to `docs/Home.md`
+  and `docs/Commands.md`).
 - Install paths and pinned version (must match `extension.yml.extension.version`).
 - Links to every `docs/*.md` page that exists.
+- A single Contributing pointer to `CONTRIBUTING.md` at the repo root.
 
 Re-check whenever: command count changes; version bumps; a wiki page is
 added.
+
+### `WORKFLOW.md`
+
+Documents: the canonical usage narrative. Longer-form than
+`docs/Workflow.md`, still written for the user running the commands.
+
+Asserts: same flow as `docs/Workflow.md` but with more context. Treat the
+two as a long/short pair. When `docs/Workflow.md` updates, `WORKFLOW.md`
+may also need an update.
+
+Re-check whenever: `docs/Workflow.md` changes; commands are added.
 
 ### `CHANGELOG.md`
 
@@ -214,54 +227,29 @@ Re-check whenever: the version bumps. The release pipeline edits this
 file; the skill only verifies the top entry version is consistent and
 does not edit it unless explicitly asked.
 
-### `WORKFLOW.md`
+## Out of scope (do not maintain as user docs)
 
-Documents: the canonical workflow narrative. Longer-form than
-`docs/Workflow.md`.
-
-Asserts: same flow as `docs/Workflow.md` but with more context. Treat
-the two as a long/short pair. When `docs/Workflow.md` updates,
-`WORKFLOW.md` may also need an update.
-
-Re-check whenever: `docs/Workflow.md` changes; commands are added.
-
-### `CONTRIBUTING.md`
-
-Documents: how to contribute. Root-level mirror of
-`docs/Contributing.md`. The two should not contradict each other.
-
-Re-check whenever: `docs/Contributing.md` changes; the dev install
-command changes.
-
-### `AGENTS.md` (symlinked as `CLAUDE.md`)
-
-Documents: behavioral guidelines for any AI agent working in this repo.
-
-Asserts: the four-agent boundary table (which surface owns which
-files). Must match `docs/Architecture.md` on this table.
-
-Re-check whenever: agent surfaces change; the four-surface mirror rule
-in the constitution changes.
-
-### `SECURITY.md`, `SUPPORT.md`, `CODE_OF_CONDUCT.md`
-
-Standard repo files. Rarely drift with extension features. Leave alone
-unless explicitly asked.
+- `CONTRIBUTING.md` — the contributor home: repo layout, dev install,
+  pipeline checks, release procedure, catalog submission, style coupling,
+  branch naming. User-facing pages link here for contributor questions;
+  the skill does not edit it.
+- `AGENTS.md` / `CLAUDE.md` — agent behavioral guidelines and the
+  four-agent boundary rule. Repo governance, not user docs.
+- `SECURITY.md`, `SUPPORT.md`, `CODE_OF_CONDUCT.md` — standard repo
+  files. Leave alone unless explicitly asked.
 
 ## Canonical sources → pages that depend on them
 
-Use this when you know which source changed and want to find every page
-that might need a touch.
+Use this when you know which source changed and want to find every
+user-facing page that might need a touch.
 
 | Canonical file                            | Pages to re-check                                                                                   |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | `extension.yml` (commands/hooks/version)  | `README.md`, `docs/Home.md`, `docs/Commands.md`, `docs/Getting-Started.md`, `docs/Architecture.md`, `CHANGELOG.md` |
 | `extension.yml.extension.description`     | `README.md`, `docs/Home.md`                                                                         |
 | `catalog.json` (version, counts)          | `README.md`, `docs/Getting-Started.md`                                                              |
-| `commands/speckit.product.<verb>.md`      | `docs/Commands.md`, `docs/Troubleshooting.md`, `docs/Examples.md`                                   |
+| `commands/speckit.product.<verb>.md`      | `docs/Commands.md`, `docs/Troubleshooting.md`, `docs/Examples.md`, `docs/Architecture.md`           |
 | `templates/<artifact>-template.md`        | `docs/Commands.md` (output sections), `docs/Examples.md` (example bodies)                            |
-| `.specify/integrations/<agent>.manifest.json` | `AGENTS.md`, `docs/Contributing.md` (the wiki does not surface per-agent mirrors)                |
-| `.specify/memory/constitution.md`         | `docs/Style-Guide.md`, `docs/FAQ.md`, `docs/Architecture.md`, `AGENTS.md`                            |
-| `.github/workflows/*.yml`                 | `docs/Architecture.md`, `docs/Contributing.md`                                                       |
-| `.releaserc.json`, release scripts        | `docs/Architecture.md`, `docs/Contributing.md`, `CONTRIBUTING.md`                                    |
+| `extension.yml.hooks`                     | `docs/Commands.md`, `docs/Architecture.md`, `docs/Workflow.md`                                       |
+| `.specify/memory/constitution.md` §III    | `docs/Style-Guide.md`, `docs/FAQ.md` (only the user-visible output style, not governance)            |
 | New file at `docs/<Page>.md`              | `docs/Home.md`, `docs/_Sidebar.md`, `docs/README.md`, `README.md` (if linked there)                  |

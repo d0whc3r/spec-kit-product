@@ -44,8 +44,8 @@ the previous version, rename or copy it before regenerating. The shared
 ## Why is the em dash banned?
 
 It is the single strongest "AI tell" in modern LLM output. Banning it
-makes the generated text harder to dismiss as AI slop. The rule is enforced
-by the lint script in CI and by the checklist after generation.
+makes the generated text harder to dismiss as AI slop. The checklist lets
+you verify the rule held after generation.
 
 ## Does the extension run by itself?
 

@@ -16,8 +16,7 @@ The full guide lives in the **[project wiki](https://github.com/d0whc3r/spec-kit
 | [Style Guide](https://github.com/d0whc3r/spec-kit-product/wiki/Style-Guide)         | The voice rules every generated artifact enforces.               |
 | [Troubleshooting](https://github.com/d0whc3r/spec-kit-product/wiki/Troubleshooting) | Error codes, refusals, common breakages and their fixes.         |
 | [FAQ](https://github.com/d0whc3r/spec-kit-product/wiki/FAQ)                         | Conceptual questions and design rationale.                       |
-| [Architecture](https://github.com/d0whc3r/spec-kit-product/wiki/Architecture)       | How the extension is structured and how it ships.                |
-| [Contributing](https://github.com/d0whc3r/spec-kit-product/wiki/Contributing)       | Repo layout, dev install, release pipeline.                      |
+| [Architecture](https://github.com/d0whc3r/spec-kit-product/wiki/Architecture)       | How the extension works when you run a command.                  |
 
 The wiki is generated from [`docs/`](docs/) on every push to `main`. To browse the same content as plain markdown, open the [docs folder](docs/).
 
@@ -48,11 +47,11 @@ To pin a specific version:
 specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.3.0/product-0.3.0.zip
 ```
 
-For prerequisites, dev install, and the first-run walkthrough see [Getting Started](https://github.com/d0whc3r/spec-kit-product/wiki/Getting-Started).
+For prerequisites and the first-run walkthrough see [Getting Started](https://github.com/d0whc3r/spec-kit-product/wiki/Getting-Started).
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) at the repo root or the [Contributing](https://github.com/d0whc3r/spec-kit-product/wiki/Contributing) wiki page.
+See [CONTRIBUTING.md](CONTRIBUTING.md) at the repo root.
 
 ## License
 

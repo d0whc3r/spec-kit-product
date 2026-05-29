@@ -6,16 +6,17 @@ edit and want to keep voice and shape consistent across the wiki.
 
 ## 1. New command added
 
-A new file `commands/speckit.product.<verb>.md` exists. It must be
-reflected in:
+A new file `commands/speckit.product.<verb>.md` exists. The canonical
+side (`extension.yml`, `catalog.json`, the integration manifests) is owned
+by the release pipeline and contributors; this skill does not touch it.
+The user-facing side to update:
 
-- `extension.yml.provides.commands[]` (canonical, do not edit here).
-- `catalog.json.provides.commands` count (canonical, do not edit).
-- The four manifests (canonical, do not edit).
 - `README.md` and `docs/Home.md` command table (one new row).
 - `docs/Commands.md` (one new section).
 - `docs/Workflow.md` (mention in the recommended order if relevant).
 - `docs/Troubleshooting.md` (one row per new error code).
+- `docs/Architecture.md` (add to the runtime flow / hooks table if the
+  command participates in a hook).
 - `docs/_Sidebar.md` (no change unless a new top-level page was added).
 
 ### Before (excerpt of `docs/Commands.md`)
@@ -217,13 +218,53 @@ updating the link target, not the link text.
 
 ## 10. Long-form vs short-form workflow doc
 
-`WORKFLOW.md` (root) and `docs/Workflow.md` are a long/short pair. When
-they drift:
+`WORKFLOW.md` (root) and `docs/Workflow.md` are a long/short pair, both
+written for the user running the commands. When they drift:
 
 - Update `docs/Workflow.md` first (it is the wiki entry point).
 - Mirror the structural changes in `WORKFLOW.md` while keeping its
   fuller narrative. Do not collapse `WORKFLOW.md` into
-  `docs/Workflow.md`; they serve different audiences.
+  `docs/Workflow.md`; the long form has room for more context.
 
 If a fact appears in both files (a hook name, a filename, a command
 name), make sure they match byte-for-byte.
+
+## 11. Removing out-of-scope content
+
+A user-facing page has drifted into contributor or tooling territory: it
+describes the release pipeline, a CI workflow, the dev install
+(`specify extension add --dev`), the repo source tree, or constitution
+governance. This content is correct but misplaced; it belongs in
+`CONTRIBUTING.md`, and on a user page it is noise that rots unread.
+
+The fix is to cut it. If a reader might genuinely need the contributor
+information, leave a single pointer rather than the content itself.
+
+### Before (`docs/Style-Guide.md`)
+
+```markdown
+The shared `product/checklist.md` enforces them. `.github/scripts/lint-content.sh`
+in the release pipeline enforces them too.
+```
+
+### After
+
+```markdown
+The shared `product/checklist.md` enforces them.
+```
+
+### Before (a hand-off at the bottom of a page)
+
+```markdown
+See [Contributing](Contributing.md) for the full release coupling.
+```
+
+### After
+
+```markdown
+Contributors: see [CONTRIBUTING.md](https://github.com/d0whc3r/spec-kit-product/blob/main/CONTRIBUTING.md).
+```
+
+Do not leave a dangling link to a wiki `Contributing` page; that page is
+not part of the user-facing wiki. Point at the repo-root `CONTRIBUTING.md`
+by absolute URL so it resolves from both the repo and the wiki.

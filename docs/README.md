@@ -25,54 +25,9 @@ Reference material:
 - [Troubleshooting](Troubleshooting.md)
 - [FAQ](FAQ.md)
 - [Architecture](Architecture.md)
-- [Contributing](Contributing.md)
 
-## Publishing to GitHub Wiki
-
-The GitHub Wiki is a separate git repo at
-`https://github.com/d0whc3r/spec-kit-product.wiki.git`. To publish this
-folder to it:
-
-```bash
-# one-time setup
-git clone https://github.com/d0whc3r/spec-kit-product.wiki.git /tmp/skp-wiki
-
-# whenever docs/ changes
-cp docs/*.md /tmp/skp-wiki/
-cd /tmp/skp-wiki
-git add .
-git commit -m "docs: sync from main repo"
-git push
-```
-
-GitHub renders `_Sidebar.md` and `_Footer.md` automatically as navigation
-chrome. Pages are flat (no nested folders), which is the wiki's required
-structure.
-
-**Automatic sync.** `.github/workflows/sync-wiki.yml` runs
-`.github/scripts/stage-wiki.sh` to stage `docs/*.md` into `.wiki-staging/`,
-then publishes that staging dir to the wiki on every push to `main` that
-touches `docs/`. It can also be triggered manually from the Actions tab.
-
-The staging script:
-
-- Excludes `docs/README.md` (this file, repo-only meta-doc).
-- Strips `.md` from intra-wiki links (`[Commands](Commands.md)` ->
-  `[Commands](Commands)`) since GitHub Wiki does not resolve the extension.
-- Rewrites `../FILE.md` parent-dir links to absolute repo URLs so they keep
-  working from the wiki.
-
-To rehearse the staged output locally:
-
-```bash
-bash .github/scripts/stage-wiki.sh docs .wiki-staging
-ls .wiki-staging/
-```
-
-**One-time setup.** GitHub does not create the `.wiki.git` repo until the
-wiki has at least one page. Before the first sync, go to Settings →
-Features → Wikis, enable Wikis, then create any placeholder page from the
-UI. After that the workflow can push unattended.
+How this folder is published to the GitHub Wiki is a contributor topic.
+See [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Editing rules
 

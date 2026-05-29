@@ -16,8 +16,7 @@ English with a strict no em dash style.
 | [Style Guide](Style-Guide.md)         | The voice rules every generated artifact enforces.               |
 | [Troubleshooting](Troubleshooting.md) | Error codes, refusals, common breakages and their fixes.         |
 | [FAQ](FAQ.md)                         | Conceptual questions and design rationale.                       |
-| [Architecture](Architecture.md)       | How the extension is structured and how it ships.                |
-| [Contributing](Contributing.md)       | Repo layout, dev install, release pipeline.                      |
+| [Architecture](Architecture.md)       | How the extension works when you run a command.                  |
 
 ## The four commands at a glance
 

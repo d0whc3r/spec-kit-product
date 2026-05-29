@@ -1,112 +1,127 @@
 ---
 name: "maintain-docs"
-description: "Keep the project wiki and root markdown in sync with the canonical extension sources. Invoke whenever someone asks to update the docs, sync the wiki, refresh documentation, audit docs for drift, document a new command, regenerate the README/CHANGELOG cross-references, or after any change under commands/, templates/, extension.yml, catalog.json, or .specify/integrations/. Use this skill before merging structural changes, even if the user only said 'update the docs' in passing. It does an exhaustive review of project purpose, usage, use cases, and examples, detects drift against the actual code, and updates docs/*.md and the relevant root markdown files in place."
-compatibility: "Requires the spec-kit-product repo layout: extension.yml, catalog.json, commands/, templates/, .specify/integrations/, docs/."
+description: "Keep the user-facing extension docs (the wiki under docs/ plus the root README and CHANGELOG) in sync with what the extension actually does. Invoke whenever someone asks to update the docs, sync the wiki, refresh documentation, audit docs for drift, document a new command, or after any change under commands/, templates/, extension.yml, or catalog.json. Use it before merging structural changes, even if the user only said 'update the docs' in passing. It writes for the person who USES the extension: what each command does, how to run it, what it produces, and how the pieces fit together. It never documents how the repo is built or released; that lives in CONTRIBUTING.md."
+compatibility: "Requires the spec-kit-product repo layout: extension.yml, catalog.json, commands/, templates/, docs/."
 metadata:
   author: "spec-kit-product"
   scope: "repo-local"
 ---
 
-# Maintain Project Docs
+# Maintain User Docs
 
-Keep the wiki under `docs/` and the root-level markdown in sync with what
-the extension actually does. The canonical truth lives in code-adjacent
-files (`extension.yml`, `catalog.json`, `commands/`, `templates/`, the
-manifests in `.specify/integrations/`). The wiki is a derived view of
-those files, written for humans. Drift between the two is a bug.
+Keep the wiki under `docs/` and the user-facing root markdown in sync with
+what the extension actually does for the people who use it. The canonical
+truth lives in code-adjacent files (`extension.yml`, `catalog.json`,
+`commands/`, `templates/`). The wiki is a derived, human-readable view of
+those files. Drift between the two is a bug.
 
-This skill audits both sides, reports the drift, and edits the docs.
-It never edits the canonical sources. If a doc and a source disagree,
-the source wins.
+This skill audits both sides, reports the drift, and edits the docs. It
+never edits the canonical sources. If a doc and a source disagree, the
+source wins.
 
-## When to run this
+## Who these docs are for
 
-Run it whenever any of the following just happened or is being requested:
+Everything this skill maintains is written for the **user of the
+extension**: someone who has Spec Kit installed and wants to turn their
+`spec.md` and `plan.md` into product artifacts. They want to know what a
+command does, how to run it, what it writes, what the output looks like,
+and why a command refused. They do not care how the repo is structured,
+how a release is cut, or which CI job lints the templates.
 
-- A command was added, renamed, or removed under `commands/`.
-- A template under `templates/` changed shape (sections added or
-  removed, error codes added or renamed).
-- `extension.yml` or `catalog.json` changed (version, hooks, command
-  count, descriptions, tags, requires).
-- A manifest under `.specify/integrations/` changed.
-- The release pipeline workflow under `.github/workflows/` changed in a
-  way humans should know about.
-- The user said any of: "update the docs", "sync the wiki", "refresh
-  documentation", "docs are out of date", "audit the docs", "document
-  this new command", "the README is stale", "fix the wiki", "what's
-  drifted in the docs".
-- A new release was just cut and `CHANGELOG.md` got a new entry that
-  the wiki should reference.
+That second audience (contributors) has its own home: `CONTRIBUTING.md` at
+the repo root. Keeping the two separate is the whole point. A wiki page
+that explains the release pipeline or the dev install is noise for the
+99% of readers who just want to generate a spec, and it rots faster than
+anyone notices because users never read it. So this skill keeps the wiki
+about the extension and routes every contributor or tooling concern to
+`CONTRIBUTING.md`.
 
-Default behavior: do an exhaustive audit, propose a change list, then
-apply edits. Ask the user only when a drift is ambiguous (e.g. a
-template added a section that the wiki could describe in two reasonable
-ways).
+## What is in scope
 
-## Mental model
-
-Treat the project as having two layers:
+The user-facing pages this skill owns and keeps in sync:
 
 ```
-canonical layer                                derived layer
-─────────────                                  ─────────────
-extension.yml          ┐                       docs/Home.md
-catalog.json           │                       docs/Getting-Started.md
-commands/*.md          │  ──> drift detector ──> docs/Commands.md
-templates/*.md         │                       docs/Workflow.md
-.specify/integrations/ ┘                       docs/Examples.md
-                                               docs/Style-Guide.md
-                                               docs/Troubleshooting.md
-                                               docs/FAQ.md
-                                               docs/Architecture.md
-                                               docs/Contributing.md
-                                               docs/_Sidebar.md
-                                               docs/_Footer.md
-                                               README.md
-                                               CHANGELOG.md (entry shape)
-                                               WORKFLOW.md
-                                               CONTRIBUTING.md
-                                               AGENTS.md (= CLAUDE.md)
+canonical layer                          user-facing layer (this skill owns)
+─────────────                            ───────────────────────────────────
+extension.yml      ┐                     docs/Home.md
+catalog.json       │                     docs/Getting-Started.md
+commands/*.md      │  ──> drift  ──>     docs/Commands.md
+templates/*.md     ┘   detector          docs/Workflow.md
+                                         docs/Examples.md
+                                         docs/Style-Guide.md
+                                         docs/Troubleshooting.md
+                                         docs/FAQ.md
+                                         docs/Architecture.md  (how it works, not how it ships)
+                                         docs/_Sidebar.md
+                                         docs/_Footer.md
+                                         README.md      (front door)
+                                         WORKFLOW.md    (long-form usage narrative)
+                                         CHANGELOG.md   (version coherence only)
 ```
 
-The job is one direction only: canonical → derived. The skill must not
-touch the canonical layer. It must touch only the derived layer, and
-only the parts that drifted.
+`docs/README.md` is a repo-only meta-doc about the `docs/` folder itself
+(it is excluded from the published wiki). Maintain only its reading-order
+link list so it stays consistent with the pages that exist. Do not turn it
+into a tooling guide.
+
+## What is out of scope
+
+Do not write any of the following into the user-facing pages, and if you
+find it already there, remove it and point the reader to `CONTRIBUTING.md`
+instead:
+
+- The release pipeline, `semantic-release`, Conventional Commits, version
+  bumping, tagging, the catalog submission flow.
+- Anything under `.github/` (workflows, actions, scripts), CI, linting
+  tooling, `pnpm`, build/zip, `.extensionignore`.
+- The contributor repo layout (the source tree, where `commands/` and
+  `templates/` live as files to edit), dev install
+  (`specify extension add --dev`), branch naming.
+- The four-agent mirror rule, the per-agent surfaces (`.claude/`,
+  `.github/agents/`, `.github/prompts/`), assistant names as
+  maintainers, and constitution governance (renames as breaking changes,
+  the "change these four files together" coupling).
+- `CONTRIBUTING.md` and `AGENTS.md`/`CLAUDE.md` themselves. They are the
+  contributor home and the agent-behavior file. This skill does not edit
+  them. When a user-facing page needs to hand a reader off to contributor
+  material, link to `CONTRIBUTING.md` with an absolute repo URL.
+
+The line to hold: a user-facing page may say *what the extension does and
+why* (including runtime behavior, the source-of-truth contract, hooks,
+and output style, because those shape what the user gets). It must not say
+*how the repo produces or ships the extension*.
+
+`docs/Architecture.md` is the page most prone to crossing this line. Keep
+it to how the extension works at runtime: what it is (text, no runtime),
+how a command resolves and what it reads and writes, the source-of-truth
+contract, and the hook events. The repo tree, the release pipeline, and
+constitution governance do not belong on it.
 
 ## The workflow
 
-Follow these phases in order. Each phase explains what to read, what to
-produce, and how to verify the result.
+Follow these phases in order.
 
 ### Phase 1: Inventory the canonical layer
 
-Read these and build an in-memory picture of what the extension actually
-does:
+Read these and build a picture of what the extension actually does:
 
 1. `extension.yml` — id, name, version, description, `requires`,
-   `provides.commands[]`, `hooks{}`, `tags[]`, `homepage`,
-   `repository`.
+   `provides.commands[]`, `hooks{}`, `tags[]`, `homepage`, `repository`.
 2. `catalog.json` — must match `extension.yml` on version, description,
-   tags, requires, `provides.commands` count, `provides.hooks` count,
-   homepage, repository.
-3. `commands/speckit.*.md` — list of canonical command files. Each
-   filename maps 1:1 to a command name (`speckit.product.spec.md` →
-   `/speckit.product.spec`). Skim each file's frontmatter and the first
-   ~40 lines to capture: what it reads, what it writes, the audience,
-   the error codes, the output section list.
+   tags, requires, `provides.commands` count, `provides.hooks` count.
+3. `commands/speckit.*.md` — each filename maps 1:1 to a command name
+   (`speckit.product.spec.md` → `/speckit.product.spec`). Capture what
+   each reads, what it writes, the audience, the error codes, the output
+   section list.
 4. `templates/*.md` — output section list per artifact. Cross-check
    against what the command prompt claims to emit.
-5. `.specify/integrations/*.manifest.json` — every public command must
-   appear in all four manifests (`claude`, `copilot`, `codex`,
-   `speckit`) per the constitution §V. Surface missing entries.
-6. `CHANGELOG.md` — top entry version and date should equal
-   `extension.yml.extension.version` (modulo an in-flight `[Unreleased]`
+5. `CHANGELOG.md` — top entry version should equal
+   `extension.yml.extension.version` (modulo an open `[Unreleased]`
    block).
 
 Open each file with `Read`. Do not trust grep alone for structure.
 
-Output of this phase: a coverage map you carry in your head (or write
-to a scratch note) of the form:
+Output: a coverage map you carry in your head of the form:
 
 ```
 Commands actually shipped:
@@ -115,239 +130,166 @@ Commands actually shipped:
   /speckit.product.plan   reads plan.md, spec.md writes product/20-plan.md
   /speckit.product.design reads plan.md, spec.md writes product/30-design.md
 Hooks declared: after_specify, after_clarify, after_plan
-Version: 0.1.2  Requires: speckit >= 0.2.0
+Version: 0.2.0  Requires: speckit >= 0.2.0
 ```
 
-### Phase 2: Inventory the derived layer
+The manifests under `.specify/integrations/` are a contributor concern
+(they keep the command mirrored across host agents). They are not a
+user-facing doc input, so do not inventory them here.
 
-Read the wiki pages and root markdown:
+### Phase 2: Inventory the user-facing layer
 
-- `docs/Home.md`, `docs/Getting-Started.md`, `docs/Commands.md`,
-  `docs/Workflow.md`, `docs/Examples.md`, `docs/Style-Guide.md`,
-  `docs/Troubleshooting.md`, `docs/FAQ.md`, `docs/Architecture.md`,
-  `docs/Contributing.md`, `docs/_Sidebar.md`, `docs/_Footer.md`,
-  `docs/README.md`.
-- `README.md` (root), `WORKFLOW.md`, `CONTRIBUTING.md`, `CHANGELOG.md`,
-  `AGENTS.md` (and the `CLAUDE.md` symlink — same file, do not edit
-  twice).
-
-For each page note: which canonical artifacts it claims to describe,
-and what specific claims it makes that can drift (command list, version
-strings, install URLs, file paths, hook names, error codes, output
-section lists, example snippets).
+Read the pages in the in-scope list above. For each page note which
+canonical artifacts it describes and what specific claims it makes that
+can drift (command list, version strings, install URLs, file paths, hook
+names, error codes, output section lists, example snippets).
 
 See `references/coverage-map.md` for the page-by-page list of which
 canonical sources each page is responsible for. Read it now.
 
+While reading, also watch for **scope drift**: a user-facing page that has
+drifted into describing the release pipeline, CI, the repo tree, or dev
+setup. That is its own drift class (see Phase 3), separate from factual
+staleness.
+
 ### Phase 3: Detect drift
 
-Run `scripts/detect_drift.sh` from the repo root:
+Run the drift script from the repo root:
 
 ```bash
-bash .claude/skills/maintain-docs/scripts/detect_drift.sh
+bash .agents/skills/maintain-docs/scripts/detect_drift.sh
 ```
 
-It prints a machine-readable report of common drift classes:
+It prints a machine-readable report of common drift classes: command
+count mismatch, command names missing from `docs/Commands.md`, hook list
+mismatch between `extension.yml` and the docs, version mismatch across
+`extension.yml` / `catalog.json` / `CHANGELOG.md` / install URLs, em dash
+characters, and broken intra-wiki links.
 
-- Command count mismatch between `extension.yml`, `catalog.json`, and
-  the number of files in `commands/`.
-- Command names that exist in `commands/` but are missing from any
-  manifest under `.specify/integrations/`, or vice versa.
-- Hook list mismatch between `extension.yml` and `docs/Architecture.md`
-  / `docs/Commands.md`.
-- Version mismatch between `extension.yml`, `catalog.json`, latest
-  `CHANGELOG.md` entry, install URLs in `README.md` and
-  `docs/Getting-Started.md`.
-- Em dash characters present anywhere in `docs/` or root `*.md`
-  (constitution §III forbids them).
-- Broken intra-wiki links (relative `*.md` references that do not
-  resolve).
+After the script, do a second-pass semantic audit it cannot do:
 
-After the script, do a second-pass semantic audit that the script
-cannot do:
-
-1. For each command in Phase 1, open `docs/Commands.md` and confirm the
-   section for that command exists and lists the same reads, writes,
-   audience, output sections, and error codes as the canonical command
-   file and its template.
-2. For each error code defined in a `commands/*.md`, confirm
+1. For each command in Phase 1, confirm its section in `docs/Commands.md`
+   exists and lists the same reads, writes, audience, output sections,
+   and error codes as the canonical command file and its template.
+2. For each error code in a `commands/*.md`, confirm
    `docs/Troubleshooting.md` lists it with the same meaning.
 3. For each install path in `README.md`, confirm `docs/Getting-Started.md`
    has the same paths and version pin.
 4. Confirm `docs/_Sidebar.md` lists every page that exists under `docs/`
    and nothing else.
-5. Confirm the table of command audiences in `README.md`,
-   `docs/Home.md`, and `docs/Commands.md` is byte-equivalent (it is the
-   single source of "who reads what").
-6. Confirm `docs/Examples.md` references the same output filenames as
-   the templates produce (`00-info.md`, `10-spec.md`, etc.).
+5. Confirm the "Command / Reads / Writes / Audience" table in `README.md`,
+   `docs/Home.md`, and `docs/Commands.md` is byte-equivalent.
+6. Confirm `docs/Examples.md` references the same output filenames the
+   templates produce (`00-info.md`, `10-spec.md`, etc.).
+7. **Scope audit.** Scan every in-scope page for out-of-scope content
+   (release pipeline, CI, `.github/`, dev install, repo tree, the
+   four-agent rule, constitution governance). Flag each occurrence. The
+   fix is to remove it and, if a reader genuinely needs that information,
+   leave a single link to `CONTRIBUTING.md`.
 
 Write the drift report as a short bullet list grouped by file. Do not
 write it to disk unless the user asked for a report-only run.
 
 ### Phase 4: Propose the change set
 
-Before editing, summarize for the user:
-
-```
-Drift found:
-  docs/Commands.md
-    - Missing section for /speckit.product.foo (added in extension.yml v0.2.0)
-    - Error code E_NEW_CODE in commands/speckit.product.info.md is not listed
-  docs/Getting-Started.md
-    - Install URL points to v0.1.1, extension.yml is at 0.1.2
-  README.md
-    - "provides 3 commands" should be 4
-  docs/_Sidebar.md
-    - Missing entry for new Examples-Advanced.md page
-
-Planned edits (in order):
-  1. docs/Commands.md  add /speckit.product.foo section, append E_NEW_CODE row
-  2. docs/Getting-Started.md  bump install URLs to v0.1.2
-  3. README.md  fix command count
-  4. docs/_Sidebar.md  add Examples-Advanced entry
-
-Pages with no drift: docs/Home.md, docs/Workflow.md, docs/FAQ.md, ...
-```
-
-If a drift has more than one reasonable resolution (e.g. a new template
-section could be documented under "Output sections" or under a new
-"Advanced" subsection), ask once, then proceed.
+Before editing, summarize for the user: the drift found per file, the
+planned edits in order, and the pages with no drift. If a drift has more
+than one reasonable resolution, ask once, then proceed.
 
 ### Phase 5: Apply edits
 
 Edit in place with `Edit` (preferred) or `Write` (only when rewriting a
 whole page). Apply one change at a time so each edit is reviewable.
 
-Style rules every edit must obey (these come from
-`.specify/memory/constitution.md` §III and `docs/Style-Guide.md`):
+Style rules every edit must obey (from `.specify/memory/constitution.md`
+§III and `docs/Style-Guide.md`; full list in `references/style-rules.md`):
 
-- No em dash characters. Use a hyphen, comma, or period instead.
+- No em dash characters. Use a hyphen, comma, or period.
 - Plain English. Short sentences. No marketing voice.
 - Match the existing voice of the page you are editing.
-- Preserve `[NEEDS CLARIFICATION]` markers if any appear in source
-  files surfaced through examples. Never silently resolve them.
-- File references use the `[Page Name](Page-Name.md)` form so they
-  work both in the repo and on GitHub Wiki.
-- Command names in prose are wrapped in backticks:
-  `` `/speckit.product.spec` ``.
-- Tables use the same column shape across pages. When the same table
-  appears in `README.md`, `docs/Home.md`, and `docs/Commands.md`, copy
-  it verbatim. Do not vary the spacing or wording across copies.
+- Write for the user, not the contributor. If you reach for a sentence
+  about how the repo works, stop: it belongs in `CONTRIBUTING.md`.
+- Preserve `[NEEDS CLARIFICATION]` markers shown in examples.
+- File references use `[Page Name](Page-Name.md)` so they work in the
+  repo and on the wiki. Links to contributor material use an absolute
+  repo URL to `CONTRIBUTING.md`.
+- Command names in prose are wrapped in backticks.
+- The "Command / Reads / Writes / Audience" table is copied verbatim
+  across `README.md`, `docs/Home.md`, and `docs/Commands.md`.
 
-When you add a new wiki page, also:
+When you add a new wiki page, also add it to `docs/_Sidebar.md` (correct
+order), the start-here table on `docs/Home.md` if it belongs there, and
+the reading-order list in `docs/README.md`.
 
-- Add it to `docs/_Sidebar.md` in the correct order.
-- Add it to the table on `docs/Home.md` if it belongs in the start-here
-  list.
-- Add it to the reading order list in `docs/README.md` if appropriate.
-
-When you bump the version:
-
-- `README.md` install snippets, `docs/Getting-Started.md` install
-  snippets, `catalog.json`, and the latest `CHANGELOG.md` entry all
-  refer to the same version. Only `CHANGELOG.md` and the README's
-  install URL line are wiki concerns; `catalog.json` and
-  `extension.yml` are canonical and the release pipeline owns them
-  (do not edit them here).
+When the version bumps, the wiki touch points are the install URL line in
+`README.md` and the pinned-version snippet in `docs/Getting-Started.md`.
+`catalog.json` and `extension.yml` are canonical and the release pipeline
+owns them; do not edit them here.
 
 ### Phase 6: Verify
 
-After editing, rerun the drift script:
+Rerun the drift script and the style check:
 
 ```bash
-bash .claude/skills/maintain-docs/scripts/detect_drift.sh
+bash .agents/skills/maintain-docs/scripts/detect_drift.sh
+bash .agents/skills/maintain-docs/scripts/check_style.sh
 ```
 
-It should now report no drift. If anything remains, either the edit was
-incomplete or a previously unnoticed drift surfaced; loop back to
-Phase 4.
+Both should report clean. If anything remains, loop back to Phase 4.
 
-Also run the style check:
+If the user gave a commit range to react to, cross-check it:
 
 ```bash
-bash .claude/skills/maintain-docs/scripts/check_style.sh
+git diff --name-only <base>..HEAD -- commands/ templates/ extension.yml catalog.json
 ```
 
-It scans `docs/` and root `*.md` for em dash characters and other
-style violations. Zero output means clean.
-
-If the user gave a specific PR or commit range to react to, also run:
-
-```bash
-git diff --name-only <base>..HEAD -- commands/ templates/ extension.yml \
-  catalog.json .specify/integrations/
-```
-
-Cross-check that every file in the diff has a corresponding doc edit in
-this run. If something changed canonically and no doc edit was needed,
-say so explicitly in the summary: "extension.yml description tweak was
-cosmetic, no doc update needed."
+Every file in that diff should have a corresponding doc edit, or an
+explicit note that no user-facing change was needed (e.g. "the
+`extension.yml` description tweak was cosmetic").
 
 ### Phase 7: Report
 
-End with a short summary the user can paste into a PR description:
-
-```
-Docs synced.
-  Updated: docs/Commands.md, docs/Getting-Started.md, README.md, docs/_Sidebar.md
-  No-op:   docs/Home.md, docs/Workflow.md, docs/FAQ.md, docs/Architecture.md,
-           docs/Contributing.md, docs/Examples.md, docs/Style-Guide.md,
-           docs/Troubleshooting.md, AGENTS.md, CONTRIBUTING.md, WORKFLOW.md
-  Drift detector: clean.
-  Style check: clean.
-```
-
-Do not commit. The user controls commits.
+End with a short summary the user can paste into a PR description: which
+pages were updated, which were no-ops, and that the drift and style
+checks are clean. Do not commit; the user controls commits.
 
 ## Modes
 
-- **Audit only.** User says "audit the docs" or "show me what's
-  drifted". Stop after Phase 3 and print the drift report. Do not edit.
+- **Audit only.** "audit the docs" / "what's drifted". Stop after Phase 3
+  and print the report. Do not edit.
 - **Scoped sync.** User points at a specific change ("after my last
-  commit", "after the v0.2.0 cut"). Run the full workflow but in
-  Phase 3 prioritize drift implied by the diff.
-- **Full sync.** No scope given. Run all phases on the entire repo.
-  This is the default.
-- **New page.** User says "add a docs page for X" or "create a
-  troubleshooting entry for X". Treat it as a Phase 5 edit with the
-  drift report skipped, but still run Phase 6 verification.
+  commit"). Run the full workflow but prioritize drift implied by the
+  diff in Phase 3.
+- **Full sync.** No scope given. Run all phases. This is the default.
+- **New page.** "add a docs page for X". Treat as a Phase 5 edit with the
+  drift report skipped, but still run Phase 6.
 
 ## What this skill must not do
 
-- Do not edit `commands/`, `templates/`, `extension.yml`,
-  `catalog.json`, `.specify/integrations/`, the workflows under
-  `.github/workflows/`, or `.specify/memory/constitution.md`. They are
-  canonical.
-- Do not "improve" prose adjacent to a drift fix. Touch only the
-  drifted lines.
+- Do not edit `commands/`, `templates/`, `extension.yml`, `catalog.json`,
+  `.specify/integrations/`, the workflows under `.github/`, or
+  `.specify/memory/constitution.md`. They are canonical.
+- Do not edit `CONTRIBUTING.md` or `AGENTS.md`/`CLAUDE.md`. They are the
+  contributor and agent-behavior homes.
+- Do not add release, CI, dev-install, repo-tree, or governance content
+  to a user-facing page. Route it to `CONTRIBUTING.md`.
+- Do not "improve" prose adjacent to a fix. Touch only the lines that
+  drifted.
 - Do not regenerate the `product/` artifacts under `specs/*/product/`.
-  Those are produced by the `/speckit.product.*` commands, not by docs
-  maintenance.
-- Do not change the wiki page filenames without updating
-  `docs/_Sidebar.md`, `docs/README.md`, and every inbound link in the
-  same edit batch. Renaming a wiki page is a coordinated change.
+- Do not rename a wiki page without updating `docs/_Sidebar.md`,
+  `docs/README.md`, and every inbound link in the same batch.
 - Do not silently delete `[NEEDS CLARIFICATION]` markers.
-- Do not introduce em dashes. The lint will catch you and the
-  constitution forbids them.
-- Do not reintroduce per-agent surface detail to the wiki. The wiki
-  describes the extension itself, not the integrations that host it.
-  Per-agent mirror surfaces (`.claude/`, `.github/agents/`,
-  `.github/prompts/`), assistant names (Claude Code, Copilot, Codex),
-  and the four-agent boundary rule live in `docs/Contributing.md` and
-  `AGENTS.md`. The wiki may refer generically to "a Spec Kit-aware
-  assistant" when context demands it.
+- Do not introduce em dashes.
 
 ## References
 
-- `references/coverage-map.md` — which canonical file each wiki page is
-  responsible for. Read this in Phase 2.
-- `references/edit-patterns.md` — concrete before/after examples of
-  common doc edits (new command, new error code, version bump, new
-  hook, renamed file). Read when you are about to make an edit and
-  want a template.
-- `references/style-rules.md` — the full style rule list extracted from
-  the constitution and `docs/Style-Guide.md`. Read when in doubt.
+- `references/coverage-map.md` — which canonical file each user-facing
+  page is responsible for. Read in Phase 2.
+- `references/edit-patterns.md` — before/after examples of common doc
+  edits (new command, new error code, version bump, new hook, new page,
+  removing out-of-scope content). Read before editing.
+- `references/style-rules.md` — the full style rule list. Read when in
+  doubt.
 
 ## Scripts
 

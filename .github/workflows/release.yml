@@ -44,7 +44,6 @@ jobs:
         id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          UPSTREAM_SUBMIT_TOKEN: ${{ secrets.UPSTREAM_SUBMIT_TOKEN }}
           GIT_AUTHOR_NAME: github-actions[bot]
           GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
           GIT_COMMITTER_NAME: github-actions[bot]
@@ -65,12 +64,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Submit upstream catalog issue
+      - name: Render and upload upstream catalog issue
         if: steps.release.outputs.published == 'true'
-        continue-on-error: true
-        env:
-          UPSTREAM_SUBMIT_TOKEN: ${{ secrets.UPSTREAM_SUBMIT_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-        run: |
-          version=$(jq -r .version catalog.json)
-          bash .github/scripts/submit-catalog-update.sh "$version" release "v$version"
+        uses: ./.github/actions/render-catalog-issue

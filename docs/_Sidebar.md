@@ -9,10 +9,10 @@
 - [Troubleshooting](Troubleshooting.md)
 - [FAQ](FAQ.md)
 - [Architecture](Architecture.md)
-- [Contributing](Contributing.md)
 
 ---
 
 - [Repo](https://github.com/d0whc3r/spec-kit-product)
 - [Issues](https://github.com/d0whc3r/spec-kit-product/issues)
 - [Discussions](https://github.com/d0whc3r/spec-kit-product/discussions)
+- [Contributing](https://github.com/d0whc3r/spec-kit-product/blob/main/CONTRIBUTING.md)

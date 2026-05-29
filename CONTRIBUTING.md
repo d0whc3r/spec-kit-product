@@ -100,6 +100,43 @@ GITHUB_REPOSITORY=d0whc3r/spec-kit-product OUTPUT_FILE=/tmp/issue.md \
 cat /tmp/issue.md
 ```
 
+## Publishing the Documentation Wiki
+
+The user-facing docs live in `docs/` and are published to the project's
+GitHub Wiki. The wiki is a separate git repo at
+`https://github.com/d0whc3r/spec-kit-product.wiki.git`. GitHub renders
+`_Sidebar.md` and `_Footer.md` as navigation chrome, and wiki pages are
+flat (no nested folders).
+
+**Automatic sync.** `.github/workflows/sync-wiki.yml` runs
+`.github/scripts/stage-wiki.sh` to stage `docs/*.md` into `.wiki-staging/`,
+then publishes that staging dir to the wiki on every push to `main` that
+touches `docs/`. It can also be triggered manually from the Actions tab.
+
+The staging script:
+
+- Excludes `docs/README.md` (repo-only meta-doc).
+- Strips `.md` from intra-wiki links (`[Commands](Commands.md)` ->
+  `[Commands](Commands)`) since GitHub Wiki does not resolve the extension.
+- Rewrites `../FILE.md` parent-dir links to absolute repo URLs so they keep
+  working from the wiki.
+
+To rehearse the staged output locally:
+
+```bash
+bash .github/scripts/stage-wiki.sh docs .wiki-staging
+ls .wiki-staging/
+```
+
+GitHub does not create the `.wiki.git` repo until the wiki has at least one
+page. Before the first sync, enable Wikis under Settings -> Features, then
+create any placeholder page from the UI. After that the workflow can push
+unattended.
+
+Keep `docs/` strictly user-facing (how to use the extension and how it
+works). Contributor and tooling topics belong in this file, not the wiki.
+The `maintain-docs` skill under `.agents/skills/` enforces that split.
+
 ## Branch Naming
 
 Use feature branches named `NNN-short-description` (sequential numbering, matching the pattern under `specs/`). The bundled `git` extension's `before_specify` hook creates these automatically when you run `/speckit.specify`.

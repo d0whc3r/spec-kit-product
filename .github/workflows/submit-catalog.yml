@@ -1,9 +1,8 @@
 name: submit-catalog
 
-# Manual fallback only. The automatic submission runs inline at the end of
-# the `release` workflow — the `release: published` event is not used here
-# because semantic-release publishes with the default GITHUB_TOKEN, which
-# does not trigger downstream workflows.
+# Manual fallback. Re-renders the upstream catalog issue document for a given
+# release tag and uploads it as an artifact. The `release` workflow already
+# does this inline on every publish; use this to regenerate it on demand.
 on:
   workflow_dispatch:
     inputs:
@@ -16,9 +15,8 @@ permissions:
 
 jobs:
   submit:
-    name: submit upstream catalog issue
+    name: render upstream catalog issue
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - name: Resolve tag
         id: tag
@@ -31,11 +29,8 @@ jobs:
         with:
           ref: ${{ steps.tag.outputs.tag }}
 
-      - name: Submit catalog update
-        env:
-          UPSTREAM_SUBMIT_TOKEN: ${{ secrets.UPSTREAM_SUBMIT_TOKEN }}
-        run: |
-          bash .github/scripts/submit-catalog-update.sh \
-            "${{ steps.tag.outputs.version }}" \
-            "release" \
-            "${{ steps.tag.outputs.tag }}"
+      - name: Render and upload upstream catalog issue
+        uses: ./.github/actions/render-catalog-issue
+        with:
+          version: ${{ steps.tag.outputs.version }}
+          git-tag: ${{ steps.tag.outputs.tag }}

@@ -1,8 +1,7 @@
 # Style Guide
 
 Every artifact this extension generates obeys the same voice rules. The
-shared `product/checklist.md` enforces them. `.github/scripts/lint-content.sh`
-in the release pipeline enforces them too.
+shared `product/checklist.md` lets you verify them after generation.
 
 ## The rules
 
@@ -60,17 +59,4 @@ we hit in the prototype phase:
 
 If `spec.md` contains `[NEEDS CLARIFICATION]` markers, the commands surface
 them as open product questions in the output. They are never silently
-resolved. This is a constitution-level rule (constitution §III).
-
-## When you change a rule
-
-Style rules live in three coupled places. Change all three in the same
-commit:
-
-1. `templates/product-*-template.md`
-2. `templates/product-checklist-template.md`
-3. `.github/scripts/lint-content.sh`
-
-Plus the relevant command body under `commands/speckit.product.*.md`.
-
-See [Contributing](Contributing.md) for the full release coupling.
+resolved.
