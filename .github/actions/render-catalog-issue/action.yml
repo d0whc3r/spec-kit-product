@@ -42,7 +42,7 @@ runs:
         echo "file=$out" >> "$GITHUB_OUTPUT"
 
     - name: Upload catalog issue
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ inputs.artifact-name }}
         path: ${{ steps.render.outputs.file }}
