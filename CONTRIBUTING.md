@@ -64,7 +64,7 @@ Releases are automatic. The `release` workflow at `.github/workflows/release.yml
    - Determine the next version from commits since the last tag.
    - Generate release notes and prepend them to `CHANGELOG.md`.
    - Run `.github/scripts/semantic-release-prepare.sh <version>` to bump `extension.yml`, refresh the README direct-install URL, and update `catalog.json`.
-   - Run `.github/scripts/submit-catalog-update.sh` to optionally file an `[Extension Submission]` issue at `github/spec-kit` (see **Community Catalog Submission** below).
+   - Run `.github/scripts/submit-catalog-update.sh` to render the `[Extension Submission]` document, uploaded as the `upstream-catalog-issue` artifact for manual filing at `github/spec-kit` (see **Community Catalog Submission** below).
    - Commit `chore(release): catalog v<version>` as `github-actions[bot]` with `CHANGELOG.md`, `extension.yml`, `catalog.json`, and `README.md`.
    - Create tag `v<version>`, publish a GitHub Release, and attach `dist/product-<version>.zip`.
 4. If no commits since the last tag qualify, semantic-release exits cleanly and nothing is released. Push another qualifying commit to trigger a release.
@@ -78,28 +78,26 @@ Re-tagging an already-released version is not supported. Push a qualifying commi
 
 ### Community Catalog Submission
 
-The release pipeline can auto-file submission issues at `github/spec-kit` so the community catalog stays in sync with each release. This is opt-in via a repository secret.
-
-**One-time setup:**
-
-1. Create a [fine-grained personal access token](https://github.com/settings/personal-access-tokens/new):
-   - Resource owner: `github`
-   - Repository access: only `github/spec-kit`
-   - Permissions: `Issues: Read and write`
-2. Add it as a repository secret named `UPSTREAM_SUBMIT_TOKEN` (Settings → Secrets and variables → Actions).
-3. File the **first** submission manually via the [Extension Submission form](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml). The CI handles update submissions thereafter.
+The release pipeline keeps the community catalog at `github/spec-kit` in sync by preparing a submission issue for each release. Filing it is manual: automatic `gh issue create` against the upstream repo proved unreliable, so CI renders the issue as a document and you file it by hand.
 
 **What runs on each release:**
 
-`.github/scripts/submit-catalog-update.sh` queries the upstream `catalog.community.json`. If `product` is present it files `Update Product Spec Extension to vX.Y.Z`; if absent it files `Add Product Spec Extension`. It skips silently if `UPSTREAM_SUBMIT_TOKEN` is unset or if an open issue with the same title already exists.
+`.github/scripts/submit-catalog-update.sh` queries the upstream `catalog.community.json`. If `product` is present the document targets `[Extension]: Update Product Spec Extension to vX.Y.Z`; if absent it targets `[Extension]: Add Product Spec Extension`. The rendered markdown is uploaded as the `upstream-catalog-issue` workflow artifact. No token is required.
 
-To rehearse locally without filing:
+**Filing the issue:**
+
+1. Open the finished `release` run in Actions and download the `upstream-catalog-issue` artifact.
+2. Follow the **How to file this issue** steps at the top of the document: open the [Extension Submission form](https://github.com/github/spec-kit/issues/new?template=extension_submission.yml), set the title, and copy each form field from the document's **Issue body** section.
+
+To regenerate the document for an already-released tag, run the `submit-catalog` workflow (`workflow_dispatch`) with that tag and download its artifact.
+
+To rehearse locally:
 
 ```bash
 VERSION=<x.y.z>  # replace with the version you want to rehearse
-SUBMIT_DRY_RUN=true UPSTREAM_SUBMIT_TOKEN=dummy \
-  bash .github/scripts/submit-catalog-update.sh "$VERSION" patch \
-    "https://github.com/d0whc3r/spec-kit-product/releases/download/v${VERSION}/product-${VERSION}.zip"
+GITHUB_REPOSITORY=d0whc3r/spec-kit-product OUTPUT_FILE=/tmp/issue.md \
+  bash .github/scripts/submit-catalog-update.sh "$VERSION" patch "v${VERSION}"
+cat /tmp/issue.md
 ```
 
 ## Branch Naming

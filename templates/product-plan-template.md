@@ -17,6 +17,18 @@
 **Quality bar**: [The observable standard this must meet - speed, reliability, coverage, or similar. No internal metrics.]
 **Constraints**: [What this must not do or break. Omit if none.]
 
+> User journey: a `journey` diagram of the steps the persona takes, drawn from the spec use cases. Plain-language step labels, no tooling or component names. Omit only when no user-facing flow is described in the source.
+
+```mermaid
+journey
+    title [Persona] completes [goal]
+    section [Stage]
+      [Step the user takes]: 3: [Persona]
+      [Next step]: 4: [Persona]
+    section [Stage]
+      [Step]: 5: [Persona]
+```
+
 ## Goals
 
 - [Concrete outcome this feature delivers when complete, one sentence.]
@@ -36,6 +48,14 @@
 
 - **[Part name]**: [What it does, one sentence. This feature [adds / changes / uses] it.]
 - **[Part name]**: [What it does, one sentence. This feature [adds / changes / uses] it.]
+
+> Diagram: a high-level `flowchart` showing how the parts above connect. Plain-language node labels only, no frameworks, languages, or file names. Omit only when the plan has no structural information.
+
+```mermaid
+flowchart LR
+    A[Part name] --> B[Part name]
+    B --> C[Part name]
+```
 
 ## Key Principles _(optional)_
 

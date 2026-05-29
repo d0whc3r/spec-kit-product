@@ -14,6 +14,10 @@ Every command accepts `--feature-dir specs/<feature-dir>` to target a specific
 feature directory. Without it, the active feature pointer at
 `.specify/feature.json` is used.
 
+`/speckit.product.plan` and `/speckit.product.design` embed Mermaid diagrams in
+their output by default. Each diagram renders only when its host section has
+source content to draw. See each command below for the diagram types it produces.
+
 ---
 
 ## `/speckit.product.info`
@@ -112,6 +116,9 @@ Mandatory unless marked optional:
 
 Technical terms are glossed in plain English on first use.
 
+Diagrams (by default): a `journey` of the persona's flow under Feature Context
+and a high-level `flowchart` under Build Overview. Labels stay plain-language.
+
 ### Error codes
 
 | Code             | Meaning                                                  |
@@ -153,6 +160,11 @@ Mandatory unless marked optional or conditional:
 10. **Rollout and Migration** - strategy, data migration, rollback.
 11. **Risks and Mitigations** _(optional)_.
 12. **Open Questions** _(optional)_.
+
+Diagrams (by default): a C4-level `flowchart` under Architectural Approach, an
+`erDiagram` plus data-flow diagram under Data Design, and a `sequenceDiagram`
+under API Design. A `stateDiagram-v2` is added when the source describes a
+lifecycle.
 
 ### Error codes
 

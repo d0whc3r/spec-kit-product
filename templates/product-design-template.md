@@ -21,6 +21,35 @@
 
 [3-6 paragraphs. How the solution fits into the existing architecture. Which components are added, changed, or removed. How they connect and why this structure was chosen over alternatives. Reference component and module names. State the key design principles driving the approach. No code, no framework-specific syntax.]
 
+> Diagram: a `flowchart` that shows how the components connect. Group layers (frontend, API, data, jobs) into `subgraph` blocks, C4 container/component level. Only include nodes and edges named in the prose above.
+
+```mermaid
+flowchart TD
+    subgraph Client
+        UI[Web UI]
+    end
+    subgraph Backend
+        API[API layer]
+        SVC[Domain service]
+    end
+    subgraph Data
+        DB[(Primary store)]
+    end
+    UI -->|requests| API
+    API --> SVC
+    SVC --> DB
+```
+
+> State diagram (only when the source describes a lifecycle or state machine): a `stateDiagram-v2` for the entity or process whose states are named in the source. Omit otherwise.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Draft
+    Draft --> Active: publish
+    Active --> Archived: archive
+    Archived --> [*]
+```
+
 ## Affected Modules
 
 | Module / Component | Change                           | Responsibility                                   |
@@ -42,9 +71,33 @@
 - [field]: [type]
 ```
 
+> Diagram: an `erDiagram` for the entities and relationships named above. Only include entities present in the source.
+
+```mermaid
+erDiagram
+    ENTITY_A ||--o{ ENTITY_B : has
+    ENTITY_A {
+        string id
+        string name
+    }
+    ENTITY_B {
+        string id
+        string entity_a_id
+    }
+```
+
 ### Data Flow
 
 [How data moves through the system: what triggers creation or mutation, where it persists, what events or messages are emitted downstream.]
+
+> Diagram: a `flowchart` (or `sequenceDiagram` when ordering matters) tracing how data moves between the components named above.
+
+```mermaid
+flowchart LR
+    Trigger[Inbound event] --> Validate[Validate]
+    Validate --> Persist[(Store)]
+    Persist --> Emit[Downstream event]
+```
 
 ## API Design _(optional)_
 
@@ -57,6 +110,19 @@
   Request:  [key fields and types]
   Response: [key fields and types]
   Errors:   [HTTP status or error code]: [meaning]
+```
+
+> Diagram: a `sequenceDiagram` showing the request/response interaction between the caller and the services that handle it. Include the key error path when the source describes one.
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API
+    participant Service
+    Client->>API: request
+    API->>Service: validated call
+    Service-->>API: result
+    API-->>Client: response
 ```
 
 ## Spec Coverage _(optional)_

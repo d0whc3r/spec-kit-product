@@ -178,6 +178,8 @@ Output sections (mandatory unless marked optional):
 
 Technical terms are glossed in plain English on first use. No code, no file paths.
 
+Mermaid diagrams are embedded by default: a `journey` of the persona's flow under Feature Context, and a high-level `flowchart` under Build Overview. Each diagram renders only when its section has source content.
+
 ---
 
 ### `/speckit.product.design`
@@ -209,6 +211,8 @@ Output sections (mandatory unless marked optional):
 10. **Rollout and Migration** — strategy, data migration steps, rollback plan.
 11. **Risks and Mitigations** _(optional)_ — pre-mortem lens with probability, impact, mitigation.
 12. **Open Questions** _(optional)_ — unresolved technical decisions as single-sentence questions.
+
+Mermaid diagrams are embedded by default: a `flowchart` of how components connect (C4 level) under Architectural Approach, an `erDiagram` and data-flow diagram under Data Design, and a `sequenceDiagram` under API Design. Each diagram renders only when its section has source content.
 
 ---
 

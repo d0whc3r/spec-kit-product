@@ -119,15 +119,17 @@ release.yml step → publish-wiki action
     syncs docs/ to the GitHub wiki
     ↓
 release.yml step → submit-catalog-update.sh
-    files [Extension Submission] issue at github/spec-kit
-    (skipped when UPSTREAM_SUBMIT_TOKEN is unset)
+    renders the [Extension Submission] document and uploads it as the
+    `upstream-catalog-issue` artifact for manual filing at github/spec-kit
 ```
 
-The catalog submission runs inline in `release.yml` rather than from a
-`release: published` workflow because semantic-release creates the release
-with the default `GITHUB_TOKEN`, which does not trigger downstream
-workflows. `submit-catalog.yml` remains as a `workflow_dispatch`-only
-fallback for manual reruns.
+The catalog submission is not filed automatically: `gh issue create` against
+the upstream repo proved unreliable. Instead the pipeline renders a
+ready-to-paste markdown document (issue title + manual steps + form-field
+body) and uploads it as the `upstream-catalog-issue` workflow artifact. A
+maintainer downloads it and files the issue by hand. `submit-catalog.yml`
+remains a `workflow_dispatch`-only fallback to regenerate the document for a
+given tag.
 
 The pipeline-owned fields in `catalog.json` (`version`, `download_url`,
 `requires.speckit_version`, `updated_at`, `created_at`) are updated by CI
