@@ -28,11 +28,11 @@ echo "[semantic-release-prepare] OK: extension.yml version → ${VERSION}"
 pnpm pkg set version="${VERSION}"
 echo "[semantic-release-prepare] OK: package.json version → ${VERSION}"
 
-# Bump every pinned release URL across README + wiki + contributor docs.
+# Bump every pinned release URL across README + wiki + website.
 # Matches https://github.com/<owner>/<repo>/releases/download/vX.Y.Z/product-X.Y.Z.zip
 # regardless of file or surrounding context.
 URL_PATTERN='https://github\.com/[^/]+/[^/]+/releases/download/v[0-9]+\.[0-9]+\.[0-9]+/product-[0-9]+\.[0-9]+\.[0-9]+\.zip'
-for f in README.md docs/Getting-Started.md; do
+for f in README.md docs/Getting-Started.md web/index.html; do
     if grep -qE "$URL_PATTERN" "$f"; then
         sed -i -E "s|${URL_PATTERN}|${DOWNLOAD_URL}|g" "$f"
         echo "[semantic-release-prepare] OK: ${f} direct-install URL → ${DOWNLOAD_URL}"
