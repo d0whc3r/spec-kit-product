@@ -26,6 +26,8 @@
           "package.json",
           "README.md",
           "docs/Getting-Started.md",
+          "docs/FAQ.md",
+          "docs/Troubleshooting.md",
           "web/index.html"
         ],
         "message": "chore(release): catalog v${nextRelease.version}"

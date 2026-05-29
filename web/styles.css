@@ -235,6 +235,17 @@ pre code {
   font-weight: 700;
 }
 
+.brand-version {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
 .nav-links {
   list-style: none;
   display: flex;
@@ -447,6 +458,13 @@ pre code {
 
 .card pre {
   margin: 14px 0 8px;
+}
+
+/* Install options: stacked full-width cards so the long URLs get room. */
+.install-options {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
 }
 
 .card {
