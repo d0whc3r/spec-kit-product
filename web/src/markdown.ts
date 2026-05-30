@@ -1,0 +1,132 @@
+// Markdown rendering for the example excerpts and the full-file viewer.
+// `marked` is loaded from a CDN just before the entry script (see index.html).
+// If it failed to load, excerpts stay as their plain-text <pre> fallback and
+// the viewer buttons degrade to opening the file on GitHub.
+const GH_BLOB = "https://github.com/d0whc3r/spec-kit-product/blob/main/";
+
+// Pull in the mermaid pan/zoom chunk only when a rendered document actually
+// contains a diagram, so a plain visit never downloads it.
+function renderMermaidIn(root: ParentNode): void {
+  if (!root.querySelector("pre > code.language-mermaid")) {
+    return;
+  }
+  import("./mermaid")
+    .then((m) => m.renderMermaid(root))
+    .catch(() => {
+      /* mermaid chunk unavailable: code blocks stay as plain text */
+    });
+}
+
+export function setupMarkdown(): void {
+  const hasMarked = typeof window.marked !== "undefined";
+
+  if (hasMarked && window.marked!.setOptions) {
+    window.marked!.setOptions({ gfm: true, breaks: false });
+  }
+
+  const render = (text: string) => window.marked!.parse(text);
+
+  // Upgrade each excerpt <pre class="md-source"> to rendered markdown.
+  if (hasMarked) {
+    document.querySelectorAll<HTMLElement>("pre.md-source").forEach((pre) => {
+      const code = pre.querySelector("code");
+      const raw = (code ? code.textContent : pre.textContent) || "";
+      const view = document.createElement("div");
+      view.className = "md-body md-excerpt";
+      view.innerHTML = render(raw);
+      pre.parentNode!.insertBefore(view, pre);
+      pre.hidden = true;
+      renderMermaidIn(view);
+    });
+  }
+
+  // Full-file viewer modal.
+  const modal = document.getElementById("md-modal");
+  const modalBody = document.getElementById("md-modal-body");
+  const modalTitle = document.getElementById("md-modal-title");
+  const modalGh = document.getElementById("md-modal-gh") as HTMLAnchorElement | null;
+  let lastFocused: HTMLElement | null = null;
+  const cache: Record<string, string> = {};
+
+  const closeModal = () => {
+    if (!modal) {
+      return;
+    }
+    modal.hidden = true;
+    document.body.classList.remove("md-modal-open");
+    lastFocused?.focus?.();
+  };
+
+  const openModal = (path: string, title: string | null) => {
+    if (!modal || !modalBody || !modalTitle || !modalGh) {
+      return;
+    }
+    lastFocused = document.activeElement as HTMLElement;
+    modalTitle.textContent = title || path;
+    modalGh.href = GH_BLOB + path;
+    modal.hidden = false;
+    document.body.classList.add("md-modal-open");
+    modalBody.focus();
+
+    const show = (html: string) => {
+      modalBody.innerHTML = html;
+      modalBody.scrollTop = 0;
+      renderMermaidIn(modalBody);
+    };
+
+    if (cache[path]) {
+      show(cache[path]);
+      return;
+    }
+
+    show('<p class="md-loading">Loading&hellip;</p>');
+    fetch(path)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(String(res.status));
+        }
+        return res.text();
+      })
+      .then((text) => {
+        cache[path] = render(text);
+        show(cache[path]);
+      })
+      .catch(() => {
+        modalBody.innerHTML =
+          '<p class="md-loading">Could not load this file. ' +
+          '<a href="' +
+          GH_BLOB +
+          path +
+          '" target="_blank" rel="noopener">Open it on GitHub</a> instead.</p>';
+      });
+  };
+
+  document.querySelectorAll<HTMLElement>(".md-full-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const path = btn.getAttribute("data-md-full");
+      const title = btn.getAttribute("data-md-title");
+      if (!path) {
+        return;
+      }
+      // No renderer available: send the user straight to the source.
+      if (!hasMarked) {
+        window.open(GH_BLOB + path, "_blank", "noopener");
+        return;
+      }
+      openModal(path, title);
+    });
+  });
+
+  if (modal) {
+    modal.addEventListener("click", (event) => {
+      if ((event.target as Element).closest("[data-md-close]")) {
+        closeModal();
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !modal.hidden) {
+        closeModal();
+      }
+    });
+  }
+}

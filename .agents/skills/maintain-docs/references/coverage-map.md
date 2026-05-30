@@ -274,8 +274,8 @@ Asserts:
 - The FAQ entries (a subset of `docs/FAQ.md`; must not contradict it).
 - The repository, wiki, issues, and discussions links.
 
-Edit content only. Do not restyle `web/styles.css` or rewrite
-`web/script.js`. `web/README.md` is a repo-only meta-doc about the folder,
+Edit content only. Do not restyle `web/src/styles.css` or rewrite
+the TypeScript under `web/src/`. `web/README.md` is a repo-only meta-doc about the folder,
 maintained like `docs/README.md`.
 
 Re-check whenever: a command is added or removed; the description in

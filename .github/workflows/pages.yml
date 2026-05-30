@@ -50,16 +50,20 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v6
 
-      # The site renders the real example artifacts at runtime. They live at
-      # /examples (single source of truth); the examples:sync script copies them
-      # under web/ so they ship with the published site.
-      - name: Stage examples into the site
-        run: pnpm examples:sync
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Build the site with Vite. web:build first stages the real example
+      # artifacts (single source of truth: /examples) into web/public so Vite
+      # copies them into the output, then bundles TS and minifies CSS/HTML into
+      # web/dist.
+      - name: Build site
+        run: pnpm web:build
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: web
+          path: web/dist
 
       - name: Deploy to GitHub Pages
         id: deployment

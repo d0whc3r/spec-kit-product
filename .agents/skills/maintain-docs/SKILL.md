@@ -66,8 +66,9 @@ templates/*.md     ┘   detector          docs/Workflow.md
                                          web/index.html (public landing site)
 ```
 
-The website under `web/` is a single hand-authored page (`index.html`,
-`styles.css`, `script.js`) deployed to GitHub Pages. This skill owns its
+The website under `web/` is a single page whose content is hand-authored in
+`index.html` (styling and behaviour live in `web/src/`, built with Vite) and
+deployed to GitHub Pages. This skill owns its
 **content**, not its visual design: keep the command list, the Command /
 Reads / Writes / Audience table, the install and usage snippets, the
 version pin, the `product/` output filenames, and the repo and wiki links
@@ -256,8 +257,8 @@ Style rules every edit must obey (from `.specify/memory/constitution.md`
   facts appear in `web/index.html` as an HTML table; keep its rows in
   step, but it is HTML markup, not a byte copy.
 - The website is content-only for this skill. Edit the text inside
-  `web/index.html`; do not restyle `web/styles.css` or rewrite
-  `web/script.js`.
+  `web/index.html`; do not restyle `web/src/styles.css` or rewrite
+  the TypeScript under `web/src/`.
 
 When you add a new wiki page, also add it to `docs/_Sidebar.md` (correct
 order), the start-here table on `docs/Home.md` if it belongs there, and
