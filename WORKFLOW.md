@@ -22,12 +22,12 @@ specify extension add product --from https://github.com/d0whc3r/spec-kit-product
 
 Change the version in the URL to pin a different release.
 
-Prefer to install and upgrade by name with `specify extension add product`? That resolves the extension from Spec Kit's community catalog, which ships as discovery only (`install_allowed: false`). Approve it once, then add and upgrade by name:
+Prefer to install and update by name with `specify extension add product`? That resolves the extension from Spec Kit's community catalog, which ships as discovery only (`install_allowed: false`). Approve it once, then add and update by name:
 
 ```bash
 specify extension catalog add https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json --name community --install-allowed
 specify extension add product
-specify extension upgrade product
+specify extension update product
 ```
 
 If `specify extension add product` fails with `installation is not allowed from that catalog`, that is why.

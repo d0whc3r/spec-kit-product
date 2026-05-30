@@ -106,10 +106,9 @@
   --name community --install-allowed
 specify extension add product</code></pre>
               <p class="install-hint">
-                Prefer installing and upgrading by name? Approve the community catalog once, then
-                <code>add</code> and <code>upgrade</code> resolve
-                <code>product</code> automatically. See <a href="#install-help">install help</a> for
-                why this is needed.
+                Prefer installing and updating by name? Approve the community catalog once, then
+                <code>add</code> and <code>update</code> resolve <code>product</code> automatically.
+                See <a href="#install-help">install help</a> for why this is needed.
               </p>
             </div>
           </div>
@@ -743,13 +742,13 @@ To enable installation, add 'product' to an approved catalog
               <pre data-copy><code>specify extension add product \
   --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.7.1/product-0.7.1.zip</code></pre>
               <p class="example-note">
-                To upgrade later, run the same command with a newer version URL.
+                To update later, run the same command with a newer version URL.
               </p>
             </article>
             <article class="card">
               <h3>Option B: Approve the community catalog</h3>
               <p>
-                Do this once if you want to install and upgrade by name. It adds the catalog with
+                Do this once if you want to install and update by name. It adds the catalog with
                 <code>install_allowed: true</code> to <code>.specify/extension-catalogs.yml</code>.
               </p>
               <pre data-copy><code>specify extension catalog add \
@@ -757,7 +756,7 @@ To enable installation, add 'product' to an approved catalog
   --name community --install-allowed
 
 specify extension add product
-specify extension upgrade product</code></pre>
+specify extension update product</code></pre>
               <p class="example-note">
                 Community extensions are author-maintained and not reviewed by Spec Kit. Review the
                 source before approving a catalog.
@@ -822,10 +821,10 @@ specify extension upgrade product</code></pre>
               </p>
             </details>
             <details>
-              <summary>How do I upgrade the extension?</summary>
+              <summary>How do I update the extension?</summary>
               <p>
                 If you approved the community catalog, run
-                <code>specify extension upgrade product</code>. Otherwise rerun the direct install
+                <code>specify extension update product</code>. Otherwise rerun the direct install
                 with the newer release URL. Your generated <code>product/*.md</code> files are not
                 touched.
               </p>

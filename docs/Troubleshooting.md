@@ -27,10 +27,10 @@ specify extension add product --from \
   https://github.com/d0whc3r/spec-kit-product/releases/download/v0.7.1/product-0.7.1.zip
 ```
 
-To upgrade later, rerun the same command with a newer version URL.
+To update later, rerun the same command with a newer version URL.
 
 **Option B: approve the community catalog.** Do this once if you want to
-install and upgrade by name. It adds the catalog with `install_allowed: true`
+install and update by name. It adds the catalog with `install_allowed: true`
 to `.specify/extension-catalogs.yml`:
 
 ```bash
@@ -39,7 +39,7 @@ specify extension catalog add \
   --name community --install-allowed
 
 specify extension add product
-specify extension upgrade product
+specify extension update product
 ```
 
 Community extensions are author-maintained and not reviewed by Spec Kit. Review
@@ -93,7 +93,7 @@ will produce garbage downstream, so the command refuses early.
    startup. Open a new chat or reload the agent's window.
 4. If it still does not appear, try a fresh install:
    ```bash
-   specify extension upgrade product
+   specify extension update product
    ```
 
 ## Output does not match the style rules

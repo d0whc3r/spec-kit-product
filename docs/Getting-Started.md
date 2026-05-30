@@ -32,7 +32,7 @@ specify extension add product --from \
 
 Change the version in the URL to pin a different release.
 
-Prefer to install and upgrade by name with `specify extension add product`?
+Prefer to install and update by name with `specify extension add product`?
 That resolves the extension from Spec Kit's community catalog, which ships as
 discovery only (`install_allowed: false`). Approve it once:
 

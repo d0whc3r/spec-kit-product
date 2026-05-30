@@ -14,7 +14,7 @@ specify extension add product --from \
   https://github.com/d0whc3r/spec-kit-product/releases/download/v0.7.1/product-0.7.1.zip
 ```
 
-To install and upgrade by name instead, approve the community catalog once. See
+To install and update by name instead, approve the community catalog once. See
 [Troubleshooting](Troubleshooting.md#installation-errors) for both paths in
 full.
 
@@ -102,7 +102,7 @@ boundaries, API shapes are appropriate.
 Mixing them produces a document that is too technical for PMs and too
 hand-wavy for engineers.
 
-## How do I upgrade the extension?
+## How do I update the extension?
 
 If you installed directly with `--from`, rerun the same command with a newer
 release URL:
@@ -112,10 +112,10 @@ specify extension add product --from \
   https://github.com/d0whc3r/spec-kit-product/releases/download/v0.7.1/product-0.7.1.zip
 ```
 
-If you approved the community catalog, you can upgrade by name:
+If you approved the community catalog, you can update by name:
 
 ```bash
-specify extension upgrade product
+specify extension update product
 ```
 
 Either way, your generated `product/*.md` files are not touched; they are in
