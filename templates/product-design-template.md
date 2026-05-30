@@ -14,8 +14,16 @@
 **Affected layers**: [Comma-separated list: e.g. frontend, API layer, data layer, background jobs, infra.]
 **Technical constraints**:
 
-- [Constraint derived from plan.md or spec.md: e.g. latency budget, backward compatibility requirement, approved library policy.]
+- [Non-measurable design rule or boundary from plan.md or spec.md: e.g. backward compatibility requirement, approved library policy, a must-not behavior. Put measurable numeric targets in the Non-Functional Requirements table below, not here.]
 - [Constraint 2]
+
+## Non-Functional Requirements _(optional)_
+
+> Include only when the source states measurable quality targets (latency, throughput, availability, accuracy, accessibility, and similar). Map each to an ISO 25010 quality category and a numeric target, plus how it is verified. State numbers, not adjectives ("p95 under 250 ms", not "fast"). This table is the single home for measurable numeric targets; do not also list them as bare Technical Constraints bullets. Omit the section entirely when the source names no measurable target, or when the table would only restate the Technical Constraints above without adding the ISO category and verification method.
+
+| Quality attribute (ISO 25010)                                                                                                                                                          | Target                                     | How verified                                |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------- |
+| [One of the 8 ISO 25010 categories: Functional suitability / Performance efficiency / Compatibility / Interaction capability / Reliability / Security / Maintainability / Flexibility] | [Numeric target with units and conditions] | [Test, monitor, or review that confirms it] |
 
 ## Architectural Approach
 
@@ -174,6 +182,21 @@ sequenceDiagram
 - **Probability**: [Low / Medium / High]
 - **Impact**: [Low / Medium / High]
 - **Mitigation**: [What is in place or planned to reduce this risk.]
+
+> Diagram: a `quadrantChart` plotting each risk above on probability (x) by impact (y). Map Low near 0.2, Medium near 0.5, High near 0.85 on each axis. When risks share a cell, give them a small offset so labels stay readable, never one large enough to imply a difference the prose does not state. Plot only risks named above; never invent one. Omit when there are fewer than two risks, or when every risk lands in the same cell (the plot would add nothing over the prose).
+
+```mermaid
+quadrantChart
+    title Risk exposure
+    x-axis Low probability --> High probability
+    y-axis Low impact --> High impact
+    quadrant-1 Mitigate now
+    quadrant-2 Plan contingency
+    quadrant-3 Accept
+    quadrant-4 Monitor and reduce
+    [Risk name]: [0.5, 0.85]
+    [Risk name]: [0.2, 0.5]
+```
 
 ## Open Questions _(optional)_
 

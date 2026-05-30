@@ -66,6 +66,15 @@ flowchart LR
 
 ## Delivery Phases
 
+> Roadmap: a `flowchart LR` of the phases below. One node per phase; draw an edge from each prerequisite phase to the phase that names it under "_Depends on_". Phases with no declared dependency are roots. Plain-language labels, no dates or durations. Render only when the dependencies branch (a phase has more than one direct dependent, or more than one phase has no prerequisite): a single straight chain or a set of independent phases adds nothing over the numbered list, so omit it then. Also omit when there are fewer than two phases.
+
+```mermaid
+flowchart LR
+    P1["Phase 1 name"]
+    P2["Phase 2 name"]
+    P1 --> P2
+```
+
 ### Phase 1: [Name]
 
 - [What this phase delivers or enables, one sentence.]
@@ -99,6 +108,21 @@ _Depends on_: Phase 1.
 - **Probability**: [Low / Medium / High]
 - **Impact**: [Low / Medium / High]
 - **Mitigation**: [What is in place to reduce the impact, one sentence.]
+
+> Diagram: a `quadrantChart` plotting each risk above on probability (x) by impact (y). Map Low near 0.2, Medium near 0.5, High near 0.85 on each axis. When risks share a cell, give them a small offset so labels stay readable, never one large enough to imply a difference the prose does not state. Plot only risks named above; never invent one. Omit when there are fewer than two risks, or when every risk lands in the same cell (the plot would add nothing over the prose).
+
+```mermaid
+quadrantChart
+    title Risk exposure
+    x-axis Low probability --> High probability
+    y-axis Low impact --> High impact
+    quadrant-1 Mitigate now
+    quadrant-2 Plan contingency
+    quadrant-3 Accept
+    quadrant-4 Monitor and reduce
+    [Risk name]: [0.5, 0.85]
+    [Risk name]: [0.2, 0.5]
+```
 
 ## Divergences and Edge Cases _(optional)_
 
