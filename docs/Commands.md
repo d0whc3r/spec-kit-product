@@ -15,8 +15,12 @@ feature directory. Without it, the active feature pointer at
 `.specify/feature.json` is used.
 
 `/speckit.product.plan` and `/speckit.product.design` embed Mermaid diagrams in
-their output by default. Each diagram renders only when its host section has
-source content to draw. See each command below for the diagram types it produces.
+their output by default. A diagram renders only when it earns its place: when it
+shows structure the prose cannot convey at a glance, and is not a restatement, a
+duplicate, or a trivial shape. `/speckit.product.design` can also add a
+Non-Functional Requirements table on the same terms. See [Diagrams](Diagrams.md)
+for the full per-section mapping and the value gate; each command below lists a
+summary.
 
 ---
 
@@ -118,8 +122,11 @@ Mandatory unless marked optional:
 
 Technical terms are glossed in plain English on first use.
 
-Diagrams (by default): a `journey` of the persona's flow under Feature Context
-and a high-level `flowchart` under Build Overview. Labels stay plain-language.
+Diagrams (by default, subject to the value gate): a `journey` of the persona's
+flow under Feature Context, a high-level `flowchart` under Build Overview, a
+dependency `flowchart` under Delivery Phases when the phases branch, and a
+`quadrantChart` risk matrix under Risks and Mitigations when the risks spread.
+Labels stay plain-language. See [Diagrams](Diagrams.md).
 
 ### Error codes
 
@@ -150,23 +157,27 @@ implementation detail.
 Mandatory unless marked optional or conditional:
 
 1. **Summary** - what is being built technically, layers affected.
-2. **Technical Context** - current state, affected layers, constraints.
-3. **Architectural Approach** - components added, changed, removed.
-4. **Affected Modules** - table: module, change type, responsibility.
-5. **Data Design** _(conditional)_ - entity shapes and data flow.
-6. **API Design** _(conditional)_ - request/response shapes and error cases.
-7. **Spec Coverage** _(conditional)_ - table mapping each spec use case to
+2. **Technical Context** - current state, affected layers, non-measurable constraints.
+3. **Non-Functional Requirements** _(conditional)_ - measurable quality targets
+   mapped to ISO 25010 categories and how each is verified.
+4. **Architectural Approach** - components added, changed, removed.
+5. **Affected Modules** - table: module, change type, responsibility.
+6. **Data Design** _(conditional)_ - entity shapes and data flow.
+7. **API Design** _(conditional)_ - request/response shapes and error cases.
+8. **Spec Coverage** _(conditional)_ - table mapping each spec use case to
    its implementing component. Gaps marked explicitly.
-8. **Key Technical Decisions** _(optional)_ - ADR format.
-9. **Testing Strategy** - Unit, Integration, E2E/BDD, Observability.
-10. **Rollout and Migration** - strategy, data migration, rollback.
-11. **Risks and Mitigations** _(optional)_.
-12. **Open Questions** _(optional)_.
+9. **Key Technical Decisions** _(optional)_ - ADR format.
+10. **Testing Strategy** - Unit, Integration, E2E/BDD, Observability.
+11. **Rollout and Migration** - strategy, data migration, rollback.
+12. **Risks and Mitigations** _(optional)_.
+13. **Open Questions** _(optional)_.
 
-Diagrams (by default): a C4-level `flowchart` under Architectural Approach, an
-`erDiagram` plus data-flow diagram under Data Design, and a `sequenceDiagram`
-under API Design. A `stateDiagram-v2` is added when the source describes a
-lifecycle.
+Diagrams (by default, subject to the value gate): a C4-level `flowchart` under
+Architectural Approach (this one always renders), an `erDiagram` plus data-flow
+diagram under Data Design, a `sequenceDiagram` under API Design, and a
+`quadrantChart` risk matrix under Risks and Mitigations when the risks spread. A
+`stateDiagram-v2` is added when the source describes a lifecycle. See
+[Diagrams](Diagrams.md).
 
 ### Error codes
 

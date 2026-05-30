@@ -180,7 +180,7 @@ Output sections (mandatory unless marked optional):
 
 Technical terms are glossed in plain English on first use. No code, no file paths.
 
-Mermaid diagrams are embedded by default: a `journey` of the persona's flow under Feature Context, and a high-level `flowchart` under Build Overview. Each diagram renders only when its section has source content.
+Mermaid diagrams are embedded by default, and each one appears only when it earns its place (it shows structure the prose cannot convey, and is not a restatement, a duplicate, or a trivial shape): a `journey` of the persona's flow under Feature Context, a high-level `flowchart` under Build Overview, a dependency `flowchart` under Delivery Phases when the phases branch, and a `quadrantChart` risk matrix under Risks and Mitigations when the risks spread across more than one cell.
 
 ---
 
@@ -202,19 +202,20 @@ Technical design document for tech leads and senior developers. Goes deeper than
 Output sections (mandatory unless marked optional):
 
 1. **Summary** - what is being built technically, layers affected, key architectural approach.
-2. **Technical Context** - current state, affected layers, technical constraints.
-3. **Architectural Approach** - how the solution fits the existing architecture, components added/changed/removed.
-4. **Affected Modules** - table: module name, change type (adds/modifies/removes/uses), responsibility.
-5. **Data Design** _(conditional)_ - entity shapes and data flow. Present when any source has data model content.
-6. **API Design** _(conditional)_ - request/response shapes and error cases. Present when the feature has an API surface.
-7. **Spec Coverage** _(conditional)_ - table mapping each spec use case to the component that implements it. Gaps marked explicitly.
-8. **Key Technical Decisions** _(optional)_ - ADR format: Context, Options considered, Decision, Consequences.
-9. **Testing Strategy** - Unit, Integration, E2E/BDD, Observability bullets derived from spec use cases.
-10. **Rollout and Migration** - strategy, data migration steps, rollback plan.
-11. **Risks and Mitigations** _(optional)_ - pre-mortem lens with probability, impact, mitigation.
-12. **Open Questions** _(optional)_ - unresolved technical decisions as single-sentence questions.
+2. **Technical Context** - current state, affected layers, non-measurable design constraints.
+3. **Non-Functional Requirements** _(conditional)_ - measurable quality targets mapped to ISO 25010 categories, with how each is verified. Present when the source states measurable targets.
+4. **Architectural Approach** - how the solution fits the existing architecture, components added/changed/removed.
+5. **Affected Modules** - table: module name, change type (adds/modifies/removes/uses), responsibility.
+6. **Data Design** _(conditional)_ - entity shapes and data flow. Present when any source has data model content.
+7. **API Design** _(conditional)_ - request/response shapes and error cases. Present when the feature has an API surface.
+8. **Spec Coverage** _(conditional)_ - table mapping each spec use case to the component that implements it. Gaps marked explicitly.
+9. **Key Technical Decisions** _(optional)_ - ADR format: Context, Options considered, Decision, Consequences.
+10. **Testing Strategy** - Unit, Integration, E2E/BDD, Observability bullets derived from spec use cases.
+11. **Rollout and Migration** - strategy, data migration steps, rollback plan.
+12. **Risks and Mitigations** _(optional)_ - pre-mortem lens with probability, impact, mitigation.
+13. **Open Questions** _(optional)_ - unresolved technical decisions as single-sentence questions.
 
-Mermaid diagrams are embedded by default: a `flowchart` of how components connect (C4 level) under Architectural Approach, an `erDiagram` and data-flow diagram under Data Design, and a `sequenceDiagram` under API Design. Each diagram renders only when its section has source content.
+Mermaid diagrams are embedded by default, subject to the same value gate: a `flowchart` of how components connect (C4 level) under Architectural Approach (this one always renders), an `erDiagram` and data-flow diagram under Data Design, a `sequenceDiagram` under API Design, and a `quadrantChart` risk matrix under Risks and Mitigations when the risks spread across more than one cell. A `stateDiagram-v2` is added when the source describes a lifecycle.
 
 ---
 

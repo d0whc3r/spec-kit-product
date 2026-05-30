@@ -22,6 +22,7 @@ Start at [Home.md](Home.md). The intended path for new users is:
 Reference material:
 
 - [Style Guide](Style-Guide.md)
+- [Diagrams](Diagrams.md)
 - [Troubleshooting](Troubleshooting.md)
 - [FAQ](FAQ.md)
 - [Architecture](Architecture.md)

@@ -7,16 +7,17 @@ English with a strict no em dash style.
 
 ## Start here
 
-| Page                                  | When to read                                                     |
-| ------------------------------------- | ---------------------------------------------------------------- |
-| [Getting Started](Getting-Started.md) | First install, zero to first generated artifact in five minutes. |
-| [Commands](Commands.md)               | Deep reference for the four `/speckit.product.*` commands.       |
-| [Workflow](Workflow.md)               | Input and output flow, recommended order, the `product/` layout. |
-| [Examples](Examples.md)               | Sample `spec.md` input and the four artifacts it produces.       |
-| [Style Guide](Style-Guide.md)         | The voice rules every generated artifact enforces.               |
-| [Troubleshooting](Troubleshooting.md) | Error codes, refusals, common breakages and their fixes.         |
-| [FAQ](FAQ.md)                         | Conceptual questions and design rationale.                       |
-| [Architecture](Architecture.md)       | How the extension works when you run a command.                  |
+| Page                                  | When to read                                                                                     |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [Getting Started](Getting-Started.md) | First install, zero to first generated artifact in five minutes.                                 |
+| [Commands](Commands.md)               | Deep reference for the four `/speckit.product.*` commands.                                       |
+| [Workflow](Workflow.md)               | Input and output flow, recommended order, the `product/` layout.                                 |
+| [Examples](Examples.md)               | Sample `spec.md` input and the four artifacts it produces.                                       |
+| [Style Guide](Style-Guide.md)         | The voice rules every generated artifact enforces.                                               |
+| [Diagrams](Diagrams.md)               | How diagrams and optional sections are generated, and the value gate that keeps them meaningful. |
+| [Troubleshooting](Troubleshooting.md) | Error codes, refusals, common breakages and their fixes.                                         |
+| [FAQ](FAQ.md)                         | Conceptual questions and design rationale.                                                       |
+| [Architecture](Architecture.md)       | How the extension works when you run a command.                                                  |
 
 ## The four commands at a glance
 

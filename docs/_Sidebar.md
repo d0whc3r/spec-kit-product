@@ -6,6 +6,7 @@
 - [Workflow](Workflow.md)
 - [Examples](Examples.md)
 - [Style Guide](Style-Guide.md)
+- [Diagrams](Diagrams.md)
 - [Troubleshooting](Troubleshooting.md)
 - [FAQ](FAQ.md)
 - [Architecture](Architecture.md)

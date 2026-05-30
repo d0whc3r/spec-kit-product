@@ -43,6 +43,13 @@ shared `product/checklist.md` lets you verify them after generation.
    Twelve words or fewer per bullet, ideally one short sentence ending with
    a period.
 
+9. **Diagrams and optional sections earn their place.**
+   `/speckit.product.plan` and `/speckit.product.design` embed Mermaid diagrams
+   by default, but a diagram or optional section appears only when it shows
+   structure the prose cannot convey at a glance. One that would restate a list,
+   duplicate another view, or collapse to a trivial shape is omitted. See
+   [Diagrams](Diagrams.md) for the full rule.
+
 ## Why these rules
 
 Generated product artifacts are read by people who do not have time to
@@ -54,6 +61,8 @@ we hit in the prototype phase:
   as a customer-observable spec.
 - Optional empty sections waste reader attention.
 - "Robust", "seamless", "leverage" carry no information.
+- A diagram that only repeats the prose is noise, not signal. The value gate
+  keeps the output lean and the diagrams meaningful.
 
 ## Surfacing clarifications instead of resolving them
 

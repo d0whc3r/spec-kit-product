@@ -194,6 +194,13 @@ runner and a delivery worker emails the artifact when complete.
 | export-service    | modifies    | Accepts a list of dashboard ids, returns combined output. |
 | job-runner        | uses        | Runs large bulk exports out of band.                      |
 | delivery-mailer   | adds        | New worker that emails completed bulk exports.            |
+
+## Non-Functional Requirements
+
+| Quality attribute (ISO 25010)           | Target                                            | How verified           |
+| --------------------------------------- | ------------------------------------------------- | ---------------------- |
+| Performance efficiency (time behaviour) | Inline export under 15 s at p95 for 50 dashboards | Load test at the cap   |
+| Interaction capability (operability)    | Zero new manual steps to opt in                   | Usability walk-through |
 ```
 
 Component-level detail. No code, no full ORM definitions, no line-by-line
