@@ -10,7 +10,7 @@ shared `product/checklist.md` lets you verify them after generation.
    is detected as non-English.
 
 2. **No em dash character.**
-   The em dash (`—`, U+2014) is banned in generated output. Use a period or
+   The em dash character (U+2014) is banned in generated output. Use a period or
    a semicolon or a comma. This is the single strongest "AI tell" cue we
    filter against.
 

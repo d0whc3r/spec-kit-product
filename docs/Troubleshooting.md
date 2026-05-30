@@ -47,6 +47,9 @@ the source before approving a catalog.
 
 ## Project resolution errors
 
+These come from Spec Kit core's feature resolver and are surfaced verbatim
+before the extension runs. They are not extension error codes.
+
 | Code           | Cause                                                      | Fix                                                                |
 | -------------- | ---------------------------------------------------------- | ------------------------------------------------------------------ |
 | `E_NO_PROJECT` | Not inside a Spec Kit project.                             | `cd` into a project with `.specify/`, or run `specify init`.       |

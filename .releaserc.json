@@ -25,6 +25,7 @@
           "catalog.json",
           "package.json",
           "README.md",
+          "WORKFLOW.md",
           "docs/Getting-Started.md",
           "docs/FAQ.md",
           "docs/Troubleshooting.md",

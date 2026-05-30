@@ -32,7 +32,7 @@ echo "[semantic-release-prepare] OK: package.json version → ${VERSION}"
 # Matches https://github.com/<owner>/<repo>/releases/download/vX.Y.Z/product-X.Y.Z.zip
 # regardless of file or surrounding context.
 URL_PATTERN='https://github\.com/[^/]+/[^/]+/releases/download/v[0-9]+\.[0-9]+\.[0-9]+/product-[0-9]+\.[0-9]+\.[0-9]+\.zip'
-for f in README.md docs/Getting-Started.md docs/FAQ.md docs/Troubleshooting.md web/index.html; do
+for f in README.md WORKFLOW.md docs/Getting-Started.md docs/FAQ.md docs/Troubleshooting.md web/index.html; do
     if grep -qE "$URL_PATTERN" "$f"; then
         sed -i -E "s|${URL_PATTERN}|${DOWNLOAD_URL}|g" "$f"
         echo "[semantic-release-prepare] OK: ${f} direct-install URL → ${DOWNLOAD_URL}"

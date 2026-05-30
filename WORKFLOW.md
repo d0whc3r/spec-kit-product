@@ -14,21 +14,23 @@ This document explains how to install the extension, what each command needs as 
 
 ## Install
 
+Install directly from the latest release. This needs no catalog setup and is the recommended path:
+
 ```bash
-specify extension add product
+specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.6.0/product-0.6.0.zip
 ```
 
-To upgrade an existing install:
+Change the version in the URL to pin a different release.
+
+Prefer to install and upgrade by name with `specify extension add product`? That resolves the extension from Spec Kit's community catalog, which ships as discovery only (`install_allowed: false`). Approve it once, then add and upgrade by name:
 
 ```bash
+specify extension catalog add https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json --name community --install-allowed
+specify extension add product
 specify extension upgrade product
 ```
 
-To install a specific version:
-
-```bash
-specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v<version>/product-<version>.zip
-```
+If `specify extension add product` fails with `installation is not allowed from that catalog`, that is why.
 
 After install, four slash commands become available in your assistant.
 
@@ -69,15 +71,15 @@ All four commands also write to:   product/checklist.md
 
 ## Recommended Order
 
-Run the commands in this sequence as the feature matures. You do not need to run all four — stop at the level of detail your audience needs.
+Run the commands in this sequence as the feature matures. You do not need to run all four - stop at the level of detail your audience needs.
 
 ```
-1. /speckit.specify         (core) — creates spec.md, run this first
-2. /speckit.product.info    — quick stakeholder summary to validate direction early
-3. /speckit.product.spec    — full product spec once direction is confirmed
+1. /speckit.specify         (core) - creates spec.md, run this first
+2. /speckit.product.info    - quick stakeholder summary to validate direction early
+3. /speckit.product.spec    - full product spec once direction is confirmed
    ── run /speckit.plan (core) before continuing ──
-4. /speckit.product.plan    — product-oriented delivery view for PMs and leads
-5. /speckit.product.design  — technical design document for engineers
+4. /speckit.product.plan    - product-oriented delivery view for PMs and leads
+5. /speckit.product.design  - technical design document for engineers
 ```
 
 `/speckit.product.info` and `/speckit.product.spec` both read only `spec.md` and can be run before any engineering plan exists. `/speckit.product.plan` and `/speckit.product.design` require `plan.md`, so run `/speckit.plan` (Spec Kit core) first.
@@ -101,13 +103,13 @@ Short, non-technical summary of what is changing and why. One page or less. Run 
 
 Output sections:
 
-1. **Overview** — two to three sentences on what the feature is and why it exists.
-2. **Headline** — who this is for and what is changing, in plain language.
-3. **What is Changing** — two to five customer-observable bullets.
-4. **Out of Scope** — what is deliberately excluded.
-5. **Risks** _(optional)_ — appears when the spec has concrete risk signals.
-6. **Key Decisions** _(optional)_ — appears when `spec.md` has a `## Clarifications` section or `[NEEDS CLARIFICATION]` markers. Surfaces resolved decisions and flags still-open questions.
-7. **References** _(optional)_ — external links worth surfacing to non-technical readers.
+1. **Overview** - two to three sentences on what the feature is and why it exists.
+2. **Headline** - who this is for and what is changing, in plain language.
+3. **What is Changing** - two to five customer-observable bullets.
+4. **Out of Scope** - what is deliberately excluded.
+5. **Risks** _(optional)_ - appears when the spec has concrete risk signals.
+6. **Key Decisions** _(optional)_ - appears when `spec.md` has a `## Clarifications` section or `[NEEDS CLARIFICATION]` markers. Surfaces resolved decisions and flags still-open questions.
+7. **References** _(optional)_ - external links worth surfacing to non-technical readers.
 
 ---
 
@@ -126,21 +128,21 @@ Full product spec following Working Backwards (PRFAQ), Jobs to Be Done, Gherkin 
 
 Output sections (mandatory unless marked optional):
 
-1. **Headline** — press-release voice, customer and new outcome.
-2. **Glossary** _(optional)_ — domain terms that need plain-language definitions for non-technical readers.
-3. **Target Users and Personas** — named roles and what each cares about.
-4. **Problem Statement** — Job to Be Done in Ulwick format: "When..., I want to..., so I can...".
-5. **Assumptions** _(optional)_ — conditions believed true but not yet confirmed.
-6. **Value Proposition** — what changes in the user's life, compared to the status quo.
-7. **Scope** — finite list of included capabilities.
-8. **Out of Scope** — explicitly excluded capabilities with a one-phrase reason each.
-9. **Use Cases** — Gherkin scenarios (Given/When/Then), customer-observable behavior only.
-10. **Success Metrics** — one north star metric and at least one supporting metric, both tech-agnostic.
-11. **Risks and Open Product Questions** — risks and any `[NEEDS CLARIFICATION]` markers surfaced from `spec.md`.
-12. **Positioning** _(optional)_ — for features with external users or competing alternatives.
-13. **Go to Market and Rollout** _(optional)_ — when a launch motion exists.
+1. **Headline** - press-release voice, customer and new outcome.
+2. **Glossary** _(optional)_ - domain terms that need plain-language definitions for non-technical readers.
+3. **Target Users and Personas** - named roles and what each cares about.
+4. **Problem Statement** - Job to Be Done in Ulwick format: "When..., I want to..., so I can...".
+5. **Assumptions** _(optional)_ - conditions believed true but not yet confirmed.
+6. **Value Proposition** - what changes in the user's life, compared to the status quo.
+7. **Scope** - finite list of included capabilities.
+8. **Out of Scope** - explicitly excluded capabilities with a one-phrase reason each.
+9. **Use Cases** - Gherkin scenarios (Given/When/Then), customer-observable behavior only.
+10. **Success Metrics** - one north star metric and at least one supporting metric, both tech-agnostic.
+11. **Risks and Open Product Questions** - risks and any `[NEEDS CLARIFICATION]` markers surfaced from `spec.md`.
+12. **Positioning** _(optional)_ - for features with external users or competing alternatives.
+13. **Go to Market and Rollout** _(optional)_ - when a launch motion exists.
 
-The checklist validates mandatory sections, Gherkin scenario shape, style rules (no em dash, English only, no implementation detail), and section order. Walk the checklist after generation — any failed Required item means regenerate.
+The checklist validates mandatory sections, Gherkin scenario shape, style rules (no em dash, English only, no implementation detail), and section order. Walk the checklist after generation - any failed Required item means regenerate.
 
 If `product/10-spec.md` already exists, the command prompts for overwrite or abort.
 
@@ -150,9 +152,9 @@ If `product/10-spec.md` already exists, the command prompts for overwrite or abo
 
 High-level product view of the engineering plan. Describes what is being built and how it is structured, without time estimates or technical jargon. Intended for product managers, engineering leads, and cross-functional reviewers.
 
-**Requires**: `plan.md` — run `/speckit.plan` first.
+**Requires**: `plan.md` - run `/speckit.plan` first.
 
-**Reads**: `plan.md` (required), `spec.md` (supplementary — personas, problem framing)
+**Reads**: `plan.md` (required), `spec.md` (supplementary - personas, problem framing)
 **Writes**: `product/20-plan.md`, `product/checklist.md`
 
 ```text
@@ -163,18 +165,18 @@ High-level product view of the engineering plan. Describes what is being built a
 
 Output sections (mandatory unless marked optional):
 
-1. **Summary** — what is being built, who it is for, the main approach. No code, no time estimates.
-2. **Feature Context** — six labeled fields: Problem, For, Change, Quality bar, Constraints.
-3. **Goals** — three to six concrete observable outcomes this feature delivers.
-4. **Out of Scope** — explicitly excluded capabilities with a one-phrase reason each.
-5. **Build Overview** _(optional)_ — how the main system parts connect, at C4 container level.
-6. **Key Principles** _(optional)_ — explicit guard rails or core rules from the plan.
-7. **Delivery Phases** — numbered phases in source order. Each phase lists its outcomes. No time estimates, no temporal bands.
-8. **Key Decisions** _(optional)_ — mini-ADR format: Context, Options considered, Decision, Consequence. One subsection per decision.
-9. **Risks and Mitigations** _(optional)_ — pre-mortem lens. Probability, Impact, Mitigation for each.
-10. **Divergences and Edge Cases** _(optional)_ — scenarios that deviate from the normal flow.
-11. **Validation** _(optional)_ — observable conditions a reviewer can verify after shipping.
-12. **Open Questions** _(optional)_ — unresolved items from the plan, as single-sentence questions.
+1. **Summary** - what is being built, who it is for, the main approach. No code, no time estimates.
+2. **Feature Context** - six labeled fields: Problem, For, Change, Quality bar, Constraints.
+3. **Goals** - three to six concrete observable outcomes this feature delivers.
+4. **Out of Scope** - explicitly excluded capabilities with a one-phrase reason each.
+5. **Build Overview** _(optional)_ - how the main system parts connect, at C4 container level.
+6. **Key Principles** _(optional)_ - explicit guard rails or core rules from the plan.
+7. **Delivery Phases** - numbered phases in source order. Each phase lists its outcomes. No time estimates, no temporal bands.
+8. **Key Decisions** _(optional)_ - mini-ADR format: Context, Options considered, Decision, Consequence. One subsection per decision.
+9. **Risks and Mitigations** _(optional)_ - pre-mortem lens. Probability, Impact, Mitigation for each.
+10. **Divergences and Edge Cases** _(optional)_ - scenarios that deviate from the normal flow.
+11. **Validation** _(optional)_ - observable conditions a reviewer can verify after shipping.
+12. **Open Questions** _(optional)_ - unresolved items from the plan, as single-sentence questions.
 
 Technical terms are glossed in plain English on first use. No code, no file paths.
 
@@ -186,7 +188,7 @@ Mermaid diagrams are embedded by default: a `journey` of the persona's flow unde
 
 Technical design document for tech leads and senior developers. Goes deeper than the plan: component names, module boundaries, API surface shapes, data schemas at a conceptual level. No runnable code, no full ORM definitions, no line-by-line detail.
 
-**Requires**: `plan.md` and `spec.md` — run `/speckit.plan` and `/speckit.specify` first.
+**Requires**: `plan.md` and `spec.md` - run `/speckit.plan` and `/speckit.specify` first.
 
 **Reads**: `plan.md` (required), `spec.md` (required), `tasks.md` (optional), `data-model.md` (optional)
 **Writes**: `product/30-design.md`, `product/checklist.md`
@@ -199,18 +201,18 @@ Technical design document for tech leads and senior developers. Goes deeper than
 
 Output sections (mandatory unless marked optional):
 
-1. **Summary** — what is being built technically, layers affected, key architectural approach.
-2. **Technical Context** — current state, affected layers, technical constraints.
-3. **Architectural Approach** — how the solution fits the existing architecture, components added/changed/removed.
-4. **Affected Modules** — table: module name, change type (adds/modifies/removes/uses), responsibility.
-5. **Data Design** _(conditional)_ — entity shapes and data flow. Present when any source has data model content.
-6. **API Design** _(conditional)_ — request/response shapes and error cases. Present when the feature has an API surface.
-7. **Spec Coverage** _(conditional)_ — table mapping each spec use case to the component that implements it. Gaps marked explicitly.
-8. **Key Technical Decisions** _(optional)_ — ADR format: Context, Options considered, Decision, Consequences.
-9. **Testing Strategy** — Unit, Integration, E2E/BDD, Observability bullets derived from spec use cases.
-10. **Rollout and Migration** — strategy, data migration steps, rollback plan.
-11. **Risks and Mitigations** _(optional)_ — pre-mortem lens with probability, impact, mitigation.
-12. **Open Questions** _(optional)_ — unresolved technical decisions as single-sentence questions.
+1. **Summary** - what is being built technically, layers affected, key architectural approach.
+2. **Technical Context** - current state, affected layers, technical constraints.
+3. **Architectural Approach** - how the solution fits the existing architecture, components added/changed/removed.
+4. **Affected Modules** - table: module name, change type (adds/modifies/removes/uses), responsibility.
+5. **Data Design** _(conditional)_ - entity shapes and data flow. Present when any source has data model content.
+6. **API Design** _(conditional)_ - request/response shapes and error cases. Present when the feature has an API surface.
+7. **Spec Coverage** _(conditional)_ - table mapping each spec use case to the component that implements it. Gaps marked explicitly.
+8. **Key Technical Decisions** _(optional)_ - ADR format: Context, Options considered, Decision, Consequences.
+9. **Testing Strategy** - Unit, Integration, E2E/BDD, Observability bullets derived from spec use cases.
+10. **Rollout and Migration** - strategy, data migration steps, rollback plan.
+11. **Risks and Mitigations** _(optional)_ - pre-mortem lens with probability, impact, mitigation.
+12. **Open Questions** _(optional)_ - unresolved technical decisions as single-sentence questions.
 
 Mermaid diagrams are embedded by default: a `flowchart` of how components connect (C4 level) under Architectural Approach, an `erDiagram` and data-flow diagram under Data Design, and a `sequenceDiagram` under API Design. Each diagram renders only when its section has source content.
 
@@ -248,3 +250,5 @@ specs/<feature-dir>/
 | `E_PLACEHOLDERS` | `spec.md` or `plan.md` still contains unfilled template markers. | Replace all `[PLACEHOLDER]` values with real content.        |
 | `E_LANGUAGE`     | Source files are not in English.                                 | Translate the source file to English and rerun.              |
 | `E_USER_ABORT`   | You answered "no" at the overwrite prompt.                       | Rerun when ready.                                            |
+
+`E_NO_PROJECT` and `E_NO_POINTER` are Spec Kit core resolver errors, surfaced verbatim before the extension runs. They are not extension error codes. The rest are emitted by the product commands.

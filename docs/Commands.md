@@ -52,6 +52,8 @@ align stakeholders before committing to the full spec.
 | `E_LANGUAGE`     | `spec.md` is not in English.                                |
 | `E_USER_ABORT`   | You answered "no" at the overwrite or clarification prompt. |
 
+`E_NO_PROJECT` and `E_NO_POINTER` come from Spec Kit core's feature resolver and are surfaced verbatim. They are not codes this extension emits. The rest are emitted by the command.
+
 ---
 
 ## `/speckit.product.spec`
