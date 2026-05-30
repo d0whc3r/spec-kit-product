@@ -11,7 +11,7 @@ The quickest fix is a direct install:
 
 ```bash
 specify extension add product --from \
-  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.6.0/product-0.6.0.zip
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.7.0/product-0.7.0.zip
 ```
 
 To install and upgrade by name instead, approve the community catalog once. See
@@ -109,7 +109,7 @@ release URL:
 
 ```bash
 specify extension add product --from \
-  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.6.0/product-0.6.0.zip
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.7.0/product-0.7.0.zip
 ```
 
 If you approved the community catalog, you can upgrade by name:

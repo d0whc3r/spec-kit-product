@@ -1,5 +1,17 @@
 # Changelog
 
+# [0.7.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.6.0...v0.7.0) (2026-05-30)
+
+
+### Bug Fixes
+
+* update path for maintain-docs skill reference ([18bc857](https://github.com/d0whc3r/spec-kit-product/commit/18bc857c7f9872b1f15885f61db3c98363992475))
+
+
+### Features
+
+* update documentation to include WORKFLOW.md and enhance troubleshooting details ([541dcf9](https://github.com/d0whc3r/spec-kit-product/commit/541dcf95c931fbbcaede0379bd46a75c9e4961ae))
+
 # [0.6.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.5.3...v0.6.0) (2026-05-30)
 
 
