@@ -84,6 +84,17 @@ flowchart LR
 
 ## Delivery Phases
 
+```mermaid
+flowchart LR
+    P1["Phase 1: Per-minute burst protection"]
+    P2["Phase 2: Monthly request quota"]
+    P3["Phase 3: Admin limit overrides"]
+    P4["Phase 4: Tenant usage in the dashboard"]
+    P1 --> P2
+    P1 --> P3
+    P2 --> P4
+```
+
 ### Phase 1: Per-minute burst protection
 
 - Each customer's requests are capped within the current minute.
@@ -146,33 +157,48 @@ _Depends on_: Phase 2.
 
 ## Risks and Mitigations
 
-**Counter store outage relaxes protection**
+**Abuse slips through during an outage**
 
-- **What could go wrong**: Fail-open lets abuse through during a counter outage.
+- **What could go wrong**: Fail-open lets abusive traffic through while counters are down.
 - **Probability**: Medium
 - **Impact**: High
 - **Mitigation**: Alert on outages and keep them short.
 
-**Counting drift under heavy load**
+**One tenant's spike degrades others**
 
-- **What could go wrong**: Concurrent requests miscount, breaking the accuracy target.
-- **Probability**: Medium
+- **What could go wrong**: A noisy tenant consumes shared capacity and slows others.
+- **Probability**: Low
 - **Impact**: High
-- **Mitigation**: Use all-or-nothing counter updates and load-test them.
+- **Mitigation**: Isolate counts per tenant and load-test isolation.
 
-**Stale limits after a change**
+**Default limits throttle legitimate traffic**
 
-- **What could go wrong**: Cached limits stay stale, delaying changes.
+- **What could go wrong**: Default limits set too low block legitimate new customers.
+- **Probability**: Medium
+- **Impact**: Medium
+- **Mitigation**: Set conservative defaults; staff override without a release.
+
+**Support cannot raise a limit fast enough**
+
+- **What could go wrong**: A customer stays stuck at a wrong limit until staff react.
 - **Probability**: Low
 - **Impact**: Medium
-- **Mitigation**: Refresh the cache on every limit change.
+- **Mitigation**: Changes apply within a minute, with no release.
 
-**Shared counter store becomes a bottleneck**
-
-- **What could go wrong**: The shared counter store slows checks at peak.
-- **Probability**: Low
-- **Impact**: Medium
-- **Mitigation**: Keep each check to a few fast counter operations.
+```mermaid
+quadrantChart
+    title Risk exposure
+    x-axis Low probability --> High probability
+    y-axis Low impact --> High impact
+    quadrant-1 Mitigate now
+    quadrant-2 Plan contingency
+    quadrant-3 Accept
+    quadrant-4 Monitor and reduce
+    Abuse during outage: [0.5, 0.85]
+    Spike degrades other tenants: [0.2, 0.85]
+    Default limits too low: [0.5, 0.5]
+    Slow limit change: [0.2, 0.5]
+```
 
 ## Divergences and Edge Cases
 

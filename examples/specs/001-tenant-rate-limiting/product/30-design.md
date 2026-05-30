@@ -14,11 +14,19 @@ This feature enforces two independent per-tenant rate limits, a per-minute burst
 **Affected layers**: API gateway middleware, backend services, data layer (counter store and relational store), dashboard frontend.
 **Technical constraints**:
 
-- Counters must be atomic to stay within 1% accuracy under concurrency.
-- Admin limit changes must take effect within one minute.
-- Dashboard usage must be fresh within one minute.
+- Counters must be atomic, with no lost increments under concurrency.
 - Counter-store outage fails open and emits a monitored alert.
-- Rate-limit check adds under 5 ms at p95 latency.
+- Unauthenticated requests are neither counted nor blocked.
+- Limit changes apply without a deploy.
+
+## Non-Functional Requirements
+
+| Quality attribute (ISO 25010)           | Target                                           | How verified                      |
+| --------------------------------------- | ------------------------------------------------ | --------------------------------- |
+| Performance efficiency (time behaviour) | Rate-limit check adds under 5 ms at p95          | Latency load test and p95 monitor |
+| Functional suitability (correctness)    | Enforced counts within 1% under peak concurrency | Concurrency load tests            |
+| Reliability                             | Admin limit changes take effect within 1 minute  | Integration test                  |
+| Functional suitability (correctness)    | Dashboard usage is fresh within 1 minute         | Integration test                  |
 
 ## Architectural Approach
 
@@ -339,3 +347,18 @@ sequenceDiagram
 - **Probability**: Low
 - **Impact**: Medium
 - **Mitigation**: Accept per spec, or revisit with a sliding window later.
+
+```mermaid
+quadrantChart
+    title Risk exposure
+    x-axis Low probability --> High probability
+    y-axis Low impact --> High impact
+    quadrant-1 Mitigate now
+    quadrant-2 Plan contingency
+    quadrant-3 Accept
+    quadrant-4 Monitor and reduce
+    Counter store outage: [0.5, 0.86]
+    Inaccurate counts: [0.5, 0.8]
+    Stale cached policy: [0.2, 0.53]
+    Window-edge burst: [0.2, 0.47]
+```
