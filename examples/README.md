@@ -13,18 +13,25 @@ you run it on your own feature.
 
 ```
 examples/
-└── api-rate-limiting/          one worked feature
-    ├── spec.md                 /speckit.specify        (read by info, spec, plan, design)
-    ├── plan.md                 /speckit.plan           (read by plan, design)
-    ├── research.md             /speckit.plan, Phase 0
-    ├── data-model.md           /speckit.plan, Phase 1  (read by design)
-    ├── quickstart.md           /speckit.plan, Phase 1
-    └── product/                this extension's output
-        ├── 00-info.md          /speckit.product.info
-        ├── 10-spec.md          /speckit.product.spec
-        ├── 20-plan.md          /speckit.product.plan
-        ├── 30-design.md        /speckit.product.design
-        └── checklist.md        shared, updated by all four
+└── specs/
+    └── 001-tenant-rate-limiting/    one worked feature
+        ├── spec.md                  /speckit.specify        (read by info, spec, plan, design)
+        ├── plan.md                  /speckit.plan           (read by plan, design)
+        ├── research.md              /speckit.plan, Phase 0
+        ├── data-model.md            /speckit.plan, Phase 1  (read by design)
+        ├── quickstart.md            /speckit.plan, Phase 1
+        ├── contracts/               /speckit.plan, Phase 1  (not read by product commands)
+        │   ├── admin-limits-api.md
+        │   ├── ratelimit-response.md
+        │   └── tenant-usage-api.md
+        ├── checklists/
+        │   └── requirements.md      /speckit.specify        (not read by product commands)
+        └── product/                 this extension's output
+            ├── 00-info.md           /speckit.product.info
+            ├── 10-spec.md           /speckit.product.spec
+            ├── 20-plan.md           /speckit.product.plan
+            ├── 30-design.md         /speckit.product.design
+            └── checklist.md         shared, updated by all four
 ```
 
 ## Which inputs each command reads
@@ -43,8 +50,8 @@ Design section in `data-model.md` when one exists.
 ## How this example was generated
 
 Run these in a Spec Kit project with the extension installed (see the repo
-[README](../README.md) for install). Copy the generated files from
-`specs/<NNN-feature>/` into the matching folder here.
+[README](../README.md) for install). Then copy the generated
+`specs/<NNN-feature>/` folder into `examples/specs/` here.
 
 ```bash
 # 1. Create the feature spec (Spec Kit core).
@@ -62,11 +69,9 @@ Run these in a Spec Kit project with the extension installed (see the repo
 /speckit.product.design
 ```
 
-Then copy the results:
+Then copy the whole feature folder under `examples/specs/` (this pulls in the
+`contracts/`, `checklists/`, and `product/` subfolders along with it):
 
 ```bash
-mkdir -p examples/api-rate-limiting/product
-cp specs/<NNN-feature>/{spec.md,plan.md,research.md,data-model.md,quickstart.md} \
-   examples/api-rate-limiting/
-cp specs/<NNN-feature>/product/*.md examples/api-rate-limiting/product/
+cp -r specs/<NNN-feature> examples/specs/
 ```

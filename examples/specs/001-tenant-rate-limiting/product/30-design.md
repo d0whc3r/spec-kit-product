@@ -1,210 +1,231 @@
-# Technical Design: Per-Tenant API Rate Limiting
+# Technical Design: Implementation Plan: Per-Tenant API Rate Limiting
 
-**Feature**: Per-Tenant API Rate Limiting
+**Feature**: Implementation Plan: Per-Tenant API Rate Limiting
 **Created**: 2026-05-30
 **Status**: Draft
 
 ## Summary
 
-This feature enforces two independent per-tenant rate limits, a per-minute burst limit and a monthly quota, at an API gateway middleware that runs after authentication and before application handlers. The middleware resolves the tenant from the authenticated request, then checks two atomic counters held in a fast in-memory store (Redis). Durable policy overrides and an immutable audit trail live in the relational store (PostgreSQL), with the effective policy cached and invalidated on admin change. The dashboard gains a usage panel backed by a tenant-scoped usage endpoint that reads the live counters.
+This design adds per-tenant API rate limiting across the backend API layer, data layer, and existing dashboard frontend. The API gateway middleware resolves the tenant, checks short-window and monthly counters, and returns a standardized 429 response when a limit blocks the request. Admin APIs update tenant policy rows and audit records, while the tenant usage API feeds the dashboard from live counters and effective policy values.
 
 ## Technical Context
 
-**Current state**: An existing authenticated API and tenant identity serve customers through a dashboard, with no per-tenant rate limiting today.
-**Affected layers**: API gateway middleware, backend services, data layer (counter store and relational store), dashboard frontend.
+**Current state**: The repository has a docs-only demo feature with assumed existing tenant identity, admin authorization, and dashboard surfaces.
+**Affected layers**: backend API, backend services, data layer, cache layer, frontend dashboard, tests, observability
 **Technical constraints**:
 
-- Counters must be atomic, with no lost increments under concurrency.
-- Counter-store outage fails open and emits a monitored alert.
-- Unauthenticated requests are neither counted nor blocked.
-- Limit changes apply without a deploy.
+- Authenticated requests must resolve to exactly one tenant.
+- Unauthenticated requests stay on the existing authentication path.
+- Tenant usage must never expose another tenant's data.
+- Admin limit changes require internal authorization.
+- Tracking outages fail open and emit alerts.
+- Monthly quotas align to UTC calendar months.
 
-## Non-Functional Requirements
+## Non-Functional Requirements _(optional)_
 
-| Quality attribute (ISO 25010)           | Target                                           | How verified                      |
-| --------------------------------------- | ------------------------------------------------ | --------------------------------- |
-| Performance efficiency (time behaviour) | Rate-limit check adds under 5 ms at p95          | Latency load test and p95 monitor |
-| Functional suitability (correctness)    | Enforced counts within 1% under peak concurrency | Concurrency load tests            |
-| Reliability                             | Admin limit changes take effect within 1 minute  | Integration test                  |
-| Functional suitability (correctness)    | Dashboard usage is fresh within 1 minute         | Integration test                  |
+| Quality attribute (ISO 25010) | Target                                               | How verified                         |
+| ----------------------------- | ---------------------------------------------------- | ------------------------------------ |
+| Performance efficiency        | Rate-limit check adds < 5 ms p95 latency             | Backend integration and load tests   |
+| Performance efficiency        | Sustain 5,000 requests/sec aggregate                 | Peak load test across tenants        |
+| Functional suitability        | 100% of over-limit calls return 429 with Retry-After | Contract tests for limiter responses |
+| Functional suitability        | New admin limits apply within 1 minute               | Admin update integration test        |
+| Functional suitability        | Dashboard usage is fresh within 1 minute             | Dashboard E2E and usage API tests    |
+| Reliability                   | Counts stay within 1% of accepted requests           | Concurrent request integration test  |
+| Functional suitability        | 100% of limit changes have audit records             | Admin API contract tests             |
 
 ## Architectural Approach
 
-The core of the design is an enforcement middleware placed at the front of the request pipeline, after authentication and before application handlers. It resolves the tenant from the authenticated request through a tenant resolver, then asks the limiter for a decision. Because it sits at a single choke point, no individual application handler needs to know about rate limiting.
+The design fits a web application with a stateless backend, shared Redis counters, PostgreSQL policy storage, and an existing dashboard frontend. The API middleware is the enforcement boundary for authenticated traffic behind the limiter. It calls `tenant_resolver`, resolves the effective policy through `policy_store`, and delegates counter checks to `limiter`.
 
-The limiter checks two independent counters in the in-memory store: a fixed-window per-minute key that expires after 60 seconds, and a monthly key tied to the UTC calendar month. Each accepted request increments both counters atomically, so counts stay accurate under high concurrency. The limiter produces a transient RateLimitDecision that names whether the request is allowed, which limit is binding, and the retry-after wait. Only accepted requests increment counters; an over-limit request consumes nothing.
+The limiter owns the decision path for burst limits, monthly quotas, and the binding-limit response. Accepted requests increment both counters. Rejected requests do not consume quota. When both limits are violated, the decision reports the monthly quota because it has the longer reset window.
 
-The policy store resolves the effective policy for a tenant: a per-tenant override row when present, otherwise platform defaults held in configuration. The effective policy is cached in the in-memory store and invalidated whenever an admin changes a limit, so changes take effect within the one-minute target without a restart.
+Policy and audit data stay durable in PostgreSQL. Redis stores ephemeral usage counters and the effective-policy cache. Admin updates upsert the tenant policy, append a limit-change audit record in the same database transaction, and invalidate the cached policy so the next request can observe the new limit.
 
-The admin limits endpoint lets authorized admins read and update a tenant's policy. Every change is written append-only to the audit trail in the same transaction as the policy update, so a policy change can never exist without its audit record. Unauthorized callers are denied before any change is made.
-
-A tenant-scoped usage endpoint aggregates the live counters and effective policy into a usage view: consumed this month, remaining, reset date, and burst limit. The dashboard adds a usage panel that reads this endpoint and shows an approaching-limit warning at 80% of the monthly quota. Tenant scoping ensures a user sees only their own organization's usage.
-
-The key design principles are a single enforcement choke point, two independent reset cycles, atomic counter updates for accuracy, cache-and-invalidate for limits that are both fast and current, and fail-open on a counter-store outage to preserve availability.
+The dashboard reads usage through the tenant-scoped usage API. The endpoint derives the tenant from the authenticated principal and accepts no tenant identifier. This keeps dashboard reads scoped to the viewer's organization while still exposing consumed usage, remaining quota, reset time, burst limit, and approaching-limit status.
 
 ```mermaid
 flowchart TD
-    subgraph Client
-        UI[Dashboard usage panel]
+    subgraph Frontend
+        UsagePanel[UsagePanel]
+        UsageClient[usageClient]
     end
     subgraph API
-        MW[Enforcement middleware]
-        ADM[Admin limits endpoint]
-        USG[Usage endpoint]
+        Middleware[middleware]
+        AdminLimits[admin_limits]
+        UsageAPI[usage]
     end
     subgraph Services
-        TR[Tenant resolver]
-        LIM[Limiter]
-        PS[Policy store]
-        AUD[Audit log]
+        TenantResolver[tenant_resolver]
+        Limiter[limiter]
+        PolicyStore[policy_store]
+        AuditLog[audit_log]
     end
     subgraph Data
-        RED[(Counters and policy cache)]
-        PG[(Policy and audit store)]
+        Redis[(Redis counters and cache)]
+        Postgres[(PostgreSQL policy and audit)]
     end
-    UI -->|reads usage| USG
-    MW --> TR
-    MW --> LIM
-    LIM --> RED
-    LIM --> PS
-    PS --> RED
-    PS --> PG
-    ADM --> PS
-    ADM --> AUD
-    AUD --> PG
-    USG --> RED
-    USG --> PS
-```
-
-A tenant's limit window moves through a small lifecycle: it accepts requests until the limit is reached, refuses further requests until the window resets, then accepts again.
-
-```mermaid
-stateDiagram-v2
-    [*] --> WithinLimit
-    WithinLimit --> WithinLimit: accepted request
-    WithinLimit --> OverLimit: limit reached
-    OverLimit --> OverLimit: request refused
-    OverLimit --> WithinLimit: window resets
+    UsagePanel --> UsageClient
+    UsageClient --> UsageAPI
+    Middleware --> TenantResolver
+    Middleware --> Limiter
+    Limiter --> PolicyStore
+    Limiter --> Redis
+    PolicyStore --> Redis
+    PolicyStore --> Postgres
+    AdminLimits --> PolicyStore
+    AdminLimits --> AuditLog
+    AuditLog --> Postgres
+    UsageAPI --> PolicyStore
+    UsageAPI --> Redis
 ```
 
 ## Affected Modules
 
-| Module / Component        | Change | Responsibility                                          |
-| ------------------------- | ------ | ------------------------------------------------------- |
-| Tenant resolver           | adds   | Maps an authenticated request to its tenant id.         |
-| Enforcement middleware    | adds   | Runs the limit check and builds the 429 envelope.       |
-| Limiter                   | adds   | Checks atomic burst and monthly counters per request.   |
-| Policy store              | adds   | Resolves effective policy with defaults and a cache.    |
-| Audit log                 | adds   | Writes append-only records of every limit change.       |
-| Admin limits endpoint     | adds   | Lets authorized admins read and update a tenant policy. |
-| Usage endpoint            | adds   | Returns tenant-scoped usage for the dashboard.          |
-| Dashboard usage panel     | adds   | Shows consumption, reset date, and a limit warning.     |
-| Counters and policy cache | uses   | Holds atomic counters and the cached effective policy.  |
-| Policy and audit store    | uses   | Persists policy overrides and the audit trail.          |
+| Module / Component                        | Change | Responsibility                                    |
+| ----------------------------------------- | ------ | ------------------------------------------------- |
+| `backend/src/api/middleware.py`           | adds   | Enforces limits and builds 429 responses.         |
+| `backend/src/api/admin_limits.py`         | adds   | Reads and updates tenant policies for admins.     |
+| `backend/src/api/usage.py`                | adds   | Returns tenant-scoped usage snapshots.            |
+| `backend/src/services/tenant_resolver.py` | uses   | Maps authenticated requests to tenant ids.        |
+| `backend/src/services/limiter.py`         | adds   | Checks counters and returns rate-limit decisions. |
+| `backend/src/services/policy_store.py`    | adds   | Resolves defaults, overrides, and policy cache.   |
+| `backend/src/services/audit_log.py`       | adds   | Appends immutable limit-change records.           |
+| `backend/src/models/rate_limit_policy.py` | adds   | Represents tenant policy overrides.               |
+| `backend/src/models/usage.py`             | adds   | Shapes usage snapshots over live counters.        |
+| `backend/src/models/audit.py`             | adds   | Represents limit-change audit records.            |
+| `frontend/src/components/UsagePanel.tsx`  | adds   | Displays usage, reset, and warning state.         |
+| `frontend/src/services/usageClient.ts`    | adds   | Calls the tenant usage API.                       |
 
-## Data Design
+## Data Design _(optional)_
 
 ### Data Model
 
 ```text
-RateLimitPolicy (durable, relational; absent row means platform defaults)
-- tenant_id: id - primary key, one row per tenant override
-- burst_limit_per_minute: integer - greater than 0, requests per minute window
-- monthly_quota: integer - greater than 0, accepted requests per UTC month
-- updated_at: timestamp - UTC, set on every change
-- updated_by: actor reference - last admin to change
+Tenant
+- tenant_id: UUID or string, stable organization identity.
+```
 
-LimitChangeAuditRecord (durable, append-only)
-- id: id - primary key
-- tenant_id: id - affected tenant
-- actor: actor reference - admin who made the change
-- changed_at: timestamp - UTC, server-assigned
-- old_burst_limit / new_burst_limit: integer - previous and new values
-- old_monthly_quota / new_monthly_quota: integer - previous and new values
+```text
+RateLimitPolicy
+- tenant_id: tenant reference, unique policy owner.
+- burst_limit_per_minute: integer, positive burst cap.
+- monthly_quota: integer, positive monthly cap.
+- updated_at: timestamp, UTC policy update time.
+- updated_by: actor reference, last admin modifier.
+```
 
-UsageCounter (ephemeral, in-memory; reconstructable from traffic)
-- minute key: accepted count in the active minute, expires after 60 seconds
-- month key: accepted count in the active UTC month, rolls at month boundary
+```text
+UsageCounter
+- minute key: integer, accepted requests this minute.
+- month key: integer, accepted requests this UTC month.
+- quota_resets_at: timestamp, next UTC month boundary.
+- burst_limit_per_minute: integer, effective burst cap.
+```
 
-RateLimitDecision (transient, per request, not stored)
-- allowed: boolean - whether the request proceeds
-- binding_limit: none | burst | monthly - which limit blocked it
-- retry_after_seconds: integer - longer wait when both limits are hit
-- limit_value: integer - the limit that was hit
-- window_resets_at: timestamp - minute or month boundary
+```text
+LimitChangeAuditRecord
+- id: UUID, audit record identity.
+- tenant_id: tenant reference, affected organization.
+- actor: actor reference, admin who changed limits.
+- changed_at: timestamp, server-assigned UTC time.
+- old_burst_limit: integer or null, previous burst cap.
+- new_burst_limit: integer, new burst cap.
+- old_monthly_quota: integer or null, previous quota.
+- new_monthly_quota: integer, new quota.
+```
+
+```text
+RateLimitDecision
+- allowed: boolean, request proceeds when true.
+- binding_limit: none, burst, or monthly.
+- retry_after_seconds: integer or null, retry delay.
+- limit_value: integer, limit that blocked the request.
+- window_resets_at: timestamp, binding reset time.
 ```
 
 ```mermaid
 erDiagram
-    Tenant ||--o| RateLimitPolicy : overrides
-    Tenant ||--o{ LimitChangeAuditRecord : logs
-    Tenant ||--|| UsageCounter : tracks
-    Tenant {
-        id tenant_id PK
+    TENANT ||--o| RATE_LIMIT_POLICY : has_override
+    TENANT ||--o{ LIMIT_CHANGE_AUDIT_RECORD : records
+    TENANT ||--o{ USAGE_COUNTER : has_live_counts
+    TENANT {
+        string tenant_id
     }
-    RateLimitPolicy {
-        id tenant_id PK
-        integer burst_limit_per_minute
-        integer monthly_quota
-        timestamp updated_at
-        actor updated_by
+    RATE_LIMIT_POLICY {
+        string tenant_id
+        int burst_limit_per_minute
+        int monthly_quota
+        datetime updated_at
+        string updated_by
     }
-    LimitChangeAuditRecord {
-        id id PK
-        id tenant_id FK
-        actor actor
-        timestamp changed_at
-        integer new_burst_limit
-        integer new_monthly_quota
+    LIMIT_CHANGE_AUDIT_RECORD {
+        string id
+        string tenant_id
+        string actor
+        datetime changed_at
     }
-    UsageCounter {
-        integer minute_count
-        integer month_count
+    USAGE_COUNTER {
+        string tenant_id
+        int minute_count
+        int month_count
     }
 ```
 
 ### Data Flow
 
-A request enters the middleware, which resolves the tenant and asks the limiter to check the counters. On an accepted request, both the minute and month counters increment atomically; on an over-limit request, neither increments and a decision carrying a retry-after value is returned. Admin changes write the policy override and an audit record in one transaction, then invalidate the cached policy. The usage endpoint reads the live counters and effective policy to build the usage view.
+An authenticated request enters the middleware, resolves its tenant, reads the effective policy, and updates live counters if the request is accepted. Admin writes update the policy and audit row together, then invalidate the policy cache. Dashboard reads combine live monthly counters with the effective policy to produce the usage snapshot.
 
 ```mermaid
-flowchart LR
-    Req[Authenticated request] --> Res[Resolve tenant]
-    Res --> Chk[Check counters]
-    Chk --> Dec{Within limits?}
-    Dec -->|Yes| Inc[Increment minute and month]
-    Dec -->|No| Ref[Return decision with retry-after]
-    Adm[Admin change] --> Tx[Write policy and audit]
-    Tx --> Inv[Invalidate cached policy]
-    Usg[Usage request] --> Read[Read counters and policy]
-    Read --> View[Build usage view]
+sequenceDiagram
+    participant Caller
+    participant Middleware
+    participant TenantResolver
+    participant Limiter
+    participant PolicyStore
+    participant Redis
+    Caller->>Middleware: authenticated request
+    Middleware->>TenantResolver: resolve tenant
+    Middleware->>Limiter: check request
+    Limiter->>PolicyStore: get effective policy
+    PolicyStore->>Redis: read policy cache
+    Limiter->>Redis: update counters
+    Redis-->>Limiter: counts and resets
+    Limiter-->>Middleware: decision
+    Middleware-->>Caller: accepted or rate limited
 ```
 
-## API Design
+## API Design _(optional)_
 
-The feature touches three surfaces: the rate-limited response envelope, an admin limits surface, and a tenant usage surface. Shapes are conceptual, not a full specification.
+The feature adds one tenant usage read, one internal admin policy read and write surface, and a standardized limiter response envelope on protected routes. Request and response bodies stay conceptual here; the contract files remain the detailed source for field rules and contract tests.
 
 ```text
-Rate-limited response (applies to any limited endpoint)
-  Response (429 Too Many Requests):
-    Retry-After: seconds to wait
-    body: { reason, binding_limit: burst | monthly, limit_value, resets_at }
-  Behavior: the longer wait wins when both limits are hit
+GET /usage
+  Request: authenticated tenant user, no tenant id parameter.
+  Response: tenant_id, monthly_quota, consumed_this_month, remaining_this_month,
+            quota_resets_at, burst_limit_per_minute, approaching_limit, as_of.
+  Errors: authentication failure follows the existing auth path.
+```
 
-GET /admin/tenants/{tenant_id}/limits        (admin only)
-  Response: { burst_limit_per_minute, monthly_quota, updated_at, updated_by }
-  Errors:   403 when the caller is not an authorized admin
+```text
+GET /admin/tenants/{tenant_id}/limits
+  Request: admin role and tenant_id path parameter.
+  Response: tenant_id, burst_limit_per_minute, monthly_quota,
+            source, updated_at, updated_by.
+  Errors: 403 for non-admin, 404 for unknown tenant.
+```
 
-PUT /admin/tenants/{tenant_id}/limits        (admin only)
-  Request:  { burst_limit_per_minute?, monthly_quota? }
-  Response: { burst_limit_per_minute, monthly_quota, updated_at }
-  Errors:   403 not authorized; 400 non-positive value
-  Effect:   writes an audit record, invalidates the cache, effective within one minute
+```text
+PUT /admin/tenants/{tenant_id}/limits
+  Request: admin role, burst_limit_per_minute, monthly_quota.
+  Response: updated tenant policy.
+  Errors: 400 for invalid limits, 403 for non-admin, 404 for unknown tenant.
+```
 
-GET /tenants/{tenant_id}/usage               (tenant-scoped)
-  Response: { consumed_this_month, remaining_this_month, monthly_quota,
-              quota_resets_at, burst_limit_per_minute }
-  Errors:   403 when requesting another tenant's usage
+```text
+Protected API route
+  Request: authenticated request behind the limiter.
+  Response: normal handler response with rate-limit headers.
+  Errors: 429 with Retry-After, binding_limit, limit, retry_after_seconds, resets_at.
 ```
 
 ```mermaid
@@ -212,141 +233,139 @@ sequenceDiagram
     participant Client
     participant Middleware
     participant Limiter
-    participant Counters
-    Client->>Middleware: authenticated request
-    Middleware->>Limiter: check(tenant)
-    Limiter->>Counters: read minute and month
-    alt within limits
-        Counters-->>Limiter: counts ok
-        Limiter->>Counters: increment both
-        Limiter-->>Middleware: allowed
-        Middleware-->>Client: 200 response
+    participant Handler
+    Client->>Middleware: protected API request
+    Middleware->>Limiter: rate-limit check
+    alt allowed
+        Middleware->>Handler: continue request
+        Handler-->>Client: response with remaining headers
     else over limit
-        Counters-->>Limiter: limit reached
-        Limiter-->>Middleware: blocked, retry-after
         Middleware-->>Client: 429 with Retry-After
     end
 ```
 
-## Spec Coverage
+## Spec Coverage _(optional)_
 
-| Use Case (from spec.md)           | Component / Operation                | Notes                          |
-| --------------------------------- | ------------------------------------ | ------------------------------ |
-| US1 burst limit enforced          | Limiter, minute counter              | Atomic per-minute window       |
-| US1 isolation between tenants     | Per-tenant counter keys              | Per-tenant key namespace       |
-| US1 burst window reset            | Minute key 60s expiry                | FR-009                         |
-| US2 monthly quota enforced        | Limiter, month counter               | UTC month key                  |
-| US2 monthly reset                 | Month key rolls at boundary          | FR-010                         |
-| US2 binding limit named           | RateLimitDecision                    | FR-007, FR-008                 |
-| US3 admin raises limit, no deploy | Admin limits endpoint, cache refresh | Effective within one minute    |
-| US3 change audited                | Audit log                            | Same transaction as the policy |
-| US3 non-admin denied              | Admin authorization                  | FR-016                         |
-| US4 dashboard shows usage         | Usage endpoint, usage panel          | Consumed, remaining, reset     |
-| US4 approaching-limit warning     | Usage panel                          | 80% threshold                  |
-| US4 tenant scoping                | Usage endpoint scoping               | FR-020                         |
+| Use Case (from spec.md)                     | Component / Operation          | Notes                                        |
+| ------------------------------------------- | ------------------------------ | -------------------------------------------- |
+| US1 AS1.1 Burst limit accepts N requests    | `limiter` and middleware       | Counter allows requests within limit.        |
+| US1 AS1.2 Burst overage returns 429         | 429 response envelope          | Retry-After uses minute reset.               |
+| US1 AS1.3 Other tenants unaffected          | `tenant_resolver` and counters | Tenant id scopes all keys.                   |
+| US1 AS1.4 Next window restores access       | `limiter` minute counter       | Minute reset enables new requests.           |
+| US2 AS2.1 Monthly usage decreases remaining | `limiter` month counter        | Accepted requests increment quota usage.     |
+| US2 AS2.2 Monthly overage returns 429       | 429 response envelope          | Retry-After uses monthly reset.              |
+| US2 AS2.3 New month resets quota            | Usage counter monthly key      | UTC month boundary resets usage.             |
+| US2 AS2.4 Both limits exceeded              | `RateLimitDecision`            | Monthly quota becomes binding limit.         |
+| US3 AS3.1 Admin raises burst limit          | Admin limits API               | Cache invalidation applies new policy.       |
+| US3 AS3.2 Admin raises monthly quota        | Admin limits API               | Usage reflects increased remaining quota.    |
+| US3 AS3.3 Audit saved                       | `audit_log`                    | Audit row records actor and values.          |
+| US3 AS3.4 Non-admin denied                  | Admin limits API               | 403 prevents changes and audits.             |
+| US4 AS4.1 Dashboard shows monthly usage     | Usage API and UsagePanel       | Shows quota, consumed, remaining, reset.     |
+| US4 AS4.2 Dashboard shows burst limit       | Usage API and UsagePanel       | Effective burst limit is included.           |
+| US4 AS4.3 Approaching warning appears       | Usage API and UsagePanel       | Warning starts at 80% consumption.           |
+| US4 AS4.4 Tenant scoping holds              | Usage API                      | Tenant derives from authenticated principal. |
 
-## Key Technical Decisions
+## Key Technical Decisions _(optional)_
 
-### Enforce at gateway middleware
+### API Middleware Enforcement
 
-**Context**: Limits must apply to every authenticated request without per-handler changes.
+**Context**: Every authenticated protected route must share the same limiting behavior.
 **Options considered**:
 
-- In-handler checks: precise but duplicated across every endpoint.
-- Single middleware choke point: one place, but resolves tenant itself.
+- Route handlers: simple, but easy to miss.
+- API middleware: centralizes enforcement before handlers.
 
-**Decision**: Enforce once at an API gateway middleware before application handlers.
+**Decision**: Enforce in API gateway middleware.
 **Consequences**:
 
-- Positive: One consistent enforcement point; handlers stay unchanged.
-- Negative: The middleware must resolve tenant and own all limit logic.
+- Positive: Protected routes get consistent 429 behavior.
+- Negative: Middleware needs careful ordering with authentication.
 
-### Two independent fixed-window counters
+### Shared Atomic Counters
 
-**Context**: The feature needs a short burst window and a long monthly window.
+**Context**: Horizontally scaled replicas must count accepted requests consistently.
 **Options considered**:
 
-- Single combined counter: simpler but cannot reset on two cycles.
-- Sliding window: smoother but heavier per-request cost.
-- Two fixed windows: simple and cheap, with sharp boundaries.
+- Local counters: low latency, but unsafe across replicas.
+- Shared counters: consistent, but depend on Redis availability.
+- Batch accounting: cheaper, but fails immediate enforcement.
 
-**Decision**: Use two independent fixed-window counters, per-minute and per-UTC-month.
+**Decision**: Use Redis atomic counters for burst and monthly usage.
 **Consequences**:
 
-- Positive: Cheap atomic operations; each limit resets independently.
-- Negative: Fixed windows allow bursts at window edges.
+- Positive: Counters stay consistent across stateless replicas.
+- Negative: Fail-open behavior can allow temporary excess usage.
 
-### Cache effective policy, invalidate on change
+### Durable Policy and Audit Storage
 
-**Context**: Changes must apply within a minute without a restart, yet checks must stay fast.
+**Context**: Tenant limits and audit history must survive restarts.
 **Options considered**:
 
-- Read policy every request: always fresh but slower per request.
-- Cache with timed expiry: fast but changes lag the expiry.
-- Cache with invalidation on write: fast and prompt.
+- Configuration only: simple, but requires releases.
+- Durable policy rows: dynamic and auditable.
 
-**Decision**: Cache the effective policy and invalidate it on every admin write.
+**Decision**: Store policies and audit records in PostgreSQL.
 **Consequences**:
 
-- Positive: Fast checks and prompt limit changes without a restart.
-- Negative: Cache invalidation must be reliable to avoid stale limits.
+- Positive: Admin changes become durable and traceable.
+- Negative: Policy writes require transactional care.
 
-### Fail open on counter-store outage
+### Effective Policy Cache
 
-**Context**: The counter store may be briefly unavailable during a check.
+**Context**: Limit checks need current policies without adding excess latency.
 **Options considered**:
 
-- Fail closed: blocks all traffic, maximizing protection.
-- Fail open: allows traffic, maximizing availability.
+- Read durable storage every request: current, but slower.
+- Cache effective policy: faster, but needs invalidation.
 
-**Decision**: Fail open and emit a monitored alert when the counter store is unavailable.
+**Decision**: Cache effective policies and invalidate on admin change.
 **Consequences**:
 
-- Positive: Customer availability is preserved during a counter-store outage.
-- Negative: Protection is temporarily relaxed, relying on alerting.
+- Positive: Request checks stay within latency targets.
+- Negative: Cache invalidation becomes part of correctness.
 
 ## Testing Strategy
 
-- **Unit**: Limiter math, window-boundary handling, retry-after selection logic.
-- **Integration**: Per-tenant isolation, window resets, concurrent counting accuracy.
-- **E2E / BDD**: US1 burst, US2 quota, US3 admin override, US4 dashboard usage.
-- **Observability**: Counter-store outage alerts, fail-open events, enforced-count accuracy.
+- **Unit**: Limiter math, window resets, and retry selection.
+- **Integration**: Tenant isolation, concurrency, admin changes, audit writes.
+- **E2E / BDD**: Burst, quota, admin, and dashboard scenarios.
+- **Observability**: Track fail-open alerts and rate-limit decisions.
 
 ## Rollout and Migration
 
-**Strategy**: Gradual rollout by phase (burst, then monthly, then admin override, then dashboard), with platform default limits applied to every tenant.
-**Data migration**: None required; policy overrides are created on demand and counters are reconstructable from traffic.
-**Rollback**: Disable enforcement at the middleware so all requests pass; durable policy and audit rows remain intact.
+**Strategy**: Not specified in source.
+**Data migration**: Add tenant policy and audit storage for overrides.
+**Rollback**: Not specified in source.
 
-## Risks and Mitigations
+## Risks and Mitigations _(optional)_
 
-**Counter store outage during checks**
+**Tracking outage**
 
-- **What could go wrong**: Fail-open lets traffic through unprotected during an outage.
+- **What could go wrong**: Fail-open mode may allow excess usage.
+- **Probability**: Medium
+- **Impact**: Medium
+- **Mitigation**: Emit monitored alerts when counters are unavailable.
+
+**Concurrent count drift**
+
+- **What could go wrong**: Accepted counts may diverge under load.
 - **Probability**: Medium
 - **Impact**: High
-- **Mitigation**: Monitored alerts and short outage windows.
+- **Mitigation**: Use atomic counters and concurrency tests.
 
-**Inaccurate counts under concurrency**
+**Admin authorization gap**
 
-- **What could go wrong**: Non-atomic updates miscount, breaking the 1% accuracy target.
-- **Probability**: Medium
+- **What could go wrong**: Wrong users may change tenant limits.
+- **Probability**: Low
 - **Impact**: High
-- **Mitigation**: Atomic counter operations plus concurrency load tests.
+- **Mitigation**: Require internal admin authorization for writes.
 
-**Stale cached policy after a change**
+**Dashboard freshness gap**
 
-- **What could go wrong**: Failed invalidation keeps an old limit in effect.
-- **Probability**: Low
+- **What could go wrong**: Customers may see stale usage data.
+- **Probability**: Medium
 - **Impact**: Medium
-- **Mitigation**: Invalidate on write and bound cache lifetime.
-
-**Window-edge burst doubling**
-
-- **What could go wrong**: Fixed windows allow a double burst at boundaries.
-- **Probability**: Low
-- **Impact**: Medium
-- **Mitigation**: Accept per spec, or revisit with a sliding window later.
+- **Mitigation**: Verify usage freshness through E2E tests.
 
 ```mermaid
 quadrantChart
@@ -357,8 +376,12 @@ quadrantChart
     quadrant-2 Plan contingency
     quadrant-3 Accept
     quadrant-4 Monitor and reduce
-    Counter store outage: [0.5, 0.86]
-    Inaccurate counts: [0.5, 0.8]
-    Stale cached policy: [0.2, 0.53]
-    Window-edge burst: [0.2, 0.47]
+    Tracking outage: [0.48, 0.5]
+    Concurrent count drift: [0.52, 0.85]
+    Admin authorization gap: [0.2, 0.82]
+    Dashboard freshness gap: [0.52, 0.48]
 ```
+
+## Open Questions _(optional)_
+
+- Should future versions support tenant-specific billing cycles?

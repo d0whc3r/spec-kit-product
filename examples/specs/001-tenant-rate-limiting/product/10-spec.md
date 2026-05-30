@@ -1,124 +1,149 @@
-# Product Spec: Per-Tenant API Rate Limiting
+# Product Spec: Feature Specification: Per-Tenant API Rate Limiting
 
-**Feature**: Per-Tenant API Rate Limiting
+**Feature**: Feature Specification: Per-Tenant API Rate Limiting
 **Created**: 2026-05-30
 **Status**: Draft
 
 ## Headline
 
-Customer organizations that build on our service can now count on steady, predictable access, even when a neighbor sends a sudden flood of traffic. Each organization gets its own request limits, so one heavy user can no longer slow things down for everyone else. When a customer goes over a limit, they get a plain response that says what happened and when they can try again, and they can watch their own usage in the dashboard. Support staff can lift a customer's limits the moment a plan changes, without waiting for an engineering release.
+Customer organizations get fair, predictable API access without one tenant's traffic hurting another. The product sets separate usage limits for each organization, explains clearly when a limit is reached, and shows customers where they stand. Support and operations teams can raise approved limits without waiting for an engineering release.
 
-## Glossary
+## Glossary _(optional)_
 
-- **Tenant**: A single customer organization that the limits apply to.
-- **Burst limit**: The most requests an organization may send in one minute.
-- **Monthly quota**: The total requests an organization may send each month.
+- **API**: A way for software systems to send requests to each other.
+- **Tenant**: A customer organization with its own account and limits.
+- **Quota**: The total allowed usage for a set time period.
+- **Burst limit**: The short-term cap that prevents sudden traffic spikes.
+- **Retry guidance**: Instructions that tell callers when to try again.
 
 ## Target Users and Personas
 
-- **Customer organization developer**: Builds on our service. Cares about predictable, uninterrupted access.
-- **Customer organization admin**: Manages the account. Cares about staying within plan limits.
-- **Internal support staff**: Helps customers. Cares about resolving limit requests without engineering.
+- **Customer developer**: Integrates with the platform and needs predictable access.
+- **Customer admin**: Tracks usage and plans around account limits.
+- **Support admin**: Raises approved limits quickly for customer needs.
+- **Operations lead**: Protects service quality across all organizations.
 
 ## Problem Statement (Job to Be Done)
 
 **Primary job**:
 
-> When my organization depends on a shared service for its daily work, I want to keep steady access regardless of what other customers do, so I can serve my own users without interruption.
+> When my organization depends on platform requests, I want to understand and manage usage limits, so I can avoid service disruption and plan growth.
 
-**Why this matters now**: As more customers build on the same shared service, a single traffic spike from one customer can degrade everyone's experience. Today there is no fair, per-customer boundary, so protecting one customer can mean throttling all of them or scrambling through a manual release. A clear per-customer limit makes access predictable and lets support resolve plan changes on their own.
+**Why this matters now**: Customers can create sudden traffic spikes or exhaust paid usage without a clear path to recovery. Support teams currently risk needing engineering help for limit changes, which slows customer outcomes during urgent events.
 
-## Assumptions
+## Assumptions _(optional)_
 
-- Admins are internal staff, not customers; invalid if customers self-serve.
-- Monthly periods follow the calendar in UTC; invalid if billing cycles differ.
-- Exhausted quotas hard-block until reset; invalid if overage is wanted.
-- Tracking outages allow requests; invalid if protection outranks availability.
-- A dashboard and admin identity exist; invalid if neither is available.
+- Internal admins own limit increases; customer self-service would invalidate this.
+- Monthly quotas use calendar months; tenant billing cycles would invalidate this.
+- Exhausted quotas hard-block usage; paid overages would invalidate this.
+- Existing dashboards can show usage; no dashboard would invalidate this.
+- Admin authorization exists; missing admin access would invalidate this.
 
 ## Value Proposition
 
-Today, one customer's traffic spike can slow the service for everyone, and raising a single customer's limit means waiting on an engineering release. With per-customer limits, each organization's access is protected from its neighbors, and a clear refusal tells callers exactly when to retry. Customers can track their own usage and see when they are close to a limit, instead of being surprised by a block. Support staff resolve limit changes in minutes, not in a deploy cycle.
+This feature turns API limits from a hidden failure mode into a predictable customer experience. Customers know how much they have used, when limits reset, and what to do when they hit a limit. Support and operations teams can resolve approved limit increases directly, instead of waiting for a release.
 
 ## Scope
 
-- Per-minute burst limit enforced for each organization.
-- Monthly request quota enforced for each organization.
-- Clear refusal response with a retry time when over limit.
-- Per-customer usage shown in the dashboard with reset date.
-- Warning in the dashboard at 80% of monthly quota.
-- Staff can change a customer's limits without a release.
-- Audit record of every limit change.
-- Default limits for organizations with no custom values.
+- Per-organization monthly request quotas.
+- Per-organization per-minute burst limits.
+- Clear over-limit retry guidance.
+- Customer dashboard usage visibility.
+- Internal admin limit changes.
+- Audit history for limit changes.
+- Tenant isolation during high traffic.
 
 ## Out of Scope
 
-- Customers cannot change their own limits, since that defeats paid plans.
-- No pay-as-you-go overage beyond the quota in this version.
-- Unauthenticated requests are not counted, since authentication handles them.
-- No per-customer billing cycle; the month follows the calendar in UTC.
-- No new dashboard; usage is added to the existing one.
+- Customer self-service limit increases, to preserve plan control.
+- Automatic overage billing, because this version hard-blocks usage.
+- Per-tenant billing cycles, because calendar months are assumed.
+- Unauthenticated request counting, because authentication handles those requests.
+- A new dashboard area, because existing views are extended.
 
 ## Use Cases
 
-### Use Case 1: A spike is capped within the minute
+### Use Case 1: Burst limit protects other customers
 
-**Given** my organization has a per-minute limit and is sending many requests.
-**When** my organization goes over that limit within one minute.
-**Then** further requests get a clear refusal telling me when to retry.
+**Given** Given one organization has reached its short-term request limit.
+**When** When that organization sends another request in the same minute.
+**Then** Then the request is rejected with clear retry guidance.
 
-### Use Case 2: One organization's spike does not affect another
+### Use Case 2: Other tenants stay unaffected
 
-**Given** two organizations are using the service at the same time.
-**When** one organization uses up its per-minute limit.
-**Then** the other organization's requests keep succeeding up to its own limit.
+**Given** Given one organization has exhausted its short-term limit.
+**When** When another organization sends requests during the same period.
+**Then** Then the other organization can continue within its own limit.
 
-### Use Case 3: Monthly quota is exhausted
+### Use Case 3: Monthly quota stops excess usage
 
-**Given** my organization has used its full monthly quota.
-**When** my organization sends another request that month.
-**Then** the request gets a clear refusal pointing to the next reset.
+**Given** Given an organization has used its full monthly quota.
+**When** When that organization sends another request before reset.
+**Then** Then the caller is told the monthly quota was reached.
 
-### Use Case 4: An admin raises a limit without a release
+### Use Case 4: Limits reset predictably
 
-**Given** a customer is being blocked at its current limit.
-**When** an admin raises that customer's limit.
-**Then** the customer's later requests are accepted, with no release performed.
+**Given** Given an organization was limited in the prior period.
+**When** When the next limit period begins.
+**Then** Then the organization can make requests again within its limit.
 
-### Use Case 5: A customer reviews usage in the dashboard
+### Use Case 5: Admin raises an approved limit
 
-**Given** my organization has made requests this month.
-**When** I open my organization's dashboard.
-**Then** I see used amount, remaining quota, reset date, and burst limit.
+**Given** Given an organization needs a higher approved limit.
+**When** When a support admin raises the limit.
+**Then** Then the new limit applies without an engineering release.
 
-### Use Case 6: A customer is warned before being blocked
+### Use Case 6: Unauthorized changes are blocked
 
-**Given** my organization has used 80% or more of its monthly quota.
-**When** I view my dashboard.
-**Then** I see a clear warning that I am nearing my limit.
+**Given** Given a user does not have limit-management permission.
+**When** When that user tries to change an organization's limit.
+**Then** Then the change is denied.
+
+### Use Case 7: Customer sees current usage
+
+**Given** Given an organization has made requests this month.
+**When** When its user reviews usage in the dashboard.
+**Then** Then the user sees used, remaining, reset, and burst details.
+
+### Use Case 8: Customer sees approaching-limit warning
+
+**Given** Given an organization has reached 80% of monthly quota.
+**When** When its user reviews usage in the dashboard.
+**Then** Then the dashboard clearly warns that usage is nearing the limit.
 
 ## Success Metrics
 
 **North star**:
 
-- **Cross-tenant interference**: Share of customers affected by another's traffic, targeting zero.
+- **Support escalation elimination**: Zero limit-increase contacts require engineering help after rollout.
 
 **Supporting metrics**:
 
-- **Self-served limit changes**: Limit increases resolved without engineering, targeting 100%.
-- **Surprise blocks**: Customers blocked without a prior warning, trending toward zero.
-- **Recovery without support**: Blocked callers who retry without contacting support, targeting high.
+- **Clear retry guidance**: All over-limit callers know the limit and retry time.
+- **Admin adjustment speed**: Approved limit increases affect usage within one minute.
+- **Dashboard accuracy**: Displayed usage matches actual usage within one minute.
+- **Limit-change audit coverage**: Every limit change has a complete audit record.
 
 ## Risks and Open Product Questions
 
 **Risks**:
 
-- Fail-open mode lets abuse through when usage tracking is down.
-- Inaccurate counts under peak load break trust in the limits.
-- UTC monthly resets may confuse customers in other time zones.
-- Hard blocking at quota may frustrate customers expecting overage.
+- Usage tracking outages could allow more usage than planned.
+- High concurrency could make usage counts inaccurate.
+- Missing admin authorization could block limit-management workflows.
+- Dashboard freshness gaps could leave customers surprised by limits.
 
 **Open product questions**:
 
-- Should the platform fail open or fail closed when tracking is down?
-- Should any paid overage be offered instead of a hard block?
+- Should planning choose availability or protection during tracking outages?
+- Should future versions support tenant-specific billing cycles?
+- Should paid overages replace hard blocking for some plans?
+
+## Positioning _(optional)_
+
+**For** customer organizations and internal support teams
+**who** need predictable platform access and fast limit changes
+**this product is a** per-organization usage control experience
+**that** protects service quality while explaining limits clearly
+**unlike** manual limit changes that depend on engineering releases
+**this product** lets authorized admins adjust approved limits directly.

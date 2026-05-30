@@ -1,47 +1,46 @@
-# Product Info: Per-Tenant API Rate Limiting
+# Product Info: Feature Specification: Per-Tenant API Rate Limiting
 
-**Feature**: Per-Tenant API Rate Limiting
+**Feature**: Feature Specification: Per-Tenant API Rate Limiting
 **Created**: 2026-05-30
 **Status**: Draft
 
 ## Overview
 
-Per-Tenant API Rate Limiting gives every customer organization its own request limits so that one organization's traffic cannot slow the service for others. It pairs a short-term burst limit with a monthly quota, returns a clear refusal when a caller goes over, and shows each customer their own usage. Internal staff can adjust any customer's limits on demand.
+Per-tenant API rate limiting protects the platform from one customer organization's request volume affecting others. It sets clear monthly and per-minute limits for each organization, gives callers useful retry guidance when a limit is reached, and gives teams visibility into current usage.
 
 ## Headline
 
-This is for customer organizations that rely on our service and for the internal staff who support them. Each organization now has a per-minute burst limit and a monthly request quota, so heavy use by one customer no longer affects anyone else. Customers can see how much of their quota they have used and when it resets, and when they go over a limit they get a plain response telling them what happened and when to retry. Support and operations staff can raise a customer's limits right away, without waiting for an engineering release.
+Customer organizations will have clear API limits that match their account and protect service quality for everyone. Callers who exceed a limit will know which limit they hit and when to retry. Support and operations admins can raise limits for approved tenants without waiting for an engineering release.
 
 ## What is Changing
 
-- Each organization gets a per-minute burst limit and monthly quota.
-- Over-limit requests return a clear refusal with a retry time.
-- The dashboard shows used, remaining, reset date, and burst limit.
-- The dashboard warns when usage reaches 80% of quota.
-- Staff can raise a customer's limits without a release.
+- Each organization has its own API limits.
+- Over-limit callers receive clear 429 retry guidance.
+- Customers can view current monthly API usage.
+- Admins can adjust tenant limits without a release.
 
 ## Out of Scope
 
-- Customers cannot change their own limits, since that would defeat paid plans.
-- No pay-as-you-go overage beyond the monthly quota in this version.
-- Unauthenticated requests are not counted, since authentication handles them.
-- No per-customer billing cycle; the month follows the calendar in UTC.
+- Customer-managed limit increases are excluded to preserve plan control.
+- Automatic overage billing is excluded from this version.
+- Unauthenticated requests stay with existing authentication handling.
+- A new dashboard area is excluded; existing views are extended.
 
-## Risks
+## Risks _(optional)_
 
-- Fail-open mode could let abuse through when usage tracking is down.
-- Counting errors under peak load could break the 1% accuracy target.
-- Reliance on existing dashboard and admin access controls could delay delivery.
-- Calendar-month resets in UTC may confuse customers in other time zones.
+- Usage tracking outages could allow excess requests.
+- High concurrency could make counts inaccurate.
+- Missing admin authorization could delay limit management.
+- Dashboard freshness gaps could surprise customers.
 
-## Key Decisions
+## Key Decisions _(optional)_
 
-These decisions were made while writing this spec. Review them to confirm they still reflect the right direction, and flag any that have changed.
+These decisions were made while writing this spec. Review them to confirm they still reflect the right direction.
 
-**Approaching-limit warning threshold**
-The dashboard warns a customer once usage reaches 80% of the monthly quota, giving early notice before requests are blocked.
+**Approaching-limit warning**
+The dashboard will warn tenants when monthly usage reaches 80% of quota.
 _Session: 2026-05-29_
 
 **Peak scale target**
-The design and load tests target about 5,000 requests per second across thousands of customers, setting the scale the feature must hold up under.
+The feature will target about 5,000 requests per second across thousands of tenants.
 _Session: 2026-05-29_
