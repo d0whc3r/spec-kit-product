@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/d0whc3r/spec-kit-product/compare/v0.7.0...v0.7.1) (2026-05-30)
+
+
+### Bug Fixes
+
+* update GitHub Pages workflow to deploy after release completion ([9b91490](https://github.com/d0whc3r/spec-kit-product/commit/9b91490a0ddfd6583ffcf2d55d3b3080bf2e3f1d))
+
 # [0.7.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.6.0...v0.7.0) (2026-05-30)
 
 
