@@ -26,14 +26,14 @@ Customer organizations will have clear API limits that match their account and p
 - Unauthenticated requests stay with existing authentication handling.
 - A new dashboard area is excluded; existing views are extended.
 
-## Risks _(optional)_
+## Risks
 
 - Usage tracking outages could allow excess requests.
 - High concurrency could make counts inaccurate.
 - Missing admin authorization could delay limit management.
 - Dashboard freshness gaps could surprise customers.
 
-## Key Decisions _(optional)_
+## Key Decisions
 
 These decisions were made while writing this spec. Review them to confirm they still reflect the right direction.
 

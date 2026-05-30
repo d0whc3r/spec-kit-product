@@ -247,3 +247,22 @@ approach before tasks are cut.
 
 Items that need manual review are explicitly flagged rather than silently
 passed. Walk the failed Required items and regenerate if needed.
+
+## Real worked examples
+
+The walkthrough above is illustrative. The repository also ships two complete,
+end to end examples under
+[`examples/specs/`](https://github.com/d0whc3r/spec-kit-product/tree/main/examples/specs).
+Nothing in them is hand written: each was produced by running the commands on a
+real feature description.
+
+- **Per-tenant API rate limiting**:
+  [`001-tenant-rate-limiting/`](https://github.com/d0whc3r/spec-kit-product/tree/main/examples/specs/001-tenant-rate-limiting)
+- **Self-serve billing usage dashboard**:
+  [`002-billing-usage-dashboard/`](https://github.com/d0whc3r/spec-kit-product/tree/main/examples/specs/002-billing-usage-dashboard)
+
+Each folder holds the Spec Kit inputs (`spec.md`, `plan.md`, and the artifacts
+`/speckit.plan` produces) and the four `product/` artifacts this extension
+wrote. See the
+[examples README](https://github.com/d0whc3r/spec-kit-product/blob/main/examples/README.md)
+for the shared folder layout and which input each command reads.

@@ -48,7 +48,7 @@ journey
 - Unauthenticated request counting, because authentication owns it.
 - A new dashboard area, because existing views expand.
 
-## Build Overview _(optional)_
+## Build Overview
 
 The request entry point identifies the organization, checks the active limit policy, updates shared counters, and either accepts the request or returns clear retry guidance. Admin controls update the active policy and write an audit record, while the customer dashboard reads usage snapshots scoped to the viewing organization.
 
@@ -72,7 +72,7 @@ flowchart LR
     LimitPolicy --> CustomerDashboard
 ```
 
-## Key Principles _(optional)_
+## Key Principles
 
 - **Tenant isolation**: One organization never consumes another's limits.
 - **Clear retry guidance**: Callers know which limit blocked them.
@@ -113,7 +113,7 @@ _Depends on_: Phase 2.
 - Show reset timing and burst limit.
 - Warn customers near monthly quota.
 
-## Key Decisions _(optional)_
+## Key Decisions
 
 ### Shared Counter Enforcement
 
@@ -143,7 +143,7 @@ _Depends on_: Phase 2.
 **Decision**: Add usage visibility to the existing dashboard.
 **Consequence**: Customers see limits where they already work, while new navigation stays out of scope.
 
-## Risks and Mitigations _(optional)_
+## Risks and Mitigations
 
 **Usage tracking outage**
 
@@ -188,7 +188,7 @@ quadrantChart
     Dashboard freshness gap: [0.52, 0.48]
 ```
 
-## Divergences and Edge Cases _(optional)_
+## Divergences and Edge Cases
 
 - **Missing tenant identity**: Existing authentication handles the request before rate limiting.
 - **No tenant-specific policy**: Default limits apply until an admin changes them.
@@ -196,7 +196,7 @@ quadrantChart
 - **Limit lowered below usage**: The tenant remains over limit until reset.
 - **Both limits exceeded**: The monthly quota is named as binding.
 
-## Validation _(optional)_
+## Validation
 
 - Over-limit burst calls receive retry guidance.
 - Monthly exhausted calls receive retry guidance.
@@ -206,7 +206,7 @@ quadrantChart
 - Concurrent enforcement stays within the accuracy target.
 - Every limit change appears in the audit trail.
 
-## Open Questions _(optional)_
+## Open Questions
 
 - Should future versions support tenant-specific billing cycles?
 - Should paid overages replace hard blocking for some plans?

@@ -230,108 +230,139 @@ specify extension add product</code></pre>
           <p class="section-lede">
             Spec Kit's <code>spec.md</code> and <code>plan.md</code> go in. Four audience-specific
             artifacts come out, each with the open clarifications surfaced and the style rules
-            enforced. Below is a real, end-to-end example for per-tenant API rate limiting, rendered
-            straight from the files in the
+            enforced. Below are two real, end-to-end examples, rendered straight from the files in
+            the
             <a href="https://github.com/d0whc3r/spec-kit-product/tree/main/examples"
               >examples folder</a
-            >. Pick a command to see what it wrote, then open the full file.
+            >. Pick a feature, then a command to see what it wrote, and open the full file.
           </p>
 
-          <div class="example-card">
-            <div class="example-tabs tabs" role="tablist" aria-label="Generated artifact">
+          <div class="tabs-wrap">
+            <div class="tabs" role="tablist" aria-label="Example feature">
               <button
-                id="tab-ex-info"
+                id="tab-feat-rl"
                 class="tab is-active"
                 role="tab"
                 aria-selected="true"
-                aria-controls="panel-ex-info"
+                aria-controls="panel-feat-rl"
               >
-                /speckit.product.info
+                Per-tenant rate limiting
               </button>
               <button
-                id="tab-ex-spec"
+                id="tab-feat-bill"
                 class="tab"
                 role="tab"
                 aria-selected="false"
-                aria-controls="panel-ex-spec"
+                aria-controls="panel-feat-bill"
               >
-                /speckit.product.spec
-              </button>
-              <button
-                id="tab-ex-plan"
-                class="tab"
-                role="tab"
-                aria-selected="false"
-                aria-controls="panel-ex-plan"
-              >
-                /speckit.product.plan
-              </button>
-              <button
-                id="tab-ex-design"
-                class="tab"
-                role="tab"
-                aria-selected="false"
-                aria-controls="panel-ex-design"
-              >
-                /speckit.product.design
-              </button>
-              <button
-                id="tab-ex-checklist"
-                class="tab"
-                role="tab"
-                aria-selected="false"
-                aria-controls="panel-ex-checklist"
-              >
-                checklist.md
+                Billing usage dashboard
               </button>
             </div>
+          </div>
 
-            <div class="example-body">
-              <div class="example-pane">
-                <div
-                  class="example-input-tabs tabs"
-                  role="tablist"
-                  aria-label="Spec Kit input file"
+          <div
+            id="panel-feat-rl"
+            class="tab-panel is-active"
+            role="tabpanel"
+            aria-labelledby="tab-feat-rl"
+          >
+            <div class="example-card">
+              <div class="example-tabs tabs" role="tablist" aria-label="Generated artifact">
+                <button
+                  id="tab-ex-info"
+                  class="tab is-active"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="panel-ex-info"
                 >
-                  <button
-                    id="tab-in-spec"
-                    class="tab is-active"
-                    role="tab"
-                    aria-selected="true"
-                    aria-controls="panel-in-spec"
-                  >
-                    spec.md
-                  </button>
-                  <button
-                    id="tab-in-plan"
-                    class="tab"
-                    role="tab"
-                    aria-selected="false"
-                    aria-controls="panel-in-plan"
-                  >
-                    plan.md
-                  </button>
-                </div>
+                  /speckit.product.info
+                </button>
+                <button
+                  id="tab-ex-spec"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex-spec"
+                >
+                  /speckit.product.spec
+                </button>
+                <button
+                  id="tab-ex-plan"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex-plan"
+                >
+                  /speckit.product.plan
+                </button>
+                <button
+                  id="tab-ex-design"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex-design"
+                >
+                  /speckit.product.design
+                </button>
+                <button
+                  id="tab-ex-checklist"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex-checklist"
+                >
+                  checklist.md
+                </button>
+              </div>
 
-                <div
-                  id="panel-in-spec"
-                  class="tab-panel is-active"
-                  role="tabpanel"
-                  aria-labelledby="tab-in-spec"
-                >
-                  <div class="example-head">
-                    <span class="example-tag">Input</span>
-                    <code>spec.md</code>
+              <div class="example-body">
+                <div class="example-pane">
+                  <div
+                    class="example-input-tabs tabs"
+                    role="tablist"
+                    aria-label="Spec Kit input file"
+                  >
                     <button
-                      class="md-full-btn"
-                      type="button"
-                      data-md-full="examples/specs/001-tenant-rate-limiting/spec.md"
-                      data-md-title="spec.md"
+                      id="tab-in-spec"
+                      class="tab is-active"
+                      role="tab"
+                      aria-selected="true"
+                      aria-controls="panel-in-spec"
                     >
-                      View full file
+                      spec.md
+                    </button>
+                    <button
+                      id="tab-in-plan"
+                      class="tab"
+                      role="tab"
+                      aria-selected="false"
+                      aria-controls="panel-in-plan"
+                    >
+                      plan.md
                     </button>
                   </div>
-                  <pre class="md-source"><code># Feature Specification: Per-Tenant API Rate Limiting
+
+                  <div
+                    id="panel-in-spec"
+                    class="tab-panel is-active"
+                    role="tabpanel"
+                    aria-labelledby="tab-in-spec"
+                  >
+                    <div class="example-head">
+                      <span class="example-tag">Input</span>
+                      <code>spec.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/001-tenant-rate-limiting/spec.md"
+                        data-md-title="spec.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre
+                      class="md-source"
+                    ><code># Feature Specification: Per-Tenant API Rate Limiting
 
 **Status**: Draft
 
@@ -352,28 +383,28 @@ A customer organization sends a sudden spike of API requests. The platform
 caps how many requests that organization can make within any single minute.
 Once the cap is reached, further requests are rejected with a clear 429
 response and a Retry-After header.</code></pre>
-                </div>
-
-                <div
-                  id="panel-in-plan"
-                  class="tab-panel"
-                  role="tabpanel"
-                  aria-labelledby="tab-in-plan"
-                  hidden
-                >
-                  <div class="example-head">
-                    <span class="example-tag">Input</span>
-                    <code>plan.md</code>
-                    <button
-                      class="md-full-btn"
-                      type="button"
-                      data-md-full="examples/specs/001-tenant-rate-limiting/plan.md"
-                      data-md-title="plan.md"
-                    >
-                      View full file
-                    </button>
                   </div>
-                  <pre class="md-source"><code># Implementation Plan: Per-Tenant API Rate Limiting
+
+                  <div
+                    id="panel-in-plan"
+                    class="tab-panel"
+                    role="tabpanel"
+                    aria-labelledby="tab-in-plan"
+                    hidden
+                  >
+                    <div class="example-head">
+                      <span class="example-tag">Input</span>
+                      <code>plan.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/001-tenant-rate-limiting/plan.md"
+                        data-md-title="plan.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre class="md-source"><code># Implementation Plan: Per-Tenant API Rate Limiting
 
 **Branch**: `001-tenant-rate-limiting` | **Spec**: spec.md
 
@@ -394,31 +425,31 @@ PostgreSQL.
 **Storage**: Redis 7 for counters; PostgreSQL 16 for policy and audit trail
 
 **Performance Goals**: rate-limit check adds &lt; 5 ms p95; sustain 5k req/s</code></pre>
-                </div>
-              </div>
-
-              <div class="example-arrow" aria-hidden="true">&rarr;</div>
-
-              <div class="example-pane">
-                <div
-                  id="panel-ex-info"
-                  class="tab-panel is-active"
-                  role="tabpanel"
-                  aria-labelledby="tab-ex-info"
-                >
-                  <div class="example-head">
-                    <span class="example-tag example-tag-out">Output</span>
-                    <code>product/00-info.md</code>
-                    <button
-                      class="md-full-btn"
-                      type="button"
-                      data-md-full="examples/specs/001-tenant-rate-limiting/product/00-info.md"
-                      data-md-title="product/00-info.md"
-                    >
-                      View full file
-                    </button>
                   </div>
-                  <pre class="md-source"><code># Product Info: Per-Tenant API Rate Limiting
+                </div>
+
+                <div class="example-arrow" aria-hidden="true">&rarr;</div>
+
+                <div class="example-pane">
+                  <div
+                    id="panel-ex-info"
+                    class="tab-panel is-active"
+                    role="tabpanel"
+                    aria-labelledby="tab-ex-info"
+                  >
+                    <div class="example-head">
+                      <span class="example-tag example-tag-out">Output</span>
+                      <code>product/00-info.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/001-tenant-rate-limiting/product/00-info.md"
+                        data-md-title="product/00-info.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre class="md-source"><code># Product Info: Per-Tenant API Rate Limiting
 
 ## Overview
 
@@ -438,32 +469,32 @@ each customer their own usage.
 
 **Approaching-limit warning threshold**
 The dashboard warns a customer once usage reaches 80% of the monthly quota.</code></pre>
-                  <p class="example-note">
-                    Three-sentence overview, short bullets, decisions surfaced for review. No
-                    implementation detail.
-                  </p>
-                </div>
-
-                <div
-                  id="panel-ex-spec"
-                  class="tab-panel"
-                  role="tabpanel"
-                  aria-labelledby="tab-ex-spec"
-                  hidden
-                >
-                  <div class="example-head">
-                    <span class="example-tag example-tag-out">Output</span>
-                    <code>product/10-spec.md</code>
-                    <button
-                      class="md-full-btn"
-                      type="button"
-                      data-md-full="examples/specs/001-tenant-rate-limiting/product/10-spec.md"
-                      data-md-title="product/10-spec.md"
-                    >
-                      View full file
-                    </button>
+                    <p class="example-note">
+                      Three-sentence overview, short bullets, decisions surfaced for review. No
+                      implementation detail.
+                    </p>
                   </div>
-                  <pre class="md-source"><code>## Problem Statement (Job to Be Done)
+
+                  <div
+                    id="panel-ex-spec"
+                    class="tab-panel"
+                    role="tabpanel"
+                    aria-labelledby="tab-ex-spec"
+                    hidden
+                  >
+                    <div class="example-head">
+                      <span class="example-tag example-tag-out">Output</span>
+                      <code>product/10-spec.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/001-tenant-rate-limiting/product/10-spec.md"
+                        data-md-title="product/10-spec.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre class="md-source"><code>## Problem Statement (Job to Be Done)
 
 **Primary job**:
 
@@ -479,32 +510,32 @@ The dashboard warns a customer once usage reaches 80% of the monthly quota.</cod
   within plan limits.
 - **Internal support staff**: Helps customers. Cares about resolving limit
   requests without engineering.</code></pre>
-                  <p class="example-note">
-                    A Job to Be Done statement and named personas. The PRD voice the checklist
-                    enforces.
-                  </p>
-                </div>
-
-                <div
-                  id="panel-ex-plan"
-                  class="tab-panel"
-                  role="tabpanel"
-                  aria-labelledby="tab-ex-plan"
-                  hidden
-                >
-                  <div class="example-head">
-                    <span class="example-tag example-tag-out">Output</span>
-                    <code>product/20-plan.md</code>
-                    <button
-                      class="md-full-btn"
-                      type="button"
-                      data-md-full="examples/specs/001-tenant-rate-limiting/product/20-plan.md"
-                      data-md-title="product/20-plan.md"
-                    >
-                      View full file
-                    </button>
+                    <p class="example-note">
+                      A Job to Be Done statement and named personas. The PRD voice the checklist
+                      enforces.
+                    </p>
                   </div>
-                  <pre class="md-source"><code>## Summary
+
+                  <div
+                    id="panel-ex-plan"
+                    class="tab-panel"
+                    role="tabpanel"
+                    aria-labelledby="tab-ex-plan"
+                    hidden
+                  >
+                    <div class="example-head">
+                      <span class="example-tag example-tag-out">Output</span>
+                      <code>product/20-plan.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/001-tenant-rate-limiting/product/20-plan.md"
+                        data-md-title="product/20-plan.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre class="md-source"><code>## Summary
 
 This feature adds per-customer request limits to a shared service API. Each
 customer organization gets a per-minute burst limit and a monthly request
@@ -518,31 +549,31 @@ everyone, with no fair per-customer boundary.
 
 **Quality bar**: Limits are enforced accurately under heavy concurrent load,
 with changes and usage reflected within one minute.</code></pre>
-                  <p class="example-note">
-                    No file paths, no code, no time estimates. The voice a PM can read aloud.
-                  </p>
-                </div>
-
-                <div
-                  id="panel-ex-design"
-                  class="tab-panel"
-                  role="tabpanel"
-                  aria-labelledby="tab-ex-design"
-                  hidden
-                >
-                  <div class="example-head">
-                    <span class="example-tag example-tag-out">Output</span>
-                    <code>product/30-design.md</code>
-                    <button
-                      class="md-full-btn"
-                      type="button"
-                      data-md-full="examples/specs/001-tenant-rate-limiting/product/30-design.md"
-                      data-md-title="product/30-design.md"
-                    >
-                      View full file
-                    </button>
+                    <p class="example-note">
+                      No file paths, no code, no time estimates. The voice a PM can read aloud.
+                    </p>
                   </div>
-                  <pre class="md-source"><code>## Architectural Approach
+
+                  <div
+                    id="panel-ex-design"
+                    class="tab-panel"
+                    role="tabpanel"
+                    aria-labelledby="tab-ex-design"
+                    hidden
+                  >
+                    <div class="example-head">
+                      <span class="example-tag example-tag-out">Output</span>
+                      <code>product/30-design.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/001-tenant-rate-limiting/product/30-design.md"
+                        data-md-title="product/30-design.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre class="md-source"><code>## Architectural Approach
 
 The core of the design is an enforcement middleware placed at the front of
 the request pipeline, after authentication and before application handlers.
@@ -554,33 +585,33 @@ at a single choke point, no individual handler needs to know about limiting.
 - Counters must be atomic to stay within 1% accuracy under concurrency.
 - Admin limit changes must take effect within one minute.
 - Rate-limit check adds under 5 ms at p95 latency.</code></pre>
-                  <p class="example-note">
-                    Component-level detail. No code, no line-by-line implementation.
-                  </p>
-                </div>
-
-                <div
-                  id="panel-ex-checklist"
-                  class="tab-panel"
-                  role="tabpanel"
-                  aria-labelledby="tab-ex-checklist"
-                  hidden
-                >
-                  <div class="example-head">
-                    <span class="example-tag example-tag-out">Output</span>
-                    <code>product/checklist.md</code>
-                    <button
-                      class="md-full-btn"
-                      type="button"
-                      data-md-full="examples/specs/001-tenant-rate-limiting/product/checklist.md"
-                      data-md-title="product/checklist.md"
-                    >
-                      View full file
-                    </button>
+                    <p class="example-note">
+                      Component-level detail. No code, no line-by-line implementation.
+                    </p>
                   </div>
-                  <pre
-                    class="md-source"
-                  ><code># Product Quality Checklist: Per-Tenant API Rate Limiting
+
+                  <div
+                    id="panel-ex-checklist"
+                    class="tab-panel"
+                    role="tabpanel"
+                    aria-labelledby="tab-ex-checklist"
+                    hidden
+                  >
+                    <div class="example-head">
+                      <span class="example-tag example-tag-out">Output</span>
+                      <code>product/checklist.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/001-tenant-rate-limiting/product/checklist.md"
+                        data-md-title="product/checklist.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre
+                      class="md-source"
+                    ><code># Product Quality Checklist: Per-Tenant API Rate Limiting
 
 ## Info (`product/00-info.md`)
 
@@ -594,9 +625,356 @@ at a single choke point, no individual handler needs to know about limiting.
 - [x] Problem Statement contains a Job to Be Done statement
 - [x] Use Cases follow Given/When/Then
 - [ ] No AI tell filler phrases</code></pre>
-                  <p class="example-note">
-                    Auto-validated items are checked; items that need a human eye stay unchecked.
-                  </p>
+                    <p class="example-note">
+                      Auto-validated items are checked; items that need a human eye stay unchecked.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="panel-feat-bill"
+            class="tab-panel"
+            role="tabpanel"
+            aria-labelledby="tab-feat-bill"
+            hidden
+          >
+            <div class="example-card">
+              <div class="example-tabs tabs" role="tablist" aria-label="Generated artifact">
+                <button
+                  id="tab-ex2-info"
+                  class="tab is-active"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="panel-ex2-info"
+                >
+                  /speckit.product.info
+                </button>
+                <button
+                  id="tab-ex2-spec"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex2-spec"
+                >
+                  /speckit.product.spec
+                </button>
+                <button
+                  id="tab-ex2-plan"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex2-plan"
+                >
+                  /speckit.product.plan
+                </button>
+                <button
+                  id="tab-ex2-design"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex2-design"
+                >
+                  /speckit.product.design
+                </button>
+                <button
+                  id="tab-ex2-checklist"
+                  class="tab"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="panel-ex2-checklist"
+                >
+                  checklist.md
+                </button>
+              </div>
+
+              <div class="example-body">
+                <div class="example-pane">
+                  <div
+                    class="example-input-tabs tabs"
+                    role="tablist"
+                    aria-label="Spec Kit input file"
+                  >
+                    <button
+                      id="tab-in2-spec"
+                      class="tab is-active"
+                      role="tab"
+                      aria-selected="true"
+                      aria-controls="panel-in2-spec"
+                    >
+                      spec.md
+                    </button>
+                    <button
+                      id="tab-in2-plan"
+                      class="tab"
+                      role="tab"
+                      aria-selected="false"
+                      aria-controls="panel-in2-plan"
+                    >
+                      plan.md
+                    </button>
+                  </div>
+
+                  <div
+                    id="panel-in2-spec"
+                    class="tab-panel is-active"
+                    role="tabpanel"
+                    aria-labelledby="tab-in2-spec"
+                  >
+                    <div class="example-head">
+                      <span class="example-tag">Input</span>
+                      <code>spec.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/002-billing-usage-dashboard/spec.md"
+                        data-md-title="spec.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre
+                      class="md-source"
+                    ><code># Feature Specification: Self-Serve Billing Usage Dashboard
+
+**Status**: Draft
+
+## User Scenarios &amp; Testing
+
+### User Story 1 - Current cost and projected bill (Priority: P1)
+
+An organization admin opens the billing dashboard and immediately sees their
+current plan, how much of their included allowance they have used this period,
+and a projected total for the end of the period, including any projected
+overage.</code></pre>
+                  </div>
+
+                  <div
+                    id="panel-in2-plan"
+                    class="tab-panel"
+                    role="tabpanel"
+                    aria-labelledby="tab-in2-plan"
+                    hidden
+                  >
+                    <div class="example-head">
+                      <span class="example-tag">Input</span>
+                      <code>plan.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/002-billing-usage-dashboard/plan.md"
+                        data-md-title="plan.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre
+                      class="md-source"
+                    ><code># Implementation Plan: Self-Serve Billing Usage Dashboard
+
+**Branch**: `002-billing-usage-dashboard` | **Spec**: spec.md
+
+## Summary
+
+A read-oriented billing API aggregates from an existing metering source and a
+durable store of plans, invoices, alert rules, and cached projections.
+Usage-by-team and the account total come from one aggregation pass so the parts
+always reconcile.
+
+## Technical Context
+
+**Performance Goals**: dashboard overview returns within 1 s p95</code></pre>
+                  </div>
+                </div>
+
+                <div class="example-arrow" aria-hidden="true">&rarr;</div>
+
+                <div class="example-pane">
+                  <div
+                    id="panel-ex2-info"
+                    class="tab-panel is-active"
+                    role="tabpanel"
+                    aria-labelledby="tab-ex2-info"
+                  >
+                    <div class="example-head">
+                      <span class="example-tag example-tag-out">Output</span>
+                      <code>product/00-info.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/002-billing-usage-dashboard/product/00-info.md"
+                        data-md-title="product/00-info.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre class="md-source"><code># Product Info: Self-Serve Billing Usage Dashboard
+
+## Overview
+
+This feature gives organization admins a read-only billing dashboard for
+current costs, usage, projected overage, and invoice history. It addresses
+surprise bills by showing what is driving charges.
+
+## What is Changing
+
+- Admins see current usage against plan allowances.
+- Projected overage appears before the bill closes.
+- Charge changes are explained by team and dimension.
+- Past invoices can be reviewed and exported.</code></pre>
+                    <p class="example-note">
+                      Three-sentence overview, short bullets, risks surfaced for review. No
+                      implementation detail.
+                    </p>
+                  </div>
+
+                  <div
+                    id="panel-ex2-spec"
+                    class="tab-panel"
+                    role="tabpanel"
+                    aria-labelledby="tab-ex2-spec"
+                    hidden
+                  >
+                    <div class="example-head">
+                      <span class="example-tag example-tag-out">Output</span>
+                      <code>product/10-spec.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/002-billing-usage-dashboard/product/10-spec.md"
+                        data-md-title="product/10-spec.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre class="md-source"><code>## Problem Statement (Job to Be Done)
+
+**Primary job**:
+
+&gt; When my organization is using a billed product during the month, I want to
+&gt; understand expected charges and their causes, so I can prevent surprises and
+&gt; explain costs before the invoice arrives.
+
+## Target Users and Personas
+
+- **Organization admin**: Owns account health and avoids billing surprises.
+- **Billing manager**: Reviews invoices and reconciles costs for finance.
+- **Team lead**: Explains why their team changed account usage.</code></pre>
+                    <p class="example-note">
+                      A Job to Be Done statement and named personas. The PRD voice the checklist
+                      enforces.
+                    </p>
+                  </div>
+
+                  <div
+                    id="panel-ex2-plan"
+                    class="tab-panel"
+                    role="tabpanel"
+                    aria-labelledby="tab-ex2-plan"
+                    hidden
+                  >
+                    <div class="example-head">
+                      <span class="example-tag example-tag-out">Output</span>
+                      <code>product/20-plan.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/002-billing-usage-dashboard/product/20-plan.md"
+                        data-md-title="product/20-plan.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre class="md-source"><code>## Summary
+
+This feature gives organization admins a read-only billing dashboard that
+shows the current plan, current-period usage, projected overage, invoice
+history, team-level usage, and alert activity.
+
+## Goals
+
+- Show current plan and allowance usage.
+- Separate included price from projected overage.
+- Explain charge changes by team and dimension.
+- Send one alert per threshold and period.</code></pre>
+                    <p class="example-note">
+                      No file paths, no code, no time estimates. The voice a PM can read aloud.
+                    </p>
+                  </div>
+
+                  <div
+                    id="panel-ex2-design"
+                    class="tab-panel"
+                    role="tabpanel"
+                    aria-labelledby="tab-ex2-design"
+                    hidden
+                  >
+                    <div class="example-head">
+                      <span class="example-tag example-tag-out">Output</span>
+                      <code>product/30-design.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/002-billing-usage-dashboard/product/30-design.md"
+                        data-md-title="product/30-design.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre class="md-source"><code>## Architectural Approach
+
+The dashboard adds a frontend page composed of cost overview, team usage,
+alerts, invoice history, and empty-state components. The page calls four read
+API surfaces plus an invoice export operation.
+
+The API layer resolves the organization from the authenticated session and
+gates access to admins or billing-role users. Operations delegate billing logic
+to services rather than reading upstream systems directly.</code></pre>
+                    <p class="example-note">
+                      Component-level detail. No code, no line-by-line implementation.
+                    </p>
+                  </div>
+
+                  <div
+                    id="panel-ex2-checklist"
+                    class="tab-panel"
+                    role="tabpanel"
+                    aria-labelledby="tab-ex2-checklist"
+                    hidden
+                  >
+                    <div class="example-head">
+                      <span class="example-tag example-tag-out">Output</span>
+                      <code>product/checklist.md</code>
+                      <button
+                        class="md-full-btn"
+                        type="button"
+                        data-md-full="examples/specs/002-billing-usage-dashboard/product/checklist.md"
+                        data-md-title="product/checklist.md"
+                      >
+                        View full file
+                      </button>
+                    </div>
+                    <pre
+                      class="md-source"
+                    ><code># Product Quality Checklist: Self-Serve Billing Usage Dashboard
+
+## Info (`product/00-info.md`)
+
+- [x] Overview is three sentences or fewer
+- [x] No em dash
+- [x] No implementation detail
+
+## Spec (`product/10-spec.md`)
+
+- [x] Problem Statement contains a Job to Be Done
+- [x] Use Cases follow Given/When/Then
+- [x] No AI tells</code></pre>
+                    <p class="example-note">
+                      Auto-validated items are checked; items that need a human eye stay unchecked.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

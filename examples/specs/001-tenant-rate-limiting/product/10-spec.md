@@ -8,7 +8,7 @@
 
 Customer organizations get fair, predictable API access without one tenant's traffic hurting another. The product sets separate usage limits for each organization, explains clearly when a limit is reached, and shows customers where they stand. Support and operations teams can raise approved limits without waiting for an engineering release.
 
-## Glossary _(optional)_
+## Glossary
 
 - **API**: A way for software systems to send requests to each other.
 - **Tenant**: A customer organization with its own account and limits.
@@ -31,7 +31,7 @@ Customer organizations get fair, predictable API access without one tenant's tra
 
 **Why this matters now**: Customers can create sudden traffic spikes or exhaust paid usage without a clear path to recovery. Support teams currently risk needing engineering help for limit changes, which slows customer outcomes during urgent events.
 
-## Assumptions _(optional)_
+## Assumptions
 
 - Internal admins own limit increases; customer self-service would invalidate this.
 - Monthly quotas use calendar months; tenant billing cycles would invalidate this.
@@ -139,7 +139,7 @@ This feature turns API limits from a hidden failure mode into a predictable cust
 - Should future versions support tenant-specific billing cycles?
 - Should paid overages replace hard blocking for some plans?
 
-## Positioning _(optional)_
+## Positioning
 
 **For** customer organizations and internal support teams
 **who** need predictable platform access and fast limit changes

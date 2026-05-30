@@ -21,7 +21,7 @@ This design adds per-tenant API rate limiting across the backend API layer, data
 - Tracking outages fail open and emit alerts.
 - Monthly quotas align to UTC calendar months.
 
-## Non-Functional Requirements _(optional)_
+## Non-Functional Requirements
 
 | Quality attribute (ISO 25010) | Target                                               | How verified                         |
 | ----------------------------- | ---------------------------------------------------- | ------------------------------------ |
@@ -96,7 +96,7 @@ flowchart TD
 | `frontend/src/components/UsagePanel.tsx`  | adds   | Displays usage, reset, and warning state.         |
 | `frontend/src/services/usageClient.ts`    | adds   | Calls the tenant usage API.                       |
 
-## Data Design _(optional)_
+## Data Design
 
 ### Data Model
 
@@ -194,7 +194,7 @@ sequenceDiagram
     Middleware-->>Caller: accepted or rate limited
 ```
 
-## API Design _(optional)_
+## API Design
 
 The feature adds one tenant usage read, one internal admin policy read and write surface, and a standardized limiter response envelope on protected routes. Request and response bodies stay conceptual here; the contract files remain the detailed source for field rules and contract tests.
 
@@ -244,7 +244,7 @@ sequenceDiagram
     end
 ```
 
-## Spec Coverage _(optional)_
+## Spec Coverage
 
 | Use Case (from spec.md)                     | Component / Operation          | Notes                                        |
 | ------------------------------------------- | ------------------------------ | -------------------------------------------- |
@@ -265,7 +265,7 @@ sequenceDiagram
 | US4 AS4.3 Approaching warning appears       | Usage API and UsagePanel       | Warning starts at 80% consumption.           |
 | US4 AS4.4 Tenant scoping holds              | Usage API                      | Tenant derives from authenticated principal. |
 
-## Key Technical Decisions _(optional)_
+## Key Technical Decisions
 
 ### API Middleware Enforcement
 
@@ -337,7 +337,7 @@ sequenceDiagram
 **Data migration**: Add tenant policy and audit storage for overrides.
 **Rollback**: Not specified in source.
 
-## Risks and Mitigations _(optional)_
+## Risks and Mitigations
 
 **Tracking outage**
 
@@ -382,6 +382,6 @@ quadrantChart
     Dashboard freshness gap: [0.52, 0.48]
 ```
 
-## Open Questions _(optional)_
+## Open Questions
 
 - Should future versions support tenant-specific billing cycles?
