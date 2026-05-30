@@ -6,19 +6,26 @@
   "keywords": [
     "design",
     "documentation",
+    "jtbd",
+    "lean-prd",
+    "planning",
     "prd",
     "prfaq",
     "product",
+    "product-management",
+    "requirements",
     "spec",
     "spec-kit",
-    "spec-kit-extension"
+    "spec-kit-extension",
+    "stakeholder",
+    "technical-design"
   ],
-  "homepage": "https://github.com/d0whc3r/spec-kit-product",
+  "homepage": "https://d0whc3r.github.io/spec-kit-product/",
   "bugs": {
     "url": "https://github.com/d0whc3r/spec-kit-product/issues"
   },
   "license": "MIT",
-  "author": "spec-kit-product contributors",
+  "author": "d0whc3r",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/d0whc3r/spec-kit-product.git"
@@ -26,13 +33,15 @@
   "scripts": {
     "oxfmt": "oxfmt --no-error-on-unmatched-pattern",
     "lint": "pnpm run oxfmt --check",
-    "lint:content": "bash .github/scripts/lint-content.sh",
+    "lint:content": "node .github/scripts/lint-content.mjs",
     "format": "pnpm run oxfmt --write",
-    "validate": "bash .github/scripts/validate-manifest.sh",
-    "build": "bash .github/scripts/build-zip.sh",
-    "catalog:issue": "bash .github/scripts/submit-catalog-update.sh",
+    "validate": "node .github/scripts/validate-manifest.mjs",
+    "sync": "node .github/scripts/sync-metadata.mjs",
+    "sync:check": "node .github/scripts/sync-metadata.mjs --check",
+    "build": "node .github/scripts/build-zip.mjs",
+    "catalog:issue": "node .github/scripts/submit-catalog-update.mjs",
     "examples:sync": "rm -rf web/examples && cp -r examples web/examples",
-    "check": "pnpm run validate && pnpm run lint && pnpm run lint:content",
+    "check": "pnpm run validate && pnpm run sync:check && pnpm run lint && pnpm run lint:content",
     "release": "semantic-release",
     "release:dry": "semantic-release --dry-run",
     "prepare": "husky"
@@ -43,9 +52,10 @@
     "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "12.0.8",
     "husky": "9.1.7",
-    "lint-staged": "17.0.5",
+    "lint-staged": "17.0.6",
     "oxfmt": "0.52.0",
-    "semantic-release": "25.0.3"
+    "semantic-release": "25.0.3",
+    "zx": "8.8.5"
   },
   "lint-staged": {
     "*": "pnpm run format"

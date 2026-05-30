@@ -46,16 +46,18 @@ hooks:
     description: "Generate product/20-plan.md from plan.md"
 
 tags:
-  - product
-  - spec
-  - prd
   - design
   - documentation
-  - prfaq
   - jtbd
   - lean-prd
-  - requirements
-  - product-management
   - planning
+  - prd
+  - prfaq
+  - product
+  - product-management
+  - requirements
+  - spec
+  - spec-kit
+  - spec-kit-extension
   - stakeholder
   - technical-design

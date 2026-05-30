@@ -243,7 +243,7 @@ information, leave a single pointer rather than the content itself.
 ### Before (`docs/Style-Guide.md`)
 
 ```markdown
-The shared `product/checklist.md` enforces them. `.github/scripts/lint-content.sh`
+The shared `product/checklist.md` enforces them. `.github/scripts/lint-content.mjs`
 in the release pipeline enforces them too.
 ```
 

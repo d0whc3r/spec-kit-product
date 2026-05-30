@@ -41,8 +41,8 @@
 <!-- Show your work. Paste output, screenshots of generated artifacts, or before/after diffs. -->
 
 - [ ] `pnpm run lint` passes (or N/A)
-- [ ] `bash .github/scripts/validate-manifest.sh` passes
-- [ ] `bash .github/scripts/lint-content.sh` passes
+- [ ] `pnpm run validate` passes
+- [ ] `pnpm run lint:content` passes
 - [ ] I ran the affected command against a real `spec.md`/`plan.md` and inspected the output.
 
 ```

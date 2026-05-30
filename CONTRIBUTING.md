@@ -11,7 +11,7 @@ The repo root IS the extension root, per the canonical Spec Kit extension layout
 - `.extensionignore` lists files at the root that are NOT part of the extension (specs, CI, repo metadata).
 - `catalog.json` is the single-entry catalog file. Pipeline-owned fields (`version`, `download_url`, `requires.speckit_version`, `updated_at`, `created_at`) are updated by CI on every release; do not edit them by hand.
 - `.github/workflows/release.yml` is the tag-driven release pipeline.
-- `.github/scripts/` holds pipeline helpers (`validate-manifest.sh`, `build-zip.sh`, `update-catalog.sh`, `lint-content.sh`).
+- `.github/scripts/` holds pipeline helpers (`validate-manifest.mjs`, `build-zip.mjs`, `update-catalog.sh`, `lint-content.mjs`).
 - `specs/` holds the design artifacts for the extension itself (this repo dogfoods Spec Kit). It is excluded from the release zip.
 
 ## Developer Install (Self-Dogfood)
@@ -39,14 +39,14 @@ When iterating on the templates (`templates/*.md`), keep them in sync with the c
 Before opening a PR, run:
 
 ```bash
-bash .github/scripts/validate-manifest.sh
-bash .github/scripts/lint-content.sh
+node .github/scripts/validate-manifest.mjs
+node .github/scripts/lint-content.mjs
 ```
 
-To exercise the build path locally (requires `zip`, `unzip`, and `jq`):
+To exercise the build path locally (requires `zip` and `unzip`):
 
 ```bash
-bash .github/scripts/build-zip.sh
+node .github/scripts/build-zip.mjs
 ls dist/
 ```
 
@@ -63,8 +63,8 @@ Releases are automatic. The `release` workflow at `.github/workflows/release.yml
 3. `semantic-release` runs the plugin chain in `.releaserc.json`:
    - Determine the next version from commits since the last tag.
    - Generate release notes and prepend them to `CHANGELOG.md`.
-   - Run `.github/scripts/semantic-release-prepare.sh <version>` to bump `extension.yml`, refresh the README direct-install URL, and update `catalog.json`.
-   - Run `.github/scripts/submit-catalog-update.sh` to render the `[Extension Submission]` document, uploaded as the `upstream-catalog-issue` artifact for manual filing at `github/spec-kit` (see **Community Catalog Submission** below).
+   - Run `.github/scripts/semantic-release-prepare.mjs <version>` to bump `extension.yml`, refresh the README direct-install URL, and update `catalog.json`.
+   - Run `.github/scripts/submit-catalog-update.mjs` to render the `[Extension Submission]` document, uploaded as the `upstream-catalog-issue` artifact for manual filing at `github/spec-kit` (see **Community Catalog Submission** below).
    - Commit `chore(release): catalog v<version>` as `github-actions[bot]` with `CHANGELOG.md`, `extension.yml`, `catalog.json`, and `README.md`.
    - Create tag `v<version>`, publish a GitHub Release, and attach `dist/product-<version>.zip`.
 4. If no commits since the last tag qualify, semantic-release exits cleanly and nothing is released. Push another qualifying commit to trigger a release.
@@ -82,7 +82,7 @@ The release pipeline keeps the community catalog at `github/spec-kit` in sync by
 
 **What runs on each release:**
 
-`.github/scripts/submit-catalog-update.sh` queries the upstream `catalog.community.json`. If `product` is present the document targets `[Extension]: Update Product Spec Extension to vX.Y.Z`; if absent it targets `[Extension]: Add Product Spec Extension`. The rendered markdown is uploaded as the `upstream-catalog-issue` workflow artifact, retained for 7 days. No token is required.
+`.github/scripts/submit-catalog-update.mjs` queries the upstream `catalog.community.json`. If `product` is present the document targets `[Extension]: Update Product Spec Extension to vX.Y.Z`; if absent it targets `[Extension]: Add Product Spec Extension`. The rendered markdown is uploaded as the `upstream-catalog-issue` workflow artifact, retained for 7 days. No token is required.
 
 **Filing the issue:**
 
@@ -96,7 +96,7 @@ To rehearse locally:
 ```bash
 VERSION=<x.y.z>  # replace with the version you want to rehearse
 GITHUB_REPOSITORY=d0whc3r/spec-kit-product OUTPUT_FILE=/tmp/issue.md \
-  bash .github/scripts/submit-catalog-update.sh "$VERSION" patch "v${VERSION}"
+  node .github/scripts/submit-catalog-update.mjs "$VERSION" patch "v${VERSION}"
 cat /tmp/issue.md
 ```
 
@@ -109,7 +109,7 @@ GitHub Wiki. The wiki is a separate git repo at
 flat (no nested folders).
 
 **Automatic sync.** `.github/workflows/sync-wiki.yml` runs
-`.github/scripts/stage-wiki.sh` to stage `docs/*.md` into `.wiki-staging/`,
+`.github/scripts/stage-wiki.mjs` to stage `docs/*.md` into `.wiki-staging/`,
 then publishes that staging dir to the wiki on every push to `main` that
 touches `docs/`. It can also be triggered manually from the Actions tab.
 
@@ -124,7 +124,7 @@ The staging script:
 To rehearse the staged output locally:
 
 ```bash
-bash .github/scripts/stage-wiki.sh docs .wiki-staging
+node .github/scripts/stage-wiki.mjs docs .wiki-staging
 ls .wiki-staging/
 ```
 
@@ -143,7 +143,7 @@ Use feature branches named `NNN-short-description` (sequential numbering, matchi
 
 ## Style Rules for Generated Output
 
-The extension's whole reason to exist is the canonical product spec voice. Style rules are pinned in `templates/product-spec-template.md` and enforced by `.github/scripts/lint-content.sh`:
+The extension's whole reason to exist is the canonical product spec voice. Style rules are pinned in `templates/product-spec-template.md` and enforced by `.github/scripts/lint-content.mjs`:
 
 1. English only.
 2. No em dash character.

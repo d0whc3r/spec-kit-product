@@ -1,7 +1,7 @@
 name: render-catalog-issue
 description: Render the upstream Spec Kit catalog submission issue and upload it as an artifact for manual filing.
 # To reproduce locally, run the same renderer: `pnpm run catalog:issue`
-# (wraps .github/scripts/submit-catalog-update.sh). It writes
+# (wraps .github/scripts/submit-catalog-update.mjs). It writes
 # upstream-catalog-issue-v<version>.md to the repo root.
 
 inputs:
@@ -41,7 +41,7 @@ runs:
         tag="${{ inputs.git-tag }}"
         [ -n "$tag" ] || tag="v${version}"
         out="upstream-catalog-issue-v${version}.md"
-        OUTPUT_FILE="$out" bash .github/scripts/submit-catalog-update.sh "$version" "${{ inputs.release-type }}" "$tag"
+        OUTPUT_FILE="$out" node .github/scripts/submit-catalog-update.mjs "$version" "${{ inputs.release-type }}" "$tag"
         echo "file=$out" >> "$GITHUB_OUTPUT"
 
     - name: Publish catalog issue to job summary

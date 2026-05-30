@@ -23,7 +23,7 @@ runs:
   steps:
     - name: Stage wiki pages
       shell: bash
-      run: bash .github/scripts/stage-wiki.sh "${{ inputs.source-dir }}" "${{ inputs.staging-dir }}"
+      run: node .github/scripts/stage-wiki.mjs "${{ inputs.source-dir }}" "${{ inputs.staging-dir }}"
 
     - name: Publish to GitHub Wiki
       uses: Andrew-Chen-Wang/github-wiki-action@v5
