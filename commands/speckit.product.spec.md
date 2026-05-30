@@ -115,6 +115,7 @@ Read `templates/product-spec-template.md`. Replace every bracketed placeholder w
 3. **Plain English.** Active voice, short sentences, human tone. Avoid AI tells: do not use "delve", "tapestry", "in essence", "navigate the landscape", or similar filler.
 4. **No implementation detail.** No frameworks, languages, APIs, data stores, code, or file paths.
 5. **Bullets are short. Prose is full sentences.**
+6. **`_(optional)_` is a marker, not title text.** In the template, a heading like `## Glossary _(optional)_` uses `_(optional)_` only to flag that the section is optional. It is an authoring marker, never part of the title. When you keep the section, emit the heading clean (`## Glossary`) with no `_(optional)_`. When the source has no real content that earns the section, omit the whole section, heading included. The string `_(optional)_`, and a bare `(optional)` suffix on any heading, must never appear in the generated document.
 
 #### Section rules
 
@@ -205,6 +206,7 @@ After composing the full text of `product/10-spec.md` in memory (before writing)
 | Each metric in Success Metrics is tech-agnostic                   | Metrics do not contain: "p95", "p99", "latency", "throughput", "queue depth", "milliseconds", "bytes", "CPU", "memory", "API response time"                                                                                                                                                               | Yes — rephrase to user-facing equivalent (e.g., "time to first result", "task completion rate")   |
 | Glossary present only when terms require definition               | If Glossary section present: each bullet is a bold term followed by a one-sentence plain-language definition. If absent: no domain-specific terms in the document require definition for a non-technical reader                                                                                           | Yes — add missing definitions; remove section if no term gap exists                               |
 | Assumptions present only when source has material assumptions     | If Assumptions section present: each bullet states one assumption with a condition that would invalidate it. If absent and source spec contains assumption markers or undeclared dependencies: add the section                                                                                            | Yes — add invalidation clause to entries without one; remove section if source has no assumptions |
+| No optional marker leaks into a heading                           | No heading contains `_(optional)_` or a trailing `(optional)`; the marker is a template authoring flag, not title text                                                                                                                                                                                    | Yes — strip the marker from the heading                                                           |
 
 **Iteration protocol**:
 

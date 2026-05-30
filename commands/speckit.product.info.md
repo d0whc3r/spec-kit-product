@@ -117,6 +117,7 @@ Read `templates/product-info-template.md`. Replace every bracketed placeholder w
 3. **Plain English.** Active voice, short sentences, human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb without a concrete object), "robust" (without a measurable target).
 4. **No implementation detail.** No frameworks, languages, APIs, data stores, code, or file paths.
 5. **Bullets are short. Prose is full sentences.**
+6. **`_(optional)_` is a marker, not title text.** In the template, a heading like `## Risks _(optional)_` uses `_(optional)_` only to flag that the section is optional. It is an authoring marker, never part of the title. When you keep the section, emit the heading clean (`## Risks`) with no `_(optional)_`. When the source has no real content that earns the section, omit the whole section, heading included. The string `_(optional)_`, and a bare `(optional)` suffix on any heading, must never appear in the generated document.
 
 #### Section rules
 
@@ -170,6 +171,7 @@ After composing the full text of `product/00-info.md` in memory (before writing)
 | No implementation detail                                          | File does not contain: file extensions (`.js`, `.ts`, `.py`, `.go`, `.java`, `.rb`, `.sql`), HTTP verbs (`GET`, `POST`, `PUT`, `DELETE`), code fences, database names (`PostgreSQL`, `MySQL`, `Redis`, `MongoDB`, `DynamoDB`, `S3`)                                     | Yes — remove or rephrase                                                                         |
 | Header has non-placeholder Feature and Created                    | File has `Feature:` and `Created: YYYY-MM-DD` with real values                                                                                                                                                                                                          | Yes — set from context                                                                           |
 | References are external URLs only                                 | If References section present: every entry has a plain-language label and an external URL; no entry points to spec-kit artifacts (spec.md, plan.md, tasks.md, or any extension-generated file). If absent and source spec contains external hyperlinks: add the section | Yes — remove entries pointing to internal files; remove section if no external references remain |
+| No optional marker leaks into a heading                           | No heading contains `_(optional)_` or a trailing `(optional)`; the marker is a template authoring flag, not title text                                                                                                                                                  | Yes — strip the marker from the heading                                                          |
 
 **Checklist structure for the `## Info` section**: replace the section content with:
 
