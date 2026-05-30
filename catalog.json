@@ -3,8 +3,8 @@
   "id": "product",
   "description": "Generates PRFAQ, Lean PRD, stakeholder summaries, and technical designs from engineering specs.",
   "author": "d0whc3r",
-  "version": "0.7.1",
-  "download_url": "https://github.com/d0whc3r/spec-kit-product/releases/download/v0.7.1/product-0.7.1.zip",
+  "version": "0.8.0",
+  "download_url": "https://github.com/d0whc3r/spec-kit-product/releases/download/v0.8.0/product-0.8.0.zip",
   "repository": "https://github.com/d0whc3r/spec-kit-product",
   "homepage": "https://d0whc3r.github.io/spec-kit-product/",
   "documentation": "https://github.com/d0whc3r/spec-kit-product/wiki",
@@ -36,5 +36,5 @@
   ],
   "verified": false,
   "created_at": "2026-05-07T20:09:54Z",
-  "updated_at": "2026-05-30T09:31:38Z"
+  "updated_at": "2026-05-30T11:50:45Z"
 }

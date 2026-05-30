@@ -1,5 +1,18 @@
 # Changelog
 
+# [0.8.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.7.1...v0.8.0) (2026-05-30)
+
+
+### Bug Fixes
+
+* remove references to brownfield extension from templates and documentation ([50a091c](https://github.com/d0whc3r/spec-kit-product/commit/50a091c07ae222fd003d57674c953ed4598bb0f2))
+
+
+### Features
+
+* add delivery phases and non-functional requirements for per-tenant API rate limiting ([55d8707](https://github.com/d0whc3r/spec-kit-product/commit/55d87071e8665c6ad7c94cbeed5ee8296bf37dfb))
+* enhance design and plan templates with non-functional requirements and diagram guidelines ([1d3e5fe](https://github.com/d0whc3r/spec-kit-product/commit/1d3e5fe1ae3e3b3c18be39710959bac061bef963))
+
 ## [0.7.1](https://github.com/d0whc3r/spec-kit-product/compare/v0.7.0...v0.7.1) (2026-05-30)
 
 
