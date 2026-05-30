@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/d0whc3r/spec-kit-product/compare/v0.8.0...v0.8.1) (2026-05-30)
+
+
+### Bug Fixes
+
+* clarify usage of optional markers in design, info, plan, and spec templates ([0a8441f](https://github.com/d0whc3r/spec-kit-product/commit/0a8441f10f08aedff596df21ed73be9a0d87ca59))
+
 # [0.8.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.7.1...v0.8.0) (2026-05-30)
 
 
