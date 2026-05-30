@@ -1,5 +1,20 @@
 # Changelog
 
+# [0.6.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.5.3...v0.6.0) (2026-05-30)
+
+
+### Bug Fixes
+
+* add example reference to catalog update script and update .gitignore to include .specify/ ([f05c9d0](https://github.com/d0whc3r/spec-kit-product/commit/f05c9d03b2a04c27f8a4a7d4f903d8dc5f29dcc0))
+* update author information and documentation links in catalog.json and extension.yml; enhance example layout in index.html and styles.css ([4fb75a9](https://github.com/d0whc3r/spec-kit-product/commit/4fb75a9e861da969bc8df0bd6071dfd04f0b1234))
+* update installation instructions and troubleshooting details in documentation ([ed893c4](https://github.com/d0whc3r/spec-kit-product/commit/ed893c4d57929d65c5a9690c32590b7a4c49d368))
+
+
+### Features
+
+* add Git integration commands for auto-commit, feature branch creation, repository initialization, remote URL detection, and branch validation; include example usage in README ([9cfa3b2](https://github.com/d0whc3r/spec-kit-product/commit/9cfa3b2db4e83ada5b8c8c1b6a60aad77b8dc42c))
+* add markdown viewer for example artifacts and enhance web documentation ([c09b63a](https://github.com/d0whc3r/spec-kit-product/commit/c09b63a07af7cf247317cfca39bb3f9520780a1e))
+
 ## [0.5.3](https://github.com/d0whc3r/spec-kit-product/compare/v0.5.2...v0.5.3) (2026-05-29)
 
 
