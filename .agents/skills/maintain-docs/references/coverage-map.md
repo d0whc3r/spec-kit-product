@@ -113,6 +113,31 @@ contributor concern and lives in `CONTRIBUTING.md`.
 Re-check whenever: `.specify/memory/constitution.md` §III changes in a way
 that changes the user-visible output style.
 
+### `docs/Diagrams.md`
+
+Documents: how `/speckit.product.plan` and `/speckit.product.design`
+generate Mermaid diagrams and the design Non-Functional Requirements
+table, and the value gate that decides when each one renders or is
+omitted.
+
+Asserts:
+
+- The per-section diagram table for both commands (must match each
+  command's `#### Diagram generation` block and the template `>`
+  instruction lines).
+- The value gate: a diagram or optional section earns its place; omit when
+  it restates the prose, duplicates another view, or is a trivial shape.
+- The conditional gates: Delivery Phases flowchart only when phases branch;
+  risk quadrant omitted when all risks share one cell; the NFR table holds
+  measurable targets while Technical Constraints holds non-measurable
+  rules; plan risks are product-level, design risks technical.
+- That the Architectural Approach flowchart is the one diagram that always
+  renders.
+
+Re-check whenever: a command's `#### Diagram generation` block changes; a
+diagram type is added or removed; the value-gate wording changes; the NFR
+or Technical Constraints rules change.
+
 ### `docs/Troubleshooting.md`
 
 Documents: error codes, refusals, common breakages.
@@ -279,7 +304,8 @@ user-facing page that might need a touch.
 | `extension.yml.extension.description`     | `README.md`, `docs/Home.md`, `web/index.html`                                                       |
 | `catalog.json` (version, counts)          | `README.md`, `docs/Getting-Started.md`, `web/index.html`                                            |
 | `commands/speckit.product.<verb>.md`      | `docs/Commands.md`, `docs/Troubleshooting.md`, `docs/Examples.md`, `docs/Architecture.md`           |
-| `templates/<artifact>-template.md`        | `docs/Commands.md` (output sections), `docs/Examples.md` (example bodies)                            |
+| `commands/*.md` `#### Diagram generation` + value gate | `docs/Diagrams.md`, `docs/Commands.md`, `docs/Style-Guide.md`, `WORKFLOW.md`           |
+| `templates/<artifact>-template.md`        | `docs/Commands.md` (output sections), `docs/Examples.md` (example bodies), `docs/Diagrams.md` (diagram and section gating) |
 | `extension.yml.hooks`                     | `docs/Commands.md`, `docs/Architecture.md`, `docs/Workflow.md`                                       |
 | `docs/FAQ.md` (echoed answers)            | `web/index.html` (FAQ subset)                                                                       |
 | `.specify/memory/constitution.md` §III    | `docs/Style-Guide.md`, `docs/FAQ.md` (only the user-visible output style, not governance)            |

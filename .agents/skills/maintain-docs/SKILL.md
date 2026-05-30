@@ -54,6 +54,7 @@ commands/*.md      │  ──> drift  ──>     docs/Commands.md
 templates/*.md     ┘   detector          docs/Workflow.md
                                          docs/Examples.md
                                          docs/Style-Guide.md
+                                         docs/Diagrams.md  (diagram generation + value gate)
                                          docs/Troubleshooting.md
                                          docs/FAQ.md
                                          docs/Architecture.md  (how it works, not how it ships)
@@ -127,9 +128,15 @@ Read these and build a picture of what the extension actually does:
 3. `commands/speckit.*.md` — each filename maps 1:1 to a command name
    (`speckit.product.spec.md` → `/speckit.product.spec`). Capture what
    each reads, what it writes, the audience, the error codes, the output
-   section list.
-4. `templates/*.md` — output section list per artifact. Cross-check
-   against what the command prompt claims to emit.
+   section list, and the `#### Diagram generation` block: the per-section
+   diagram table, the value-gate paragraph (when a diagram earns its place
+   versus when it is omitted), and any conditional gates (branch, spread,
+   single-cell, trivial-shape). These shape the user-visible output, so
+   they are user-facing facts, not contributor detail.
+4. `templates/*.md` — output section list per artifact, including optional
+   sections like Non-Functional Requirements and the `>` instruction lines
+   that gate each diagram. Cross-check against what the command prompt
+   claims to emit.
 5. `CHANGELOG.md` — top entry version should equal
    `extension.yml.extension.version` (modulo an open `[Unreleased]`
    block).
@@ -186,7 +193,13 @@ After the script, do a second-pass semantic audit it cannot do:
 
 1. For each command in Phase 1, confirm its section in `docs/Commands.md`
    exists and lists the same reads, writes, audience, output sections,
-   and error codes as the canonical command file and its template.
+   and error codes as the canonical command file and its template. Confirm
+   the diagram types per section and the value-gate conditions in
+   `docs/Commands.md`, `docs/Diagrams.md`, and `WORKFLOW.md` match each
+   command's `#### Diagram generation` block (the per-section table, the
+   "earn its place" rule, and the conditional gates such as the Delivery
+   Phases branch test, the risk-quadrant single-cell omission, and the
+   Non-Functional Requirements versus Technical Constraints division).
 2. For each error code in a `commands/*.md`, confirm
    `docs/Troubleshooting.md` lists it with the same meaning.
 3. For each install path in `README.md`, confirm `docs/Getting-Started.md`
