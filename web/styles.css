@@ -805,18 +805,72 @@ pre code {
 
 /* Mermaid diagrams rendered from ```mermaid code blocks. */
 .md-body .mermaid-rendered {
+  position: relative;
   margin: 0 0 1em;
   padding: 16px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--bg-alt);
-  overflow-x: auto;
+  overflow: hidden;
   text-align: center;
+}
+
+.md-body .mermaid-rendered.is-zoomed {
+  cursor: grab;
+  touch-action: none;
+}
+
+.md-body .mermaid-rendered.is-panning {
+  cursor: grabbing;
 }
 
 .md-body .mermaid-rendered svg {
   max-width: 100%;
   height: auto;
+}
+
+/* Pan/zoom toolbar injected into each diagram by script.js. */
+.mermaid-zoom {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.mermaid-rendered:hover .mermaid-zoom,
+.mermaid-rendered:focus-within .mermaid-zoom,
+.mermaid-rendered.is-zoomed .mermaid-zoom {
+  opacity: 1;
+}
+
+.mermaid-zoom-btn {
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.mermaid-zoom-btn:hover,
+.mermaid-zoom-btn:focus-visible {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
 }
 
 /* Full-file markdown viewer modal. */

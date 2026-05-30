@@ -163,6 +163,166 @@
     return mermaidPromise;
   };
 
+  // Attach pan/zoom controls to a rendered mermaid figure. The +/- buttons zoom
+  // from the diagram's centre; Ctrl/Cmd + wheel zooms toward the pointer (plain
+  // wheel still scrolls the page); drag pans once zoomed in. Reset returns to
+  // the fit-to-width view.
+  var setupMermaidZoom = function (fig) {
+    var svg = fig.querySelector("svg");
+    if (!svg) {
+      return;
+    }
+
+    var MIN = 1;
+    var MAX = 6;
+    var scale = 1;
+    var tx = 0;
+    var ty = 0;
+
+    // Mermaid sets an inline max-width to the diagram's natural width, which can
+    // overflow the container. Pin it to the container so the rest state fits and
+    // zoom scales up from a fit-to-width baseline.
+    svg.style.maxWidth = "100%";
+    svg.style.transformOrigin = "0 0";
+    svg.style.transition = "transform 0.08s ease-out";
+
+    // Keep at least a sliver of the diagram inside the viewport after panning.
+    var clampPan = function () {
+      var f = fig.getBoundingClientRect();
+      var r = svg.getBoundingClientRect();
+      var margin = 48;
+      if (r.right < f.left + margin) {
+        tx += f.left + margin - r.right;
+      }
+      if (r.left > f.right - margin) {
+        tx -= r.left - (f.right - margin);
+      }
+      if (r.bottom < f.top + margin) {
+        ty += f.top + margin - r.bottom;
+      }
+      if (r.top > f.bottom - margin) {
+        ty -= r.top - (f.bottom - margin);
+      }
+    };
+
+    var apply = function () {
+      svg.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + scale + ")";
+      fig.classList.toggle("is-zoomed", scale > 1.001);
+    };
+
+    // Zoom by `factor`, anchoring the client point (mx,my) so it stays put.
+    var zoomAt = function (factor, mx, my) {
+      var next = Math.min(MAX, Math.max(MIN, scale * factor));
+      if (next === scale) {
+        return;
+      }
+      var rect = svg.getBoundingClientRect();
+      var ratio = next / scale;
+      tx -= (mx - rect.left) * (ratio - 1);
+      ty -= (my - rect.top) * (ratio - 1);
+      scale = next;
+      clampPan();
+      apply();
+    };
+
+    var zoomCentre = function (factor) {
+      var f = fig.getBoundingClientRect();
+      zoomAt(factor, f.left + f.width / 2, f.top + f.height / 2);
+    };
+
+    var reset = function () {
+      scale = 1;
+      tx = 0;
+      ty = 0;
+      apply();
+    };
+
+    var bar = document.createElement("div");
+    bar.className = "mermaid-zoom";
+    var addBtn = function (label, title, fn) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "mermaid-zoom-btn";
+      b.textContent = label;
+      b.title = title;
+      b.setAttribute("aria-label", title);
+      b.addEventListener("click", fn);
+      bar.appendChild(b);
+    };
+    addBtn("−", "Zoom out", function () {
+      zoomCentre(1 / 1.3);
+    });
+    addBtn("↺", "Reset zoom", reset);
+    addBtn("+", "Zoom in", function () {
+      zoomCentre(1.3);
+    });
+    fig.appendChild(bar);
+
+    fig.addEventListener(
+      "wheel",
+      function (event) {
+        if (!event.ctrlKey && !event.metaKey) {
+          return;
+        }
+        event.preventDefault();
+        zoomAt(event.deltaY < 0 ? 1.12 : 1 / 1.12, event.clientX, event.clientY);
+      },
+      { passive: false },
+    );
+
+    // Drag to pan, but only once zoomed in.
+    var dragging = false;
+    var lastX = 0;
+    var lastY = 0;
+
+    fig.addEventListener("pointerdown", function (event) {
+      if (scale <= 1.001 || event.button !== 0) {
+        return;
+      }
+      if (event.target.closest(".mermaid-zoom")) {
+        return;
+      }
+      dragging = true;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      fig.classList.add("is-panning");
+      svg.style.transition = "none";
+      if (fig.setPointerCapture) {
+        fig.setPointerCapture(event.pointerId);
+      }
+    });
+
+    fig.addEventListener("pointermove", function (event) {
+      if (!dragging) {
+        return;
+      }
+      tx += event.clientX - lastX;
+      ty += event.clientY - lastY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      clampPan();
+      apply();
+    });
+
+    var endDrag = function (event) {
+      if (!dragging) {
+        return;
+      }
+      dragging = false;
+      fig.classList.remove("is-panning");
+      svg.style.transition = "transform 0.08s ease-out";
+      if (fig.releasePointerCapture && event.pointerId != null) {
+        try {
+          fig.releasePointerCapture(event.pointerId);
+        } catch (err) {
+          /* pointer already released */
+        }
+      }
+    };
+    fig.addEventListener("pointerup", endDrag);
+    fig.addEventListener("pointercancel", endDrag);
+  };
+
   // Replace each rendered ```mermaid code block in `root` with an SVG diagram.
   // On any failure the original code block is left untouched.
   var renderMermaid = function (root) {
@@ -186,6 +346,7 @@
               fig.className = "mermaid-rendered";
               fig.innerHTML = out.svg;
               pre.parentNode.replaceChild(fig, pre);
+              setupMermaidZoom(fig);
             })
             .catch(function () {
               /* leave the fenced code block as-is */
