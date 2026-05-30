@@ -227,9 +227,13 @@ specify extension add product</code></pre>
         <div class="container">
           <h2>See it in action</h2>
           <p class="section-lede">
-            One engineering <code>spec.md</code> goes in. Four audience-specific artifacts come out,
-            each with the open clarifications surfaced and the style rules enforced. Below is a
-            worked example for a fictional feature, bulk export of dashboards to PDF.
+            Spec Kit's <code>spec.md</code> and <code>plan.md</code> go in. Four audience-specific
+            artifacts come out, each with the open clarifications surfaced and the style rules
+            enforced. Below is a real, end-to-end example for per-tenant API rate limiting, rendered
+            straight from the files in the
+            <a href="https://github.com/d0whc3r/spec-kit-product/tree/main/examples"
+              >examples folder</a
+            >. Pick a command to see what it wrote, then open the full file.
           </p>
 
           <div class="example-card">
@@ -283,33 +287,113 @@ specify extension add product</code></pre>
 
             <div class="example-body">
               <div class="example-pane">
-                <div class="example-head">
-                  <span class="example-tag">Input</span>
-                  <code>spec.md</code>
+                <div
+                  class="example-input-tabs tabs"
+                  role="tablist"
+                  aria-label="Spec Kit input file"
+                >
+                  <button
+                    id="tab-in-spec"
+                    class="tab is-active"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="panel-in-spec"
+                  >
+                    spec.md
+                  </button>
+                  <button
+                    id="tab-in-plan"
+                    class="tab"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="panel-in-plan"
+                  >
+                    plan.md
+                  </button>
                 </div>
-                <pre data-copy><code># Feature: Bulk Dashboard Export
 
-## Summary
+                <div
+                  id="panel-in-spec"
+                  class="tab-panel is-active"
+                  role="tabpanel"
+                  aria-labelledby="tab-in-spec"
+                >
+                  <div class="example-head">
+                    <span class="example-tag">Input</span>
+                    <code>spec.md</code>
+                    <button
+                      class="md-full-btn"
+                      type="button"
+                      data-md-full="examples/specs/001-tenant-rate-limiting/spec.md"
+                      data-md-title="spec.md"
+                    >
+                      View full file
+                    </button>
+                  </div>
+                  <pre class="md-source"><code># Feature Specification: Per-Tenant API Rate Limiting
 
-Lumen users currently export one dashboard at a time. Power users on the
-Analytics team build weekly reports by exporting 20+ dashboards manually,
-one PDF at a time. We want a single action that exports any selection of
-dashboards into one combined PDF or a zip of PDFs.
-
-## Acceptance
-
-- A user can select multiple dashboards in the library view.
-- They trigger one export action.
-- They receive a single combined PDF, or a zip of individual PDFs.
+**Status**: Draft
 
 ## Clarifications
 
-- 2026-04-12: confirmed v1 supports up to 50 dashboards per export.
-  Above that, the export is queued and emailed.
+### Session 2026-05-29
 
-## [NEEDS CLARIFICATION]
+- Q: At what share of the monthly quota should the dashboard "approaching
+  limit" warning appear? &rarr; A: 80% of the monthly quota.
+- Q: What peak scale should the load tests target? &rarr; A: ~5,000
+  requests/sec aggregate across thousands of tenants.
 
-- Branding. Should exports use the workspace logo, a Lumen logo, or both?</code></pre>
+## User Scenarios &amp; Testing
+
+### User Story 1 - Per-minute burst protection (Priority: P1)
+
+A customer organization sends a sudden spike of API requests. The platform
+caps how many requests that organization can make within any single minute.
+Once the cap is reached, further requests are rejected with a clear 429
+response and a Retry-After header.</code></pre>
+                </div>
+
+                <div
+                  id="panel-in-plan"
+                  class="tab-panel"
+                  role="tabpanel"
+                  aria-labelledby="tab-in-plan"
+                  hidden
+                >
+                  <div class="example-head">
+                    <span class="example-tag">Input</span>
+                    <code>plan.md</code>
+                    <button
+                      class="md-full-btn"
+                      type="button"
+                      data-md-full="examples/specs/001-tenant-rate-limiting/plan.md"
+                      data-md-title="plan.md"
+                    >
+                      View full file
+                    </button>
+                  </div>
+                  <pre class="md-source"><code># Implementation Plan: Per-Tenant API Rate Limiting
+
+**Branch**: `001-tenant-rate-limiting` | **Spec**: spec.md
+
+## Summary
+
+Enforce two independent rate limits per customer organization: a per-minute
+burst limit and a monthly request quota. Over-limit requests get a 429 with a
+`Retry-After` header. Enforcement happens at an API gateway middleware that
+checks two atomic counters in Redis; policy and audit trail live in
+PostgreSQL.
+
+## Technical Context
+
+**Language/Version**: Python 3.12
+
+**Primary Dependencies**: FastAPI, redis-py, SQLAlchemy + Alembic, Pydantic v2
+
+**Storage**: Redis 7 for counters; PostgreSQL 16 for policy and audit trail
+
+**Performance Goals**: rate-limit check adds &lt; 5 ms p95; sustain 5k req/s</code></pre>
+                </div>
               </div>
 
               <div class="example-arrow" aria-hidden="true">&rarr;</div>
@@ -324,28 +408,38 @@ dashboards into one combined PDF or a zip of PDFs.
                   <div class="example-head">
                     <span class="example-tag example-tag-out">Output</span>
                     <code>product/00-info.md</code>
+                    <button
+                      class="md-full-btn"
+                      type="button"
+                      data-md-full="examples/specs/001-tenant-rate-limiting/product/00-info.md"
+                      data-md-title="product/00-info.md"
+                    >
+                      View full file
+                    </button>
                   </div>
-                  <pre data-copy><code># Product Info: Bulk Dashboard Export
+                  <pre class="md-source"><code># Product Info: Per-Tenant API Rate Limiting
 
-## Headline
+## Overview
 
-Analytics leads and customer success teams can now export any selection of
-their dashboards in a single action, as one combined PDF or a zip of PDFs.
-What used to take half an hour of manual work now takes one click.
+Per-Tenant API Rate Limiting gives every customer organization its own
+request limits so that one organization's traffic cannot slow the service
+for others. It pairs a short-term burst limit with a monthly quota and shows
+each customer their own usage.
 
 ## What is Changing
 
-- Users can select more than one dashboard at a time.
-- A new export action handles the whole selection.
-- Exports of up to 50 dashboards run inline; larger jobs are emailed.
+- Each organization gets a per-minute burst limit and monthly quota.
+- Over-limit requests return a clear refusal with a retry time.
+- The dashboard shows used, remaining, reset date, and burst limit.
+- The dashboard warns when usage reaches 80% of quota.
 
 ## Key Decisions
 
-> **Still open**: answered before this feature is built.
->
-> - Should exports use the workspace logo, the Lumen logo, or both?</code></pre>
+**Approaching-limit warning threshold**
+The dashboard warns a customer once usage reaches 80% of the monthly quota.</code></pre>
                   <p class="example-note">
-                    The open clarification is surfaced, not silently resolved.
+                    Three-sentence overview, short bullets, decisions surfaced for review. No
+                    implementation detail.
                   </p>
                 </div>
 
@@ -359,22 +453,33 @@ What used to take half an hour of manual work now takes one click.
                   <div class="example-head">
                     <span class="example-tag example-tag-out">Output</span>
                     <code>product/10-spec.md</code>
+                    <button
+                      class="md-full-btn"
+                      type="button"
+                      data-md-full="examples/specs/001-tenant-rate-limiting/product/10-spec.md"
+                      data-md-title="product/10-spec.md"
+                    >
+                      View full file
+                    </button>
                   </div>
-                  <pre data-copy><code>## Problem Statement (Job to Be Done)
+                  <pre class="md-source"><code>## Problem Statement (Job to Be Done)
 
-> When I need to share a weekly snapshot of many dashboards with my team
-> or a customer, I want to export the full set in one action, so I can
-> spend my time on analysis instead of clicking export fifty times.
+**Primary job**:
 
-## Use Cases
+> When my organization depends on a shared service for its daily work, I
+> want to keep steady access regardless of what other customers do, so I can
+> serve my own users without interruption.
 
-### Use Case 1: Combined PDF export
+## Target Users and Personas
 
-**Given** I have selected ten dashboards in the library view.
-**When** I trigger the bulk export action with the combined PDF option.
-**Then** I receive a single PDF containing all ten dashboards in order.</code></pre>
+- **Customer organization developer**: Builds on our service. Cares about
+  predictable, uninterrupted access.
+- **Customer organization admin**: Manages the account. Cares about staying
+  within plan limits.
+- **Internal support staff**: Helps customers. Cares about resolving limit
+  requests without engineering.</code></pre>
                   <p class="example-note">
-                    Three lines per scenario, each a full sentence. The Gherkin shape the checklist
+                    A Job to Be Done statement and named personas. The PRD voice the checklist
                     enforces.
                   </p>
                 </div>
@@ -389,23 +494,29 @@ What used to take half an hour of manual work now takes one click.
                   <div class="example-head">
                     <span class="example-tag example-tag-out">Output</span>
                     <code>product/20-plan.md</code>
+                    <button
+                      class="md-full-btn"
+                      type="button"
+                      data-md-full="examples/specs/001-tenant-rate-limiting/product/20-plan.md"
+                      data-md-title="product/20-plan.md"
+                    >
+                      View full file
+                    </button>
                   </div>
-                  <pre data-copy><code>## Goals
+                  <pre class="md-source"><code>## Summary
 
-- Reduce time to produce a weekly multi-dashboard packet from thirty
-  minutes to under one minute for jobs up to fifty dashboards.
-- Cap inline export latency at fifteen seconds at the ninety-fifth
-  percentile for fifty dashboards.
+This feature adds per-customer request limits to a shared service API. Each
+customer organization gets a per-minute burst limit and a monthly request
+quota. When a caller goes over a limit, the service refuses the request with
+a clear reason and a retry time.
 
-## Delivery Phases
+## Feature Context
 
-**Phase 1: Multi-select in the library**
+**Problem**: One customer's traffic spike can degrade the shared service for
+everyone, with no fair per-customer boundary.
 
-- Users can select more than one dashboard at a time.
-
-**Phase 2: Inline combined export**
-
-- A new action produces a combined document for selections up to fifty.</code></pre>
+**Quality bar**: Limits are enforced accurately under heavy concurrent load,
+with changes and usage reflected within one minute.</code></pre>
                   <p class="example-note">
                     No file paths, no code, no time estimates. The voice a PM can read aloud.
                   </p>
@@ -421,21 +532,27 @@ What used to take half an hour of manual work now takes one click.
                   <div class="example-head">
                     <span class="example-tag example-tag-out">Output</span>
                     <code>product/30-design.md</code>
+                    <button
+                      class="md-full-btn"
+                      type="button"
+                      data-md-full="examples/specs/001-tenant-rate-limiting/product/30-design.md"
+                      data-md-title="product/30-design.md"
+                    >
+                      View full file
+                    </button>
                   </div>
-                  <pre data-copy><code>## Architectural Approach
+                  <pre class="md-source"><code>## Architectural Approach
 
-The bulk export feature extends the existing single-dashboard export path
-by adding a selection-set entry point and a renderer pool. Above a
-configurable limit, the export is enqueued to the background job runner
-and a delivery worker emails the artifact when complete.
+The core of the design is an enforcement middleware placed at the front of
+the request pipeline, after authentication and before application handlers.
+It resolves the tenant, then asks the limiter for a decision. Because it sits
+at a single choke point, no individual handler needs to know about limiting.
 
-## Affected Modules
+## Technical Constraints
 
-| Module            | Change type | Responsibility                          |
-| ----------------- | ----------- | --------------------------------------- |
-| dashboard-library | modifies    | Adds multi-select state and bulk button.|
-| export-service    | modifies    | Accepts a list of ids, returns output.  |
-| delivery-mailer   | adds        | New worker that emails completed jobs.  |</code></pre>
+- Counters must be atomic to stay within 1% accuracy under concurrency.
+- Admin limit changes must take effect within one minute.
+- Rate-limit check adds under 5 ms at p95 latency.</code></pre>
                   <p class="example-note">
                     Component-level detail. No code, no line-by-line implementation.
                   </p>
@@ -451,23 +568,33 @@ and a delivery worker emails the artifact when complete.
                   <div class="example-head">
                     <span class="example-tag example-tag-out">Output</span>
                     <code>product/checklist.md</code>
+                    <button
+                      class="md-full-btn"
+                      type="button"
+                      data-md-full="examples/specs/001-tenant-rate-limiting/product/checklist.md"
+                      data-md-title="product/checklist.md"
+                    >
+                      View full file
+                    </button>
                   </div>
-                  <pre data-copy><code># Quality Checklist: Bulk Dashboard Export
+                  <pre
+                    class="md-source"
+                  ><code># Product Quality Checklist: Per-Tenant API Rate Limiting
 
-## Info
-- [x] Headline present.
-- [x] No em dash.
-- [x] No implementation detail.
+## Info (`product/00-info.md`)
 
-## Spec
-- [x] Use Cases follow Given/When/Then with one line each.
-- [ ] No AI tell filler phrases. &larr; MANUAL REVIEW REQUIRED
+- [x] Overview is three sentences or fewer
+- [x] No em dash
+- [x] No AI tells
+- [x] No implementation detail
 
-## Plan
-- [x] Delivery Phases present.
-- [x] No time estimates.</code></pre>
+## Spec (`product/10-spec.md`)
+
+- [x] Problem Statement contains a Job to Be Done statement
+- [x] Use Cases follow Given/When/Then
+- [ ] No AI tell filler phrases</code></pre>
                   <p class="example-note">
-                    Items that need a human eye are flagged, not silently passed.
+                    Auto-validated items are checked; items that need a human eye stay unchecked.
                   </p>
                 </div>
               </div>
@@ -475,12 +602,38 @@ and a delivery worker emails the artifact when complete.
           </div>
 
           <p class="note">
-            Want the full input and every section of every output? See the
+            The snippets above are excerpts. Hit <strong>View full file</strong> to read the whole
+            artifact rendered in place, or browse every file on the
             <a href="https://github.com/d0whc3r/spec-kit-product/wiki/Examples">Examples page</a> in
             the wiki.
           </p>
         </div>
       </section>
+
+      <!-- In-page markdown viewer. Populated and toggled by script.js; hidden
+           and inert until a "View full file" button is pressed. -->
+      <div
+        id="md-modal"
+        class="md-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="md-modal-title"
+        hidden
+      >
+        <div class="md-modal-backdrop" data-md-close></div>
+        <div class="md-modal-dialog" role="document">
+          <header class="md-modal-head">
+            <code id="md-modal-title" class="md-modal-title"></code>
+            <a id="md-modal-gh" class="md-modal-gh" href="#" target="_blank" rel="noopener">
+              Open on GitHub
+            </a>
+            <button class="md-modal-close" type="button" data-md-close aria-label="Close">
+              &times;
+            </button>
+          </header>
+          <div id="md-modal-body" class="md-modal-body md-body" tabindex="-1"></div>
+        </div>
+      </div>
 
       <section class="section section-alt" id="start">
         <div class="container">
@@ -709,6 +862,14 @@ specify extension upgrade product</code></pre>
       </div>
     </footer>
 
+    <!-- Markdown parser for the rendered example viewer. Loaded from a CDN,
+         pinned and integrity-checked. See web/README.md. -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"
+      integrity="sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <script src="./script.js"></script>
   </body>
 </html>

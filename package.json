@@ -31,6 +31,7 @@
     "validate": "bash .github/scripts/validate-manifest.sh",
     "build": "bash .github/scripts/build-zip.sh",
     "catalog:issue": "bash .github/scripts/submit-catalog-update.sh",
+    "examples:sync": "rm -rf web/examples && cp -r examples web/examples",
     "check": "pnpm run validate && pnpm run lint && pnpm run lint:content",
     "release": "semantic-release",
     "release:dry": "semantic-release --dry-run",

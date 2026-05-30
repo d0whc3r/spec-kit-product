@@ -7,6 +7,7 @@ on:
     paths:
       - "web/**"
       - "docs/**"
+      - "examples/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -31,8 +32,21 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
       - name: Configure Pages
         uses: actions/configure-pages@v6
+
+      # The site renders the real example artifacts at runtime. They live at
+      # /examples (single source of truth); the examples:sync script copies them
+      # under web/ so they ship with the published site.
+      - name: Stage examples into the site
+        run: pnpm examples:sync
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v5

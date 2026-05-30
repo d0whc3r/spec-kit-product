@@ -112,4 +112,194 @@
       }
     });
   });
+
+  // --- Markdown rendering (example excerpts + full-file viewer) --------------
+  // `marked` is loaded from a CDN just before this script. If it failed to
+  // load, excerpts stay as their plain-text <pre> fallback and the viewer
+  // buttons degrade to opening the file on GitHub.
+  var hasMarked = typeof window.marked !== "undefined";
+  var GH_BLOB = "https://github.com/d0whc3r/spec-kit-product/blob/main/";
+
+  if (hasMarked && window.marked.setOptions) {
+    window.marked.setOptions({ gfm: true, breaks: false });
+  }
+
+  var render = function (text) {
+    return window.marked.parse(text);
+  };
+
+  // --- Mermaid (lazy-loaded) ------------------------------------------------
+  // The 2.5 MB library is fetched only the first time a rendered document
+  // actually contains a ```mermaid block, so it never weighs on a plain visit.
+  var MERMAID_SRC = "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js";
+  var MERMAID_SRI = "sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I";
+  var mermaidPromise = null;
+  var mermaidSeq = 0;
+
+  var ensureMermaid = function () {
+    if (mermaidPromise) {
+      return mermaidPromise;
+    }
+    mermaidPromise = new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = MERMAID_SRC;
+      s.integrity = MERMAID_SRI;
+      s.crossOrigin = "anonymous";
+      s.referrerPolicy = "no-referrer";
+      s.onload = function () {
+        var dark = !window.matchMedia("(prefers-color-scheme: light)").matches;
+        window.mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: "strict",
+          theme: dark ? "dark" : "default",
+        });
+        resolve(window.mermaid);
+      };
+      s.onerror = function () {
+        reject(new Error("mermaid failed to load"));
+      };
+      document.head.appendChild(s);
+    });
+    return mermaidPromise;
+  };
+
+  // Replace each rendered ```mermaid code block in `root` with an SVG diagram.
+  // On any failure the original code block is left untouched.
+  var renderMermaid = function (root) {
+    var blocks = root.querySelectorAll("pre > code.language-mermaid");
+    if (!blocks.length) {
+      return;
+    }
+    ensureMermaid()
+      .then(function (mermaid) {
+        blocks.forEach(function (code) {
+          var pre = code.parentNode;
+          if (!pre || pre.dataset.mermaidDone) {
+            return;
+          }
+          pre.dataset.mermaidDone = "1";
+          var id = "mmd-" + mermaidSeq++;
+          mermaid
+            .render(id, code.textContent || "")
+            .then(function (out) {
+              var fig = document.createElement("div");
+              fig.className = "mermaid-rendered";
+              fig.innerHTML = out.svg;
+              pre.parentNode.replaceChild(fig, pre);
+            })
+            .catch(function () {
+              /* leave the fenced code block as-is */
+            });
+        });
+      })
+      .catch(function () {
+        /* mermaid unavailable: code blocks stay as plain text */
+      });
+  };
+
+  // Upgrade each excerpt <pre class="md-source"> to rendered markdown.
+  if (hasMarked) {
+    document.querySelectorAll("pre.md-source").forEach(function (pre) {
+      var code = pre.querySelector("code");
+      var raw = (code ? code.textContent : pre.textContent) || "";
+      var view = document.createElement("div");
+      view.className = "md-body md-excerpt";
+      view.innerHTML = render(raw);
+      pre.parentNode.insertBefore(view, pre);
+      pre.hidden = true;
+      renderMermaid(view);
+    });
+  }
+
+  // Full-file viewer modal.
+  var modal = document.getElementById("md-modal");
+  var modalBody = document.getElementById("md-modal-body");
+  var modalTitle = document.getElementById("md-modal-title");
+  var modalGh = document.getElementById("md-modal-gh");
+  var lastFocused = null;
+  var cache = {};
+
+  var closeModal = function () {
+    if (!modal) {
+      return;
+    }
+    modal.hidden = true;
+    document.body.classList.remove("md-modal-open");
+    if (lastFocused && lastFocused.focus) {
+      lastFocused.focus();
+    }
+  };
+
+  var openModal = function (path, title) {
+    if (!modal) {
+      return;
+    }
+    lastFocused = document.activeElement;
+    modalTitle.textContent = title || path;
+    modalGh.href = GH_BLOB + path;
+    modal.hidden = false;
+    document.body.classList.add("md-modal-open");
+    modalBody.focus();
+
+    var show = function (html) {
+      modalBody.innerHTML = html;
+      modalBody.scrollTop = 0;
+      renderMermaid(modalBody);
+    };
+
+    if (cache[path]) {
+      show(cache[path]);
+      return;
+    }
+
+    show('<p class="md-loading">Loading&hellip;</p>');
+    fetch(path)
+      .then(function (res) {
+        if (!res.ok) {
+          throw new Error(String(res.status));
+        }
+        return res.text();
+      })
+      .then(function (text) {
+        cache[path] = render(text);
+        show(cache[path]);
+      })
+      .catch(function () {
+        modalBody.innerHTML =
+          '<p class="md-loading">Could not load this file. ' +
+          '<a href="' +
+          GH_BLOB +
+          path +
+          '" target="_blank" rel="noopener">Open it on GitHub</a> instead.</p>';
+      });
+  };
+
+  document.querySelectorAll(".md-full-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var path = btn.getAttribute("data-md-full");
+      var title = btn.getAttribute("data-md-title");
+      if (!path) {
+        return;
+      }
+      // No renderer available: send the user straight to the source.
+      if (!hasMarked) {
+        window.open(GH_BLOB + path, "_blank", "noopener");
+        return;
+      }
+      openModal(path, title);
+    });
+  });
+
+  if (modal) {
+    modal.addEventListener("click", function (event) {
+      if (event.target.closest("[data-md-close]")) {
+        closeModal();
+      }
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !modal.hidden) {
+        closeModal();
+      }
+    });
+  }
 })();

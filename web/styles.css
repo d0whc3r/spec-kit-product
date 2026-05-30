@@ -656,6 +656,264 @@ pre code {
   font-style: italic;
 }
 
+/* Input file tabs (spec.md / plan.md) inside the left example pane. */
+.example-input-tabs {
+  margin-bottom: 12px;
+}
+
+/* "View full file" button, right-aligned in the example head. */
+.md-full-btn {
+  margin-left: auto;
+  flex: none;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.md-full-btn:hover,
+.md-full-btn:focus-visible {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Rendered markdown excerpt inside a pane (replaces the <pre> fallback). */
+.md-excerpt {
+  max-height: 380px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--code-bg);
+  padding: 16px 20px;
+  font-size: 0.85rem;
+}
+
+/* Shared markdown typography for excerpts and the full-file viewer. */
+.md-body {
+  color: var(--text);
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.md-body > :first-child {
+  margin-top: 0;
+}
+
+.md-body > :last-child {
+  margin-bottom: 0;
+}
+
+.md-body h1,
+.md-body h2,
+.md-body h3,
+.md-body h4 {
+  line-height: 1.25;
+  margin: 1.4em 0 0.5em;
+  font-weight: 700;
+}
+
+.md-body h1 {
+  font-size: 1.5rem;
+}
+
+.md-body h2 {
+  font-size: 1.25rem;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--border);
+}
+
+.md-body h3 {
+  font-size: 1.05rem;
+}
+
+.md-body h4 {
+  font-size: 0.95rem;
+}
+
+.md-body p,
+.md-body ul,
+.md-body ol,
+.md-body blockquote,
+.md-body table {
+  margin: 0 0 1em;
+}
+
+.md-body ul,
+.md-body ol {
+  padding-left: 1.4em;
+}
+
+.md-body li + li {
+  margin-top: 0.25em;
+}
+
+.md-body blockquote {
+  margin-left: 0;
+  padding: 0.2em 1em;
+  border-left: 3px solid var(--accent);
+  color: var(--text-muted);
+}
+
+.md-body a {
+  color: var(--accent);
+}
+
+.md-body table {
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+  font-size: 0.92em;
+}
+
+.md-body th,
+.md-body td {
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  text-align: left;
+}
+
+.md-body th {
+  background: var(--bg-alt);
+  font-weight: 700;
+}
+
+.md-body hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5em 0;
+}
+
+/* GitHub-style task lists (the checklist artifact). marked emits a bare
+   <li><input type="checkbox"> with no marker class, so target the checkbox. */
+.md-body li:has(> input[type="checkbox"]) {
+  list-style: none;
+}
+
+.md-body ul:has(> li > input[type="checkbox"]) {
+  padding-left: 0.2em;
+}
+
+.md-body li > input[type="checkbox"] {
+  margin-right: 0.5em;
+}
+
+/* Mermaid diagrams rendered from ```mermaid code blocks. */
+.md-body .mermaid-rendered {
+  margin: 0 0 1em;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+  overflow-x: auto;
+  text-align: center;
+}
+
+.md-body .mermaid-rendered svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Full-file markdown viewer modal. */
+body.md-modal-open {
+  overflow: hidden;
+}
+
+.md-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.md-modal[hidden] {
+  display: none;
+}
+
+.md-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, #000 60%, transparent);
+}
+
+.md-modal-dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(820px, 100%);
+  max-height: min(86vh, 900px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.md-modal-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-alt);
+}
+
+.md-modal-title {
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.md-modal-gh {
+  margin-left: auto;
+  flex: none;
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+
+.md-modal-close {
+  flex: none;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.md-modal-close:hover,
+.md-modal-close:focus-visible {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.md-modal-body {
+  padding: 24px 28px;
+  overflow: auto;
+}
+
+.md-modal-body:focus {
+  outline: none;
+}
+
+.md-loading {
+  color: var(--text-muted);
+}
+
 /* Callout */
 .callout {
   border: 1px solid var(--border);
