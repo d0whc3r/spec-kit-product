@@ -23,7 +23,6 @@
 - [ ] Spec Kit manifest in `.specify/integrations/`
 - [ ] `extension.yml` or `catalog.json`
 - [ ] Templates in `templates/`
-- [ ] Brownfield extension in `.specify/extensions/brownfield/`
 - [ ] Scripts in `.github/scripts/`
 - [ ] Documentation only
 

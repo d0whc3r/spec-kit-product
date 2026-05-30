@@ -81,9 +81,10 @@ the open discussion on the repo if you want to advocate for this.
 
 ## Does this work in a brownfield codebase?
 
-Yes. The bundled brownfield extension at `.specify/extensions/brownfield/`
-helps reverse-engineer specs from existing code. Once you have a `spec.md`,
-the product commands work the same way.
+Yes. The product commands operate on a `spec.md`, so they work the same way
+whether the spec describes a greenfield feature or an existing system. Produce
+the `spec.md` however you like (for example with `/speckit.specify`), then run
+the product commands against it.
 
 ## Is there a Python or Node API to run these programmatically?
 

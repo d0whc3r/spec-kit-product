@@ -94,8 +94,7 @@ Rules:
 1. Canonical command file lives at `commands/speckit.<area>.<verb>.md`. Mirrors derive from it; they must not diverge in intent.
 2. Adding a command requires updating: the canonical file, all four manifests, every mirror surface, `extension.yml` `provides.commands`, and `catalog.json` `provides.commands` count.
 3. Renaming or removing a command is a breaking change and requires a `feat!:` or `BREAKING CHANGE:` commit per constitution §Governance.
-4. The brownfield extension at `.specify/extensions/brownfield/` follows the same mirror rule via its own commands and the agent surfaces under `.claude/skills/speckit-brownfield-*` and `.github/agents/speckit.brownfield.*`.
-5. All agents must emit output obeying constitution §III: no em dashes, plain English, PRFAQ + JTBD + Gherkin + Lean PRD conventions, `[NEEDS CLARIFICATION]` markers preserved.
+4. All agents must emit output obeying constitution §III: no em dashes, plain English, PRFAQ + JTBD + Gherkin + Lean PRD conventions, `[NEEDS CLARIFICATION]` markers preserved.
 
 <!-- CODEGRAPH_START -->
 
