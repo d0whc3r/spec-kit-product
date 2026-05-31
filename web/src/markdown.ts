@@ -1,8 +1,12 @@
 // Markdown rendering for the example excerpts and the full-file viewer.
-// `marked` is loaded from a CDN just before the entry script (see index.html).
-// If it failed to load, excerpts stay as their plain-text <pre> fallback and
-// the viewer buttons degrade to opening the file on GitHub.
+// `marked` is bundled from npm (see web/package.json). Parsing is forced
+// synchronous (`async: false`) so the rendered HTML is available immediately.
+import { marked } from "marked";
+
 const GH_BLOB = "https://github.com/d0whc3r/spec-kit-product/blob/main/";
+
+const render = (text: string): string =>
+  marked.parse(text, { async: false, gfm: true, breaks: false });
 
 // Pull in the mermaid pan/zoom chunk only when a rendered document actually
 // contains a diagram, so a plain visit never downloads it.
@@ -18,27 +22,17 @@ function renderMermaidIn(root: ParentNode): void {
 }
 
 export function setupMarkdown(): void {
-  const hasMarked = typeof window.marked !== "undefined";
-
-  if (hasMarked && window.marked!.setOptions) {
-    window.marked!.setOptions({ gfm: true, breaks: false });
-  }
-
-  const render = (text: string) => window.marked!.parse(text);
-
   // Upgrade each excerpt <pre class="md-source"> to rendered markdown.
-  if (hasMarked) {
-    document.querySelectorAll<HTMLElement>("pre.md-source").forEach((pre) => {
-      const code = pre.querySelector("code");
-      const raw = (code ? code.textContent : pre.textContent) || "";
-      const view = document.createElement("div");
-      view.className = "md-body md-excerpt";
-      view.innerHTML = render(raw);
-      pre.parentNode!.insertBefore(view, pre);
-      pre.hidden = true;
-      renderMermaidIn(view);
-    });
-  }
+  document.querySelectorAll<HTMLElement>("pre.md-source").forEach((pre) => {
+    const code = pre.querySelector("code");
+    const raw = (code ? code.textContent : pre.textContent) || "";
+    const view = document.createElement("div");
+    view.className = "md-body md-excerpt";
+    view.innerHTML = render(raw);
+    pre.parentNode!.insertBefore(view, pre);
+    pre.hidden = true;
+    renderMermaidIn(view);
+  });
 
   // Full-file viewer modal.
   const modal = document.getElementById("md-modal");
@@ -106,11 +100,6 @@ export function setupMarkdown(): void {
       const path = btn.getAttribute("data-md-full");
       const title = btn.getAttribute("data-md-title");
       if (!path) {
-        return;
-      }
-      // No renderer available: send the user straight to the source.
-      if (!hasMarked) {
-        window.open(GH_BLOB + path, "_blank", "noopener");
         return;
       }
       openModal(path, title);

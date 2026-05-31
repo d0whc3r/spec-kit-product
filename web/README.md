@@ -4,11 +4,12 @@ The public landing site for the Product Spec Extension, published to GitHub
 Pages. The page content is hand-authored in `index.html`; the interactive
 behaviour and styling are written in TypeScript and CSS under `src/` and
 **built with [Vite](https://vite.dev/)** into `dist/`, which is what gets
-deployed. Two runtime dependencies are loaded from pinned, integrity-checked
-CDN URLs and used only to render the example artifacts:
+deployed. Two runtime dependencies are bundled from npm (see `package.json`)
+and used only to render the example artifacts:
 [marked](https://github.com/markedjs/marked) for markdown, and
-[mermaid](https://github.com/mermaid-js/mermaid) for diagrams (lazy-loaded the
-first time a rendered file actually contains a `mermaid` code block).
+[mermaid](https://github.com/mermaid-js/mermaid) for diagrams (code-split into
+its own chunk that loads the first time a rendered file actually contains a
+`mermaid` code block).
 
 The page is built with progressive enhancement: the CSS is a real `<link>`, so
 the site is fully readable and styled with JavaScript disabled. The bundled
@@ -24,9 +25,8 @@ web/
 │   ├── clipboard.ts    copy-to-clipboard buttons
 │   ├── tabs.ts         ARIA tabs (install methods, example outputs)
 │   ├── markdown.ts     marked rendering + full-file modal viewer
-│   ├── mermaid.ts      lazy mermaid loader + diagram pan/zoom (its own chunk)
-│   ├── styles.css      all styling, responsive, light and dark
-│   └── globals.d.ts    ambient types for the CDN globals
+│   ├── mermaid.ts      mermaid init + diagram pan/zoom (its own lazy chunk)
+│   └── styles.css      all styling, responsive, light and dark
 ├── public/
 │   ├── favicon.svg
 │   └── examples/       real example artifacts, staged from /examples (gitignored)
@@ -61,8 +61,8 @@ page URL, so the example files must sit next to `index.html` in the output.
 twice. For `web:dev`, run `pnpm examples:sync` once first.
 
 Each command tab shows a rendered excerpt; **View full file** opens the whole
-artifact in an in-page markdown viewer (or falls back to GitHub if marked fails
-to load).
+artifact in an in-page markdown viewer (or falls back to GitHub if the file
+cannot be fetched).
 
 ## Relationship to the docs
 

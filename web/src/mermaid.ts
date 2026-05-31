@@ -1,37 +1,25 @@
-// Lazy mermaid loader plus rendered-diagram pan/zoom. This whole module is a
-// dynamic import (see markdown.ts), so it ships as its own chunk that is fetched
-// only when a rendered document actually contains a ```mermaid block. The
-// ~2.5 MB mermaid library itself is then loaded from a pinned, integrity-checked
-// CDN URL the first time a diagram needs rendering.
-const MERMAID_SRC = "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js";
-const MERMAID_SRI = "sha384-rbtjAdnIQE/aQJGEgXrVUlMibdfTSa4PQju4HDhN3sR2PmaKFzhEafuePsl9H/9I";
+// Rendered-diagram pan/zoom plus a one-time mermaid initializer. `mermaid` is
+// bundled from npm (see web/package.json), but this whole module is reached
+// only through a dynamic import (see markdown.ts), so Vite emits it - and the
+// heavy mermaid library it pulls in - as its own chunk that is fetched the
+// first time a rendered document actually contains a ```mermaid block. A plain
+// visit never downloads it.
+import mermaid from "mermaid";
 
-let mermaidPromise: Promise<MermaidLike> | null = null;
+let initialized = false;
 let mermaidSeq = 0;
 
-function ensureMermaid(): Promise<MermaidLike> {
-  if (mermaidPromise) {
-    return mermaidPromise;
+function ensureMermaid(): typeof mermaid {
+  if (!initialized) {
+    const dark = !window.matchMedia("(prefers-color-scheme: light)").matches;
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: dark ? "dark" : "default",
+    });
+    initialized = true;
   }
-  mermaidPromise = new Promise((resolve, reject) => {
-    const s = document.createElement("script");
-    s.src = MERMAID_SRC;
-    s.integrity = MERMAID_SRI;
-    s.crossOrigin = "anonymous";
-    s.referrerPolicy = "no-referrer";
-    s.onload = () => {
-      const dark = !window.matchMedia("(prefers-color-scheme: light)").matches;
-      window.mermaid!.initialize({
-        startOnLoad: false,
-        securityLevel: "strict",
-        theme: dark ? "dark" : "default",
-      });
-      resolve(window.mermaid!);
-    };
-    s.onerror = () => reject(new Error("mermaid failed to load"));
-    document.head.appendChild(s);
-  });
-  return mermaidPromise;
+  return mermaid;
 }
 
 // Attach pan/zoom controls to a rendered mermaid figure. The +/- buttons zoom
@@ -195,30 +183,24 @@ export function renderMermaid(root: ParentNode): void {
   if (!blocks.length) {
     return;
   }
-  ensureMermaid()
-    .then((mermaid) => {
-      blocks.forEach((code) => {
-        const pre = code.parentNode as HTMLElement | null;
-        if (!pre || pre.dataset.mermaidDone) {
-          return;
-        }
-        pre.dataset.mermaidDone = "1";
-        const id = "mmd-" + mermaidSeq++;
-        mermaid
-          .render(id, code.textContent || "")
-          .then((out) => {
-            const fig = document.createElement("div");
-            fig.className = "mermaid-rendered";
-            fig.innerHTML = out.svg;
-            pre.parentNode!.replaceChild(fig, pre);
-            setupMermaidZoom(fig);
-          })
-          .catch(() => {
-            /* leave the fenced code block as-is */
-          });
+  const m = ensureMermaid();
+  blocks.forEach((code) => {
+    const pre = code.parentNode as HTMLElement | null;
+    if (!pre || pre.dataset.mermaidDone) {
+      return;
+    }
+    pre.dataset.mermaidDone = "1";
+    const id = "mmd-" + mermaidSeq++;
+    m.render(id, code.textContent || "")
+      .then((out) => {
+        const fig = document.createElement("div");
+        fig.className = "mermaid-rendered";
+        fig.innerHTML = out.svg;
+        pre.parentNode!.replaceChild(fig, pre);
+        setupMermaidZoom(fig);
+      })
+      .catch(() => {
+        /* leave the fenced code block as-is */
       });
-    })
-    .catch(() => {
-      /* mermaid unavailable: code blocks stay as plain text */
-    });
+  });
 }
