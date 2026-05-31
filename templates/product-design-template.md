@@ -137,7 +137,7 @@ sequenceDiagram
 
 > Include only when `spec.md` contains use cases or Gherkin scenarios. Map each use case to the component or operation that implements it. Gaps must be flagged in the Notes column with "GAP".
 
-| Use Case (from spec.md)                 | Component / Operation        | Notes                               |
+| Use Case                                | Component / Operation        | Notes                               |
 | --------------------------------------- | ---------------------------- | ----------------------------------- |
 | [Gherkin scenario title or use case ID] | [component name or endpoint] | [key constraint, edge case, or gap] |
 

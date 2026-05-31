@@ -165,7 +165,6 @@ Diagram rules (enforced):
 #### Header metadata
 
 - `Feature` field: the H1 title of `plan.md` (the text of the first `#` heading, stripped of the `#` prefix and trimmed). If no H1 is present, fall back to the H1 of `spec.md` when available. If neither has an H1, use the feature directory name with any leading numeric prefix and hyphens removed (e.g., `003-my-feature` becomes `My Feature`, capitalised as title case).
-- `Source Plan` field: `[plan.md](../plan.md)`.
 - `Created` field: today's date in `YYYY-MM-DD`.
 - `Status` field: `Draft`.
 
@@ -198,7 +197,7 @@ After composing the full text of `product/20-plan.md` in memory (before writing)
 | Risks include probability and impact                          | Risks and Mitigations section, if present: each entry has What could go wrong, Probability (Low/Medium/High), Impact (Low/Medium/High), and Mitigation fields                                                                                                                                       | Yes - add missing fields; default Probability and Impact to Medium when source plan has no signal                                                       |
 | Optional sections present only when source warrants           | Key Decisions, Risks and Mitigations, Divergences and Edge Cases, Validation, Open Questions present only when source plan has the corresponding content                                                                                                                                            | Yes - remove sections with no source backing                                                                                                            |
 | No optional marker leaks into a heading                       | No heading contains `_(optional)_` or a trailing `(optional)`; the marker is a template authoring flag, not title text                                                                                                                                                                              | Yes - strip the marker from the heading                                                                                                                 |
-| Header has non-placeholder Feature, Source Plan, and Created  | File has `Feature:`, `Source Plan:`, and `Created: YYYY-MM-DD` with real values                                                                                                                                                                                                                     | Yes - set from context                                                                                                                                  |
+| Header has non-placeholder Feature and Created                | File has `Feature:` and `Created: YYYY-MM-DD` with real values                                                                                                                                                                                                                                      | Yes - set from context                                                                                                                                  |
 
 **Checklist structure for the `## Plan` section**: replace the section content with:
 
