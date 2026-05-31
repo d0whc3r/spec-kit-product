@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.2](https://github.com/d0whc3r/spec-kit-product/compare/v0.8.1...v0.8.2) (2026-05-31)
+
+
+### Bug Fixes
+
+* update decision procedures and value gates in design and plan documentation; streamline checklist legend ([3ffb63e](https://github.com/d0whc3r/spec-kit-product/commit/3ffb63ec24110a650bd977eef1bee9dacc459b65))
+
 ## [0.8.1](https://github.com/d0whc3r/spec-kit-product/compare/v0.8.0...v0.8.1) (2026-05-30)
 
 
