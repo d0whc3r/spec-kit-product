@@ -1,132 +1,123 @@
-# Product Spec: Feature Specification: Self-Serve Billing Usage Dashboard
+# Product Spec: Self-Serve Billing Usage Dashboard
 
-**Feature**: Feature Specification: Self-Serve Billing Usage Dashboard
-**Created**: 2026-05-30
+**Feature**: Self-Serve Billing Usage Dashboard
+**Created**: 2026-05-31
 **Status**: Draft
 
 ## Headline
 
-Organization admins can understand likely billing costs before an invoice arrives. The dashboard explains current usage, projected overage, invoice history, and charge drivers in one read-only place. It helps admins avoid surprise bills and answer finance questions without contacting support.
+Organization admins can now see exactly where their bill is heading before it arrives, instead of being surprised by it. The self-serve billing dashboard shows an account's current plan, the usage recorded so far this period, and a projected total for the end of the period. When a bill looks higher than expected, admins can break usage down by team to see what changed, and they can be warned before an overage happens. Finance teams can pull past invoices on their own, without opening a support ticket.
 
 ## Glossary
 
-- **Billing period**: The date range covered by one bill.
-- **Allowance**: Usage included in the current plan price.
-- **Overage**: Extra cost after included usage is exceeded.
-- **Unattributed usage**: Usage that cannot be tied to a team.
-- **Projection**: An estimate based on current-period usage so far.
+- **Overage**: usage beyond your plan's included allowance, billed at extra cost.
+- **Included allowance**: the usage your plan covers before overage applies.
+- **Metered dimension**: a usage type measured and billed separately.
+- **Run-rate projection**: an estimate extending current usage to period end.
+- **Unattributed usage**: usage that cannot be tied to a specific team.
 
 ## Target Users and Personas
 
-- **Organization admin**: Owns account health and avoids billing surprises.
-- **Billing manager**: Reviews invoices and reconciles costs for finance.
-- **Team lead**: Explains why their team changed account usage.
+- **Organization admin**: runs the account; wants no surprise bills.
+- **Billing owner**: holds the billing role; tracks spend and overages closely.
+- **Finance teammate**: reconciles invoices; needs exportable, accurate billing records.
 
 ## Problem Statement (Job to Be Done)
 
 **Primary job**:
 
-> When my organization is using a billed product during the month, I want to understand expected charges and their causes, so I can prevent surprises and explain costs before the invoice arrives.
+> When I am responsible for my organization's bill, I want to understand and predict what we will owe, so I can avoid surprise charges and act before costs climb.
 
-**Why this matters now**: Admins currently need support or manual investigation to understand likely costs. Billing questions become more urgent when usage changes across teams and invoices arrive after the chance to react has passed.
+**Why this matters now**: No time-sensitive trigger; this is a standing need. Today admins learn what they owe only when the invoice arrives, which drives surprise charges and avoidable support contacts.
 
 ## Assumptions
 
-- **Read-only billing**: Invalid if admins need billing actions here.
-- **Admin access**: Invalid if non-admin members need billing visibility.
-- **Existing usage data**: Invalid if usage cannot identify teams.
-- **Simple forecasting**: Invalid if run-rate estimates are too inaccurate.
-- **Email and in-app alerts**: Invalid if customers require other channels.
-- **Single currency**: Invalid if accounts span multiple billing currencies.
+- Metering already attributes usage to teams; invalid if attribution is unavailable.
+- Run-rate extrapolation is accurate enough; invalid if usage is highly irregular.
+- Admins want a read-only view; invalid if they expect in-place actions.
+- Each account uses one currency; invalid for multi-currency accounts.
 
 ## Value Proposition
 
-Today, admins must piece together usage, invoices, and support answers to understand billing. This feature gives them a clear view of expected cost, why it changed, and what may happen before the billing period ends. It turns billing from a surprise into something admins can monitor, explain, and act on.
+Today, admins find out what they owe only when the invoice lands, and answering "why did it change" means a support ticket or a spreadsheet. With this dashboard, they see their projected bill and its drivers at any time, on their own. The proactive overage alert is genuinely new: admins can act before a charge happens, not after. Everything else, including plan details, usage, and invoices, already existed but was scattered or invisible, and now it sits in one self-serve place.
 
 ## Scope
 
-- Show current plan, usage, allowances, and projected bill.
-- Separate included plan price from projected overage.
-- Explain charge changes by team and usage dimension.
-- Let admins enable projected-overage alerts.
-- Show recent alert activity.
-- List past invoices with line-item detail.
-- Export invoice data for finance.
-- Show helpful empty states for new accounts.
-- Restrict billing data to permitted roles.
+- Show current plan, allowances, and usage per metered dimension.
+- Project the end-of-period bill, separating included price from overage.
+- Indicate when usage data was last updated or stale.
+- Break usage down by team, including unattributed usage.
+- Compare the current period against the previous one.
+- Configurable alerts before a projected overage occurs.
+- List, inspect, and export past invoices.
+- Purposeful empty states for brand-new accounts.
+- Restrict billing data to admin and billing roles.
 
 ## Out of Scope
 
-- Plan changes stay in existing flows.
-- Payments and disputes stay in existing billing tools.
-- Team management uses existing team data.
-- Advanced forecasting is excluded from the first version.
-- Extra alert channels are not included.
-- Spend caps are not included.
-- Historical backfill is not included.
+- Changing or canceling plans, that stays in existing flows.
+- Making payments or disputing charges, handled elsewhere.
+- Creating or managing teams, used here as existing data.
+- Advanced forecasting, only run-rate projection is included.
+- Alert channels beyond email and in-app, deferred for now.
+- Spend caps or cost-saving tips, not in this version.
+- Historical backfill of usage or invoices, not included.
 
 ## Use Cases
 
-### Use Case 1: See Expected Bill
+### Use Case 1: See current cost and projected bill
 
-**Given** Given an admin checks billing during an active billing period.
-**When** When they review the current cost summary.
-**Then** Then they see plan, usage, allowance, and projected total.
+**Given** an admin is partway through a billing period with usage recorded.
+**When** the admin opens the billing dashboard.
+**Then** they see the current plan, usage against allowance, and a projected end-of-period total.
 
-### Use Case 2: Spot Projected Overage
+### Use Case 2: Understand why charges changed
 
-**Given** Given an account is trending beyond included usage.
-**When** When the admin reviews the projected charges.
-**Then** Then overage appears separately from the included plan price.
+**Given** an account's projected bill is higher than the previous period.
+**When** the admin views usage broken down by team and compares the two periods.
+**Then** the teams and dimensions driving the increase are surfaced clearly.
 
-### Use Case 3: Explain A Charge Increase
+### Use Case 3: Be alerted before an overage
 
-**Given** Given charges are higher than the previous period.
-**When** When the admin compares usage by team and dimension.
-**Then** Then the largest drivers of the change are highlighted.
+**Given** an admin has enabled a projected-overage alert with a threshold.
+**When** projected usage crosses that threshold during the period.
+**Then** the admin is notified before the period's invoice is issued.
 
-### Use Case 4: Include Unattributed Usage
+### Use Case 4: Review and export invoices
 
-**Given** Given some usage cannot be tied to a team.
-**When** When the admin reviews the team breakdown.
-**Then** Then unattributed usage appears and reconciles to the total.
+**Given** an account has several past invoices on record.
+**When** the admin opens invoice history and selects invoices to export.
+**Then** a structured file of the invoice data is produced for finance.
 
-### Use Case 5: Receive Overage Alert
+### Use Case 5: Helpful experience for new customers
 
-**Given** Given an admin has enabled projected-overage alerts.
-**When** When projected usage crosses the chosen threshold.
-**Then** Then the admin receives one recorded alert for that period.
-
-### Use Case 6: Export Invoice Data
-
-**Given** Given an account has past invoices.
-**When** When the admin selects invoices to export.
-**Then** Then finance receives structured invoice data for reconciliation.
-
-### Use Case 7: Start With No Usage
-
-**Given** Given a new account has no usage or invoices.
-**When** When the admin opens the billing dashboard.
-**Then** Then every panel explains what will appear later.
+**Given** a brand-new account has no usage and no invoices yet.
+**When** the admin opens the dashboard and its panels.
+**Then** every panel shows a purposeful empty state with a clear next step.
 
 ## Success Metrics
 
 **North star**:
 
-- **Time to billing confidence**: Admins find projected bill within 30 seconds.
+- **Surprise-bill support contacts**: down 40% within one quarter of launch.
 
 **Supporting metrics**:
 
-- **Surprise-charge contacts**: Support contacts drop 40% within one quarter.
-- **Alert coverage**: 90% of eligible overage accounts receive timely alerts.
-- **Invoice export speed**: Admins export past invoice data within one minute.
-- **Charge-driver understanding**: 85% identify the main change driver.
+- **Time to projected bill**: under 30 seconds for a new visitor.
+- **Overage alert coverage**: 90% of alerting overage accounts warned pre-invoice.
+- **Invoice export ease**: any invoice exported under one minute, three actions.
+- **Charge-driver comprehension**: 85% of admins identify the main change driver.
 
 ## Risks and Open Product Questions
 
 **Risks**:
 
-- Delayed usage data could make projections feel more certain than warranted.
-- Mid-period plan changes could confuse usage and overage explanations.
-- Unattributed usage could reduce trust in team-level charge drivers.
-- Duplicate or late alerts could weaken confidence in overage warnings.
+- Stale or missing upstream usage makes projections wrong, eroding trust.
+- Early-period projections may overstate cost and trigger false alarms.
+- Per-team usage that fails to reconcile undermines dashboard credibility.
+- Late alerts still leave admins with the surprise bills they feared.
+
+**Open product questions**:
+
+- What default alert threshold ships, and is one enabled by default?
+- Which export format do finance teams need beyond a basic table?

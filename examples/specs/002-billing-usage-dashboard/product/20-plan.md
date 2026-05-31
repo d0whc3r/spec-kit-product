@@ -1,155 +1,189 @@
-# Product Plan: Implementation Plan: Self-Serve Billing Usage Dashboard
+# Product Plan: Self-Serve Billing Usage Dashboard
 
-**Feature**: Implementation Plan: Self-Serve Billing Usage Dashboard
+**Feature**: Self-Serve Billing Usage Dashboard
 **Source Plan**: [plan.md](../plan.md)
-**Created**: 2026-05-30
+**Created**: 2026-05-31
 **Status**: Draft
 
 ## Summary
 
-This feature gives organization admins a read-only billing dashboard that shows the current plan, current-period usage, projected overage, invoice history, team-level usage, and alert activity. The main approach adds a dashboard, a read API (application programming interface) layer, a projection and alert job, and shared billing records that keep usage, projections, invoices, and alerts consistent.
+This builds a read-only billing dashboard for organization admins, so they can answer "what will this cost me, and why?" without contacting support. It shows the current plan and included allowances, usage so far this period, and a projected end-of-period total that separates the included plan price from any projected overage. It explains changes by breaking usage down per team and comparing the current period to the previous one, and it can warn admins before an overage is invoiced. The approach reads usage from an existing metering source and stores plans, invoices, alert rules, and cached projections, computing the account total and per-team usage in one pass so the numbers always reconcile.
 
 ## Feature Context
 
-**Problem**: Admins cannot self-serve answers about projected bills, charge changes, or past invoices.
-**For**: Organization admins and billing-role users who manage account spend.
-**Change**: They can review costs, explain changes, export invoices, and enable alerts.
-**Quality bar**: Totals reconcile exactly and every dashboard panel has a purposeful state.
-**Constraints**: The dashboard must not change plans, payments, disputes, metering, or teams.
+**Problem**: Admins cannot tell what they will owe until the invoice arrives, which causes surprise charges and support contacts.
+**For**: Organization admins and billing owners responsible for the account's spend.
+**Change**: They can see a projected bill and its drivers at any time, and be warned before an overage.
+**Quality bar**: Panels read quickly enough to grasp the projected bill in seconds, never show a blank or error panel, and per-team usage reconciles exactly to the account total.
+**Constraints**: The dashboard is read-only over billing (no plan changes, payments, or disputes), and overage alerts must reach admins before the invoice is issued.
 
 ```mermaid
 journey
-    title Admin avoids surprise bills
-    section Review current bill
-      Open billing dashboard: 3: Admin
-      Read plan and usage: 4: Admin
-      Check projected total: 5: Admin
-    section Explain changes
-      Compare team usage: 4: Admin
-      Find charge drivers: 5: Admin
-    section Act before invoice
-      Enable overage alert: 4: Admin
-      Export invoice data: 4: Admin
+    title Admin checks and controls the bill
+    section Check the bill
+      Open the billing dashboard: 4: Admin
+      See plan, usage, and projected total: 5: Admin
+    section Understand changes
+      Break usage down by team: 4: Admin
+      Compare against the previous period: 4: Admin
+    section Stay ahead
+      Enable a projected-overage alert: 5: Admin
+      Export an invoice for finance: 4: Admin
 ```
 
 ## Goals
 
-- Show current plan and allowance usage.
-- Separate included price from projected overage.
-- Explain charge changes by team and dimension.
-- Send one alert per threshold and period.
-- Export invoice data for finance review.
-- Show helpful empty states for new accounts.
+- Admins see plan, usage, and a projected bill at a glance.
+- Projected overage is shown separately from the included plan price.
+- Per-team and unattributed usage reconcile to the account total.
+- Admins are alerted before an overage reaches the invoice.
+- Past invoices can be reviewed and exported for finance.
+- Every panel shows a purposeful empty state for new accounts.
 
 ## Out of Scope
 
-- Plan changes, existing billing flow remains.
-- Payments and disputes, existing flows remain.
-- Team management, teams already exist.
-- Advanced forecasting, run-rate projection only.
-- Extra alert channels, first version excludes them.
-- Spend caps, no automated throttling.
+- Changing plans, payments, or disputes, the dashboard is read-only.
+- Creating or managing teams, consumed as existing data.
+- Forecasting beyond a simple run-rate projection, deferred.
+- Alert channels beyond email and in-app, deferred.
+- Owning usage data, read from an existing metering source.
+- Historical backfill of usage or invoices, not included.
 
 ## Build Overview
 
-The dashboard presents billing information to admins and requests read-only billing views from the API layer. That layer combines plan, invoice, alert, and projection records with the existing metering source. A separate projection and alert job refreshes estimates, checks alert rules, records sent alerts, and notifies admins before invoices are issued.
+The dashboard reads from a small set of parts that keep billing records in one place and usage in another. A read-only billing service answers the dashboard's requests by combining stored billing records with live usage pulled from an existing metering source. A durable store holds plans, invoices, alert rules, the log of alerts already sent, and cached projections. A scheduled job recomputes the projection and fires overage alerts before each invoice is issued. The dashboard itself is one screen of panels that reads from the billing service and never writes back to billing.
 
-- **Billing dashboard**: Shows costs, usage, alerts, invoices, and empty states.
-- **Read API layer**: Serves dashboard views and invoice export.
-- **Metering source**: Supplies current usage and freshness signals.
-- **Billing records**: Store plans, invoices, alerts, and cached projections.
-- **Projection job**: Recomputes estimates and evaluates alert rules.
-- **Notification channels**: Deliver email and in-app alerts.
+- **Billing dashboard**: panels admins read; this feature adds it.
+- **Billing read service**: answers dashboard requests; this feature adds it.
+- **Billing store**: holds plans, invoices, alerts, and projections; feature adds it.
+- **Metering source**: existing usage system; this feature only reads it.
+- **Projection and alert job**: recomputes projections, sends alerts; feature adds it.
 
 ```mermaid
 flowchart LR
-    Admin[Billing admin] --> Dashboard[Billing dashboard]
-    Dashboard --> ReadLayer[Read API layer]
-    ReadLayer --> Metering[Metering source]
-    ReadLayer --> Records[Billing records]
-    Job[Projection job] --> Metering
-    Job --> Records
-    Job --> Notices[Notification channels]
+    Admin([Admin]) --> Dashboard[Billing dashboard]
+    Dashboard --> ReadService[Billing read service]
+    ReadService --> Store[(Billing store)]
+    ReadService --> Metering[Metering source]
+    Job[Projection and alert job] --> Store
+    Job --> Metering
+    Job --> Alerts{{Email and in-app alerts}}
 ```
 
 ## Key Principles
 
-- **Read-only billing**: Admins view data, but billing changes stay elsewhere.
-- **Exact reconciliation**: Team usage plus unattributed usage matches totals.
-- **Alert dedupe**: Each threshold fires once per billing period.
-- **Freshness clarity**: Stale or unavailable projections are clearly labeled.
-- **Purposeful empties**: New accounts see guidance, not blank panels.
-- **Single currency**: All money uses the account billing currency.
+- **Reconciliation**: per-team plus unattributed always equals the account total.
+- **Alert before close**: alerts fire before each invoice is issued.
+- **No duplicate alerts**: a threshold fires at most once per period.
+- **Read-only billing**: never change plans, payments, or disputes.
+- **Always a purposeful state**: never show a blank or error panel.
+- **Honest about staleness**: flag stale or unavailable data clearly.
 
 ## Delivery Phases
 
-### Phase 0: Research choices
+```mermaid
+flowchart LR
+    P1["Cost and projection overview"]
+    P2["Explain charge changes"]
+    P3["Projected-overage alerts"]
+    P4["Invoice history and export"]
+    P5["Empty states for new accounts"]
+    P1 --> P2
+    P1 --> P3
+    P1 --> P4
+    P1 --> P5
+```
 
-- Choose the demo technology stack.
-- Document rationale for major defaults.
-- Align with the sibling example baseline.
+### Phase 1: Cost and projection overview
 
-### Phase 1: Design contracts
+- Show plan, allowances, and usage per dimension.
+- Project the end-of-period bill with overage split.
+- Surface when usage data is stale or unavailable.
 
-_Depends on_: Phase 0.
-
-- Define billing data entities.
-- Define read surfaces and invoice export.
-- Capture dashboard validation checks.
-
-### Phase 2: Implementation tasks
+### Phase 2: Explain charge changes
 
 _Depends on_: Phase 1.
 
-- Convert design into ordered work.
-- Cover tests for each user story.
-- Keep billing changes out of scope.
+- Break usage down per team and unattributed.
+- Compare the current period against the previous one.
+- Surface the largest drivers of any change.
+
+### Phase 3: Projected-overage alerts
+
+_Depends on_: Phase 1.
+
+- Let admins enable and configure overage alerts.
+- Fire alerts before the invoice, without duplicates.
+- Record alert activity for the admin to review.
+
+### Phase 4: Invoice history and export
+
+_Depends on_: Phase 1.
+
+- List past invoices with totals and status.
+- Open line-item detail for any invoice.
+- Export invoice data for finance.
+
+### Phase 5: Empty states for new accounts
+
+_Depends on_: Phase 1.
+
+- Show purposeful empty states on every panel.
+- Explain what appears once usage begins.
+- Never show a blank or error panel.
 
 ## Key Decisions
 
-### Add a read-oriented billing surface
+### Read-only and additive, not owning billing data
 
-**Context**: The feature must explain billing without owning metering or changing billing.
-**Options considered**: Own billing data, change billing flows, or add read views.
-**Decision**: Add read views, a dashboard, and one projection job.
-**Consequence**: This enables self-service insight while keeping billing writes elsewhere.
+**Context**: Plans, teams, invoices, and usage already exist in upstream systems.
+**Options considered**: Own a new billing data model, or read additively from the existing systems.
+**Decision**: Add read access and one dashboard surface; do not own billing or write to it.
+**Consequence**: This lowers risk and avoids new write paths, but the dashboard depends on upstream data quality.
 
-### Compute totals from one aggregation pass
+### One aggregation pass for reconciliation
 
-**Context**: Team usage and account totals must reconcile exactly.
-**Options considered**: Separate queries, cached team totals, or one shared pass.
-**Decision**: Compute account, team, and unattributed usage together.
-**Consequence**: This protects trust but ties breakdown freshness to aggregation.
+**Context**: Per-team and unattributed usage must reconcile exactly to the account total.
+**Options considered**: Compute the total and the per-team breakdown separately, or in a single pass.
+**Decision**: Compute the account total and per-team breakdown in one pass over the same source.
+**Consequence**: This guarantees reconciliation, at the cost of materializing the current period's breakdown.
+
+### A scheduled job for alerts before invoicing
+
+**Context**: Overage alerts must reach admins before the invoice is issued.
+**Options considered**: Recompute on each dashboard view, or run a scheduled projection-and-alert job.
+**Decision**: Run a scheduled job that recomputes projections and fires alerts ahead of billing close.
+**Consequence**: Alerts arrive on time and at most once, but this adds one non-request component to operate.
 
 ## Risks and Mitigations
 
-**Reconciliation drift**
+**Stale upstream usage**
 
-- **What could go wrong**: Parts stop matching totals.
+- **What could go wrong**: stale or missing usage data produces misleading projections.
 - **Probability**: Medium
 - **Impact**: High
-- **Mitigation**: Compute totals from one aggregation pass.
+- **Mitigation**: flag stale or unavailable data instead of projecting confidently.
 
-**Duplicate alerts**
+**Inaccurate early projections**
 
-- **What could go wrong**: Admins receive repeated threshold notices.
+- **What could go wrong**: early run-rate projections overstate cost, triggering false alarms.
 - **Probability**: Medium
 - **Impact**: Medium
-- **Mitigation**: Dedupe against the alert event log.
+- **Mitigation**: show the projection basis date; present projections clearly as estimates.
 
-**Stale projections**
+**Reconciliation failure**
 
-- **What could go wrong**: Admins trust outdated projections.
-- **Probability**: Medium
+- **What could go wrong**: per-team usage fails to reconcile, eroding dashboard trust.
+- **Probability**: Low
 - **Impact**: High
-- **Mitigation**: Surface freshness and unavailable data.
+- **Mitigation**: compute totals and per-team usage in one reconciling pass.
 
-**Blank new-account panels**
+**Late overage alerts**
 
-- **What could go wrong**: New accounts see blank panels.
-- **Probability**: Medium
-- **Impact**: Medium
-- **Mitigation**: Drive empty states from responses.
+- **What could go wrong**: late alerts still leave admins with surprise bills.
+- **Probability**: Low
+- **Impact**: High
+- **Mitigation**: run the alert job before billing close; dedupe against the log.
 
 ```mermaid
 quadrantChart
@@ -160,29 +194,24 @@ quadrantChart
     quadrant-2 Plan contingency
     quadrant-3 Accept
     quadrant-4 Monitor and reduce
-    Reconciliation drift: [0.5, 0.85]
-    Duplicate alerts: [0.48, 0.5]
-    Stale projections: [0.52, 0.85]
-    Blank panels: [0.52, 0.5]
+    Stale upstream usage: [0.5, 0.85]
+    Inaccurate early projections: [0.5, 0.5]
+    Reconciliation failure: [0.18, 0.85]
+    Late overage alerts: [0.24, 0.88]
 ```
 
 ## Divergences and Edge Cases
 
-- **Mid-period plan change**: Projection reflects the changed allowance.
-- **Little early usage**: Projection explains its limited basis.
-- **Renamed or deleted team**: History still represents prior usage.
-- **Unusual invoice state**: History shows pending, failed, or refunded status.
-- **Multiple overage dimensions**: Summary separates each exceeded dimension.
-- **Large team count**: Breakdown remains readable through grouping.
-- **Revoked access**: Billing data is no longer shown.
-- **Delayed metering**: Dashboard shows stale or unavailable usage.
+- **Mid-period plan change**: usage and projection reflect the new plan, not mixed.
+- **Stale usage data**: the dashboard flags staleness instead of projecting confidently.
+- **Unattributed usage**: shown in a labeled bucket that still reconciles.
+- **Access revoked**: billing data stays restricted to admin and billing roles.
 
 ## Validation
 
-- Admin sees projected bill without support.
-- Projected overage is distinct from plan price.
-- Per-team usage reconciles exactly.
-- Alerts arrive before invoice issuance.
-- Duplicate threshold alerts are suppressed.
-- Invoice data exports for finance review.
-- Empty panels show purposeful guidance.
+- Per-team plus unattributed usage equals the account total.
+- A new account shows purposeful empty states on every panel.
+- Overage alerts arrive before the period's invoice is issued.
+- A threshold alert fires at most once per period.
+- The projected total separates included price from overage.
+- Stale usage is shown as stale, not as confident.

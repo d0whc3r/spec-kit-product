@@ -1,470 +1,391 @@
-# Technical Design: Implementation Plan: Self-Serve Billing Usage Dashboard
+# Technical Design: Self-Serve Billing Usage Dashboard
 
-**Feature**: Implementation Plan: Self-Serve Billing Usage Dashboard
-**Created**: 2026-05-30
+**Feature**: Self-Serve Billing Usage Dashboard
+**Created**: 2026-05-31
 **Status**: Draft
 
 ## Summary
 
-This feature adds a read-only billing dashboard for organization admins. It affects the frontend billing surface, API layer, service layer, background jobs, data layer, and notification integrations. The architecture centers on read APIs, one usage aggregation path, cached projections, and a scheduled alert job.
+This adds a read-only billing dashboard that spans a frontend surface, four read endpoints plus an export, a set of domain services, a scheduled projection-and-alert job, and a durable billing store. Usage is read from an existing upstream metering source and is never owned here. The central design principle is a single aggregation pass that produces the account total and the per-team plus unattributed split together, so they always reconcile. A scheduled job recomputes the run-rate projection and delivers overage alerts before each invoice is issued.
 
 ## Technical Context
 
-**Current state**: Plans, teams, invoices, and metered usage already exist upstream.
-**Affected layers**: frontend, API layer, service layer, data layer, background jobs, notifications
+**Current state**: Plans, teams, invoices, and metered usage already exist in upstream systems, and there is no self-serve billing view today.
+**Affected layers**: frontend, API layer, domain services, background job, data layer.
 **Technical constraints**:
 
-- Org scope comes from the authenticated session.
-- Billing data is restricted to admins and billing roles.
-- The dashboard cannot change plans, payments, or disputes.
-- Metered usage remains owned by the upstream source.
-- Team plus unattributed usage must reconcile exactly.
-- Alerts dedupe by rule, period, and threshold.
-- Stale projections must be visible to admins.
-- All money uses the account billing currency.
+- Read-only over billing; no plan changes, payments, or disputes.
+- Usage is read from the metering source, never owned.
+- Per-team plus unattributed usage must reconcile to the total.
+- A threshold alert fires at most once per period.
+- Alerts must be delivered before the invoice is issued.
+- Every panel must render a purposeful empty state.
+- Organization is resolved from the session, never a parameter.
+- Amounts shown in the account's single labeled currency.
 
 ## Non-Functional Requirements
 
-| Quality attribute (ISO 25010) | Target                                                 | How verified          |
-| ----------------------------- | ------------------------------------------------------ | --------------------- |
-| Performance efficiency        | Overview p95 under 1 s                                 | API performance test  |
-| Performance efficiency        | Team breakdown p95 under 1.5 s                         | API performance test  |
-| Functional suitability        | Projected bill understood within 30 s                  | E2E usability check   |
-| Reliability                   | 90% of enabled overage accounts alerted before invoice | Alert job audit       |
-| Functional suitability        | 100% of new-account panels show empty states           | E2E empty-state suite |
-| Functional suitability        | Per-team usage reconciles exactly                      | Reconciliation test   |
-| Functional suitability        | Invoice export in under 1 minute and 3 actions         | E2E export test       |
+| Quality attribute (ISO 25010) | Target                                                          | How verified                                                |
+| ----------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------- |
+| Performance efficiency        | Overview returns within 1 s p95                                 | Backend performance test                                    |
+| Performance efficiency        | Usage-by-team within 1.5 s p95 for hundreds of teams            | Performance test with a large-org fixture                   |
+| Functional suitability        | Per-team plus unattributed equals the account total exactly     | Reconciliation test suite                                   |
+| Reliability                   | At least 90% of alerting overage accounts warned before invoice | Alert-before-close integration test plus production monitor |
+| Interaction capability        | Projected bill graspable within 30 s of opening                 | Usability check                                             |
+| Interaction capability        | Any invoice exported within 1 minute and 3 actions              | End-to-end export test                                      |
+| Functional suitability        | 100% of panels render a purposeful empty state for new accounts | End-to-end empty-state tests                                |
 
 ## Architectural Approach
 
-The dashboard adds a frontend page composed of cost overview, team usage, alerts, invoice history, and empty-state components. The page calls four read API surfaces plus an invoice export operation. It never sends billing mutation requests except alert-rule configuration, which changes notification preferences only.
+The feature is additive and read-oriented. The frontend is a single billing dashboard composed of panels for cost overview, usage by team, alerts, and invoices, each backed by a read endpoint. The backend exposes four read APIs (overview, usage breakdown with period comparison, alerts, invoices) plus an invoice export. None of these write into billing; the only write path is saving an alert rule.
 
-The API layer resolves the organization from the authenticated session and gates access to admins or billing-role users. It exposes overview, usage breakdown, alert, invoice, and export operations. These operations delegate billing logic to services rather than reading upstream systems directly.
+The reconciliation core is a usage aggregator that performs one pass over the upstream metering source and the billing store, producing the account total and the per-team plus unattributed split at the same time. The result is materialized as a per-period usage aggregate so reads stay fast for large organizations and the reconciliation invariant holds by construction. The projector consumes the same usage to compute a run-rate end-of-period estimate, splitting the already-included plan price from projected overage, and caches it as a usage projection with a basis date and a confidence flag.
 
-The service layer uses `usage_aggregator`, `projector`, `change_explainer`, `alert_engine`, `invoice_export`, and `empty_state`. The aggregator computes account totals, team rows, and the unattributed bucket in one pass. The projector uses run-rate logic and cached projection records so the dashboard can distinguish included plan price from projected overage.
+Alerts are handled by a scheduled projection-and-alert job, the only non-request component in the design. On each run it recomputes the projection, the alert engine evaluates each enabled rule against it, dedups against the durable alert-event log, and delivers email and in-app notifications before the period's invoice is issued. The dashboard's alerts panel only reads the rule and the recent activity log; it never delivers alerts itself.
 
-The data layer stores plans, invoices, invoice line items, alert rules, alert events, usage aggregates, and cached projections. Metered usage stays read-only in the upstream metering source. Current-period aggregates are refreshed for fast reads, while closed periods provide stable comparison and invoice history.
+The read path resolves the organization from the authenticated session and gates every endpoint to the admin or billing role. A shared empty-state resolver lets each endpoint return a purposeful empty state (no usage yet, no invoices yet, no team usage) so the dashboard never shows a blank or error panel. When the metering source is stale or unreachable, the overview returns a stale flag rather than implying a confident projection.
 
-The scheduled projection and alert job recomputes projections, checks enabled alert rules, writes alert events, and sends email plus in-app notifications. The alert-event uniqueness constraint prevents duplicate alerts for the same rule, period, and threshold. Freshness fields let the dashboard show stale data instead of overstating confidence.
+This structure was chosen over owning a new billing or usage model because plans, teams, invoices, and usage already exist upstream. Reading additively keeps the feature from introducing write paths into billing, narrows the blast radius, and leaves the existing invoice document in place for export. The trade-off is a dependence on upstream data quality and freshness, which the stale-data handling is designed to make visible.
 
 ```mermaid
 flowchart TD
     subgraph Frontend
-        Dashboard[BillingDashboard]
-        Panels[Billing panels]
+        Dash[Billing dashboard]
     end
-    subgraph API layer
+    subgraph API
         Overview[Overview API]
-        Breakdown[Usage APIs]
-        Alerts[Alerts API]
-        Invoices[Invoice APIs]
+        Breakdown[Usage breakdown API]
+        AlertsApi[Alerts API]
+        Invoices[Invoices API and export]
     end
-    subgraph Service layer
-        Aggregator[usage_aggregator]
-        Projector[projector]
-        Explainer[change_explainer]
-        AlertEngine[alert_engine]
-        Exporter[invoice_export]
-        EmptyState[empty_state]
-    end
-    subgraph Data layer
-        Records[(Billing records)]
-        Metering[(Metering source)]
+    subgraph Services
+        Agg[Usage aggregator]
+        Proj[Projector]
+        Change[Change explainer]
+        Engine[Alert engine]
+        Export[Invoice export]
+        Empty[Empty-state resolver]
     end
     subgraph Jobs
-        AlertJob[projection_alert_job]
+        Job[Projection and alert job]
     end
-    subgraph Notifications
-        Channels[Email and in-app]
+    subgraph Data
+        Store[(Billing store)]
+        Metering[Metering source]
     end
-    Dashboard --> Panels
-    Panels --> Overview
-    Panels --> Breakdown
-    Panels --> Alerts
-    Panels --> Invoices
-    Overview --> Aggregator
-    Overview --> Projector
-    Breakdown --> Aggregator
-    Breakdown --> Explainer
-    Alerts --> AlertEngine
-    Invoices --> Exporter
-    Aggregator --> Metering
-    Aggregator --> Records
-    Projector --> Records
-    AlertEngine --> Records
-    Exporter --> Records
-    EmptyState --> Overview
-    EmptyState --> Breakdown
-    EmptyState --> Invoices
-    AlertJob --> Projector
-    AlertJob --> AlertEngine
-    AlertEngine --> Channels
+    Dash --> Overview
+    Dash --> Breakdown
+    Dash --> AlertsApi
+    Dash --> Invoices
+    Overview --> Proj
+    Overview --> Agg
+    Breakdown --> Agg
+    Breakdown --> Change
+    AlertsApi --> Store
+    Invoices --> Export
+    Agg --> Metering
+    Agg --> Store
+    Proj --> Store
+    Job --> Proj
+    Job --> Engine
+    Engine --> Store
 ```
 
 ## Affected Modules
 
-| Module / Component     | Change | Responsibility                                             |
-| ---------------------- | ------ | ---------------------------------------------------------- |
-| `BillingDashboard`     | adds   | Composes all billing panels behind role gating.            |
-| `CostOverviewPanel`    | adds   | Shows plan, usage, projection, and stale data states.      |
-| `UsageByTeamPanel`     | adds   | Shows team usage, unattributed usage, and change drivers.  |
-| `AlertsPanel`          | adds   | Manages alert rules and recent alert activity.             |
-| `InvoiceHistoryPanel`  | adds   | Lists invoices, line items, and export action.             |
-| `EmptyState`           | adds   | Presents purposeful empty states for missing billing data. |
-| `billingClient`        | adds   | Calls billing read APIs and export operation.              |
-| `overview` API         | adds   | Serves plan, usage, projection, and freshness data.        |
-| `usage_breakdown` API  | adds   | Serves team breakdown and period comparison data.          |
-| `alerts` API           | adds   | Serves alert rules and alert activity.                     |
-| `invoices` API         | adds   | Serves invoice history, detail, and export.                |
-| `usage_aggregator`     | adds   | Computes account and team usage together.                  |
-| `projector`            | adds   | Computes projected usage and overage split.                |
-| `change_explainer`     | adds   | Ranks period-over-period charge drivers.                   |
-| `alert_engine`         | adds   | Evaluates alert thresholds and dedupes events.             |
-| `invoice_export`       | adds   | Produces structured invoice exports.                       |
-| `projection_alert_job` | adds   | Refreshes projections and sends alerts.                    |
-| `metering_client`      | uses   | Reads upstream usage and freshness signals.                |
+| Module / Component           | Change | Responsibility                                               |
+| ---------------------------- | ------ | ------------------------------------------------------------ |
+| Billing dashboard (frontend) | adds   | Renders cost, breakdown, alerts, invoices, and empty states. |
+| Overview API                 | adds   | Returns plan, usage versus allowance, and the projection.    |
+| Usage breakdown API          | adds   | Returns per-team usage and period comparison with drivers.   |
+| Alerts API                   | adds   | Reads alert rule and activity; saves rule changes.           |
+| Invoices API and export      | adds   | Lists invoices, line-item detail, and structured export.     |
+| Usage aggregator             | adds   | One pass to account total, per-team, and unattributed.       |
+| Projector                    | adds   | Run-rate projection with included and overage split.         |
+| Change explainer             | adds   | Period comparison and ranked change drivers.                 |
+| Alert engine                 | adds   | Evaluates rules, dedups, and records alert events.           |
+| Empty-state resolver         | adds   | Shared purposeful empty state for each panel.                |
+| Projection and alert job     | adds   | Scheduled recompute and pre-invoice alert delivery.          |
+| Metering source              | uses   | Upstream usage, read-only, with a freshness signal.          |
+| Billing store                | adds   | Durable plans, invoices, rules, events, and projections.     |
 
 ## Data Design
 
 ### Data Model
 
 ```text
-Organization
-- org_id: UUID or string, scopes billing queries.
-- billing_currency: ISO 4217 code, labels all money.
+Organization (Account)  [referenced, upstream]
+- org_id: id - scopes every billing query
+- billing_currency: currency code - single currency, labels all amounts
 
-Plan
-- org_id: reference, account owner.
-- plan_name: string, displayed on overview.
-- cycle_start and cycle_end: date, billing period bounds.
-- included_allowances: map, included units by dimension.
-- overage_rates: map, price per extra unit.
-- effective_from: timestamp, supports mid-cycle change.
+Plan (Subscription)
+- plan_name, cycle_start, cycle_end
+- included_allowances: map dimension -> quantity
+- overage_rates: map dimension -> money (absent => flat, no overage)
+- effective_from: timestamp - supports mid-cycle change
 
-Team
-- team_id: UUID or string, usage attribution key.
-- team_name: string, preserved for historical usage.
-- org_id: reference, account owner.
+Team  [referenced, upstream]
+- team_id, team_name (retained for renamed or deleted teams), org_id
 
-MeteredUsage
-- org_id: reference, account owner.
-- team_id: reference or null, null means unattributed.
-- dimension: string, metered dimension.
-- quantity: number, consumed units.
-- occurred_at: timestamp, billing-period assignment.
+MeteredUsage  [upstream, read-only]
+- org_id, team_id (null => unattributed), dimension, quantity, occurred_at
 
-UsageAggregate
-- org_id: reference, account owner.
-- period: period key, covered billing period.
-- team_id: reference or null, unattributed bucket.
-- dimension: string, metered dimension.
-- quantity: number, aggregated units.
-- computed_at: timestamp, freshness marker.
+UsageAggregate  [materialized per period]
+- org_id, period, team_id (null => unattributed), dimension, quantity, computed_at
+- invariant: sum over teams + unattributed == account total per dimension
 
-UsageProjection
-- org_id: reference, account owner.
-- period: period key, current billing period.
-- projected_usage: map, projected units by dimension.
-- included_amount: money, included plan price.
-- projected_overage_amount: money, projected extra charge.
-- projected_total: money, included plus overage.
-- basis_as_of: timestamp, projection basis.
-- confidence: enum, low or normal.
+UsageProjection  [cached]
+- projected_usage: map dimension -> quantity (run-rate)
+- included_amount, projected_overage_amount, projected_total: money
+- basis_as_of: timestamp; confidence: low | normal
 
 Invoice
-- invoice_id: UUID, invoice identity.
-- org_id: reference, account owner.
-- period_start and period_end: date, covered period.
-- issued_at: timestamp, invoice issue date.
-- total_amount: money, account currency.
-- status: enum, paid, pending, failed, or refunded.
-- document_url: URL or null, existing invoice document.
+- invoice_id, org_id, period_start, period_end, issued_at
+- total_amount: money; status: paid | pending | failed | refunded
+- document_url: existing human-readable document
 
 InvoiceLineItem
-- invoice_id: reference, parent invoice.
-- description: string, line description.
-- dimension: string or null, billed dimension.
-- quantity: number or null, billed units.
-- amount: money, line amount.
+- invoice_id, description, dimension (nullable), quantity (nullable), amount
 
 AlertRule
-- rule_id: UUID, rule identity.
-- org_id: reference, account owner.
-- enabled: boolean, delivery toggle.
-- threshold: descriptor, overage or allowance percentage.
-- channels: set, email and in-app.
-- updated_at: timestamp, last change.
+- rule_id, org_id, enabled
+- threshold: projected_overage | percent_of_allowance (0..100]
+- channels: email, in_app
 
-AlertEvent
-- event_id: UUID, event identity.
-- rule_id: reference, triggering rule.
-- org_id: reference, account owner.
-- period: period key, billing period.
-- threshold: descriptor, crossed threshold.
-- sent_at: timestamp, delivery time.
-- channels_sent: set, delivered channels.
+AlertEvent  [durable log, dedup ledger]
+- event_id, rule_id, org_id, period, threshold, sent_at, channels_sent
+- unique (rule_id, period, threshold) => one alert per threshold per period
 ```
 
 ```mermaid
 erDiagram
-    ORGANIZATION ||--o{ PLAN : has
-    ORGANIZATION ||--o{ TEAM : has
-    ORGANIZATION ||--o{ USAGE_AGGREGATE : has
-    ORGANIZATION ||--o{ USAGE_PROJECTION : has
-    ORGANIZATION ||--o{ INVOICE : has
-    INVOICE ||--o{ INVOICE_LINE_ITEM : contains
-    ORGANIZATION ||--o{ ALERT_RULE : has
-    ALERT_RULE ||--o{ ALERT_EVENT : records
-    ORGANIZATION ||--o{ METERED_USAGE : reads
-    ORGANIZATION {
-        string org_id
-        string billing_currency
-    }
-    PLAN {
-        string org_id
-        string plan_name
-        date cycle_start
-        date cycle_end
-    }
-    TEAM {
-        string team_id
-        string org_id
-        string team_name
-    }
-    USAGE_AGGREGATE {
-        string org_id
-        string period
-        string dimension
-        number quantity
-    }
-    USAGE_PROJECTION {
-        string org_id
-        string period
-        number projected_total
-        string confidence
-    }
-    INVOICE {
-        string invoice_id
-        string org_id
-        number total_amount
-        string status
-    }
-    INVOICE_LINE_ITEM {
-        string invoice_id
-        string description
-        number amount
-    }
-    ALERT_RULE {
-        string rule_id
-        string org_id
-        boolean enabled
-    }
-    ALERT_EVENT {
-        string event_id
-        string rule_id
-        string period
-    }
-    METERED_USAGE {
-        string org_id
-        string team_id
-        string dimension
-        number quantity
-    }
+    Organization ||--o{ Plan : has
+    Organization ||--o{ Team : has
+    Organization ||--o{ MeteredUsage : reads
+    Organization ||--o{ UsageAggregate : materializes
+    Organization ||--o| UsageProjection : caches
+    Organization ||--o{ Invoice : has
+    Invoice ||--|{ InvoiceLineItem : contains
+    Organization ||--o{ AlertRule : has
+    AlertRule ||--o{ AlertEvent : logs
 ```
 
 ### Data Flow
 
-Dashboard reads call API operations, which resolve organization scope and invoke services. Usage aggregation reads the metering source and writes period aggregates. The scheduled job refreshes projections, evaluates alert rules, writes alert events, and sends notifications.
+On a dashboard read, the overview endpoint asks the projector for the cached projection and the aggregator for the current-period aggregate; the aggregator reads the upstream metering source and the billing store in one pass and materializes the per-team split. The only synchronous write into billing is saving an alert rule. The scheduled job is the only non-request writer of derived data: it recomputes the projection, the alert engine evaluates each enabled rule against it, dedups against the alert-event log, and delivers email and in-app alerts before the period's invoice is issued.
 
 ```mermaid
 sequenceDiagram
-    participant Dashboard
-    participant API
-    participant Services
-    participant Metering
-    participant Records
-    participant Job
-    participant Notifications
-    Dashboard->>API: request billing view
-    API->>Services: resolve scoped data
-    Services->>Metering: read usage
-    Services->>Records: read billing records
-    Records-->>Services: stored facts
-    Services-->>API: dashboard response
-    API-->>Dashboard: view data
-    Job->>Services: refresh projections
-    Services->>Records: write projection and alert event
-    Services->>Notifications: deliver alert
+    participant Job as Projection and alert job
+    participant Metering as Metering source
+    participant Proj as Projector
+    participant Store as Billing store
+    participant Engine as Alert engine
+    Job->>Metering: read current usage
+    Job->>Proj: recompute run-rate projection
+    Proj->>Store: cache projection
+    Job->>Engine: evaluate enabled rules
+    Engine->>Store: check alert-event log for dedup
+    Engine->>Store: record alert event
+    Engine-->>Job: deliver email and in-app before invoice
 ```
 
 ## API Design
 
-The API surface is read-oriented and scoped to the authenticated organization. Alert configuration is the only write operation, and it writes notification preferences rather than billing state. Shared errors include unauthenticated access, missing billing role, unsupported export format, unknown invoice identity, and unavailable metering without a usable snapshot.
+All endpoints resolve the organization from the authenticated session and require the admin or billing role. Shapes below are conceptual, not a full specification.
 
 ```text
 GET /billing/overview
-  Request: authenticated session.
-  Response: currency, data_as_of, stale, plan, usage, projection.
-  Empty state: no_usage_yet.
-  Errors: 401, 403, 503.
+  Request:  org from session (never a parameter)
+  Response: currency, data_as_of, stale, plan,
+            usage[dimension, consumed, allowance],
+            projection{included_amount, projected_overage_amount,
+                       projected_total, basis_as_of, confidence}
+            empty_state "no_usage_yet" when there is no usage
+  Errors:   401 unauthenticated; 403 not admin or billing;
+            503 metering down and no snapshot exists
 
 GET /billing/usage-by-team
-  Request: authenticated session, optional period.
-  Response: currency, period, account_total, teams, unattributed.
-  Empty state: no_team_usage.
-  Errors: 401, 403, 404.
+  Request:  optional period (defaults to current)
+  Response: account_total, teams[charges, share, by_dimension],
+            unattributed bucket
+            invariant: sum(teams) + unattributed == account_total
+            empty_state "no_team_usage" when none
+  Errors:   401; 403; 404 period before retained history
 
 GET /billing/period-comparison
-  Request: authenticated session, optional period.
-  Response: current total, previous total, change, ranked drivers.
-  Errors: 401, 403, 404.
+  Request:  period (defaults to current), compared to previous
+  Response: current_total, previous_total, change_amount, change_pct,
+            drivers[] ranked by absolute change_amount
+  Errors:   401; 403; 404 period before retained history
 
 GET /billing/alerts
-  Request: authenticated session.
-  Response: alert rule and recent alert activity.
-  Errors: 401, 403.
+  Response: rule{enabled, threshold, channels},
+            recent_activity[] from the alert-event log
 
 PUT /billing/alerts
-  Request: enabled, threshold, channels.
-  Response: saved alert rule.
-  Errors: 400, 401, 403.
+  Request:  enabled, threshold{projected_overage |
+            percent_of_allowance value 0..100}, channels
+  Response: the saved rule
+  Errors:   400 invalid threshold, percent, or empty channels; 401; 403
+  Note:     delivery and dedup happen in the scheduled job, not here
 
 GET /billing/invoices
-  Request: authenticated session, optional pagination.
-  Response: currency, invoices, next cursor.
-  Empty state: no_invoices_yet.
-  Errors: 401, 403.
+  Response: invoices[invoice_id, period, issued_at, total_amount, status],
+            next_cursor; empty_state "no_invoices_yet" for new accounts
+  Errors:   401; 403
 
 GET /billing/invoices/{invoice_id}
-  Request: authenticated session, invoice identity.
-  Response: invoice detail and line items.
-  Errors: 401, 403, 404.
+  Response: invoice header plus line_items[description, dimension,
+            quantity, amount]
+  Errors:   401; 403; 404 not found or not owned
 
 GET /billing/invoices/export
-  Request: authenticated session, invoice identities, format.
-  Response: structured invoice data.
-  Errors: 400, 401, 403, 404.
+  Request:  invoice_ids (optional, all if omitted), format (csv default)
+  Response: structured file, one row per line item, amounts in account currency
+  Errors:   400 unsupported format; 401; 403; 404 invoice not owned
 ```
 
 ```mermaid
 sequenceDiagram
-    participant Dashboard
-    participant BillingAPI
-    participant BillingServices
-    participant BillingRecords
-    participant MeteringSource
-    Dashboard->>BillingAPI: request billing endpoint
-    BillingAPI->>BillingAPI: verify role and org scope
-    BillingAPI->>BillingServices: run operation
-    BillingServices->>BillingRecords: read or write billing records
-    BillingServices->>MeteringSource: read usage when needed
-    BillingServices-->>BillingAPI: result or known error
-    BillingAPI-->>Dashboard: response or error state
+    participant Client as Billing dashboard
+    participant API as Overview API
+    participant Svc as Aggregator and projector
+    participant Metering as Metering source
+    Client->>API: GET /billing/overview (session)
+    API->>API: authorize admin or billing role
+    API->>Svc: build overview
+    Svc->>Metering: read current usage
+    alt metering reachable
+        Metering-->>Svc: usage
+        Svc-->>API: plan, usage, projection
+        API-->>Client: 200 with stale flag if data is old
+    else metering down and no snapshot
+        Svc-->>API: no data
+        API-->>Client: 503
+    end
+    Note over API,Client: 403 when the role check fails
 ```
 
 ## Spec Coverage
 
-| Use Case (from spec.md)         | Component / Operation                              | Notes                                                          |
-| ------------------------------- | -------------------------------------------------- | -------------------------------------------------------------- |
-| US1 current cost and projection | `GET /billing/overview` and `CostOverviewPanel`    | Covers plan, allowance, projection, flat plan, and stale data. |
-| US2 charge-change explanation   | `GET /billing/usage-by-team` and period comparison | Covers team rows, drivers, and unattributed reconciliation.    |
-| US3 projected-overage alerts    | alerts API plus `projection_alert_job`             | Covers enable, disable, threshold crossing, and dedupe.        |
-| US4 invoice history and export  | invoice APIs plus `InvoiceHistoryPanel`            | Covers list, detail, export, status, and retained history.     |
-| US5 new-customer empty states   | `empty_state` plus dashboard panels                | Covers no usage, no invoices, and no team usage.               |
-| Mid-period plan change          | `projector` and plan effective rows                | Covers usage and projection under changed plan terms.          |
-| Large organization breakdown    | usage APIs and `UsageByTeamPanel`                  | Covers readable grouping and pagination expectations.          |
-| Access revoked while open       | API role gating                                    | Covers refusal to show billing data after access loss.         |
-| Delayed metering source         | overview API and freshness fields                  | Covers stale and unavailable usage presentation.               |
+| Use Case (from spec.md)           | Component / Operation                            | Notes                                            |
+| --------------------------------- | ------------------------------------------------ | ------------------------------------------------ |
+| US1 current cost and projection   | GET /billing/overview; Projector                 | Included and overage shown as separate fields    |
+| US1 flat plan, no overage         | GET /billing/overview; Projector                 | Projected overage is zero; no overage dimensions |
+| US2 per-team breakdown            | GET /billing/usage-by-team; Usage aggregator     | Single-pass reconciliation (SC-006)              |
+| US2 period comparison and drivers | GET /billing/period-comparison; Change explainer | Drivers ranked by absolute change                |
+| US2 unattributed usage            | Usage aggregator; usage-by-team                  | Labeled bucket, never dropped                    |
+| US3 alert fires and is recorded   | Projection and alert job; Alert engine           | Delivered before invoice (SC-003)                |
+| US3 no duplicate alert            | Alert engine; AlertEvent unique key              | At most once per period (FR-014)                 |
+| US3 alerts disabled               | PUT /billing/alerts; Alert engine                | enabled false suppresses delivery                |
+| US4 invoice list                  | GET /billing/invoices                            | Reverse-chronological; status enum               |
+| US4 line-item detail              | GET /billing/invoices/{invoice_id}               | Per-invoice line items                           |
+| US4 export                        | GET /billing/invoices/export; Invoice export     | Structured file for finance                      |
+| US5 empty usage state             | GET /billing/overview; Empty-state resolver      | empty_state no_usage_yet                         |
+| US5 empty invoice state           | GET /billing/invoices; Empty-state resolver      | empty_state no_invoices_yet                      |
+| US5 empty team-usage state        | GET /billing/usage-by-team; Empty-state resolver | empty_state no_team_usage                        |
 
 ## Key Technical Decisions
 
-### Read-oriented billing API and dashboard
+### Single-pass aggregation, materialized per period
 
-**Context**: The feature must expose billing insight without taking over billing writes.
+**Context**: Per-team and unattributed usage must reconcile exactly to the account total, with fast reads for large organizations.
 **Options considered**:
 
-- Own billing flows: higher risk and broader scope.
-- Add read views: smaller scope and clearer boundaries.
-- Reuse support tooling: less customer-facing control.
+- Compute total and per-team separately on each read; risks drift.
+- One aggregation pass, materialized per period; deterministic and fast.
 
-**Decision**: Add read APIs, dashboard panels, and alert preference writes.
+**Decision**: One pass produces the total, per-team, and unattributed together, materialized as a per-period aggregate.
 **Consequences**:
 
-- Positive: Admins get self-service insight without billing-flow churn.
-- Negative: Plan changes and payments still depend on existing flows.
+- Positive: reconciliation holds by construction; reads stay fast.
+- Negative: adds a materialized snapshot to refresh and store.
 
-### Single-pass usage aggregation
+### Scheduled projection-and-alert job, not compute-on-view
 
-**Context**: Per-team, unattributed, and account totals must reconcile exactly.
+**Context**: Overage alerts must reach admins before the invoice is issued, even if they never open the dashboard.
 **Options considered**:
 
-- Separate queries: simpler but risks drift.
-- Cached team totals: fast but harder to trust.
-- One aggregation pass: consistent and testable.
+- Evaluate alerts on each view; misses admins who never open.
+- A scheduled job recomputes and fires before close.
 
-**Decision**: Compute account total and team splits together.
+**Decision**: A scheduled job recomputes the projection and delivers alerts ahead of billing close.
 **Consequences**:
 
-- Positive: Reconciliation becomes a service-level invariant.
-- Negative: Breakdown freshness depends on aggregation freshness.
+- Positive: alerts arrive even if the admin never visits.
+- Negative: adds the only non-request component to operate.
 
-### Scheduled projection and alert job
+### Read-only and additive over existing systems
 
-**Context**: Alerts must arrive before invoice issuance and avoid duplicates.
+**Context**: Plans, teams, invoices, and usage already exist in upstream systems.
 **Options considered**:
 
-- Request-time alerts: misses inactive admins.
-- Invoice-time alerts: too late for prevention.
-- Scheduled job: proactive and auditable.
+- Own a new billing model; duplication and write paths.
+- Read additively from existing systems and metering.
 
-**Decision**: Run a projection and alert job before billing close.
+**Decision**: Add read endpoints, services, and a dashboard; never write into billing or own usage.
 **Consequences**:
 
-- Positive: Alerts do not require dashboard visits.
-- Negative: Job monitoring becomes part of feature correctness.
+- Positive: no new write paths into billing; lower risk.
+- Negative: depends on upstream data quality and freshness.
+
+### Mid-cycle plan change priced against the effective plan
+
+**Context**: A plan can change mid-period and the projection must not mix allowances.
+**Options considered**:
+
+- Apply the current plan to the whole period; misprices usage.
+- Price usage against the plan effective when consumed.
+
+**Decision**: Usage to date is priced against the plan effective at consumption; the remainder against the current plan.
+**Consequences**:
+
+- Positive: projection stays correct across a plan change.
+- Negative: requires tracking plan effective dates within the cycle.
 
 ## Testing Strategy
 
-- **Unit**: Projection math, driver ranking, alert dedupe.
-- **Integration**: Reconciliation, plan changes, role gating, alerts.
-- **E2E / BDD**: Overview, breakdown, alerts, invoices, empty states.
-- **Observability**: Projection freshness, alert sends, export outcomes.
+- **Unit**: projection math, driver ranking, alert dedup, empty-state resolution.
+- **Integration**: reconciliation, mid-cycle plan change, alert-before-close, role gating.
+- **E2E / BDD**: overview, breakdown, export, and every empty state.
+- **Observability**: alert delivery timing, projection freshness, reconciliation invariant checks.
 
 ## Rollout and Migration
 
-**Strategy**: Additive dashboard rollout behind billing-role access.
-**Data migration**: Add durable records for plans, invoices, alerts, and projections.
-**Rollback**: Not specified in source.
+**Strategy**: Gradual, role-gated enablement. Because the feature is additive and read-only, the dashboard can be turned on without touching existing billing flows.
+**Data migration**: Add durable storage for plans, invoices, alert rules, alert events, and cached projections, and materialize per-period usage aggregates from the metering source. No migration of existing billing records is required.
+**Rollback**: Disable the dashboard surface and the scheduled job. Since nothing writes into billing, removing the read surface leaves existing billing data untouched.
 
 ## Risks and Mitigations
 
+**Upstream metering staleness or outage**
+
+- **What could go wrong**: stale or missing usage yields wrong projections.
+- **Probability**: Medium
+- **Impact**: High
+- **Mitigation**: return a stale flag or 503; never imply confidence.
+
+**Inaccurate early-period projection**
+
+- **What could go wrong**: early run-rate projections overstate cost, triggering false alarms.
+- **Probability**: Medium
+- **Impact**: Medium
+- **Mitigation**: expose the basis date and a low-confidence flag early.
+
 **Reconciliation drift**
 
-- **What could go wrong**: Team totals stop matching account totals.
-- **Probability**: Medium
+- **What could go wrong**: per-team and unattributed fail to equal the total.
+- **Probability**: Low
 - **Impact**: High
-- **Mitigation**: Aggregate account and team totals together.
+- **Mitigation**: single-pass aggregation plus a reconciliation assertion in tests.
 
-**Duplicate alerts**
+**Late or missed overage alerts**
 
-- **What could go wrong**: Admins receive repeated threshold notifications.
-- **Probability**: Medium
-- **Impact**: Medium
-- **Mitigation**: Enforce unique alert events per threshold.
-
-**Stale projections**
-
-- **What could go wrong**: Admins trust outdated projected charges.
-- **Probability**: Medium
+- **What could go wrong**: alerts fire after the invoice, defeating the feature.
+- **Probability**: Low
 - **Impact**: High
-- **Mitigation**: Return freshness and stale-data flags.
-
-**Blank new-account panels**
-
-- **What could go wrong**: New admins see empty or broken panels.
-- **Probability**: Medium
-- **Impact**: Medium
-- **Mitigation**: Drive empty states from API responses.
+- **Mitigation**: run the job before close; dedupe via the event key.
 
 ```mermaid
 quadrantChart
@@ -475,8 +396,8 @@ quadrantChart
     quadrant-2 Plan contingency
     quadrant-3 Accept
     quadrant-4 Monitor and reduce
-    Reconciliation drift: [0.5, 0.85]
-    Duplicate alerts: [0.48, 0.5]
-    Stale projections: [0.52, 0.85]
-    Blank panels: [0.52, 0.5]
+    Upstream metering staleness: [0.5, 0.85]
+    Inaccurate early projection: [0.5, 0.5]
+    Reconciliation drift: [0.18, 0.85]
+    Late overage alerts: [0.24, 0.88]
 ```
