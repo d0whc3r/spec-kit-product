@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.3](https://github.com/d0whc3r/spec-kit-product/compare/v0.8.2...v0.8.3) (2026-05-31)
+
+
+### Bug Fixes
+
+* remove Source Plan field from product plan template and update checklist rules ([872be47](https://github.com/d0whc3r/spec-kit-product/commit/872be473e798b59dc2ccc083c348bd39985668bc))
+
 ## [0.8.2](https://github.com/d0whc3r/spec-kit-product/compare/v0.8.1...v0.8.2) (2026-05-31)
 
 

@@ -17,7 +17,7 @@ This document explains how to install the extension, what each command needs as 
 Install directly from the latest release. This needs no catalog setup and is the recommended path:
 
 ```bash
-specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.8.2/product-0.8.2.zip
+specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.8.3/product-0.8.3.zip
 ```
 
 Change the version in the URL to pin a different release.
