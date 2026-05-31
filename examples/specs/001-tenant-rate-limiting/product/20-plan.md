@@ -1,177 +1,174 @@
-# Product Plan: Implementation Plan: Per-Tenant API (application programming interface) Rate Limiting
+# Product Plan: Per-Tenant API Rate Limiting
 
-**Feature**: Implementation Plan: Per-Tenant API (application programming interface) Rate Limiting
+**Feature**: Per-Tenant API Rate Limiting
 **Source Plan**: [plan.md](../plan.md)
-**Created**: 2026-05-30
+**Created**: 2026-05-31
 **Status**: Draft
 
 ## Summary
 
-This feature adds per-organization API limits for customer developers, customer admins, support admins, and operations leads. It protects shared service quality with separate short-window and monthly limits, gives clear retry guidance when a caller is over limit, shows customers their own usage, and lets authorized internal admins change approved limits without an engineering release.
+This feature gives every customer organization its own limits on how often it can call the platform API (application programming interface): a cap per minute and a total per month. The work adds a single checkpoint that every authenticated request passes through, which identifies the organization and counts its requests against both limits. Over-limit requests are turned away with a clear response that names which limit was hit and when to retry. Internal staff can adjust an organization's limits on their own, every change is recorded, and customers see their current usage in the dashboard they already use.
 
 ## Feature Context
 
-**Problem**: One organization's request volume can degrade service or exhaust usage without clear recovery.
-**For**: Customer organizations, support admins, and operations teams.
-**Change**: Each organization gets isolated limits, visible usage, and admin-managed adjustments.
-**Quality bar**: Limits must stay accurate under peak concurrent traffic.
-**Constraints**: The feature must preserve tenant isolation and avoid customer self-service increases.
+**Problem**: One organization's request surge can slow the shared platform for every other customer.
+**For**: Customer organizations that call the platform, and the internal staff who manage their limits.
+**Change**: Each organization gets its own protected request capacity, visible usage, and staff-adjustable limits.
+**Quality bar**: Limits are enforced accurately under heavy load, and usage and limit changes reflect within one minute.
+**Constraints**: When the request-counting store is unavailable, the checkpoint allows requests (fails open) and raises a monitored alert.
 
 ```mermaid
 journey
-    title Customer admin reviews API usage
-    section Usage review
-      Opens dashboard: 3: Customer admin
-      Checks consumed and remaining usage: 4: Customer admin
-    section Limit response
-      Sees approaching limit warning: 4: Customer admin
-      Requests approved increase: 3: Customer admin
-    section Admin action
-      Support admin raises limit: 4: Support admin
-      Organization continues within new limit: 5: Customer admin
+    title A customer organization manages its API usage
+    section Normal use
+      Send requests within limits: 5: Customer
+      Watch usage in the dashboard: 4: Customer
+    section Hitting a limit
+      Exceed a limit, get a clear response: 2: Customer
+      See a warning before running out: 3: Customer
+    section Getting more room
+      Ask staff to raise the limit: 3: Customer
+      Staff raise it, requests flow again: 5: Customer
 ```
 
 ## Goals
 
-- Isolate each organization's request limits.
-- Reject over-limit calls with clear retry guidance.
-- Track monthly usage for each organization.
-- Show current usage in the customer dashboard.
-- Let admins change approved limits without releases.
-- Audit every limit change.
+- Each organization is protected by its own per-minute and monthly limits.
+- One organization's traffic never affects another's accepted requests.
+- Over-limit callers get a clear response and a retry time.
+- Staff raise an organization's limits without an engineering release.
+- Every limit change is recorded with who, when, and values.
+- Customers see current usage and an early warning in the dashboard.
 
 ## Out of Scope
 
-- Customer self-service increases, to preserve plan control.
-- Automatic overage billing, because usage hard-blocks.
-- Tenant-specific billing cycles, because calendar months apply.
-- Unauthenticated request counting, because authentication owns it.
-- A new dashboard area, because existing views expand.
+- Customers raising their own limits; only internal staff can.
+- Overage beyond the monthly quota; organizations are blocked until reset.
+- Counting unauthenticated requests; the existing login path handles them.
+- Per-customer billing cycles; quotas reset on the calendar month.
+- Building a new dashboard; usage is added to the existing one.
 
 ## Build Overview
 
-The request entry point identifies the organization, checks the active limit policy, updates shared counters, and either accepts the request or returns clear retry guidance. Admin controls update the active policy and write an audit record, while the customer dashboard reads usage snapshots scoped to the viewing organization.
+Every authenticated request passes through one enforcement checkpoint before it reaches the rest of the platform. The checkpoint identifies the organization, then checks two request counters: one for the current minute and one for the current month. The limits it enforces come from a policy store that holds each organization's settings and sensible defaults, and that staff can update without a release. Each accepted request updates the counters, and each rejected one produces a clear response. A usage view reads the live counters so the dashboard can show consumption, and an audit log records every limit change.
 
-- **Request gate**: Enforces limits before accepted requests continue.
-- **Tenant identity**: Maps each authenticated request to one organization.
-- **Limit policy**: Stores default and tenant-specific limits.
-- **Usage counters**: Track short-window and monthly consumption.
-- **Admin controls**: Change approved limits and record audits.
-- **Customer dashboard**: Shows scoped usage and limit status.
+- **Enforcement checkpoint**: Checks each request against both limits. This feature adds it.
+- **Request counters**: Track per-minute and monthly use per organization. Feature adds them.
+- **Policy store**: Holds each organization's limits and defaults. This feature adds it.
+- **Usage view**: Reports live consumption to the dashboard. This feature adds it.
+- **Audit log**: Records every limit change with detail. Feature adds it.
+- **Dashboard usage panel**: Shows a customer their own usage. Feature adds it.
 
 ```mermaid
 flowchart LR
-    RequestGate[Request gate] --> TenantIdentity[Tenant identity]
-    TenantIdentity --> LimitPolicy[Limit policy]
-    TenantIdentity --> UsageCounters[Usage counters]
-    LimitPolicy --> RequestGate
-    UsageCounters --> RequestGate
-    AdminControls[Admin controls] --> LimitPolicy
-    AdminControls --> AuditTrail[Audit trail]
-    UsageCounters --> CustomerDashboard[Customer dashboard]
-    LimitPolicy --> CustomerDashboard
+    Req[Authenticated request] --> Check[Enforcement checkpoint]
+    Check --> Counters[Request counters]
+    Check --> Policy[Policy store]
+    Check -->|allowed| Platform[Rest of platform]
+    Check -->|rejected| Resp[Clear over-limit response]
+    Staff[Internal staff] --> Policy
+    Staff --> Audit[Audit log]
+    Counters --> Usage[Usage view]
+    Usage --> Panel[Dashboard usage panel]
 ```
 
 ## Key Principles
 
-- **Tenant isolation**: One organization never consumes another's limits.
-- **Clear retry guidance**: Callers know which limit blocked them.
-- **Atomic counters (all-or-nothing operation)**: Prevent counting drift.
-- **Fail open**: Tracking outages preserve customer availability.
-- **Admin-only changes**: Internal authorization protects paid limits.
-- **Complete audit**: Every limit change remains traceable.
+- **Fail open**: If counting is down, allow requests and alert.
+- **Accurate under load**: Enforced counts stay within 1% of true counts.
+- **Additive, not new**: Usage joins the existing dashboard, not a new surface.
+- **No restart to change limits**: Limit updates take effect without a release.
 
 ## Delivery Phases
 
-### Phase 1: Burst Protection
+```mermaid
+flowchart LR
+    P1["Phase 1: Per-minute burst protection"]
+    P2["Phase 2: Monthly request quota"]
+    P3["Phase 3: Staff limit overrides"]
+    P4["Phase 4: Usage in the dashboard"]
+    P1 --> P2
+    P1 --> P3
+    P2 --> P3
+    P1 --> P4
+    P2 --> P4
+```
 
-- Enforce per-organization short-window limits.
-- Return clear retry guidance for rejected calls.
-- Keep other organizations unaffected by spikes.
+### Phase 1: Per-minute burst protection
 
-### Phase 2: Monthly Quota
+- Caps each organization's requests within any single minute.
+- Rejects over-limit requests with a clear retry time.
+- Keeps one organization's spike from affecting others.
+
+### Phase 2: Monthly request quota
 
 _Depends on_: Phase 1.
 
-- Count accepted requests against monthly quota.
-- Reject exhausted organizations until reset.
-- Name the monthly quota as the binding limit.
+- Caps each organization's total requests per month.
+- Resets the count at the start of each month.
+- Rejects over-quota requests with the time until reset.
 
-### Phase 3: Admin Limit Management
+### Phase 3: Staff limit overrides
 
-_Depends on_: Phase 2.
+_Depends on_: Phase 1 and Phase 2.
 
-- Let authorized admins change tenant limits.
-- Apply new limits without an engineering release.
-- Record old and new values for audits.
+- Lets internal staff raise an organization's limits.
+- Applies changes without a release or restart.
+- Records every change with actor, time, and values.
 
-### Phase 4: Customer Usage Visibility
+### Phase 4: Usage in the dashboard
 
-_Depends on_: Phase 2.
+_Depends on_: Phase 1 and Phase 2.
 
-- Show consumed and remaining monthly usage.
-- Show reset timing and burst limit.
-- Warn customers near monthly quota.
+- Shows consumed, remaining, reset date, and burst limit.
+- Warns when usage reaches 80% of the quota.
+- Scopes the view to the viewer's own organization.
 
 ## Key Decisions
 
-### Shared Counter Enforcement
+### Additive dashboard usage, not a new surface
 
-**Context**: Multiple request handlers must enforce the same organization limits under concurrency.
-**Options considered**: Local counters, shared counters, or delayed batch accounting.
-**Decision**: Use shared atomic counters for accepted request accounting.
-**Consequence**: This supports accurate enforcement across replicas but depends on counter availability.
+**Context**: The platform already has a dashboard and a way to identify each organization.
+**Options considered**: Build a new usage surface, or add usage to the existing dashboard.
+**Decision**: Add a usage panel and a usage view to the existing dashboard.
+**Consequence**: Smaller footprint and a familiar place for customers; tied to the current dashboard's shape.
 
-### Configurable Tenant Policies
+### Fail open when request counting is unavailable
 
-**Context**: Admins must adjust approved tenant limits without releases.
-**Options considered**: Static configuration, customer self-service, or admin-managed policy records.
-**Decision**: Use admin-managed tenant policies with defaults for unset tenants.
-**Consequence**: Support teams can resolve approved increases while customer self-service stays excluded.
-
-### Availability During Tracking Outages
-
-**Context**: The source assumptions require a documented failure mode for tracking outages.
-**Options considered**: Fail open for availability or fail closed for protection.
-**Decision**: Fail open and emit monitored alerts.
-**Consequence**: Customers stay available, but temporary excess usage is possible.
-
-### Existing Dashboard Extension
-
-**Context**: The source assumes an existing tenant dashboard.
-**Options considered**: Extend the existing dashboard or create a new surface.
-**Decision**: Add usage visibility to the existing dashboard.
-**Consequence**: Customers see limits where they already work, while new navigation stays out of scope.
+**Context**: The store that holds request counts could be temporarily unavailable.
+**Options considered**: Allow requests during the outage (fail open), or block them (fail closed).
+**Decision**: Allow requests and raise a monitored alert, favoring availability.
+**Consequence**: Customers stay served during an outage; a spike could pass uncounted until it recovers.
 
 ## Risks and Mitigations
 
-**Usage tracking outage**
+**Counting store outage**
 
-- **What could go wrong**: Tracking outages may allow excess requests.
-- **Probability**: Medium
-- **Impact**: Medium
-- **Mitigation**: Fail open with monitored alerts for operational response.
-
-**Concurrent request drift**
-
-- **What could go wrong**: Counts may understate or overstate accepted requests.
+- **What could go wrong**: An outage fails open and lets spikes through.
 - **Probability**: Medium
 - **Impact**: High
-- **Mitigation**: Use atomic counter updates and concurrency validation.
+- **Mitigation**: A monitored alert lets staff respond fast.
 
-**Admin authorization gap**
+**Counting drift under load**
 
-- **What could go wrong**: Limit changes may be blocked or exposed incorrectly.
+- **What could go wrong**: Heavy load could push counts past the target.
 - **Probability**: Low
 - **Impact**: High
-- **Mitigation**: Restrict changes to authorized internal admins.
+- **Mitigation**: Counting stays accurate under concurrency and is load-tested.
 
-**Dashboard freshness gap**
+**Slow limit propagation**
 
-- **What could go wrong**: Stale usage may surprise customers at limits.
-- **Probability**: Medium
+- **What could go wrong**: A raised limit might miss the one-minute promise.
+- **Probability**: Low
 - **Impact**: Medium
-- **Mitigation**: Read recent usage snapshots and validate dashboard freshness.
+- **Mitigation**: Cached limits refresh on change so updates apply fast.
+
+**Stale usage view**
+
+- **What could go wrong**: Usage could lag consumption and mislead a customer.
+- **Probability**: Medium
+- **Impact**: Low
+- **Mitigation**: Usage stays fresh within one minute, with early warning.
 
 ```mermaid
 quadrantChart
@@ -182,31 +179,17 @@ quadrantChart
     quadrant-2 Plan contingency
     quadrant-3 Accept
     quadrant-4 Monitor and reduce
-    Usage tracking outage: [0.48, 0.5]
-    Concurrent request drift: [0.52, 0.85]
-    Admin authorization gap: [0.2, 0.82]
-    Dashboard freshness gap: [0.52, 0.48]
+    Counting store outage: [0.5, 0.85]
+    Counting drift under load: [0.2, 0.85]
+    Slow limit propagation: [0.2, 0.5]
+    Stale usage view: [0.5, 0.2]
 ```
-
-## Divergences and Edge Cases
-
-- **Missing tenant identity**: Existing authentication handles the request before rate limiting.
-- **No tenant-specific policy**: Default limits apply until an admin changes them.
-- **Boundary requests**: A consistent clock assigns each request to one window.
-- **Limit lowered below usage**: The tenant remains over limit until reset.
-- **Both limits exceeded**: The monthly quota is named as binding.
 
 ## Validation
 
-- Over-limit burst calls receive retry guidance.
-- Monthly exhausted calls receive retry guidance.
-- One tenant cannot affect another tenant's limits.
-- Admin changes affect later requests without releases.
-- Dashboard usage matches actual consumption.
-- Concurrent enforcement stays within the accuracy target.
-- Every limit change appears in the audit trail.
-
-## Open Questions
-
-- Should future versions support tenant-specific billing cycles?
-- Should paid overages replace hard blocking for some plans?
+- Over-limit callers get a response naming the limit and retry time.
+- A limit change takes effect within one minute, no restart.
+- Dashboard usage matches real consumption within one minute.
+- Enforced counts stay within 1% of true counts under load.
+- One organization's volume has no measurable effect on another's.
+- Every limit change appears in the audit log fully detailed.

@@ -1,122 +1,129 @@
-# Product Quality Checklist: Feature Specification: Per-Tenant API Rate Limiting
+# Product Quality Checklist: Per-Tenant API Rate Limiting
 
-**Created**: 2026-05-30
-**Legend**: `[x]` auto-validated · `[ ]` needs manual review · `[-]` not yet generated
+**Created**: 2026-05-31
+**Legend**: `[x]` auto-validated · `[ ]` needs manual review
 
 ---
 
 ## Info (`product/00-info.md`)
 
-**Validated**: 2026-05-30 · 18/18 items
+**Validated**: 2026-05-31 · 19/19 items
 
-- [x] Overview present with >=1 paragraph
-- [x] Overview <=3 sentences
-- [x] Headline present with >=1 paragraph
-- [x] What is Changing present with >=1 item
-- [x] Out of Scope present with >=1 item
-- [x] Risks present only when source spec has risk signals
-- [x] Key Decisions present only when decisions or open questions exist
-- [x] Key Decisions resolved count matches source clarifications
-- [x] Still open block present only when unresolved markers exist
-- [x] Still open count matches confirmed markers
-- [x] Sections in canonical order
+- [x] Overview present with at least one paragraph
+- [x] Overview is three sentences or fewer
+- [x] Headline present with at least one paragraph
+- [x] What is Changing present with at least one item
+- [x] Out of Scope present with at least one item
+- [x] Risks present and backed by real risk signals in the spec
+- [x] Key Decisions present because the spec has clarifications
+- [x] Key Decisions resolved count matches source clarifications (2)
+- [x] No "Still open" block, since the spec has no unresolved markers
+- [x] Sections appear in canonical order
 - [x] Written entirely in English
-- [x] No em dash character
-- [x] No AI tells
-- [x] Bullets are short (<=12 words each)
-- [x] No implementation detail
-- [x] Header has non-placeholder Feature and Created
-- [x] References are external URLs only
+- [x] No em dash present
+- [x] No AI-tell phrases present
+- [x] Every bullet is twelve words or fewer
+- [x] No implementation detail present
+- [x] Header has real Feature and Created values
+- [x] No References section, since the spec cites no external resources
+- [x] No optional marker leaks into a heading
+- [x] Plain English and active voice throughout
 
 ---
 
 ## Spec (`product/10-spec.md`)
 
-**Validated**: 2026-05-30 · 26/26 items
+**Validated**: 2026-05-31 · 27/27 items
 
-- [x] Headline present with >=1 paragraph
-- [x] Target Users and Personas present with >=1 persona
-- [x] Problem Statement contains Job to Be Done
+- [x] Headline present with at least one paragraph
+- [x] Glossary present, justified by domain terms (tenant, burst limit, quota)
+- [x] Target Users and Personas present with three personas
+- [x] Problem Statement contains a Job to Be Done statement
+- [x] Job to Be Done uses an action verb ("keep")
+- [x] Assumptions present, justified by explicit spec assumptions
 - [x] Value Proposition present
-- [x] Scope lists >=1 included capability
-- [x] Out of Scope lists >=1 excluded capability
-- [x] Use Cases contains >=1 use case
-- [x] Success Metrics has one north star + >=1 supporting metric
-- [x] Risks and Open Product Questions present
-- [x] Sections in canonical order
-- [x] Written entirely in English
-- [x] No em dash (`—`)
-- [x] Every use case has exactly one Given, When, Then
+- [x] Scope lists at least one included capability
+- [x] Out of Scope lists at least one excluded capability
+- [x] Use Cases contains at least one use case (5 present)
+- [x] Every use case has exactly one Given, When, and Then
 - [x] Each Given/When/Then is a full sentence starting with the keyword
-- [x] No implementation detail
-- [x] No AI tells
-- [x] Bullets are short (<=12 words each)
-- [x] Job to Be Done uses an action verb
-- [x] Header has non-placeholder Feature and Created
-- [x] NEEDS CLARIFICATION markers surfaced
-- [x] Positioning structure (if present)
-- [x] Go to Market rollout fields (if present)
-- [x] Each Use Case describes behavior, not implementation
-- [x] Each metric in Success Metrics is tech-agnostic
-- [x] Glossary present only when terms require definition
-- [x] Assumptions present only when source has material assumptions
+- [x] Each use case describes behavior, not implementation
+- [x] Success Metrics has one north star and three supporting metrics
+- [x] Each metric is measurable and technology-agnostic
+- [x] Risks and Open Product Questions present
+- [x] Sections appear in canonical order
+- [x] Positioning omitted, since the source has no positioning content
+- [x] Go to Market and Rollout omitted, since the source has no launch motion
+- [x] Written entirely in English
+- [x] No em dash present
+- [x] No implementation detail present
+- [x] No AI-tell phrases present
+- [x] Every bullet is twelve words or fewer
+- [x] Header has real Feature and Created values
+- [x] NEEDS CLARIFICATION markers surfaced (source has zero)
+- [x] No optional marker leaks into a heading
 
 ---
 
 ## Plan (`product/20-plan.md`)
 
-**Validated**: 2026-05-30 · 21/21 items
+**Validated**: 2026-05-31 · 24/24 items
 
-- [x] Summary present with >=1 paragraph
-- [x] Feature Context has all required fields
-- [x] Goals present with >=3 outcome bullets
-- [x] Out of Scope present with >=1 item
-- [x] Delivery Phases present with >=1 phase and >=1 bullet
+- [x] Summary present with at least one paragraph
+- [x] Feature Context has Problem, For, Change, Quality bar, Constraints
+- [x] Goals present with six outcome bullets
+- [x] Out of Scope present with at least one item
+- [x] Delivery Phases present with four phases, each with bullets
 - [x] Delivery Phases contain no time estimates or temporal framing
-- [x] Written entirely in English
-- [x] No em dash (`—`)
-- [x] No AI tells
-- [x] Bullets are short (<=12 words each)
-- [x] No code or file paths
-- [x] Diagrams present when section warrants
+- [x] No invented content; phases map to the source plan's prioritized stories
+- [x] Build Overview present, backed by the plan's architecture
+- [x] Key Principles present, backed by the plan's guard rails
+- [x] Key Decisions follow the mini-ADR format (Context, Options, Decision, Consequence)
+- [x] Risks each have probability, impact, and mitigation
+- [x] Validation present, backed by the plan's acceptance signals
+- [x] Optional sections present only when the source warrants (Divergences and Open Questions omitted)
+- [x] Diagrams present where warranted (journey, two flowcharts, risk quadrant)
 - [x] Mermaid blocks are valid and on-style
-- [x] Diagrams and sections earn their place
-- [x] No time estimates anywhere in the document
-- [x] Technical terms glossed on first use
-- [x] No invented content
-- [x] Key Decisions follow mini-ADR format
-- [x] Risks include probability and impact
-- [x] Optional sections present only when source warrants
-- [x] Header has non-placeholder Feature, Source Plan, and Created
+- [x] Each diagram earns its place under the value gate
+- [x] Technical terms glossed on first use (API)
+- [x] Written entirely in English
+- [x] No em dash present
+- [x] No AI-tell phrases present
+- [x] No code, file paths, or non-mermaid code fences
+- [x] Every bullet is twelve words or fewer
+- [x] No optional marker leaks into a heading
+- [x] Header has real Feature, Source Plan, and Created values
 
 ---
 
 ## Design (`product/30-design.md`)
 
-**Validated**: 2026-05-30 · 22/22 items
+**Validated**: 2026-05-31 · 24/24 items
 
-- [x] Summary present with >=2 sentences
-- [x] Technical Context has all required fields
-- [x] Architectural Approach present with >=3 paragraphs
-- [x] Affected Modules table present with >=2 rows
-- [x] Data Design present when source has data model content
-- [x] API Design present when source has API surface
-- [x] Spec Coverage table present when spec.md has use cases
+- [x] Summary present with at least two sentences
+- [x] Technical Context has Current state, Affected layers, Technical constraints
+- [x] Non-Functional Requirements present, with ISO 25010 categories and numeric targets
+- [x] Architectural Approach present with four paragraphs
+- [x] Affected Modules table present with ten rows
+- [x] Data Design present, backed by the data-model entities
+- [x] API Design present, backed by the three contract surfaces
+- [x] Spec Coverage table maps every use case to a component
 - [x] Spec Coverage has no unaddressed gaps
-- [x] Testing Strategy present with all four bullets
-- [x] Rollout and Migration present with all three fields
-- [x] Written entirely in English
-- [x] No em dash character
-- [x] No AI tells
-- [x] No runnable code
-- [x] Diagrams present when section warrants
+- [x] Key Technical Decisions follow Context, Options, Decision, Consequences
+- [x] Risks each have probability, impact, and mitigation
+- [x] Testing Strategy present with Unit, Integration, E2E/BDD, Observability
+- [x] Rollout and Migration present with Strategy, Data migration, Rollback
+- [x] Optional sections present only when warranted (Open Questions omitted)
+- [x] Diagrams present where warranted (flowchart, ER, data flow, sequence, risk quadrant)
 - [x] Mermaid blocks are valid
-- [x] Diagrams and sections earn their place
-- [x] Bullets are short (<=12 words each)
-- [x] Key Decisions follow required format
-- [x] Risks include probability and impact
-- [x] Optional sections present only when source warrants
-- [x] Header has non-placeholder Feature and Created
+- [x] Each diagram earns its place under the value gate
+- [x] No runnable code; only text and mermaid fenced blocks
+- [x] Written entirely in English
+- [x] No em dash present
+- [x] No AI-tell phrases present
+- [x] Every prose bullet is twelve words or fewer
+- [x] No optional marker leaks into a heading
+- [x] Header has real Feature and Created values
 
 ---
 
