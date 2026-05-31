@@ -6,7 +6,7 @@
 
 ## Headline
 
-> One sentence that a customer would say back to a friend, describing what this product does and why they would care.
+> One paragraph, three to five sentences, in the voice of a press release summary. Lead with a single sentence a customer would happily repeat to a friend.
 
 [One paragraph, three to five sentences, in the voice of a press release summary. State the customer, the problem, and the new outcome they can now reach. No internal jargon. No feature lists.]
 
@@ -32,7 +32,7 @@
 
 > When [situation], I want to [motivation], so I can [expected outcome].
 
-**Why this matters now**: [Two or three sentences on what changed in the user's world, the market, or the company that makes this the right job to address now.]
+**Why this matters now**: [Name the specific change that makes now the moment: a new constraint, a recent event, a shift in user behavior, or a cost that just became unacceptable. If you cannot name a concrete trigger, write "No time-sensitive trigger; this is a standing need" instead of inventing urgency.]
 
 ## Assumptions _(optional)_
 
@@ -84,7 +84,7 @@
 
 ## Success Metrics
 
-> One north star metric. Two to four supporting metrics. Each metric is measurable and technology agnostic. No frameworks, no system internals.
+> One north star metric. One or more supporting metrics. Each metric is measurable and technology agnostic. No frameworks, no system internals.
 
 **North star**:
 
