@@ -4,6 +4,8 @@
 **Created**: [DATE]
 **Status**: Draft
 
+> Authoring note (not emitted in the generated document): write every prose section to follow the humanization guide at `templates/humanization-guide.md` - plain English, varied cadence, no AI-tell phrases, no em dash.
+
 ## Summary
 
 [2-4 sentences. What is being built technically, which system layers are affected, and the key architectural approach. Enough for a tech lead to understand scope at a glance.]

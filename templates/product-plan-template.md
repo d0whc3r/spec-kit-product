@@ -4,6 +4,8 @@
 **Created**: [DATE]
 **Status**: Draft
 
+> Authoring note (not emitted in the generated document): write every prose section to follow the humanization guide at `templates/humanization-guide.md` - plain English, varied cadence, no AI-tell phrases, no em dash.
+
 ## Summary
 
 [One paragraph. What is being built, who it is for, and what the main approach is. No code. No file paths. No time estimates. Technical terms glossed on first use.]

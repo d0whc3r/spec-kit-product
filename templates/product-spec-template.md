@@ -4,6 +4,8 @@
 **Created**: [DATE]
 **Status**: Draft
 
+> Authoring note (not emitted in the generated document): write every prose section to follow the humanization guide at `templates/humanization-guide.md` - plain English, varied cadence, no AI-tell phrases, no em dash.
+
 ## Headline
 
 > One paragraph, three to five sentences, in the voice of a press release summary. Lead with a single sentence a customer would happily repeat to a friend.

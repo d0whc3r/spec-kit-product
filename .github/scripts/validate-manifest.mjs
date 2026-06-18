@@ -34,6 +34,7 @@ const REQUIRED = [
   "templates/product-info-template.md",
   "templates/product-plan-template.md",
   "templates/product-design-template.md",
+  "templates/humanization-guide.md",
 ];
 
 // Returns true on success, false on any failure (logging each problem).

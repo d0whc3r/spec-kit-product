@@ -4,6 +4,8 @@
 **Created**: [DATE]
 **Status**: Draft
 
+> Authoring note (not emitted in the generated document): write every prose section to follow the humanization guide at `templates/humanization-guide.md` - plain English, varied cadence, no AI-tell phrases, no em dash.
+
 ## Overview
 
 > Two to three sentences. What this feature is expected to be at a high level: the problem it addresses and the solution in plain language. No change-language. No implementation detail.

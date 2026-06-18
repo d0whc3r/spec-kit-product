@@ -36,10 +36,12 @@ The only files this command writes are under `${FEATURE_DIR}/product/`. All othe
 The command MUST read the following template from the installed extension and use it verbatim as the structural skeleton of the output. Do NOT invent additional sections. Do NOT reorder sections.
 
 - Product plan template: `templates/product-plan-template.md` (relative to this command's extension root).
+- Humanization guide: `templates/humanization-guide.md` (relative to this command's extension root).
 
 When this extension is installed under `.specify/extensions/product/`, the absolute path is:
 
 - `.specify/extensions/product/templates/product-plan-template.md`
+- `.specify/extensions/product/templates/humanization-guide.md`
 
 ## Execution
 
@@ -111,9 +113,11 @@ Read `templates/product-plan-template.md`. Populate all sections from `plan.md` 
 
 #### Style rules (enforced)
 
+Before writing, read `templates/humanization-guide.md` (relative to this command's extension root) and apply it as you compose and again during the rewrite loop: varied cadence, the full AI-tell banlist, and the structural tells it lists. The numbered rules below are the enforced minimum; the guide is the complete practice.
+
 1. **English only.** All output is in English.
 2. **No em dash.** The character `—` MUST NOT appear in the output. Use commas, parentheses, colons, semicolons, or sentence breaks. Hyphens (`-`) are allowed.
-3. **Plain English.** Active voice, short sentences, human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb without a concrete object), "robust" (without a measurable target), "it is worth noting".
+3. **Plain English.** Active voice, short sentences, human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb), "robust" (without a measurable target), "it is worth noting", "it should be noted", "as previously mentioned".
 4. **No implementation detail.** No frameworks, languages, specific APIs, data stores, code, or file paths. The only fenced block allowed is `mermaid` (see "Diagram generation"); its labels must still obey this rule (plain language, no frameworks, languages, APIs, data stores, or file names).
 5. **No time estimates.** Do not include any durations, deadlines, appetite framing, sprints, story points, or time-box references. The plan describes what is being built and how it is structured, not when.
 6. **Technical terms glossed on first use.** The following terms must carry a plain-language gloss in parentheses on the same line as their first occurrence: "API" (application programming interface), "CLI" (command-line interface), "SDK" (software development kit), "refactor" (restructure existing code without changing its behavior), "idempotent" (produces the same result when run multiple times), "atomic" (all-or-nothing operation), "schema" (structured definition of data), "linter" (automated style and error checker), "manifest" (declaration file listing components or contents), "hook" (event-triggered extension point), "pipeline" (automated sequence of steps), "ADR" (Architecture Decision Record - a short log of a key design choice). Subsequent occurrences of the same term require no gloss.
@@ -184,7 +188,7 @@ After composing the full text of `product/20-plan.md` in memory (before writing)
 | Delivery Phases contain no time estimates or temporal framing | No: "week", "day", "sprint", "appetite", "story point", "deadline", now/next/later as section labels, time units, or date patterns in `## Delivery Phases`                                                                                                                                          | Yes - remove offending text                                                                                                                             |
 | Written entirely in English                                   | Dominant language of prose is English                                                                                                                                                                                                                                                               | No - source was validated in Step 2                                                                                                                     |
 | No em dash (`—`)                                              | Character `—` absent from entire file                                                                                                                                                                                                                                                               | Yes - replace with comma, colon, or semicolon                                                                                                           |
-| No AI tells                                                   | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting" (case-insensitive)                                                                                 | Yes - rewrite sentence                                                                                                                                  |
+| No AI tells                                                   | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb), "robust" (without a measurable target), "it is worth noting", "it should be noted", "as previously mentioned" (case-insensitive)                    | Yes - rewrite sentence                                                                                                                                  |
 | Bullets are short (≤12 words each)                            | Every `-` line contains ≤12 words                                                                                                                                                                                                                                                                   | Yes - split or shorten                                                                                                                                  |
 | No code or file paths                                         | File does not contain: code fences (except `mermaid` blocks), file extension patterns (`.js`, `.ts`, `.py`, `.go`, etc.), absolute or relative paths starting with `/` or `./`                                                                                                                      | Yes - remove or describe in prose                                                                                                                       |
 | Diagrams present when section warrants                        | Each host section with source content has its `mermaid` diagram; no placeholder labels (`Part name`, `[Persona]`, `[Stage]`). The Delivery Phases `flowchart` and the Risks `quadrantChart` are conditional: render only with two or more phases or risks, and do not add them below that threshold | Yes - add diagram or fill from source (but never add the conditional Delivery Phases `flowchart` or Risks `quadrantChart` below the two-item threshold) |
@@ -207,7 +211,7 @@ After composing the full text of `product/20-plan.md` in memory (before writing)
 **Validated**: [DATE] · [PASSED]/[TOTAL] items
 
 - [x] ... (passing items)
-- [ ] ... (failing items, if any — see ## Needs Review)
+- [ ] ... (failing items, if any - see ## Needs Review)
 ```
 
 **`## Needs Review` section**: rebuild the `## Needs Review` section at the bottom by aggregating all `- [ ]` items from all four sections (`## Info`, `## Spec`, `## Plan`, `## Design`). Each entry includes a one-sentence explanation. If no items remain unchecked, write:

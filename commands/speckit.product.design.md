@@ -38,10 +38,12 @@ The command writes:
 The command MUST read the following template from the installed extension and use it verbatim as the structural skeleton of the output. Do NOT invent additional sections. Do NOT reorder sections.
 
 - Technical design template: `templates/product-design-template.md` (relative to this command's extension root).
+- Humanization guide: `templates/humanization-guide.md` (relative to this command's extension root).
 
 When this extension is installed under `.specify/extensions/product/`, the absolute path is:
 
 - `.specify/extensions/product/templates/product-design-template.md`
+- `.specify/extensions/product/templates/humanization-guide.md`
 
 ## Execution
 
@@ -85,8 +87,8 @@ Refuse to proceed when:
 
 Read the following files silently if they exist. Do not warn or error if absent.
 
-- `${FEATURE_DIR}/tasks.md` — use for implementation hints to populate Affected Modules and Spec Coverage.
-- `${FEATURE_DIR}/data-model.md` — use to ground the Data Design section in existing schemas.
+- `${FEATURE_DIR}/tasks.md` - use for implementation hints to populate Affected Modules and Spec Coverage.
+- `${FEATURE_DIR}/data-model.md` - use to ground the Data Design section in existing schemas.
 
 ### Step 4: Check for sparse sources
 
@@ -117,9 +119,11 @@ Read `templates/product-design-template.md`. Populate all sections from `plan.md
 
 #### Style rules (enforced)
 
+Before writing, read `templates/humanization-guide.md` (relative to this command's extension root) and apply it as you compose and again during the rewrite loop: varied cadence, the full AI-tell banlist, and the structural tells it lists. The numbered rules below are the enforced minimum; the guide is the complete practice.
+
 1. **English only.** All output is in English.
 2. **No em dash.** The character `—` MUST NOT appear in the output. Use commas, parentheses, colons, semicolons, or sentence breaks. Hyphens (`-`) are allowed.
-3. **Active voice, short sentences.** Human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb without a concrete object), "robust" (without a measurable target), "it is worth noting".
+3. **Plain English.** Active voice, short sentences, human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb), "robust" (without a measurable target), "it is worth noting", "it should be noted", "as previously mentioned".
 4. **Technical depth is appropriate.** This document targets tech leads and senior developers. Component names, module boundaries, file-system layer references (frontend, backend, data layer), API surface shapes, and data schemas at a conceptual level are all permitted and encouraged. Do NOT dumb down technical content.
 5. **No runnable code.** No language-specific syntax, no full class or function definitions, no ORM schema DDL. Use plain `text` blocks for data shapes and API contracts. The only non-`text` fenced block allowed is `mermaid` (see "Diagram generation").
 6. **No full OpenAPI specs.** API Design section shows request/response shapes conceptually. Error codes and constraints are listed but not exhaustive.
@@ -132,7 +136,7 @@ Read `templates/product-design-template.md`. Populate all sections from `plan.md
 - **Summary**: always present. 2-4 sentences: what is being built, which layers are affected, and the key architectural approach.
 - **Technical Context**: always present. Three labeled fields (Current state, Affected layers, Technical constraints). Current state is one sentence. Affected layers is a comma-separated list. Technical constraints is a bullet list of concrete constraints from the source; if none are stated, write "No explicit constraints identified." Technical constraints holds non-measurable design rules and boundaries; put measurable numeric quality targets in the Non-Functional Requirements table instead, so a target is stated once, not in both places.
 - **Non-Functional Requirements (optional)**: include only when the source states measurable quality targets (latency, throughput, availability, accuracy, accessibility, and similar). A table mapping each target to one of the eight ISO 25010 top-level quality categories (Functional suitability, Performance efficiency, Compatibility, Interaction capability, Reliability, Security, Maintainability, Flexibility; do not invent sub-qualifiers like "timeliness") and a numeric value, plus how it is verified. State numbers, not adjectives. Omit the entire section when the source names no measurable target, or when the table would only restate the Technical Constraints without adding a new dimension (the ISO category and the verification method).
-- **Architectural Approach**: always present. 3-6 paragraphs covering how the solution fits into the existing architecture, which components are added/changed/removed, how they connect, and key design principles. C4 container and component level — not class or function level.
+- **Architectural Approach**: always present. 3-6 paragraphs covering how the solution fits into the existing architecture, which components are added/changed/removed, how they connect, and key design principles. C4 container and component level - not class or function level.
 - **Affected Modules**: always present. A table with columns: Module/Component, Change (adds/modifies/removes/uses), Responsibility. At least two rows. If `tasks.md` is present, use it to identify affected modules.
 - **Data Design**: always present when `plan.md`, `spec.md`, or `data-model.md` contains any data model information. Two subsections: Data Model (entities and key fields as plain text blocks) and Data Flow (how data moves). Omit the entire section when no data model information exists in any source.
 - **API Design**: always present when the feature exposes or modifies any API surface. Show request/response shapes and error cases at a conceptual level using plain `text` blocks. Omit the entire section when the feature has no API surface.
@@ -200,7 +204,7 @@ After composing the full text of `product/30-design.md` in memory (before writin
 | Rollout and Migration present with all three fields    | `## Rollout and Migration` heading exists; Strategy, Data migration, Rollback fields present                                                                                                                                                                                                                                                     | Yes - add missing fields                                                                                            |
 | Written entirely in English                            | Dominant language of prose is English                                                                                                                                                                                                                                                                                                            | No - source was validated in Step 2                                                                                 |
 | No em dash (`—`)                                       | Character `—` absent from entire file                                                                                                                                                                                                                                                                                                            | Yes - replace with comma, colon, or semicolon                                                                       |
-| No AI tells                                            | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (standalone), "robust" (without measurable target), "it is worth noting" (case-insensitive)                                                                                                                              | Yes - rewrite sentence                                                                                              |
+| No AI tells                                            | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb), "robust" (without a measurable target), "it is worth noting", "it should be noted", "as previously mentioned" (case-insensitive)                                                                 | Yes - rewrite sentence                                                                                              |
 | No runnable code                                       | File does not contain language-specific syntax blocks (fenced blocks tagged with a language identifier other than `text` or `mermaid`)                                                                                                                                                                                                           | Yes - change language tag to `text` or remove                                                                       |
 | Diagrams present when section warrants                 | Each section with source content has its `mermaid` diagram; each diagram sits in a section with real source content; no placeholder labels (`ENTITY_A`, `Part name`). The Risks `quadrantChart` is conditional: render only with two or more risks, and do not add it below that threshold                                                       | Yes - add diagram or fill from source (but never add the conditional `quadrantChart` below the two-risk threshold)  |
 | Mermaid blocks are valid                               | Each `mermaid` block declares a known diagram type and is syntactically valid; labels carry no em dash                                                                                                                                                                                                                                           | Yes - fix syntax or remove block                                                                                    |
@@ -220,7 +224,7 @@ After composing the full text of `product/30-design.md` in memory (before writin
 **Validated**: [DATE] · [PASSED]/[TOTAL] items
 
 - [x] ... (passing items)
-- [ ] ... (failing items, if any — see ## Needs Review)
+- [ ] ... (failing items, if any - see ## Needs Review)
 ```
 
 **`## Needs Review` section**: rebuild the `## Needs Review` section at the bottom by aggregating all `- [ ]` items from all four sections (`## Info`, `## Spec`, `## Plan`, `## Design`). Each entry includes a one-sentence explanation. If no items remain unchecked, write:

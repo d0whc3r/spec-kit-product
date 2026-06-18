@@ -21,6 +21,14 @@ const log = logger("lint-content");
 const BANNED_PHRASES = ["delve", "tapestry", "in essence", "navigate the landscape"];
 const CHECKLIST = "templates/product-checklist-template.md";
 
+// The humanization guide is the single source. Each command and prose template
+// must reference it, and each command must copy the canonical AI-tell list
+// verbatim (style rule + validation row). The string below is that list; keep
+// it identical to "The enforced minimum" block in the guide.
+const GUIDE = "templates/humanization-guide.md";
+const CANONICAL_AITELLS =
+  '"delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb), "robust" (without a measurable target), "it is worth noting", "it should be noted", "as previously mentioned"';
+
 // Conditional headings that interleave between mandatory ones (e.g. plan's
 // "Build Overview", design's "Data Design") are not listed here; they carry the
 // _(optional)_ marker inline and are validated by the single ordered pass.
@@ -80,6 +88,7 @@ const TEMPLATES = [
 
 const read = (rel) => fs.readFileSync(path.join(repoRoot, rel), "utf8");
 const exists = (rel) => fs.existsSync(path.join(repoRoot, rel));
+const occurrences = (haystack, needle) => haystack.split(needle).length - 1;
 
 // 1-based line of the first heading line, or 0 if absent.
 function headingLine(lines, heading) {
@@ -134,6 +143,38 @@ function lintTemplate(spec, fail) {
   }
 }
 
+// The humanization guide is the single source of the AI-tell practice. Enforce
+// that the guide carries the canonical list, that every command and prose
+// template references the guide, and that each command copies the list verbatim
+// in both places (style rule + validation row) and uses no em dash of its own.
+function lintHumanization(fail) {
+  if (!exists(GUIDE)) {
+    fail(`${GUIDE} missing`);
+    return;
+  }
+  const guide = read(GUIDE);
+  if (guide.includes("—")) fail(`em dash found in ${GUIDE}`);
+  if (!guide.includes(CANONICAL_AITELLS)) {
+    fail(`${GUIDE} is missing the canonical AI-tell list ("The enforced minimum" drifted)`);
+  }
+
+  for (const spec of TEMPLATES) {
+    if (exists(spec.template) && !read(spec.template).includes(GUIDE)) {
+      fail(`${spec.template} does not reference ${GUIDE}`);
+    }
+    if (!exists(spec.command)) continue;
+    const cmd = read(spec.command);
+    if (!cmd.includes(GUIDE)) fail(`${spec.command} does not reference ${GUIDE}`);
+    const n = occurrences(cmd, CANONICAL_AITELLS);
+    if (n < 2) {
+      fail(
+        `${spec.command} must copy the canonical AI-tell list verbatim in the style rule and the validation row (found ${n}/2)`,
+      );
+    }
+    if (cmd.includes(" — ")) fail(`em dash found in ${spec.command}`);
+  }
+}
+
 export async function lintContent() {
   let failed = false;
   const fail = (msg) => {
@@ -142,6 +183,7 @@ export async function lintContent() {
   };
 
   for (const spec of TEMPLATES) lintTemplate(spec, fail);
+  lintHumanization(fail);
 
   // oxfmt pass over the shipped markdown.
   const oxfmt = path.join(repoRoot, "node_modules/.bin/oxfmt");

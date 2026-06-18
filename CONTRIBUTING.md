@@ -153,6 +153,8 @@ The extension's whole reason to exist is the canonical product spec voice. Style
 
 If you change these rules, update the template, the checklist template, the command prompt, and the lint script in the same commit.
 
+The AI-tell banlist has one source: `templates/humanization-guide.md`, section "The enforced minimum". Each product command copies that subset verbatim in two places, the Plain English style rule and the "No AI tells" validation row. `lint:content` (`lintHumanization`) fails when a command drifts from the guide or its siblings, or when a command body contains an em dash. To change the banlist, edit the guide's "The enforced minimum" block and re-copy it into all four commands in the same commit.
+
 ## Reporting Issues
 
 Open a GitHub issue with: the extension version (`grep version extension.yml`), the Spec Kit version, the slash command invocation, and the resulting refusal code or the diff between actual and expected output.
