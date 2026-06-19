@@ -27,7 +27,7 @@ needs no catalog setup and always works:
 
 ```bash
 specify extension add product --from \
-  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.8.3/product-0.8.3.zip
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v0.9.0/product-0.9.0.zip
 ```
 
 Change the version in the URL to pin a different release.

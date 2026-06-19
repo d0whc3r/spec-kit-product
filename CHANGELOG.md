@@ -1,5 +1,13 @@
 # Changelog
 
+# [0.9.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.8.3...v0.9.0) (2026-06-19)
+
+
+### Features
+
+* add humanization ([7e5dcff](https://github.com/d0whc3r/spec-kit-product/commit/7e5dcff024be097f453093c5d9bdfd082c8c7614))
+* create SKILL.md, ai-tells.md, humanize_lint.sh and humanize-product ([2e06b8f](https://github.com/d0whc3r/spec-kit-product/commit/2e06b8f03e183fc8f4888a199ad2d8e31f88edd6))
+
 ## [0.8.3](https://github.com/d0whc3r/spec-kit-product/compare/v0.8.2...v0.8.3) (2026-05-31)
 
 
