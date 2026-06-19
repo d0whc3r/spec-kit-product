@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/d0whc3r/spec-kit-product/compare/v0.10.0...v0.10.1) (2026-06-19)
+
+
+### Bug Fixes
+
+* clarification concepts ([451801a](https://github.com/d0whc3r/spec-kit-product/commit/451801ae0663fc1e31671247dd758b322a0d313a))
+
 # [0.10.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.9.0...v0.10.0) (2026-06-19)
 
 

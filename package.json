@@ -1,6 +1,6 @@
 {
   "name": "spec-kit-product",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "private": true,
   "description": "Generates PRFAQ, Lean PRD, stakeholder summaries, and technical designs from engineering specs.",
   "keywords": [
