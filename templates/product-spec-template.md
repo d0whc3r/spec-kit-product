@@ -8,112 +8,99 @@
 
 ## Headline
 
-> One paragraph, three to five sentences, in the voice of a press release summary. Lead with a single sentence a customer would happily repeat to a friend.
+> One paragraph, three to four sentences. Name who it is for, the problem they have today, what changes, and why that beats the status quo. No internal jargon, no feature lists.
 
-[One paragraph, three to five sentences, in the voice of a press release summary. State the customer, the problem, and the new outcome they can now reach. No internal jargon. No feature lists.]
+[Paragraph. Lead with one sentence a customer would repeat to a friend, then state the change against what they do today.]
 
 ## Glossary _(optional)_
 
-> Include this section only when the spec uses domain-specific or technical terms that a non-technical stakeholder may not know. Define each term in one plain sentence. Omit the section entirely when no vocabulary gap exists.
+> Only when the spec uses domain or technical terms a non-technical stakeholder may not know. One plain sentence each. Omit when there is no vocabulary gap.
 
 - **[Term]**: [Plain-language definition in one sentence.]
 - **[Term]**: [Plain-language definition in one sentence.]
 
-## Target Users and Personas
+## Users
 
-[List the user types this product serves. For each, give a one line description and the single most important thing they care about.]
+> Who this serves. One line each: who they are and the single thing they care about most.
 
 - **[Persona name]**: [Who they are. What they care about most.]
 - **[Persona name]**: [Who they are. What they care about most.]
 
-## Problem Statement (Job to Be Done)
+## Problem (Job to Be Done)
 
-> Use the Ulwick job statement format. Use an action verb. Do not name a solution.
-
-**Primary job**:
+> Ulwick job statement: action verb, no solution named. Then one line on why now.
 
 > When [situation], I want to [motivation], so I can [expected outcome].
 
-**Why this matters now**: [Name the specific change that makes now the moment: a new constraint, a recent event, a shift in user behavior, or a cost that just became unacceptable. If you cannot name a concrete trigger, write "No time-sensitive trigger; this is a standing need" instead of inventing urgency.]
+**Why now**: [The concrete trigger that makes this the moment, or "No time-sensitive trigger; this is a standing need."]
 
 ## Assumptions _(optional)_
 
-> Include this section when the feature rests on conditions believed true but not yet confirmed. Each assumption is one sentence. State what would need to change to invalidate it. Omit the section when no material assumptions exist.
+> Only when the feature rests on conditions believed true but not confirmed. One sentence each, with what would invalidate it. Omit when none.
 
 - [Assumption in one sentence. What would invalidate it.]
 - [Assumption in one sentence. What would invalidate it.]
-
-## Value Proposition
-
-[Two to four sentences. State, in plain language, the change in the user's life that this product creates. Compare against the status quo (what they do today without this product). Be honest about what is new and what is just better.]
 
 ## Scope
 
-[A short, scannable list of what is included in this version. Each item is one line. The list is finite and bounded.]
+> Two short lists. Out of scope is the highest-leverage part; always populate it. If it feels empty, think harder.
+
+**In scope**:
 
 - [Capability included.]
 - [Capability included.]
-- [Capability included.]
 
-## Out of Scope
+**Out of scope**:
 
-[A short, scannable list of what is explicitly not included, even though a reasonable reader might expect it. This section is the highest leverage section in the document. Always populate it; if it feels empty, think harder.]
-
-- [Capability deliberately excluded, with one short reason.]
-- [Capability deliberately excluded, with one short reason.]
+- [Capability excluded, with one short reason.]
+- [Capability excluded, with one short reason.]
 
 ## Use Cases
 
-> Each scenario follows Gherkin Given, When, Then. One Given, one When, one Then per scenario. Each line is a full sentence starting with the keyword. Describe behavior, not implementation. Aim for fewer than ten scenarios across the whole spec.
+> Gherkin Given/When/Then: one of each per scenario, full sentences, behavior not implementation. Aim for fewer than six.
 
 ### Use Case 1: [Short title in plain language]
 
-**Given** [one full sentence describing the starting context the user is in].
-**When** [one full sentence describing the action the user takes].
-**Then** [one full sentence describing the outcome the user observes].
+**Given** [one sentence describing the starting context].
+**When** [one sentence describing the action the user takes].
+**Then** [one sentence describing the outcome the user observes].
 
 ### Use Case 2: [Short title in plain language]
 
-**Given** [one full sentence describing the starting context the user is in].
-**When** [one full sentence describing the action the user takes].
-**Then** [one full sentence describing the outcome the user observes].
-
-### Use Case 3: [Short title in plain language]
-
-**Given** [one full sentence describing the starting context the user is in].
-**When** [one full sentence describing the action the user takes].
-**Then** [one full sentence describing the outcome the user observes].
+**Given** [one sentence describing the starting context].
+**When** [one sentence describing the action the user takes].
+**Then** [one sentence describing the outcome the user observes].
 
 ## Success Metrics
 
-> One north star metric. One or more supporting metrics. Each metric is measurable and technology agnostic. No frameworks, no system internals.
+> One north star, one or more supporting. Each measurable and technology agnostic.
 
 **North star**:
 
-- **[Metric name]**: [Definition in one sentence. Target value and the time window over which it is measured.]
+- **[Metric name]**: [Definition, target value, and the time window measured.]
 
-**Supporting metrics**:
+**Supporting**:
 
 - **[Metric name]**: [Definition. Target.]
 - **[Metric name]**: [Definition. Target.]
 
-## Risks and Open Product Questions
+## Risks and Open Questions
 
-[A short list of the things that could go wrong, plus the open questions that the team has not yet answered. If the source spec contained `[NEEDS CLARIFICATION]` markers, each one is surfaced here as an open product question, not silently resolved.]
+> What could go wrong, plus questions the team has not answered. Every `[NEEDS CLARIFICATION]` marker from the source spec appears here, never silently resolved.
 
 **Risks**:
 
 - [Risk in one sentence. Why it matters.]
 - [Risk in one sentence. Why it matters.]
 
-**Open product questions**:
+**Open questions**:
 
 - [Question in one sentence.]
 - [Question in one sentence.]
 
 ## Positioning _(optional)_
 
-> Include this section only when the product has external users or competes with alternatives. Internal tools may omit it.
+> Only when the product has external users or competes with alternatives. Internal tools omit it.
 
 **For** [target customer]
 **who** [statement of need or opportunity]
@@ -124,9 +111,9 @@
 
 ## Go to Market and Rollout _(optional)_
 
-> Include this section only when there is a launch motion. Internal tools or background features may omit it.
+> Only when there is a launch motion. Internal tools or background features omit it.
 
-- **Audience for the first release**: [Who gets it first. Why.]
-- **Channel and message**: [How users will hear about it. The one sentence message.]
-- **Rollout sequence**: [Stage one, stage two, stage three, in plain language.]
+- **First release audience**: [Who gets it first. Why.]
+- **Channel and message**: [How users hear about it. The one-sentence message.]
+- **Rollout sequence**: [Stage one, stage two, stage three.]
 - **Launch readiness signal**: [The single observable condition that says we are ready to ship.]

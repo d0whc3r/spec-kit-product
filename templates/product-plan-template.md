@@ -8,17 +8,17 @@
 
 ## Summary
 
-[One paragraph. What is being built, who it is for, and what the main approach is. No code. No file paths. No time estimates. Technical terms glossed on first use.]
+> One short paragraph (what is being built, who it is for, the main approach), then the context fields. No code, no file paths, no time estimates. Technical terms glossed on first use.
 
-## Feature Context
+[One paragraph.]
 
 **Problem**: [What is broken or missing today, one sentence.]
-**For**: [Who this serves - role or persona, not a user story.]
+**For**: [Who this serves - role or persona.]
 **Change**: [What is different for them after this ships, one sentence.]
-**Quality bar**: [The observable standard this must meet - speed, reliability, coverage, or similar. No internal metrics.]
+**Quality bar**: [The observable standard this must meet - speed, reliability, coverage. No internal metrics.]
 **Constraints**: [What this must not do or break. Omit if none.]
 
-> User journey: a `journey` diagram of the steps the persona takes, drawn from the spec use cases. Plain-language step labels, no tooling or component names. Omit only when no user-facing flow is described in the source.
+> User journey: a `journey` diagram of the steps the persona takes, drawn from the spec use cases. Plain-language labels, no tooling names. Omit when no user-facing flow is described.
 
 ```mermaid
 journey
@@ -30,27 +30,31 @@ journey
       [Step]: 5: [Persona]
 ```
 
-## Goals
+## Goals and Non-Goals
 
-- [Concrete outcome this feature delivers when complete, one sentence.]
-- [Concrete outcome this feature delivers when complete, one sentence.]
-- [Concrete outcome this feature delivers when complete, one sentence.]
+> Two short lists. Goals are concrete outcomes when complete. Non-goals are deliberate exclusions with a one-phrase reason. Always populate non-goals; if it feels empty, look harder.
 
-## Out of Scope
+**Goals**:
+
+- [Concrete outcome this feature delivers, one sentence.]
+- [Concrete outcome this feature delivers, one sentence.]
+- [Concrete outcome this feature delivers, one sentence.]
+
+**Non-goals**:
 
 - [Capability deliberately excluded, one short reason.]
 - [Capability deliberately excluded, one short reason.]
 
 ## Build Overview _(optional)_
 
-> Include only when the source plan contains architecture, component, or structural information. Omit the entire section otherwise.
+> Only when the source plan has architecture, component, or structural information. Omit otherwise.
 
-[One paragraph. How the main parts of the system connect and why this structure was chosen. Plain language - no code, no file names, no framework names.]
+[One paragraph. How the main parts connect and why this structure. Plain language, no code, file names, or framework names.]
 
-- **[Part name]**: [What it does, one sentence. This feature [adds / changes / uses] it.]
-- **[Part name]**: [What it does, one sentence. This feature [adds / changes / uses] it.]
+- **[Part name]**: [What it does, one sentence. This feature adds / changes / uses it.]
+- **[Part name]**: [What it does, one sentence. This feature adds / changes / uses it.]
 
-> Diagram: a high-level `flowchart` showing how the parts above connect. Plain-language node labels only, no frameworks, languages, or file names. Omit only when the plan has no structural information.
+> Diagram: a high-level `flowchart` of how the parts connect. Plain-language labels only. Omit when the plan has no structural information.
 
 ```mermaid
 flowchart LR
@@ -60,14 +64,14 @@ flowchart LR
 
 ## Key Principles _(optional)_
 
-> Include only when the source plan articulates explicit guard rails, constraints, or core rules. Omit the entire section otherwise.
+> Only when the source plan states explicit guard rails or core rules. Omit otherwise.
 
 - **[Principle]**: [The rule and why it matters, one sentence.]
 - **[Principle]**: [The rule and why it matters, one sentence.]
 
 ## Delivery Phases
 
-> Roadmap: a `flowchart LR` of the phases below. One node per phase; draw an edge from each prerequisite phase to the phase that names it under "_Depends on_". Phases with no declared dependency are roots. Plain-language labels, no dates or durations. Render only when the dependencies branch (a phase has more than one direct dependent, or more than one phase has no prerequisite): a single straight chain or a set of independent phases adds nothing over the numbered list, so omit it then. Also omit when there are fewer than two phases.
+> Roadmap: a `flowchart LR` of the phases. One node per phase; an edge from each prerequisite to the phase that names it under "_Depends on_". Render only when dependencies branch; a single chain or independent phases adds nothing over the list. Omit with fewer than two phases. No dates or durations.
 
 ```mermaid
 flowchart LR
@@ -90,27 +94,27 @@ _Depends on_: Phase 1.
 
 ## Key Decisions _(optional)_
 
-> Include only when the source plan contains explicit design decisions. Omit the entire section otherwise.
+> Only when the source plan has explicit design decisions. Omit otherwise.
 
 ### [Decision title]
 
-**Context**: [What problem or constraint forced a choice, one sentence.]
-**Options considered**: [The two or three alternatives that were on the table, brief sentence or list.]
+**Context**: [What forced a choice, one sentence.]
+**Options considered**: [The two or three alternatives, brief.]
 **Decision**: [What was chosen, one sentence.]
-**Consequence**: [What this enables and what it forecloses, one sentence.]
+**Consequence**: [What this enables and forecloses, one sentence.]
 
 ## Risks and Mitigations _(optional)_
 
-> Include only when the source plan contains concrete risk signals. Omit otherwise.
+> Only when the source plan has concrete risk signals. Omit otherwise.
 
 **[Risk title]**
 
 - **What could go wrong**: [Description and consequence, one sentence.]
 - **Probability**: [Low / Medium / High]
 - **Impact**: [Low / Medium / High]
-- **Mitigation**: [What is in place to reduce the impact, one sentence.]
+- **Mitigation**: [What reduces the impact, one sentence.]
 
-> Diagram: a `quadrantChart` plotting each risk above on probability (x) by impact (y). Map Low near 0.2, Medium near 0.5, High near 0.85 on each axis. When risks share a cell, give them a small offset so labels stay readable, never one large enough to imply a difference the prose does not state. Plot only risks named above; never invent one. Omit when there are fewer than two risks, or when every risk lands in the same cell (the plot would add nothing over the prose).
+> Diagram: a `quadrantChart` plotting each risk on probability (x) by impact (y). Map Low near 0.2, Medium near 0.5, High near 0.85. Offset shared cells just enough to keep labels readable. Plot only risks named above. Omit with fewer than two risks, or when every risk lands in the same cell.
 
 ```mermaid
 quadrantChart
@@ -127,18 +131,18 @@ quadrantChart
 
 ## Divergences and Edge Cases _(optional)_
 
-> Include only when the source plan describes scenarios that deviate from the normal flow. Omit otherwise.
+> Only when the source plan describes scenarios that deviate from the normal flow. Omit otherwise.
 
-- **[Scenario]**: [What the scenario is and how the system handles it, one to two sentences.]
+- **[Scenario]**: [What it is and how the system handles it, one to two sentences.]
 
 ## Validation _(optional)_
 
-> Include only when the source plan defines explicit acceptance criteria. Omit otherwise.
+> Only when the source plan defines explicit acceptance criteria. Omit otherwise.
 
 - [Observable condition that confirms a part of the feature is correct, one sentence.]
 
 ## Open Questions _(optional)_
 
-> Include only when the source plan contains open questions or marked assumptions. Omit otherwise.
+> Only when the source plan has open questions or marked assumptions. Omit otherwise.
 
 - [Open question, one sentence.]

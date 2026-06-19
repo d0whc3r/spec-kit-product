@@ -38,14 +38,12 @@ const TEMPLATES = [
     command: "commands/speckit.product.spec.md",
     mandatory: [
       "Headline",
-      "Target Users and Personas",
-      "Problem Statement (Job to Be Done)",
-      "Value Proposition",
+      "Users",
+      "Problem (Job to Be Done)",
       "Scope",
-      "Out of Scope",
       "Use Cases",
       "Success Metrics",
-      "Risks and Open Product Questions",
+      "Risks and Open Questions",
     ],
     optional: [],
     extraRefs: [CHECKLIST],
@@ -53,14 +51,14 @@ const TEMPLATES = [
   {
     template: "templates/product-info-template.md",
     command: "commands/speckit.product.info.md",
-    mandatory: ["Overview", "Headline", "What is Changing", "Out of Scope"],
+    mandatory: ["Overview", "What is Changing", "Out of Scope"],
     optional: ["Risks", "Key Decisions", "References"],
     extraRefs: [CHECKLIST],
   },
   {
     template: "templates/product-plan-template.md",
     command: "commands/speckit.product.plan.md",
-    mandatory: ["Summary", "Feature Context", "Goals", "Out of Scope", "Delivery Phases"],
+    mandatory: ["Summary", "Goals and Non-Goals", "Delivery Phases"],
     optional: [
       "Key Decisions",
       "Risks and Mitigations",
@@ -75,7 +73,6 @@ const TEMPLATES = [
     command: "commands/speckit.product.design.md",
     mandatory: [
       "Summary",
-      "Technical Context",
       "Architectural Approach",
       "Affected Modules",
       "Testing Strategy",

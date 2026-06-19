@@ -17,12 +17,12 @@ verbatim. If a more human phrasing would break any of those, it is wrong.
 
 Humanize the prose; leave the scaffolding alone:
 
-| Humanize freely (prose)                         | Do not restructure (gated shape)                        |
-| ----------------------------------------------- | ------------------------------------------------------- |
-| Overview, Headline, Problem Statement narrative | The `When ... I want to ... so I can ...` JTBD sentence |
-| Value Proposition, architecture overview prose  | `**Given** / **When** / **Then**` scenario lines        |
-| Risk descriptions, decision rationale           | Section headings and their canonical order              |
-| Any free paragraph                              | Metric definitions, `[NEEDS CLARIFICATION]` markers     |
+| Humanize freely (prose)                   | Do not restructure (gated shape)                        |
+| ----------------------------------------- | ------------------------------------------------------- |
+| Overview, Headline, the Problem narrative | The `When ... I want to ... so I can ...` JTBD sentence |
+| Architecture overview prose               | `**Given** / **When** / **Then**` scenario lines        |
+| Risk descriptions, decision rationale     | Section headings and their canonical order              |
+| Any free paragraph                        | Metric definitions, `[NEEDS CLARIFICATION]` markers     |
 
 You can improve a bullet's wording. You cannot grow it past twelve words, merge
 mandated sections, or soften a clarification marker out of existence.
@@ -116,8 +116,8 @@ risk is fine; a stack of hedges is not.
 A person uses a triad sometimes; generated text uses it constantly. When a
 third item is there only for rhythm, drop it.
 
-**Restating the heading.** Under `## Value Proposition`, a sentence that opens
-"The value proposition of this product is..." wastes the reader's time. Start
+**Restating the heading.** Under `## Overview`, a sentence that opens
+"The overview of this feature is..." wastes the reader's time. Start
 with the substance.
 
 **Future tense for current behavior.** "The command will write the file." It
@@ -183,7 +183,7 @@ its required form.
 
 Plain-language summary for a non-technical reader. Almost all prose.
 
-- **Humanize:** Overview, Headline, Risks.
+- **Humanize:** Overview, Risks.
 - **Watch:** "What is Changing" and "Out of Scope" are bullet lists prone to
   parallel openers and uniform shape. This is where the work earns its keep.
 
@@ -191,8 +191,8 @@ Plain-language summary for a non-technical reader. Almost all prose.
 
 Working Backwards, Jobs to Be Done, Gherkin, Lean PRD. The most gated document.
 
-- **Humanize:** Headline, the Problem Statement narrative around the JTBD
-  sentence, Value Proposition, Risk descriptions.
+- **Humanize:** Headline, the Problem narrative around the JTBD
+  sentence and the Risk descriptions.
 - **Leave the shape:** the `When ... I want to ... so I can ...` sentence; every
   `**Given** / **When** / **Then**` line keeps one each, its keyword, and its
   period; metric structure; `[NEEDS CLARIFICATION]` markers verbatim.
@@ -205,7 +205,7 @@ risks. Technical terms appear but are glossed in plain English on first use.
 - **Humanize:** the architecture overview prose, decision rationale, risk
   descriptions, phase descriptions.
 - **Leave the shape:** phase ordering and declared dependencies, the
-  goals/scope boundary, any Mermaid block (improve a node label only if it stays
+  goals/non-goals boundary, any Mermaid block (improve a node label only if it stays
   short, keeps the diagram valid, and uses no em dash).
 
 ### product/30-design.md

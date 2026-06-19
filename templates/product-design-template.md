@@ -8,20 +8,20 @@
 
 ## Summary
 
-[2-4 sentences. What is being built technically, which system layers are affected, and the key architectural approach. Enough for a tech lead to understand scope at a glance.]
+> Two to four sentences (what is being built technically and the key architectural approach), then the context fields. Enough for a tech lead to grasp scope at a glance.
 
-## Technical Context
+[Paragraph.]
 
-**Current state**: [One sentence describing the relevant part of the system as it exists today.]
-**Affected layers**: [Comma-separated list: e.g. frontend, API layer, data layer, background jobs, infra.]
-**Technical constraints**:
+**Current state**: [The relevant part of the system as it exists today, one sentence.]
+**Affected layers**: [Comma-separated: e.g. frontend, API layer, data layer, background jobs, infra.]
+**Constraints**:
 
-- [Non-measurable design rule or boundary from plan.md or spec.md: e.g. backward compatibility requirement, approved library policy, a must-not behavior. Put measurable numeric targets in the Non-Functional Requirements table below, not here.]
+- [Non-measurable design rule or boundary from plan.md or spec.md: backward compatibility, library policy, a must-not behavior. Measurable numeric targets go in the Non-Functional Requirements table, not here.]
 - [Constraint 2]
 
 ## Non-Functional Requirements _(optional)_
 
-> Include only when the source states measurable quality targets (latency, throughput, availability, accuracy, accessibility, and similar). Map each to an ISO 25010 quality category and a numeric target, plus how it is verified. State numbers, not adjectives ("p95 under 250 ms", not "fast"). This table is the single home for measurable numeric targets; do not also list them as bare Technical Constraints bullets. Omit the section entirely when the source names no measurable target, or when the table would only restate the Technical Constraints above without adding the ISO category and verification method.
+> Only when the source states measurable quality targets (latency, throughput, availability, accuracy, accessibility). Map each to an ISO 25010 category and a numeric target, plus how it is verified. State numbers, not adjectives ("p95 under 250 ms", not "fast"). This table is the single home for numeric targets; do not also list them as Constraints bullets. Omit when the source names no measurable target.
 
 | Quality attribute (ISO 25010)                                                                                                                                                          | Target                                     | How verified                                |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------- |
@@ -29,9 +29,11 @@
 
 ## Architectural Approach
 
-[3-6 paragraphs. How the solution fits into the existing architecture. Which components are added, changed, or removed. How they connect and why this structure was chosen over alternatives. Reference component and module names. State the key design principles driving the approach. No code, no framework-specific syntax.]
+> 3-6 paragraphs. How the solution fits the existing architecture, which components are added, changed, or removed, how they connect, and why over alternatives. Reference component and module names. State the key design principles. No code.
 
-> Diagram: a `flowchart` that shows how the components connect. Group layers (frontend, API, data, jobs) into `subgraph` blocks, C4 container/component level. Only include nodes and edges named in the prose above.
+[Paragraphs here.]
+
+> Diagram: a `flowchart` of how the components connect. Group layers (frontend, API, data, jobs) into `subgraph` blocks, C4 container/component level. Only nodes and edges named in the prose above.
 
 ```mermaid
 flowchart TD
@@ -69,11 +71,11 @@ stateDiagram-v2
 
 ## Data Design _(optional)_
 
-> Include only when `plan.md`, `spec.md`, or `data-model.md` contains data model information. Omit the entire section otherwise.
+> Only when `plan.md`, `spec.md`, or `data-model.md` has data model information. Omit otherwise.
 
 ### Data Model
 
-[List the key entities and their main fields at shape level. Sufficient for a reviewer to understand the data contract. No full ORM schema or migration DDL. Use plain text blocks.]
+> Key entities and their main fields at shape level. Enough for a reviewer to understand the data contract. No full ORM schema or migration DDL. Plain text blocks.
 
 ```text
 [Entity name]
@@ -81,7 +83,7 @@ stateDiagram-v2
 - [field]: [type]
 ```
 
-> Diagram: an `erDiagram` for the entities and relationships named above. Only include entities present in the source.
+> Diagram: an `erDiagram` for the entities and relationships named above. Only entities present in the source.
 
 ```mermaid
 erDiagram
@@ -98,9 +100,7 @@ erDiagram
 
 ### Data Flow
 
-[How data moves through the system: what triggers creation or mutation, where it persists, what events or messages are emitted downstream.]
-
-> Diagram: a `flowchart` (or `sequenceDiagram` when ordering matters) tracing how data moves between the components named above.
+> How data moves: what triggers creation or mutation, where it persists, what events flow downstream.
 
 ```mermaid
 flowchart LR
@@ -111,9 +111,7 @@ flowchart LR
 
 ## API Design _(optional)_
 
-> Include only when the feature exposes or modifies any API surface. Omit the entire section otherwise.
-
-[Describe endpoint or operation shapes at a conceptual level. Request and response shapes, key error cases, and important constraints. Not a full OpenAPI spec; enough for a tech lead to assess the surface area and spot design issues.]
+> Only when the feature exposes or modifies an API surface. Endpoint or operation shapes at a conceptual level: request and response shapes, key error cases, important constraints. Not a full OpenAPI spec. Omit otherwise.
 
 ```text
 [METHOD] [/path]
@@ -122,7 +120,7 @@ flowchart LR
   Errors:   [HTTP status or error code]: [meaning]
 ```
 
-> Diagram: a `sequenceDiagram` showing the request/response interaction between the caller and the services that handle it. Include the key error path when the source describes one.
+> Diagram: a `sequenceDiagram` of the request/response interaction between the caller and the services that handle it. Include the key error path when the source describes one.
 
 ```mermaid
 sequenceDiagram
@@ -137,7 +135,7 @@ sequenceDiagram
 
 ## Spec Coverage _(optional)_
 
-> Include only when `spec.md` contains use cases or Gherkin scenarios. Map each use case to the component or operation that implements it. Gaps must be flagged in the Notes column with "GAP".
+> Only when `spec.md` has use cases or Gherkin scenarios. Map each to the component or operation that implements it. Flag gaps with "GAP" in the Notes column.
 
 | Use Case                                | Component / Operation        | Notes                               |
 | --------------------------------------- | ---------------------------- | ----------------------------------- |
@@ -145,7 +143,7 @@ sequenceDiagram
 
 ## Key Technical Decisions _(optional)_
 
-> Include one subsection per significant decision. Omit the entire section when plan.md has no explicit design choices.
+> One subsection per significant decision. Omit when plan.md has no explicit design choices.
 
 ### [Decision title]
 
@@ -164,19 +162,19 @@ sequenceDiagram
 ## Testing Strategy
 
 - **Unit**: [Modules, functions, or classes to cover. Focus on non-trivial logic.]
-- **Integration**: [Cross-component or cross-service flows that must be verified end-to-end at the service level.]
+- **Integration**: [Cross-component or cross-service flows to verify end-to-end at the service level.]
 - **E2E / BDD**: [Spec scenarios to automate as priority. Reference use case IDs when available.]
-- **Observability**: [Key metrics, structured log events, or traces needed to validate correctness in production.]
+- **Observability**: [Key metrics, log events, or traces needed to validate correctness in production.]
 
 ## Rollout and Migration
 
 **Strategy**: [Feature flag / dark launch / gradual rollout / big bang. State which and why.]
-**Data migration**: [Steps required, reversibility, and risk level. Write "None" if no migration is needed.]
+**Data migration**: [Steps, reversibility, and risk level. Write "None" if no migration is needed.]
 **Rollback**: [How to revert if something goes wrong after deployment.]
 
 ## Risks and Mitigations _(optional)_
 
-> Include only when plan.md or spec.md contains concrete risk signals. Omit otherwise.
+> Only when plan.md or spec.md has concrete risk signals. Omit otherwise.
 
 **[Risk title]**
 
@@ -185,7 +183,7 @@ sequenceDiagram
 - **Impact**: [Low / Medium / High]
 - **Mitigation**: [What is in place or planned to reduce this risk.]
 
-> Diagram: a `quadrantChart` plotting each risk above on probability (x) by impact (y). Map Low near 0.2, Medium near 0.5, High near 0.85 on each axis. When risks share a cell, give them a small offset so labels stay readable, never one large enough to imply a difference the prose does not state. Plot only risks named above; never invent one. Omit when there are fewer than two risks, or when every risk lands in the same cell (the plot would add nothing over the prose).
+> Diagram: a `quadrantChart` plotting each risk on probability (x) by impact (y). Map Low near 0.2, Medium near 0.5, High near 0.85. Offset shared cells just enough to keep labels readable. Plot only risks named above. Omit with fewer than two risks, or when every risk lands in the same cell.
 
 ```mermaid
 quadrantChart
@@ -202,6 +200,6 @@ quadrantChart
 
 ## Open Questions _(optional)_
 
-> Include only when unresolved technical decisions remain. Omit otherwise.
+> Only when unresolved technical decisions remain. Omit otherwise.
 
 - [Technical open question, one sentence.]
