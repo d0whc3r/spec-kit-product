@@ -36,17 +36,17 @@
 
 ## Key Decisions _(optional)_
 
-> Only when spec.md has a populated `## Clarifications` section, or confirmed `[NEEDS CLARIFICATION]` markers. Surfaces the decisions that shaped this spec, and flags anything still open.
+> Only when spec.md has a populated `## Clarifications` section, or confirmed `[NEEDS CLARIFICATION]` markers. Surfaces the decisions that shaped this spec, and flags anything still open. Synthesize clarifications that decide the same thing into one entry, even across sessions, so a reader scans decisions instead of every raw question.
 
 These decisions were made while writing this spec. Review them to confirm they still hold, and flag any that have changed.
 
 **[Short noun phrase naming the decision area]**
-[One sentence stating what was chosen and why it matters. Active voice.]
+[One sentence stating what was chosen and why it matters. Active voice. When several clarifications shaped this decision, fold them into this one statement.]
 _Session: YYYY-MM-DD_
 
 **[Short noun phrase naming the decision area]**
 [One sentence.]
-_Session: YYYY-MM-DD_
+_Sessions: YYYY-MM-DD, YYYY-MM-DD_
 
 > **Still open**: These questions were raised but not yet resolved. They should be answered before this feature is built.
 >
