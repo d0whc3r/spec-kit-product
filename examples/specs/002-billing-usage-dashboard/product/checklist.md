@@ -7,11 +7,10 @@
 
 ## Info (`product/00-info.md`)
 
-**Validated**: 2026-05-31 · 19/19 items
+**Validated**: 2026-05-31 · 18/18 items
 
 - [x] Overview present with at least one paragraph
-- [x] Overview is three sentences or fewer
-- [x] Headline present with at least one paragraph
+- [x] Overview is four sentences or fewer
 - [x] What is Changing has at least one item
 - [x] Out of Scope has at least one item
 - [x] Risks included only because the spec has risk signals
@@ -33,17 +32,15 @@
 
 ## Spec (`product/10-spec.md`)
 
-**Validated**: 2026-05-31 · 27/27 items
+**Validated**: 2026-05-31 · 25/25 items
 
-- [x] Headline present with at least one paragraph
-- [x] Target Users and Personas present with at least one persona
-- [x] Problem Statement contains a Job to Be Done statement
-- [x] Value Proposition present
-- [x] Scope lists at least one included capability
-- [x] Out of Scope lists at least one excluded capability
+- [x] Headline present, states the change versus the status quo
+- [x] Users present with at least one persona
+- [x] Problem section contains a Job to Be Done statement
+- [x] Scope lists in-scope and out-of-scope capabilities
 - [x] Use Cases contains at least one use case
 - [x] Success Metrics has one north star and supporting metrics
-- [x] Risks and Open Product Questions present
+- [x] Risks and Open Questions present
 - [x] Sections in canonical order
 - [x] Written entirely in English
 - [x] No em dash present
@@ -67,12 +64,11 @@
 
 ## Plan (`product/20-plan.md`)
 
-**Validated**: 2026-05-31 · 22/22 items
+**Validated**: 2026-05-31 · 21/21 items
 
 - [x] Summary present with at least one paragraph
-- [x] Feature Context has all required fields
-- [x] Goals present with at least three outcome bullets
-- [x] Out of Scope present with at least one item
+- [x] Summary has all required context fields
+- [x] Goals and Non-Goals present with goals and non-goals
 - [x] Delivery Phases present with at least one phase and bullet
 - [x] Delivery Phases contain no time estimates or temporal framing
 - [x] Written entirely in English
@@ -99,7 +95,7 @@
 **Validated**: 2026-05-31 · 23/23 items
 
 - [x] Summary present with at least two sentences
-- [x] Technical Context has all required fields
+- [x] Summary has all required context fields
 - [x] Architectural Approach present with at least three paragraphs
 - [x] Affected Modules table present with at least two rows
 - [x] Data Design present (source has data model content)

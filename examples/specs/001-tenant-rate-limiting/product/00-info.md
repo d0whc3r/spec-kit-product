@@ -6,11 +6,7 @@
 
 ## Overview
 
-The platform serves many customer organizations through a shared API, and one organization sending too many requests can slow the service for everyone. Per-tenant rate limiting gives each organization its own request limits: a cap on requests per minute and a total number of requests each month. It protects shared capacity, enforces fair use, and gives customers and staff a clear view of and control over those limits.
-
-## Headline
-
-This is for the platform's customer organizations and the support and operations staff who manage them. Each organization now has its own request limits, so one customer's traffic spike can no longer degrade service for the others. Customers can see their current usage and remaining allowance in the dashboard, and staff can raise a customer's limits on their own, without waiting for an engineering release.
+The platform serves many customer organizations through a shared API, where one organization sending too many requests can slow the service for everyone. Per-tenant rate limiting gives each organization its own limits: a cap per minute and a total per month, so one customer's spike no longer degrades service for the others. Customers see their usage and remaining allowance in the dashboard, and support and operations staff can raise a customer's limits on their own, without an engineering release.
 
 ## What is Changing
 

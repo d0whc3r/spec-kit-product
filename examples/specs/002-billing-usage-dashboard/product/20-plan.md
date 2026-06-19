@@ -9,8 +9,6 @@
 
 This builds a read-only billing dashboard for organization admins, so they can answer "what will this cost me, and why?" without contacting support. It shows the current plan and included allowances, usage so far this period, and a projected end-of-period total that separates the included plan price from any projected overage. It explains changes by breaking usage down per team and comparing the current period to the previous one, and it can warn admins before an overage is invoiced. The approach reads usage from an existing metering source and stores plans, invoices, alert rules, and cached projections, computing the account total and per-team usage in one pass so the numbers always reconcile.
 
-## Feature Context
-
 **Problem**: Admins cannot tell what they will owe until the invoice arrives, which causes surprise charges and support contacts.
 **For**: Organization admins and billing owners responsible for the account's spend.
 **Change**: They can see a projected bill and its drivers at any time, and be warned before an overage.
@@ -31,7 +29,9 @@ journey
       Export an invoice for finance: 4: Admin
 ```
 
-## Goals
+## Goals and Non-Goals
+
+**Goals**:
 
 - Admins see plan, usage, and a projected bill at a glance.
 - Projected overage is shown separately from the included plan price.
@@ -40,7 +40,7 @@ journey
 - Past invoices can be reviewed and exported for finance.
 - Every panel shows a purposeful empty state for new accounts.
 
-## Out of Scope
+**Non-goals**:
 
 - Changing plans, payments, or disputes, the dashboard is read-only.
 - Creating or managing teams, consumed as existing data.

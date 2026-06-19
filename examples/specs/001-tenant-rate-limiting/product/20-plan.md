@@ -9,8 +9,6 @@
 
 This feature gives every customer organization its own limits on how often it can call the platform API (application programming interface): a cap per minute and a total per month. The work adds a single checkpoint that every authenticated request passes through, which identifies the organization and counts its requests against both limits. Over-limit requests are turned away with a clear response that names which limit was hit and when to retry. Internal staff can adjust an organization's limits on their own, every change is recorded, and customers see their current usage in the dashboard they already use.
 
-## Feature Context
-
 **Problem**: One organization's request surge can slow the shared platform for every other customer.
 **For**: Customer organizations that call the platform, and the internal staff who manage their limits.
 **Change**: Each organization gets its own protected request capacity, visible usage, and staff-adjustable limits.
@@ -31,7 +29,9 @@ journey
       Staff raise it, requests flow again: 5: Customer
 ```
 
-## Goals
+## Goals and Non-Goals
+
+**Goals**:
 
 - Each organization is protected by its own per-minute and monthly limits.
 - One organization's traffic never affects another's accepted requests.
@@ -40,7 +40,7 @@ journey
 - Every limit change is recorded with who, when, and values.
 - Customers see current usage and an early warning in the dashboard.
 
-## Out of Scope
+**Non-goals**:
 
 - Customers raising their own limits; only internal staff can.
 - Overage beyond the monthly quota; organizations are blocked until reset.

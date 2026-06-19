@@ -6,18 +6,14 @@
 
 ## Overview
 
-Organization admins often cannot tell what their bill will be until it arrives, which leads to surprise charges and support tickets. The Self-Serve Billing Usage Dashboard gives admins a single place to see their current plan, usage this period, and a projected end-of-period bill. It also explains what is driving charges and warns admins before an overage happens.
-
-## Headline
-
-This is for organization admins and billing owners who are responsible for what their company spends. Instead of waiting for an invoice to learn what they owe, they can open the dashboard at any time and see where this period's bill is heading. They can find out which teams are driving costs, get an early warning before an overage, and pull past invoices for their finance team. The result is fewer surprise bills and less back-and-forth with support.
+For organization admins and billing owners, the bill is a black box until the invoice arrives, which means surprise charges and support tickets. The Self-Serve Billing Usage Dashboard gives them one place to see the current plan, usage this period, and a projected end-of-period bill. It explains what is driving costs by team and warns before an overage happens, and finance can pull past invoices without a ticket. The result is fewer surprise bills and less back-and-forth with support.
 
 ## What is Changing
 
 - Admins see their current plan and usage in one place.
 - A projected end-of-period bill shows whether an overage is coming.
 - Usage breaks down by team to explain what changed.
-- Admins can be alerted before a projected overage occurs.
+- An alert can fire before a projected overage, not after.
 - Past invoices can be reviewed and exported for finance.
 
 ## Out of Scope

@@ -6,7 +6,7 @@
 
 ## Headline
 
-Organization admins can now see exactly where their bill is heading before it arrives, instead of being surprised by it. The self-serve billing dashboard shows an account's current plan, the usage recorded so far this period, and a projected total for the end of the period. When a bill looks higher than expected, admins can break usage down by team to see what changed, and they can be warned before an overage happens. Finance teams can pull past invoices on their own, without opening a support ticket.
+Organization admins see where this period's bill is heading before the invoice arrives, instead of being surprised by it. Today they learn what they owe only when the bill lands, and answering "why did it change" means a support ticket or a spreadsheet. The dashboard projects the end-of-period total, breaks usage down by team, and warns before an overage happens, all self-serve. The alert is the genuinely new part; the rest already existed but was scattered or invisible, and now sits in one place.
 
 ## Glossary
 
@@ -16,19 +16,17 @@ Organization admins can now see exactly where their bill is heading before it ar
 - **Run-rate projection**: an estimate extending current usage to period end.
 - **Unattributed usage**: usage that cannot be tied to a specific team.
 
-## Target Users and Personas
+## Users
 
 - **Organization admin**: runs the account; wants no surprise bills.
 - **Billing owner**: holds the billing role; tracks spend and overages closely.
-- **Finance teammate**: reconciles invoices; needs exportable, accurate billing records.
+- **Finance teammate**: reconciles invoices; needs exportable, accurate records.
 
-## Problem Statement (Job to Be Done)
-
-**Primary job**:
+## Problem (Job to Be Done)
 
 > When I am responsible for my organization's bill, I want to understand and predict what we will owe, so I can avoid surprise charges and act before costs climb.
 
-**Why this matters now**: No time-sensitive trigger; this is a standing need. Today admins learn what they owe only when the invoice arrives, which drives surprise charges and avoidable support contacts.
+**Why now**: No time-sensitive trigger; this is a standing need. The surprise-bill problem is constant, not tied to a recent change.
 
 ## Assumptions
 
@@ -37,11 +35,9 @@ Organization admins can now see exactly where their bill is heading before it ar
 - Admins want a read-only view; invalid if they expect in-place actions.
 - Each account uses one currency; invalid for multi-currency accounts.
 
-## Value Proposition
-
-Today, admins find out what they owe only when the invoice lands, and answering "why did it change" means a support ticket or a spreadsheet. With this dashboard, they see their projected bill and its drivers at any time, on their own. The proactive overage alert is genuinely new: admins can act before a charge happens, not after. Everything else, including plan details, usage, and invoices, already existed but was scattered or invisible, and now it sits in one self-serve place.
-
 ## Scope
+
+**In scope**:
 
 - Show current plan, allowances, and usage per metered dimension.
 - Project the end-of-period bill, separating included price from overage.
@@ -53,7 +49,7 @@ Today, admins find out what they owe only when the invoice lands, and answering 
 - Purposeful empty states for brand-new accounts.
 - Restrict billing data to admin and billing roles.
 
-## Out of Scope
+**Out of scope**:
 
 - Changing or canceling plans, that stays in existing flows.
 - Making payments or disputing charges, handled elsewhere.
@@ -101,14 +97,14 @@ Today, admins find out what they owe only when the invoice lands, and answering 
 
 - **Surprise-bill support contacts**: down 40% within one quarter of launch.
 
-**Supporting metrics**:
+**Supporting**:
 
 - **Time to projected bill**: under 30 seconds for a new visitor.
 - **Overage alert coverage**: 90% of alerting overage accounts warned pre-invoice.
 - **Invoice export ease**: any invoice exported under one minute, three actions.
 - **Charge-driver comprehension**: 85% of admins identify the main change driver.
 
-## Risks and Open Product Questions
+## Risks and Open Questions
 
 **Risks**:
 
@@ -117,7 +113,7 @@ Today, admins find out what they owe only when the invoice lands, and answering 
 - Per-team usage that fails to reconcile undermines dashboard credibility.
 - Late alerts still leave admins with the surprise bills they feared.
 
-**Open product questions**:
+**Open questions**:
 
 - What default alert threshold ships, and is one enabled by default?
 - Which export format do finance teams need beyond a basic table?

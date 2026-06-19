@@ -6,7 +6,7 @@
 
 ## Headline
 
-Every customer organization on the platform now gets a fair, predictable share of the API, even when a neighbor sends a sudden flood of requests. Until now, one organization's traffic spike could slow the service for everyone, and changing a customer's limit meant waiting for an engineering release. With per-tenant rate limiting, each organization has its own per-minute and monthly request allowance, sees its current usage in the dashboard, and gets a clear, actionable response when it goes over. Support and operations staff can raise a customer's limit on their own, in about a minute, with no release required.
+Every customer organization gets a fair, predictable share of the API, even when a neighbor sends a sudden flood of requests. Until now one organization's spike could slow the service for everyone, and raising a customer's limit meant waiting for an engineering release. Now each organization has its own per-minute and monthly allowance, sees its usage in the dashboard, and gets a clear response with a retry time when it goes over. Support and operations staff raise a limit themselves in about a minute, no release required, which removes a recurring engineering interruption.
 
 ## Glossary
 
@@ -15,19 +15,17 @@ Every customer organization on the platform now gets a fair, predictable share o
 - **Monthly quota**: Total requests an organization may make per calendar month.
 - **Rate limiting**: Capping how many requests an organization makes per window.
 
-## Target Users and Personas
+## Users
 
 - **Customer developer**: Builds on the platform API. Cares about predictable, uninterrupted access.
 - **Customer admin**: Watches their organization's usage. Wants to avoid surprise limits.
 - **Support or operations staff**: Manage customer limits. Want to resolve requests fast.
 
-## Problem Statement (Job to Be Done)
-
-**Primary job**:
+## Problem (Job to Be Done)
 
 > When I depend on a shared platform for my organization's work, I want to keep my request capacity fair and predictable, so I can rely on the service even when other customers spike.
 
-**Why this matters now**: Without per-tenant limits, a single customer's spike can degrade service for everyone, and every limit change waits on an engineering release. Both costs grow as the customer base grows, which makes fair, self-serviceable limits the priority now.
+**Why now**: Without per-tenant limits, a single customer's spike degrades service for everyone, and every limit change waits on an engineering release. Both costs grow with the customer base, which makes fair, self-serviceable limits the priority now.
 
 ## Assumptions
 
@@ -36,11 +34,9 @@ Every customer organization on the platform now gets a fair, predictable share o
 - Tracking failures fail open; invalid if protection outranks availability.
 - A dashboard and tenant identity exist; invalid if missing.
 
-## Value Proposition
-
-Today, one customer's traffic surge can slow the platform for everyone, and a customer who needs a higher limit has to wait for an engineering release. With this feature, each organization gets its own protected capacity, so one customer's spike no longer hurts another. Customers can watch their usage and see a warning before they run out, instead of being surprised by a rejection. Staff resolve limit requests in about a minute on their own, which removes a recurring engineering interruption.
-
 ## Scope
+
+**In scope**:
 
 - Per-minute burst limit enforced for each organization.
 - Monthly request quota enforced for each organization.
@@ -50,7 +46,7 @@ Today, one customer's traffic surge can slow the platform for everyone, and a cu
 - Staff change limits without a release, with an audit trail.
 - Dashboard usage view with an 80% near-limit warning.
 
-## Out of Scope
+**Out of scope**:
 
 - Customers raising their own limits; only internal staff can.
 - Overage or pay-as-you-go beyond the monthly quota; hard-blocked until reset.
@@ -96,13 +92,13 @@ Today, one customer's traffic surge can slow the platform for everyone, and a cu
 
 - **Engineering-free limit changes**: Share of limit-increase requests resolved without engineering, target 100%.
 
-**Supporting metrics**:
+**Supporting**:
 
 - **Self-service retry**: Share of limited callers retrying successfully without support, target 95%.
 - **Usage freshness**: Dashboard usage matches reality within one minute, 99% of views.
 - **Customer isolation**: No measurable effect of one organization's volume on another's rate.
 
-## Risks and Open Product Questions
+## Risks and Open Questions
 
 **Risks**:
 
@@ -111,7 +107,7 @@ Today, one customer's traffic surge can slow the platform for everyone, and a cu
 - Slow limit propagation could break the one-minute change promise.
 - Stale dashboard usage may mislead customers about remaining quota.
 
-**Open product questions**:
+**Open questions**:
 
 - Should the platform fail open or fail closed when tracking is down?
 - Will any tenants need billing-cycle quotas instead of calendar months?

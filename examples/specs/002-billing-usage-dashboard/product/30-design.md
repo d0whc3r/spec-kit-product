@@ -8,11 +8,9 @@
 
 This adds a read-only billing dashboard that spans a frontend surface, four read endpoints plus an export, a set of domain services, a scheduled projection-and-alert job, and a durable billing store. Usage is read from an existing upstream metering source and is never owned here. The central design principle is a single aggregation pass that produces the account total and the per-team plus unattributed split together, so they always reconcile. A scheduled job recomputes the run-rate projection and delivers overage alerts before each invoice is issued.
 
-## Technical Context
-
 **Current state**: Plans, teams, invoices, and metered usage already exist in upstream systems, and there is no self-serve billing view today.
 **Affected layers**: frontend, API layer, domain services, background job, data layer.
-**Technical constraints**:
+**Constraints**:
 
 - Read-only over billing; no plan changes, payments, or disputes.
 - Usage is read from the metering source, never owned.

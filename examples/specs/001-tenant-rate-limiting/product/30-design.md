@@ -6,13 +6,11 @@
 
 ## Summary
 
-This feature enforces two independent per-tenant limits, a per-minute burst limit and a monthly quota, at a single enforcement point in the API request path. A new limiter service checks two atomic counters in Redis, resolves each tenant's effective policy from PostgreSQL (cached in Redis and invalidated on change), and records every limit change in an append-only audit table. An admin API reads and updates a tenant's policy without a deploy, and a tenant-scoped usage API powers a new usage panel in the existing dashboard. Affected layers are the API layer, a new domain service tier, the data layer (Redis and PostgreSQL), and the existing frontend.
-
-## Technical Context
+This feature enforces two independent per-tenant limits, a per-minute burst limit and a monthly quota, at a single enforcement point in the API request path. A new limiter service checks two atomic counters in Redis, resolves each tenant's effective policy from PostgreSQL (cached in Redis and invalidated on change), and records every limit change in an append-only audit table. An admin API reads and updates a tenant's policy without a deploy, and a tenant-scoped usage API powers a new usage panel in the existing dashboard.
 
 **Current state**: The platform authenticates API requests and has an existing dashboard and tenant identity, but applies no per-tenant request limits.
 **Affected layers**: API layer (request-path middleware), domain services, data layer (Redis, PostgreSQL), existing frontend dashboard.
-**Technical constraints**:
+**Constraints**:
 
 - Counters must be atomic under high concurrency.
 - Limit changes must apply without a deploy or restart.
