@@ -1,5 +1,17 @@
 # Changelog
 
+# [0.10.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.9.0...v0.10.0) (2026-06-19)
+
+
+### Bug Fixes
+
+* refactor examples ([0ca7893](https://github.com/d0whc3r/spec-kit-product/commit/0ca789357aa2a5c87dfeff02220a41c3e89981b5))
+
+
+### Features
+
+* simplify docs ([8c5633d](https://github.com/d0whc3r/spec-kit-product/commit/8c5633d19a0d360e36ffc9ecfb2115bf6ee7e0e9))
+
 # [0.9.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.8.3...v0.9.0) (2026-06-19)
 
 
