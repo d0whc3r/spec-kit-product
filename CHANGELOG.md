@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.2](https://github.com/d0whc3r/spec-kit-product/compare/v0.10.1...v0.10.2) (2026-06-20)
+
+
+### Bug Fixes
+
+* refactor mermaid ([d935461](https://github.com/d0whc3r/spec-kit-product/commit/d9354614ef86a62fdb945ad8c48535c69ffd26f5))
+
 ## [0.10.1](https://github.com/d0whc3r/spec-kit-product/compare/v0.10.0...v0.10.1) (2026-06-19)
 
 
