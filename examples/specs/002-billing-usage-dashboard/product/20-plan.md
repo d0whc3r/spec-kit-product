@@ -15,20 +15,6 @@ This builds a read-only billing dashboard for organization admins, so they can a
 **Quality bar**: Panels read quickly enough to grasp the projected bill in seconds, never show a blank or error panel, and per-team usage reconciles exactly to the account total.
 **Constraints**: The dashboard is read-only over billing (no plan changes, payments, or disputes), and overage alerts must reach admins before the invoice is issued.
 
-```mermaid
-journey
-    title Admin checks and controls the bill
-    section Check the bill
-      Open the billing dashboard: 4: Admin
-      See plan, usage, and projected total: 5: Admin
-    section Understand changes
-      Break usage down by team: 4: Admin
-      Compare against the previous period: 4: Admin
-    section Stay ahead
-      Enable a projected-overage alert: 5: Admin
-      Export an invoice for finance: 4: Admin
-```
-
 ## Goals and Non-Goals
 
 **Goals**:
@@ -184,21 +170,6 @@ _Depends on_: Phase 1.
 - **Probability**: Low
 - **Impact**: High
 - **Mitigation**: run the alert job before billing close; dedupe against the log.
-
-```mermaid
-quadrantChart
-    title Risk exposure
-    x-axis Low probability --> High probability
-    y-axis Low impact --> High impact
-    quadrant-1 Mitigate now
-    quadrant-2 Plan contingency
-    quadrant-3 Accept
-    quadrant-4 Monitor and reduce
-    Stale upstream usage: [0.5, 0.85]
-    Inaccurate early projections: [0.5, 0.5]
-    Reconciliation failure: [0.18, 0.85]
-    Late overage alerts: [0.24, 0.88]
-```
 
 ## Divergences and Edge Cases
 

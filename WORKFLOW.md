@@ -166,7 +166,7 @@ High-level product view of the engineering plan. Describes what is being built a
 Output sections (mandatory unless marked optional):
 
 1. **Summary** - what is being built, who it is for, the main approach. No code, no time estimates.
-2. **Feature Context** - six labeled fields: Problem, For, Change, Quality bar, Constraints.
+2. **Feature Context** - five labeled fields: Problem, For, Change, Quality bar, Constraints.
 3. **Goals** - three to six concrete observable outcomes this feature delivers.
 4. **Out of Scope** - explicitly excluded capabilities with a one-phrase reason each.
 5. **Build Overview** _(optional)_ - how the main system parts connect, at C4 container level.
@@ -180,7 +180,7 @@ Output sections (mandatory unless marked optional):
 
 Technical terms are glossed in plain English on first use. No code, no file paths.
 
-Mermaid diagrams are embedded by default, and each one appears only when it earns its place (it shows structure the prose cannot convey, and is not a restatement, a duplicate, or a trivial shape): a `journey` of the persona's flow under Feature Context, a high-level `flowchart` under Build Overview, a dependency `flowchart` under Delivery Phases when the phases branch, and a `quadrantChart` risk matrix under Risks and Mitigations when the risks spread across more than one cell.
+Mermaid diagrams are embedded by default, and each one appears only when it earns its place: it shows how parts connect, the order or dependencies between steps, or transitions between states, and prose conveys that poorly. The plan gets a high-level `flowchart` under Build Overview, and a dependency `flowchart` under Delivery Phases when two or more phases have dependencies that branch. Diagrams are reserved for flows, never for fixed charts like a matrix or quadrant.
 
 ---
 
@@ -215,7 +215,7 @@ Output sections (mandatory unless marked optional):
 12. **Risks and Mitigations** _(optional)_ - pre-mortem lens with probability, impact, mitigation.
 13. **Open Questions** _(optional)_ - unresolved technical decisions as single-sentence questions.
 
-Mermaid diagrams are embedded by default, subject to the same value gate: a `flowchart` of how components connect (C4 level) under Architectural Approach (this one always renders), an `erDiagram` and data-flow diagram under Data Design, a `sequenceDiagram` under API Design, and a `quadrantChart` risk matrix under Risks and Mitigations when the risks spread across more than one cell. A `stateDiagram-v2` is added when the source describes a lifecycle.
+Mermaid diagrams are embedded by default, subject to the same value gate: a `flowchart` of how components connect (C4 level) under Architectural Approach (this one always renders), a `flowchart` or `sequenceDiagram` under Data Design when that section is present (sequence when ordering matters), and a `sequenceDiagram` under API Design when that section is present. A `stateDiagram-v2` is added when the source describes a lifecycle. Diagrams are reserved for flows, never for fixed charts like a matrix or quadrant.
 
 ---
 

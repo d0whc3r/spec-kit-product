@@ -132,32 +132,6 @@ RateLimitDecision (transient, per request)
 - window_resets_at: timestamptz - minute or month boundary
 ```
 
-```mermaid
-erDiagram
-    Tenant ||--o| RateLimitPolicy : "has override"
-    Tenant ||--o{ LimitChangeAuditRecord : "change history"
-    Tenant {
-        string tenant_id
-    }
-    RateLimitPolicy {
-        string tenant_id
-        int burst_limit_per_minute
-        int monthly_quota
-        timestamp updated_at
-        string updated_by
-    }
-    LimitChangeAuditRecord {
-        string id
-        string tenant_id
-        string actor
-        timestamp changed_at
-        int old_burst_limit
-        int new_burst_limit
-        int old_monthly_quota
-        int new_monthly_quota
-    }
-```
-
 ### Data Flow
 
 An inbound request enters the middleware, which resolves the tenant and calls the limiter. The limiter reads the effective policy (cache first, PostgreSQL on a miss) and atomically increments the minute and month counters. An accepted request proceeds; an over-limit request is rejected before the handler runs and consumes no quota. An admin update follows a separate write path: it writes the policy row and the audit record in one transaction, then invalidates the policy cache so the next request resolves the new limit.
@@ -328,18 +302,3 @@ sequenceDiagram
 - **Probability**: Medium
 - **Impact**: Low
 - **Mitigation**: Usage stays fresh within one minute, with early warning.
-
-```mermaid
-quadrantChart
-    title Risk exposure
-    x-axis Low probability --> High probability
-    y-axis Low impact --> High impact
-    quadrant-1 Mitigate now
-    quadrant-2 Plan contingency
-    quadrant-3 Accept
-    quadrant-4 Monitor and reduce
-    Counter store outage: [0.5, 0.85]
-    Counting drift under load: [0.2, 0.85]
-    Cache invalidation lag: [0.2, 0.5]
-    Stale usage view: [0.5, 0.2]
-```

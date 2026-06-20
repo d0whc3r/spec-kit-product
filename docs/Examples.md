@@ -56,12 +56,6 @@ Lumen lets people see their numbers on dashboards. Today they can export one
 dashboard at a time. This feature exports many dashboards at once so the
 people who build weekly reports stop doing it by hand.
 
-## Headline
-
-Analytics leads and customer success teams can now export any selection of
-their dashboards in a single action, as one combined PDF or a zip of PDFs.
-What used to take half an hour of manual work now takes one click.
-
 ## What is Changing
 
 - Users can select more than one dashboard at a time.
@@ -105,7 +99,7 @@ packets, Lumen Bulk Dashboard Export turns thirty minutes of manual export
 work into a single action. Users select any number of dashboards, choose
 combined PDF or zip, and receive the result inline or by email.
 
-## Problem Statement (Job to Be Done)
+## Problem (Job to Be Done)
 
 **Primary job**:
 
@@ -210,39 +204,64 @@ approach before tasks are cut.
 ## What the shared `product/checklist.md` looks like
 
 ```markdown
-# Quality Checklist: Bulk Dashboard Export
+# Product Quality Checklist: Bulk Dashboard Export
 
-## Info
+**Created**: 2026-04-12
+**Legend**: `[x]` auto-validated · `[ ]` needs manual review
 
-- [x] Overview present.
-- [x] Headline present.
-- [x] What is Changing present.
-- [x] Out of Scope present.
-- [x] No em dash.
-- [x] No implementation detail.
+---
 
-## Spec
+## Info (`product/00-info.md`)
 
-- [x] Headline present.
-- [x] Target Users and Personas present.
-- [x] Problem Statement in Ulwick format.
-- [x] Use Cases follow Given/When/Then with one line each.
-- [x] No em dash.
-- [ ] No AI tell filler phrases. ← MANUAL REVIEW REQUIRED
+**Validated**: 2026-04-12 · 6/6 items
 
-## Plan
+- [x] Overview present with at least one paragraph
+- [x] What is Changing present with at least one item
+- [x] Out of Scope present with at least one item
+- [x] Key Decisions present because the spec has clarifications
+- [x] No em dash present
+- [x] No implementation detail present
 
-- [x] Summary present.
-- [x] Goals present.
-- [x] Delivery Phases present.
-- [x] No time estimates.
+---
 
-## Design
+## Spec (`product/10-spec.md`)
 
-- [x] Architectural Approach present.
-- [x] Affected Modules table present.
-- [x] Testing Strategy present.
-- [x] No runnable code in output.
+**Validated**: 2026-04-12 · 5/6 items
+
+- [x] Headline present, states the change versus the status quo
+- [x] Users present with personas
+- [x] Problem section contains a Job to Be Done statement
+- [x] Use Cases follow Given/When/Then with one line each
+- [x] No em dash present
+- [ ] No AI-tell phrases present
+
+---
+
+## Plan (`product/20-plan.md`)
+
+**Validated**: 2026-04-12 · 4/4 items
+
+- [x] Summary present with at least one paragraph
+- [x] Goals and Non-Goals present with goals and non-goals
+- [x] Delivery Phases present, each with bullets
+- [x] No time estimates anywhere in the document
+
+---
+
+## Design (`product/30-design.md`)
+
+**Validated**: 2026-04-12 · 4/4 items
+
+- [x] Architectural Approach present
+- [x] Affected Modules table present
+- [x] Testing Strategy present with Unit, Integration, E2E/BDD, Observability
+- [x] No runnable code; only text and mermaid fenced blocks
+
+---
+
+## Needs Review
+
+- Spec (`product/10-spec.md`), "No AI-tell phrases present": skim the prose for filler and rewrite by hand.
 ```
 
 Items that need manual review are explicitly flagged rather than silently

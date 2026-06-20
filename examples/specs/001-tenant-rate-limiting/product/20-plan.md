@@ -15,20 +15,6 @@ This feature gives every customer organization its own limits on how often it ca
 **Quality bar**: Limits are enforced accurately under heavy load, and usage and limit changes reflect within one minute.
 **Constraints**: When the request-counting store is unavailable, the checkpoint allows requests (fails open) and raises a monitored alert.
 
-```mermaid
-journey
-    title A customer organization manages its API usage
-    section Normal use
-      Send requests within limits: 5: Customer
-      Watch usage in the dashboard: 4: Customer
-    section Hitting a limit
-      Exceed a limit, get a clear response: 2: Customer
-      See a warning before running out: 3: Customer
-    section Getting more room
-      Ask staff to raise the limit: 3: Customer
-      Staff raise it, requests flow again: 5: Customer
-```
-
 ## Goals and Non-Goals
 
 **Goals**:
@@ -169,21 +155,6 @@ _Depends on_: Phase 1 and Phase 2.
 - **Probability**: Medium
 - **Impact**: Low
 - **Mitigation**: Usage stays fresh within one minute, with early warning.
-
-```mermaid
-quadrantChart
-    title Risk exposure
-    x-axis Low probability --> High probability
-    y-axis Low impact --> High impact
-    quadrant-1 Mitigate now
-    quadrant-2 Plan contingency
-    quadrant-3 Accept
-    quadrant-4 Monitor and reduce
-    Counting store outage: [0.5, 0.85]
-    Counting drift under load: [0.2, 0.85]
-    Slow limit propagation: [0.2, 0.5]
-    Stale usage view: [0.5, 0.2]
-```
 
 ## Validation
 

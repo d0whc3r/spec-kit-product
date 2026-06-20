@@ -122,11 +122,10 @@ Mandatory unless marked optional:
 
 Technical terms are glossed in plain English on first use.
 
-Diagrams (by default, subject to the value gate): a `journey` of the persona's
-flow under Feature Context, a high-level `flowchart` under Build Overview, a
-dependency `flowchart` under Delivery Phases when the phases branch, and a
-`quadrantChart` risk matrix under Risks and Mitigations when the risks spread.
-Labels stay plain-language. See [Diagrams](Diagrams.md).
+Diagrams (by default, subject to the value gate): a high-level `flowchart` under
+Build Overview and a dependency `flowchart` under Delivery Phases when the phases
+branch. Diagrams are reserved for flows; labels stay plain-language. See
+[Diagrams](Diagrams.md).
 
 ### Error codes
 
@@ -173,10 +172,9 @@ Mandatory unless marked optional or conditional:
 13. **Open Questions** _(optional)_.
 
 Diagrams (by default, subject to the value gate): a C4-level `flowchart` under
-Architectural Approach (this one always renders), an `erDiagram` plus data-flow
-diagram under Data Design, a `sequenceDiagram` under API Design, and a
-`quadrantChart` risk matrix under Risks and Mitigations when the risks spread. A
-`stateDiagram-v2` is added when the source describes a lifecycle. See
+Architectural Approach (this one always renders), a data-flow diagram under Data
+Design, and a `sequenceDiagram` under API Design. A `stateDiagram-v2` is added
+when the source describes a lifecycle. Diagrams are reserved for flows. See
 [Diagrams](Diagrams.md).
 
 ### Error codes

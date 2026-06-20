@@ -75,7 +75,7 @@
 - [x] Key Decisions follow the mini-ADR format (Context, Options, Decision, Consequence)
 - [x] Risks each have probability, impact, and mitigation
 - [x] Optional sections present only when the source warrants (Divergences and Open Questions omitted)
-- [x] Diagrams present where warranted (journey, two flowcharts, risk quadrant)
+- [x] Diagrams present where warranted (two flowcharts)
 - [x] Mermaid blocks are valid and on-style
 - [x] Each diagram earns its place under the value gate
 - [x] Technical terms glossed on first use (API)
@@ -108,7 +108,7 @@
 - [x] Testing Strategy present with Unit, Integration, E2E/BDD, Observability
 - [x] Rollout and Migration present with Strategy, Data migration, Rollback
 - [x] Optional sections present only when warranted (Open Questions omitted)
-- [x] Diagrams present where warranted (flowchart, ER, data flow, sequence, risk quadrant)
+- [x] Diagrams present where warranted (flowchart, data flow, sequence)
 - [x] Mermaid blocks are valid
 - [x] Each diagram earns its place under the value gate
 - [x] No runnable code; only text and mermaid fenced blocks

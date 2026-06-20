@@ -9,14 +9,16 @@ earns its place. This page explains what gets drawn, when, and what is left out.
 
 A diagram or optional section is emitted only when it shows the reader something
 the prose cannot convey at a glance: connections between parts, ordering or
-dependencies, a flow, a state machine, or a spread across two axes.
+dependencies, a flow, or a state machine. Diagrams are reserved for flows, never
+for charts whose structure is the same every time regardless of content (a
+matrix or quadrant).
 
 It is omitted when it would:
 
 - only re-list what the prose already enumerates,
 - duplicate a relationship another diagram or table already shows, or
-- collapse to a trivial shape (a single node, a straight chain with no
-  branching, or a chart where every point lands in one cell).
+- collapse to a trivial shape (a single node, or a straight chain with no
+  branching).
 
 The rule of thumb: prefer no diagram over a decorative one. If a diagram would
 not teach the reader anything the surrounding text does not, it does not appear.
@@ -27,12 +29,10 @@ place" item so you can confirm this after generation.
 
 ### `/speckit.product.plan`
 
-| Section               | Diagram         | Renders when                                                    |
-| --------------------- | --------------- | --------------------------------------------------------------- |
-| Feature Context       | `journey`       | The spec describes a user-facing flow for the persona.          |
-| Build Overview        | `flowchart`     | The plan has structural content and the parts actually connect. |
-| Delivery Phases       | `flowchart`     | Two or more phases whose dependencies branch.                   |
-| Risks and Mitigations | `quadrantChart` | Two or more risks that do not all land in one cell.             |
+| Section         | Diagram     | Renders when                                                    |
+| --------------- | ----------- | --------------------------------------------------------------- |
+| Build Overview  | `flowchart` | The plan has structural content and the parts actually connect. |
+| Delivery Phases | `flowchart` | Two or more phases whose dependencies branch.                   |
 
 The Delivery Phases flowchart draws one node per phase and an edge for each
 `Depends on`. A set of phases that forms a single straight chain adds nothing
@@ -43,33 +43,16 @@ plan's atemporal style.
 
 ### `/speckit.product.design`
 
-| Section                | Diagram                        | Renders when                                        |
-| ---------------------- | ------------------------------ | --------------------------------------------------- |
-| Architectural Approach | `flowchart`                    | Always. Layers grouped into C4-level subgraphs.     |
-| Architectural Approach | `stateDiagram-v2`              | The source describes a lifecycle or state machine.  |
-| Data Design            | `erDiagram` and a flow diagram | The Data Design section is present.                 |
-| API Design             | `sequenceDiagram`              | The API Design section is present.                  |
-| Risks and Mitigations  | `quadrantChart`                | Two or more risks that do not all land in one cell. |
+| Section                | Diagram                          | Renders when                                                           |
+| ---------------------- | -------------------------------- | ---------------------------------------------------------------------- |
+| Architectural Approach | `flowchart`                      | Always. Layers grouped into C4-level subgraphs.                        |
+| Architectural Approach | `stateDiagram-v2`                | The source describes a lifecycle or state machine.                     |
+| Data Design            | `flowchart` or `sequenceDiagram` | The Data Design section is present and the data flow is worth showing. |
+| API Design             | `sequenceDiagram`                | The API Design section is present.                                     |
 
 The Architectural Approach flowchart is the one diagram that always renders: its
 grouping of components into layers is structure worth showing even for a simple
 design. Every other design diagram follows the value gate.
-
-## The risk matrix (`quadrantChart`)
-
-Both the plan and the design can plot their risks on a probability-by-impact
-matrix. Each point is a risk named in the prose above the chart; nothing is
-invented. Probability and impact map to the axes (Low near the start, Medium
-near the middle, High near the end). When two risks share a cell they get a
-small offset only, never one large enough to imply a difference the prose does
-not state. The chart is omitted when every risk lands in the same cell, because
-then it adds nothing the Probability and Impact lines already say.
-
-The plan and the design surface different risks. The plan lists product and
-outcome risks (for example, abuse during an outage, or default limits that
-throttle legitimate traffic). The design lists technical risks (for example,
-miscounting under concurrency, or a stale cache). The two matrices are not
-copies of each other.
 
 ## Non-Functional Requirements (design)
 

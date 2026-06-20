@@ -155,19 +155,6 @@ AlertEvent  [durable log, dedup ledger]
 - unique (rule_id, period, threshold) => one alert per threshold per period
 ```
 
-```mermaid
-erDiagram
-    Organization ||--o{ Plan : has
-    Organization ||--o{ Team : has
-    Organization ||--o{ MeteredUsage : reads
-    Organization ||--o{ UsageAggregate : materializes
-    Organization ||--o| UsageProjection : caches
-    Organization ||--o{ Invoice : has
-    Invoice ||--|{ InvoiceLineItem : contains
-    Organization ||--o{ AlertRule : has
-    AlertRule ||--o{ AlertEvent : logs
-```
-
 ### Data Flow
 
 On a dashboard read, the overview endpoint asks the projector for the cached projection and the aggregator for the current-period aggregate; the aggregator reads the upstream metering source and the billing store in one pass and materializes the per-team split. The only synchronous write into billing is saving an alert rule. The scheduled job is the only non-request writer of derived data: it recomputes the projection, the alert engine evaluates each enabled rule against it, dedups against the alert-event log, and delivers email and in-app alerts before the period's invoice is issued.
@@ -384,18 +371,3 @@ sequenceDiagram
 - **Probability**: Low
 - **Impact**: High
 - **Mitigation**: run the job before close; dedupe via the event key.
-
-```mermaid
-quadrantChart
-    title Risk exposure
-    x-axis Low probability --> High probability
-    y-axis Low impact --> High impact
-    quadrant-1 Mitigate now
-    quadrant-2 Plan contingency
-    quadrant-3 Accept
-    quadrant-4 Monitor and reduce
-    Upstream metering staleness: [0.5, 0.85]
-    Inaccurate early projection: [0.5, 0.5]
-    Reconciliation drift: [0.18, 0.85]
-    Late overage alerts: [0.24, 0.88]
-```

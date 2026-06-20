@@ -83,21 +83,6 @@ stateDiagram-v2
 - [field]: [type]
 ```
 
-> Diagram: an `erDiagram` for the entities and relationships named above. Only entities present in the source.
-
-```mermaid
-erDiagram
-    ENTITY_A ||--o{ ENTITY_B : has
-    ENTITY_A {
-        string id
-        string name
-    }
-    ENTITY_B {
-        string id
-        string entity_a_id
-    }
-```
-
 ### Data Flow
 
 > How data moves: what triggers creation or mutation, where it persists, what events flow downstream.
@@ -182,21 +167,6 @@ sequenceDiagram
 - **Probability**: [Low / Medium / High]
 - **Impact**: [Low / Medium / High]
 - **Mitigation**: [What is in place or planned to reduce this risk.]
-
-> Diagram: a `quadrantChart` plotting each risk on probability (x) by impact (y). Map Low near 0.2, Medium near 0.5, High near 0.85. Offset shared cells just enough to keep labels readable. Plot only risks named above. Omit with fewer than two risks, or when every risk lands in the same cell.
-
-```mermaid
-quadrantChart
-    title Risk exposure
-    x-axis Low probability --> High probability
-    y-axis Low impact --> High impact
-    quadrant-1 Mitigate now
-    quadrant-2 Plan contingency
-    quadrant-3 Accept
-    quadrant-4 Monitor and reduce
-    [Risk name]: [0.5, 0.85]
-    [Risk name]: [0.2, 0.5]
-```
 
 ## Open Questions _(optional)_
 

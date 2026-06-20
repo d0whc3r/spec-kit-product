@@ -89,9 +89,9 @@ Once direction is confirmed, run the larger command:
 /speckit.product.spec
 ```
 
-This writes `product/10-spec.md` following Working Backwards (PRFAQ), Jobs to
-Be Done, Gherkin BDD, and Lean PRD conventions. Walk the relevant section of
-`product/checklist.md` after generation. Any failed Required item means the
+This writes `product/10-spec.md` and creates or updates `product/checklist.md`,
+following Working Backwards (PRFAQ), Jobs to Be Done, Gherkin BDD, and Lean PRD
+conventions. Walk the relevant section of `product/checklist.md` after generation. Any failed Required item means the
 output should be regenerated.
 
 ## Step 5: Generate plan and design artifacts

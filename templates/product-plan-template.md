@@ -18,18 +18,6 @@
 **Quality bar**: [The observable standard this must meet - speed, reliability, coverage. No internal metrics.]
 **Constraints**: [What this must not do or break. Omit if none.]
 
-> User journey: a `journey` diagram of the steps the persona takes, drawn from the spec use cases. Plain-language labels, no tooling names. Omit when no user-facing flow is described.
-
-```mermaid
-journey
-    title [Persona] completes [goal]
-    section [Stage]
-      [Step the user takes]: 3: [Persona]
-      [Next step]: 4: [Persona]
-    section [Stage]
-      [Step]: 5: [Persona]
-```
-
 ## Goals and Non-Goals
 
 > Two short lists. Goals are concrete outcomes when complete. Non-goals are deliberate exclusions with a one-phrase reason. Always populate non-goals; if it feels empty, look harder.
@@ -113,21 +101,6 @@ _Depends on_: Phase 1.
 - **Probability**: [Low / Medium / High]
 - **Impact**: [Low / Medium / High]
 - **Mitigation**: [What reduces the impact, one sentence.]
-
-> Diagram: a `quadrantChart` plotting each risk on probability (x) by impact (y). Map Low near 0.2, Medium near 0.5, High near 0.85. Offset shared cells just enough to keep labels readable. Plot only risks named above. Omit with fewer than two risks, or when every risk lands in the same cell.
-
-```mermaid
-quadrantChart
-    title Risk exposure
-    x-axis Low probability --> High probability
-    y-axis Low impact --> High impact
-    quadrant-1 Mitigate now
-    quadrant-2 Plan contingency
-    quadrant-3 Accept
-    quadrant-4 Monitor and reduce
-    [Risk name]: [0.5, 0.85]
-    [Risk name]: [0.2, 0.5]
-```
 
 ## Divergences and Edge Cases _(optional)_
 
