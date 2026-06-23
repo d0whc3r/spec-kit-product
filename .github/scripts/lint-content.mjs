@@ -29,8 +29,8 @@ const GUIDE = "templates/humanization-guide.md";
 const CANONICAL_AITELLS =
   '"delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb), "robust" (without a measurable target), "it is worth noting", "it should be noted", "as previously mentioned"';
 
-// Conditional headings that interleave between mandatory ones (e.g. plan's
-// "Build Overview", design's "Data Design") are not listed here; they carry the
+// Conditional headings that interleave between mandatory ones (e.g. design's
+// "Data Design", "API Design") are not listed here; they carry the
 // _(optional)_ marker inline and are validated by the single ordered pass.
 const TEMPLATES = [
   {
@@ -51,8 +51,8 @@ const TEMPLATES = [
   {
     template: "templates/product-info-template.md",
     command: "commands/speckit.product.info.md",
-    mandatory: ["Overview", "What is Changing", "Out of Scope"],
-    optional: ["Risks", "Key Decisions", "References"],
+    mandatory: ["Overview", "What is Changing"],
+    optional: ["Key Decisions", "References"],
     extraRefs: [CHECKLIST],
   },
   {
@@ -60,7 +60,6 @@ const TEMPLATES = [
     command: "commands/speckit.product.plan.md",
     mandatory: ["Summary", "Goals and Non-Goals", "Delivery Phases"],
     optional: [
-      "Key Decisions",
       "Risks and Mitigations",
       "Divergences and Edge Cases",
       "Validation",

@@ -86,7 +86,7 @@
 
 ## Risks and Open Questions
 
-> What could go wrong, plus questions the team has not answered. Every `[NEEDS CLARIFICATION]` marker from the source spec appears here, never silently resolved.
+> Product and adoption risks, plus product questions the team has not answered. This is the home for product-level risk; delivery risks live in the plan and technical risks in the design doc. Every `[NEEDS CLARIFICATION]` marker from the source spec appears here, never silently resolved.
 
 **Risks**:
 

@@ -20,20 +20,6 @@
 - [Bullet here.]
 - [Bullet here.]
 
-## Out of Scope
-
-> What is explicitly not included, even though a reader might expect it. Always populate it. If it feels empty, think harder. One short sentence with a one-phrase reason each.
-
-- [Item excluded, with one short reason.]
-- [Item excluded, with one short reason.]
-
-## Risks _(optional)_
-
-> Pre-mortem: imagine this shipped and quietly failed. Two to four bullets naming the most likely causes, drawn from the spec. Each names the risk and its consequence in one sentence. Omit when the spec has no real risk signal.
-
-- [Risk and its consequence in one sentence.]
-- [Risk and its consequence in one sentence.]
-
 ## Key Decisions _(optional)_
 
 > Only when spec.md has a populated `## Clarifications` section, or confirmed `[NEEDS CLARIFICATION]` markers. Surfaces the decisions that shaped this spec, and flags anything still open. Synthesize clarifications that decide the same thing into one entry, even across sessions, so a reader scans decisions instead of every raw question.

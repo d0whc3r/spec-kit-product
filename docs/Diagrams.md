@@ -29,10 +29,9 @@ place" item so you can confirm this after generation.
 
 ### `/speckit.product.plan`
 
-| Section         | Diagram     | Renders when                                                    |
-| --------------- | ----------- | --------------------------------------------------------------- |
-| Build Overview  | `flowchart` | The plan has structural content and the parts actually connect. |
-| Delivery Phases | `flowchart` | Two or more phases whose dependencies branch.                   |
+| Section         | Diagram     | Renders when                                  |
+| --------------- | ----------- | --------------------------------------------- |
+| Delivery Phases | `flowchart` | Two or more phases whose dependencies branch. |
 
 The Delivery Phases flowchart draws one node per phase and an edge for each
 `Depends on`. A set of phases that forms a single straight chain adds nothing

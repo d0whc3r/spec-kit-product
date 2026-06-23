@@ -181,11 +181,13 @@ its required form.
 
 ### product/00-info.md
 
-Plain-language summary for a non-technical reader. Almost all prose.
+Plain-language summary for a non-technical reader. Almost all prose. The
+one-page digest: scope and risks are owned by the spec, plan, and design docs,
+so this document never carries an Out of Scope or Risks section.
 
-- **Humanize:** Overview, Risks.
-- **Watch:** "What is Changing" and "Out of Scope" are bullet lists prone to
-  parallel openers and uniform shape. This is where the work earns its keep.
+- **Humanize:** Overview, the Key Decisions rationale.
+- **Watch:** "What is Changing" is a bullet list prone to parallel openers and
+  uniform shape. This is where the work earns its keep.
 
 ### product/10-spec.md
 
@@ -199,11 +201,13 @@ Working Backwards, Jobs to Be Done, Gherkin, Lean PRD. The most gated document.
 
 ### product/20-plan.md
 
-Goals, scope, phase breakdown, architecture overview, condensed decisions,
-risks. Technical terms appear but are glossed in plain English on first use.
+Delivery plan: goals and non-goals, phase breakdown, delivery risks. Technical
+terms appear but are glossed in plain English on first use. Architecture,
+principles, and design decisions are owned by the design doc, so they do not
+appear here.
 
-- **Humanize:** the architecture overview prose, decision rationale, risk
-  descriptions, phase descriptions.
+- **Humanize:** the summary approach paragraph, risk descriptions, phase
+  descriptions.
 - **Leave the shape:** phase ordering and declared dependencies, the
   goals/non-goals boundary, any Mermaid block (improve a node label only if it stays
   short, keeps the diagram valid, and uses no em dash).

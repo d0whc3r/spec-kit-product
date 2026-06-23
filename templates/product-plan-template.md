@@ -8,19 +8,13 @@
 
 ## Summary
 
-> One short paragraph (what is being built, who it is for, the main approach), then the context fields. No code, no file paths, no time estimates. Technical terms glossed on first use.
+> One short paragraph on the main approach and how the work is structured. Do not restate the problem or who it is for; those live in the spec. No code, no file paths, no time estimates. Technical terms glossed on first use.
 
 [One paragraph.]
 
-**Problem**: [What is broken or missing today, one sentence.]
-**For**: [Who this serves - role or persona.]
-**Change**: [What is different for them after this ships, one sentence.]
-**Quality bar**: [The observable standard this must meet - speed, reliability, coverage. No internal metrics.]
-**Constraints**: [What this must not do or break. Omit if none.]
-
 ## Goals and Non-Goals
 
-> Two short lists. Goals are concrete outcomes when complete. Non-goals are deliberate exclusions with a one-phrase reason. Always populate non-goals; if it feels empty, look harder.
+> Two short lists scoped to this delivery effort. Goals are the outcomes that mark this build done. Non-goals are deliberate delivery exclusions with a one-phrase reason. Do not restate the spec's Scope bullets; this is about what shipping looks like, not product capabilities. Always populate non-goals; if it feels empty, look harder.
 
 **Goals**:
 
@@ -32,30 +26,6 @@
 
 - [Capability deliberately excluded, one short reason.]
 - [Capability deliberately excluded, one short reason.]
-
-## Build Overview _(optional)_
-
-> Only when the source plan has architecture, component, or structural information. Omit otherwise.
-
-[One paragraph. How the main parts connect and why this structure. Plain language, no code, file names, or framework names.]
-
-- **[Part name]**: [What it does, one sentence. This feature adds / changes / uses it.]
-- **[Part name]**: [What it does, one sentence. This feature adds / changes / uses it.]
-
-> Diagram: a high-level `flowchart` of how the parts connect. Plain-language labels only. Omit when the plan has no structural information.
-
-```mermaid
-flowchart LR
-    A[Part name] --> B[Part name]
-    B --> C[Part name]
-```
-
-## Key Principles _(optional)_
-
-> Only when the source plan states explicit guard rails or core rules. Omit otherwise.
-
-- **[Principle]**: [The rule and why it matters, one sentence.]
-- **[Principle]**: [The rule and why it matters, one sentence.]
 
 ## Delivery Phases
 
@@ -80,20 +50,9 @@ _Depends on_: Phase 1.
 - [What this phase delivers or enables, one sentence.]
 - [What this phase delivers or enables, one sentence.]
 
-## Key Decisions _(optional)_
-
-> Only when the source plan has explicit design decisions. Omit otherwise.
-
-### [Decision title]
-
-**Context**: [What forced a choice, one sentence.]
-**Options considered**: [The two or three alternatives, brief.]
-**Decision**: [What was chosen, one sentence.]
-**Consequence**: [What this enables and forecloses, one sentence.]
-
 ## Risks and Mitigations _(optional)_
 
-> Only when the source plan has concrete risk signals. Omit otherwise.
+> Only when the source plan has concrete delivery risk signals. Scope to delivery and sequencing risks; product risks live in the spec and technical risks in the design doc, so do not restate them here. Omit otherwise.
 
 **[Risk title]**
 
@@ -116,6 +75,6 @@ _Depends on_: Phase 1.
 
 ## Open Questions _(optional)_
 
-> Only when the source plan has open questions or marked assumptions. Omit otherwise.
+> Only when the source plan has open delivery questions or marked assumptions. Scope to delivery; technical open questions live in the design doc, product open questions in the spec. Omit otherwise.
 
-- [Open question, one sentence.]
+- [Open delivery question, one sentence.]

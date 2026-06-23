@@ -63,11 +63,6 @@ people who build weekly reports stop doing it by hand.
 - Output is a single combined PDF or a zip, the user's choice.
 - Exports of up to 50 dashboards run inline; larger jobs are emailed.
 
-## Out of Scope
-
-- Scheduled recurring exports. Tracked as a future feature.
-- Live-data exports. v1 captures a snapshot at export time.
-
 ## Key Decisions
 
 These decisions were made while writing this spec. Review them to confirm
@@ -213,11 +208,10 @@ approach before tasks are cut.
 
 ## Info (`product/00-info.md`)
 
-**Validated**: 2026-04-12 · 6/6 items
+**Validated**: 2026-04-12 · 5/5 items
 
 - [x] Overview present with at least one paragraph
 - [x] What is Changing present with at least one item
-- [x] Out of Scope present with at least one item
 - [x] Key Decisions present because the spec has clarifications
 - [x] No em dash present
 - [x] No implementation detail present

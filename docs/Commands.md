@@ -34,16 +34,16 @@ align stakeholders before committing to the full spec.
 
 ### Output sections
 
-1. **Overview** - two to three sentences on what the feature is and why.
-2. **Headline** - one paragraph on who this is for and what is changing.
-3. **What is Changing** - two to five customer-observable bullets.
-4. **Out of Scope** - what is deliberately excluded.
-5. **Risks** _(optional)_ - present when the spec has concrete risk signals.
-6. **Key Decisions** _(optional)_ - present when `spec.md` has a `## Clarifications`
+1. **Overview** - two to four sentences on what the feature is and why.
+2. **What is Changing** - two to five customer-observable bullets.
+3. **Key Decisions** _(optional)_ - present when `spec.md` has a `## Clarifications`
    section or `[NEEDS CLARIFICATION]` markers. Surfaces resolved decisions and
    flags still-open questions.
-7. **References** _(optional)_ - external links worth surfacing to non-technical
+4. **References** _(optional)_ - external links worth surfacing to non-technical
    readers.
+
+This is the one-page digest. Scope and risks are owned by the spec, plan, and
+design docs, so the info doc never carries an Out of Scope or Risks section.
 
 ### Error codes
 
@@ -106,26 +106,22 @@ no time estimates, no file paths.
 
 Mandatory unless marked optional:
 
-1. **Summary** - what is being built, who it is for, the main approach.
-2. **Feature Context** - Problem, For, Change, Quality bar, Constraints.
-3. **Goals** - three to six concrete observable outcomes.
-4. **Out of Scope** - explicitly excluded with a one-phrase reason each.
-5. **Build Overview** _(optional)_ - main system parts at C4 container level.
-6. **Key Principles** _(optional)_ - explicit guard rails from the plan.
-7. **Delivery Phases** - numbered phases in source order, each with outcomes.
+1. **Summary** - one paragraph on the main approach and how the work is structured.
+2. **Goals and Non-Goals** - delivery outcomes and deliberate delivery exclusions.
+3. **Delivery Phases** - numbered phases in source order, each with outcomes.
    No time estimates, no NOW/NEXT/LATER bands.
-8. **Key Decisions** _(optional)_ - mini-ADR: Context, Options, Decision, Consequence.
-9. **Risks and Mitigations** _(optional)_ - probability, impact, mitigation each.
-10. **Divergences and Edge Cases** _(optional)_.
-11. **Validation** _(optional)_ - observable post-ship conditions.
-12. **Open Questions** _(optional)_.
+4. **Risks and Mitigations** _(optional)_ - delivery risks with probability, impact, mitigation each.
+5. **Divergences and Edge Cases** _(optional)_.
+6. **Validation** _(optional)_ - observable post-ship conditions.
+7. **Open Questions** _(optional)_ - open delivery questions.
 
-Technical terms are glossed in plain English on first use.
+Technical terms are glossed in plain English on first use. Architecture, design
+principles, and key technical decisions are owned by the design doc; the problem
+and audience by the spec. The plan does not repeat them.
 
-Diagrams (by default, subject to the value gate): a high-level `flowchart` under
-Build Overview and a dependency `flowchart` under Delivery Phases when the phases
-branch. Diagrams are reserved for flows; labels stay plain-language. See
-[Diagrams](Diagrams.md).
+Diagrams (by default, subject to the value gate): a dependency `flowchart` under
+Delivery Phases when the phases branch. Diagrams are reserved for flows; labels
+stay plain-language. See [Diagrams](Diagrams.md).
 
 ### Error codes
 

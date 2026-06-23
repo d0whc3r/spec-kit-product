@@ -159,7 +159,7 @@ sequenceDiagram
 
 ## Risks and Mitigations _(optional)_
 
-> Only when plan.md or spec.md has concrete risk signals. Omit otherwise.
+> Only when plan.md or spec.md has concrete technical risk signals. Scope to technical and architectural risks; product risks live in the spec and delivery risks in the plan, so do not restate them here. Omit otherwise.
 
 **[Risk title]**
 
@@ -170,6 +170,6 @@ sequenceDiagram
 
 ## Open Questions _(optional)_
 
-> Only when unresolved technical decisions remain. Omit otherwise.
+> Only when unresolved technical decisions remain. Scope to technical questions; product open questions live in the spec, delivery questions in the plan. Omit otherwise.
 
 - [Technical open question, one sentence.]
