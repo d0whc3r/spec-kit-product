@@ -16,21 +16,6 @@ The platform serves many customer organizations through a shared API, where one 
 - The dashboard shows usage, remaining quota, reset date, and a near-limit warning.
 - Staff can raise a customer's limits without an engineering release.
 
-## Out of Scope
-
-- Customers raising their own limits; only internal staff can.
-- Pay-as-you-go overage beyond the monthly quota, blocked until reset.
-- Counting unauthenticated requests, which the login path already handles.
-- Per-customer billing cycles; limits reset on the calendar month.
-- A new dashboard; usage is added to the existing one.
-
-## Risks
-
-- If usage tracking fails open during an outage, spikes pass unchecked.
-- At about 5,000 requests per second, counting may drift past the 1% target.
-- Raised limits may propagate slowly, missing the one-minute effect promise.
-- Dashboard usage lags up to a minute, so warnings may mislead.
-
 ## Key Decisions
 
 These decisions were made while writing this spec. Review them to confirm they still reflect the right direction, and flag any that have changed.

@@ -7,13 +7,12 @@
 
 ## Info (`product/00-info.md`)
 
-**Validated**: 2026-05-31 · 18/18 items
+**Validated**: 2026-05-31 · 17/17 items
 
 - [x] Overview present with at least one paragraph
 - [x] Overview is four sentences or fewer
 - [x] What is Changing has at least one item
-- [x] Out of Scope has at least one item
-- [x] Risks included only because the spec has risk signals
+- [x] No Out of Scope or Risks section, owned by the spec, plan, and design docs
 - [x] Key Decisions correctly omitted (no clarifications or open questions)
 - [x] Resolved-decision count matches source clarifications (zero)
 - [x] Still-open block correctly omitted (no unresolved markers)
@@ -64,10 +63,10 @@
 
 ## Plan (`product/20-plan.md`)
 
-**Validated**: 2026-05-31 · 21/21 items
+**Validated**: 2026-05-31 · 20/20 items
 
 - [x] Summary present with at least one paragraph
-- [x] Summary has all required context fields
+- [x] Summary is one approach paragraph, no restated Problem/For/Change fields
 - [x] Goals and Non-Goals present with goals and non-goals
 - [x] Delivery Phases present with at least one phase and bullet
 - [x] Delivery Phases contain no time estimates or temporal framing
@@ -82,8 +81,7 @@
 - [x] No time estimates anywhere in the document
 - [x] Technical terms glossed on first use (none required)
 - [x] No invented content (phases match source plan)
-- [x] Key Decisions follow mini-ADR format
-- [x] Risks include probability and impact
+- [x] No Build Overview, Key Principles, or Key Decisions, owned by the design doc
 - [x] Optional sections present only when source warrants
 - [x] No optional marker leaked into a heading
 - [x] Header has real Feature, Source Plan, and Created values

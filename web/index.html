@@ -539,16 +539,16 @@ The dashboard warns a customer once usage reaches 80% of the monthly quota.</cod
 
 This feature adds per-customer request limits to a shared service API. Each
 customer organization gets a per-minute burst limit and a monthly request
-quota. When a caller goes over a limit, the service refuses the request with
-a clear reason and a retry time.
+quota, enforced at a single checkpoint every request passes through. The
+problem and audience live in the spec; the plan covers approach and delivery.
 
-## Feature Context
+## Goals and Non-Goals
 
-**Problem**: One customer's traffic spike can degrade the shared service for
-everyone, with no fair per-customer boundary.
+**Goals**:
 
-**Quality bar**: Limits are enforced accurately under heavy concurrent load,
-with changes and usage reflected within one minute.</code></pre>
+- Each organization is protected by its own per-minute and monthly limits.
+- One organization's traffic never affects another's accepted requests.
+- Over-limit callers get a clear response and a retry time.</code></pre>
                     <p class="example-note">
                       No file paths, no code, no time estimates. The voice a PM can read aloud.
                     </p>

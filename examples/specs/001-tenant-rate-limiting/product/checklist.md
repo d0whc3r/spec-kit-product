@@ -7,13 +7,12 @@
 
 ## Info (`product/00-info.md`)
 
-**Validated**: 2026-05-31 · 18/18 items
+**Validated**: 2026-05-31 · 17/17 items
 
 - [x] Overview present with at least one paragraph
 - [x] Overview is four sentences or fewer
 - [x] What is Changing present with at least one item
-- [x] Out of Scope present with at least one item
-- [x] Risks present and backed by real risk signals in the spec
+- [x] No Out of Scope or Risks section, owned by the spec, plan, and design docs
 - [x] Key Decisions present because the spec has clarifications
 - [x] Key Decisions resolved count matches source clarifications (2)
 - [x] No "Still open" block, since the spec has no unresolved markers
@@ -64,18 +63,17 @@
 
 ## Plan (`product/20-plan.md`)
 
-**Validated**: 2026-05-31 · 21/21 items
+**Validated**: 2026-05-31 · 20/20 items
 
 - [x] Summary present with at least one paragraph
-- [x] Summary has Problem, For, Change, Quality bar, Constraints
+- [x] Summary is one approach paragraph, no restated Problem/For/Change fields
 - [x] Goals and Non-Goals present with goals and non-goals
 - [x] Delivery Phases present with four phases, each with bullets
 - [x] Delivery Phases contain no time estimates or temporal framing
 - [x] No invented content; phases map to the source plan's prioritized stories
-- [x] Key Decisions follow the mini-ADR format (Context, Options, Decision, Consequence)
-- [x] Risks each have probability, impact, and mitigation
-- [x] Optional sections present only when the source warrants (Divergences and Open Questions omitted)
-- [x] Diagrams present where warranted (two flowcharts)
+- [x] No Build Overview, Key Principles, or Key Decisions, owned by the design doc
+- [x] Optional sections present only when warranted (Validation present; Risks, Divergences, Open Questions omitted)
+- [x] Diagrams present where warranted (one Delivery Phases flowchart)
 - [x] Mermaid blocks are valid and on-style
 - [x] Each diagram earns its place under the value gate
 - [x] Technical terms glossed on first use (API)
