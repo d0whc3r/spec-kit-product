@@ -24,7 +24,7 @@ and it is the only way to pin a specific version:
 
 ```bash
 specify extension add product --from \
-  https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.0/product-1.0.0.zip
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.1/product-1.0.1.zip
 ```
 
 To update later, rerun the same command with a newer version URL.

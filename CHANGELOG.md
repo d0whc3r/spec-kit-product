@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/d0whc3r/spec-kit-product/compare/v1.0.0...v1.0.1) (2026-06-27)
+
+
+### Bug Fixes
+
+* update docs ([52b512f](https://github.com/d0whc3r/spec-kit-product/commit/52b512f3b971efc194e8bb7ad009beba2e152cab))
+
 # [1.0.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.11.0...v1.0.0) (2026-06-27)
 
 
