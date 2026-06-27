@@ -8,10 +8,10 @@ web/public/examples/
 upstream-catalog-issue-*.md
 /.specify/
 /specs/
-.agents/skills/speckit-product-*
-.claude/skills/speckit-product-*
-.github/agents/speckit.product.*.agent.md
-.github/prompts/speckit.product.*.prompt.md
+.agents/skills/speckit-*
+.claude/skills/speckit-*
+.github/agents/speckit.*.agent.md
+.github/prompts/speckit.*.prompt.md
 
 # Editor and OS metadata
 .DS_Store
