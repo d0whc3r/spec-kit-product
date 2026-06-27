@@ -30,12 +30,11 @@ canonical `spec.md`. This extension generates four audience-specific
 artifacts from the existing engineering spec, each with an auto-validated
 quality checklist.
 
-## Do I have to run all four commands?
+## Do I have to run all three commands?
 
 No. Stop at the level of detail your audience needs.
 
-- A small change that only needs stakeholder buy-in: just `/speckit.product.info`.
-- A full feature definition: `info` plus `spec`.
+- A change that needs stakeholder buy-in and a full product spec: just `/speckit.product.brief`.
 - A feature in active build: add `plan` and `design`.
 
 Each command stands alone. The four outputs do not depend on each other,

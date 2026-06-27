@@ -13,7 +13,7 @@ body:
     attributes:
       label: Problem
       description: What is the user trying to accomplish, and where does the current extension fall short? Frame this as a Job to Be Done, not a solution.
-      placeholder: When I run /speckit.product.spec on a feature with multiple personas, the generated spec collapses them into one section, so leadership cannot see who is affected.
+      placeholder: When I run /speckit.product.brief on a feature with multiple personas, the generated spec collapses them into one section, so leadership cannot see who is affected.
     validations:
       required: true
 
@@ -39,8 +39,7 @@ body:
       label: Scope
       multiple: true
       options:
-        - /speckit.product.info
-        - /speckit.product.spec
+        - /speckit.product.brief
         - /speckit.product.plan
         - /speckit.product.design
         - Hooks

@@ -2,7 +2,7 @@
 
 Real, end to end examples generated with Spec Kit core and this extension. Each
 example folder holds the **inputs** (`spec.md`, `plan.md`, and the artifacts
-`/speckit.plan` produces) and the **outputs** the four `/speckit.product.*`
+`/speckit.plan` produces) and the **outputs** the three `/speckit.product.*`
 commands wrote under `product/`. Nothing here is hand written: every file was
 produced by running the commands below on a real feature description.
 
@@ -33,7 +33,7 @@ Every feature folder has the same shape:
 
 ```
 <NNN-feature>/
-├── spec.md                  /speckit.specify        (read by info, spec, plan, design)
+├── spec.md                  /speckit.specify        (read by brief, plan, design)
 ├── plan.md                  /speckit.plan           (read by plan, design)
 ├── research.md              /speckit.plan, Phase 0
 ├── data-model.md            /speckit.plan, Phase 1  (read by design)
@@ -42,11 +42,11 @@ Every feature folder has the same shape:
 ├── checklists/
 │   └── requirements.md      /speckit.specify        (not read by product commands)
 └── product/                 this extension's output
-    ├── 00-info.md           /speckit.product.info
-    ├── 10-spec.md           /speckit.product.spec
+    ├── 00-info.md           /speckit.product.brief
+    ├── 10-spec.md           /speckit.product.brief
     ├── 20-plan.md           /speckit.product.plan
     ├── 30-design.md         /speckit.product.design
-    └── checklist.md         shared, updated by all four
+    └── checklist.md         shared, updated by all three
 ```
 
 The files under `contracts/` differ per feature; the rest of the shape is the
@@ -54,14 +54,13 @@ same in every example.
 
 ## Which inputs each command reads
 
-| Command                   | Reads                                          | Writes                 |
-| ------------------------- | ---------------------------------------------- | ---------------------- |
-| `/speckit.product.info`   | `spec.md`                                      | `product/00-info.md`   |
-| `/speckit.product.spec`   | `spec.md`                                      | `product/10-spec.md`   |
-| `/speckit.product.plan`   | `plan.md`, `spec.md`                           | `product/20-plan.md`   |
-| `/speckit.product.design` | `plan.md`, `spec.md`, `data-model.md` (if any) | `product/30-design.md` |
+| Command                   | Reads                                          | Writes                                     |
+| ------------------------- | ---------------------------------------------- | ------------------------------------------ |
+| `/speckit.product.brief`  | `spec.md`                                      | `product/00-info.md`, `product/10-spec.md` |
+| `/speckit.product.plan`   | `plan.md`, `spec.md`                           | `product/20-plan.md`                       |
+| `/speckit.product.design` | `plan.md`, `spec.md`, `data-model.md` (if any) | `product/30-design.md`                     |
 
-`info` and `spec` only need the Spec Kit `spec.md`. `plan` and `design` also
+`brief` only needs the Spec Kit `spec.md`. `plan` and `design` also
 need the engineering `plan.md`, and `design` additionally grounds its Data
 Design section in `data-model.md` when one exists.
 
@@ -81,8 +80,7 @@ Run these in a Spec Kit project with the extension installed (see the repo
 /speckit.plan
 
 # 3. Generate the four product artifacts.
-/speckit.product.info
-/speckit.product.spec
+/speckit.product.brief
 /speckit.product.plan
 /speckit.product.design
 ```

@@ -1,6 +1,6 @@
 # Workflow
 
-How input flows into the four commands, what each one writes, and the order
+How input flows into the three commands, what each one writes, and the order
 to run them in.
 
 ## Input and output flow
@@ -9,8 +9,8 @@ to run them in.
 Spec Kit core               This extension
 ───────────────             ─────────────────────────────────────────────
 
-/speckit.specify ──→ spec.md ──→ /speckit.product.info   → product/00-info.md
-                             └─→ /speckit.product.spec   → product/10-spec.md
+/speckit.specify ──→ spec.md ──→ /speckit.product.brief  ┬─→ product/00-info.md
+                                                         └─→ product/10-spec.md
 
 /speckit.plan ──→ plan.md ──→ /speckit.product.plan      → product/20-plan.md
                          └──→ /speckit.product.design    → product/30-design.md
@@ -18,24 +18,23 @@ Spec Kit core               This extension
                          tasks.md ─────┘ (optional)
                          data-model.md ─┘ (optional)
 
-All four also write to:    product/checklist.md
+All three also write to:   product/checklist.md
 ```
 
 ## Recommended order
 
 Stop at the level of detail your audience needs. You do not need to run all
-four for every feature.
+three for every feature.
 
 ```
 1. /speckit.specify         (core)      creates spec.md
-2. /speckit.product.info                quick stakeholder summary
-3. /speckit.product.spec                full product spec once direction is locked
+2. /speckit.product.brief               stakeholder digest + full product spec
    ── run /speckit.plan (core) before continuing ──
-4. /speckit.product.plan                product-oriented delivery view
-5. /speckit.product.design              technical design for engineers
+3. /speckit.product.plan                product-oriented delivery view
+4. /speckit.product.design              technical design for engineers
 ```
 
-`info` and `spec` need only `spec.md`. `plan` and `design` need `plan.md`,
+`brief` needs only `spec.md`. `plan` and `design` need `plan.md`,
 so run `/speckit.plan` from Spec Kit core first.
 
 ## The `product/` folder
@@ -49,11 +48,11 @@ specs/<feature-dir>/
 ├── tasks.md                 optional input to /speckit.product.design
 ├── data-model.md            optional input to /speckit.product.design
 └── product/
-    ├── 00-info.md           from /speckit.product.info
-    ├── 10-spec.md           from /speckit.product.spec
+    ├── 00-info.md           from /speckit.product.brief
+    ├── 10-spec.md           from /speckit.product.brief
     ├── 20-plan.md           from /speckit.product.plan
     ├── 30-design.md         from /speckit.product.design
-    └── checklist.md         shared, updated by all four
+    └── checklist.md         shared, updated by all three
 ```
 
 No two commands write to the same output file. Each updates a different

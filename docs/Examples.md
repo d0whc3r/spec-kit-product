@@ -43,7 +43,7 @@ dashboards into one combined PDF or a zip of PDFs.
   logo, or both?
 ```
 
-## What `/speckit.product.info` produces
+## What `/speckit.product.brief` produces: `00-info.md`
 
 `product/00-info.md`:
 
@@ -82,7 +82,7 @@ _Session: 2026-04-12_
 Note: the open clarification is surfaced, not silently resolved. The "no em
 dash" and "no implementation detail" rules are visibly enforced.
 
-## What `/speckit.product.spec` produces (selected sections)
+## What `/speckit.product.brief` produces: `10-spec.md` (selected sections)
 
 `product/10-spec.md`:
 
@@ -133,13 +133,20 @@ export action that produces either one combined document or a packaged
 bundle of individual documents. Up to fifty dashboards process inline.
 Larger jobs run in the background and are emailed when ready.
 
-## Goals
+## Goals and Non-Goals
+
+**Goals**:
 
 - Reduce time to produce a weekly multi-dashboard packet from thirty
   minutes to under one minute for jobs up to fifty dashboards.
 - Cap inline export latency at fifteen seconds at the ninety-fifth
   percentile for fifty dashboards.
 - Zero new manual steps required to opt in to the feature.
+
+**Non-goals**:
+
+- No scheduled or recurring exports in this version.
+- No live-data PDFs; exports are a snapshot at request time.
 
 ## Delivery Phases
 

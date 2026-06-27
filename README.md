@@ -10,7 +10,7 @@ The full guide lives in the **[project wiki](https://github.com/d0whc3r/spec-kit
 | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | [Home](https://github.com/d0whc3r/spec-kit-product/wiki/Home)                       | Overview and reading order.                                           |
 | [Getting Started](https://github.com/d0whc3r/spec-kit-product/wiki/Getting-Started) | First install, zero to first generated artifact in five minutes.      |
-| [Commands](https://github.com/d0whc3r/spec-kit-product/wiki/Commands)               | Deep reference for the four `/speckit.product.*` commands.            |
+| [Commands](https://github.com/d0whc3r/spec-kit-product/wiki/Commands)               | Deep reference for the three `/speckit.product.*` commands.           |
 | [Workflow](https://github.com/d0whc3r/spec-kit-product/wiki/Workflow)               | Input and output flow, recommended order, the `product/` layout.      |
 | [Examples](https://github.com/d0whc3r/spec-kit-product/wiki/Examples)               | Sample `spec.md` input and the four artifacts it produces.            |
 | [Style Guide](https://github.com/d0whc3r/spec-kit-product/wiki/Style-Guide)         | The voice rules every generated artifact enforces.                    |
@@ -23,14 +23,13 @@ The wiki is generated from [`docs/`](docs/) on every push to `main`. To browse t
 
 ## At a glance
 
-| Command                   | Reads                               | Writes                 | Audience                       |
-| ------------------------- | ----------------------------------- | ---------------------- | ------------------------------ |
-| `/speckit.product.info`   | `spec.md`                           | `product/00-info.md`   | Any stakeholder, non-technical |
-| `/speckit.product.spec`   | `spec.md`                           | `product/10-spec.md`   | Product managers, leadership   |
-| `/speckit.product.plan`   | `plan.md`, `spec.md`                | `product/20-plan.md`   | PMs, engineering leads         |
-| `/speckit.product.design` | `plan.md`, `spec.md`, optional more | `product/30-design.md` | Tech leads, senior developers  |
+| Command                   | Reads                               | Writes                                     | Audience                         |
+| ------------------------- | ----------------------------------- | ------------------------------------------ | -------------------------------- |
+| `/speckit.product.brief`  | `spec.md`                           | `product/00-info.md`, `product/10-spec.md` | Any stakeholder, PMs, leadership |
+| `/speckit.product.plan`   | `plan.md`, `spec.md`                | `product/20-plan.md`                       | PMs, engineering leads           |
+| `/speckit.product.design` | `plan.md`, `spec.md`, optional more | `product/30-design.md`                     | Tech leads, senior developers    |
 
-All four commands also update their respective section of the shared `product/checklist.md`. No command modifies `spec.md` or `plan.md`.
+All three commands also update their section of the shared `product/checklist.md` (`/speckit.product.brief` writes both the Info and Spec sections). No command modifies `spec.md` or `plan.md`.
 
 ## Source of truth
 

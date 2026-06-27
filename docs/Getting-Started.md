@@ -64,37 +64,31 @@ If you do not already have a feature, run the Spec Kit core command first:
 Fill in the generated `spec.md`. Replace every `[PLACEHOLDER]` with real
 content. The product commands refuse to run on an unfilled spec.
 
-## Step 3: Generate your first artifact
+## Step 3: Generate your first artifacts
 
-Run the lightest command first to validate direction:
-
-```text
-/speckit.product.info
-```
-
-This reads the active feature's `spec.md` and writes:
-
-- `specs/<feature-dir>/product/00-info.md`
-- `specs/<feature-dir>/product/checklist.md`
-
-Open `00-info.md`. It is one rendered page or less, written for any
-stakeholder, with no implementation detail. If something looks wrong, edit
-`spec.md` and rerun the command. The extension never modifies the source.
-
-## Step 4: Generate the full product spec
-
-Once direction is confirmed, run the larger command:
+Run `/speckit.product.brief` first. It reads the active feature's `spec.md` and
+generates the two entry artifacts in a single pass:
 
 ```text
-/speckit.product.spec
+/speckit.product.brief
 ```
 
-This writes `product/10-spec.md` and creates or updates `product/checklist.md`,
-following Working Backwards (PRFAQ), Jobs to Be Done, Gherkin BDD, and Lean PRD
-conventions. Walk the relevant section of `product/checklist.md` after generation. Any failed Required item means the
-output should be regenerated.
+This writes:
 
-## Step 5: Generate plan and design artifacts
+- `specs/<feature-dir>/product/00-info.md`, the one-page non-technical digest.
+- `specs/<feature-dir>/product/10-spec.md`, the full product spec following
+  Working Backwards (PRFAQ), Jobs to Be Done, Gherkin BDD, and Lean PRD
+  conventions.
+- `specs/<feature-dir>/product/checklist.md`.
+
+Open `00-info.md` first. It is one rendered page or less, written for any
+stakeholder, with no implementation detail. Then read `10-spec.md` for the
+structured detail. Walk the relevant sections of `product/checklist.md` after
+generation; any failed Required item means the output should be regenerated. If
+something looks wrong, edit `spec.md` and rerun the command. The extension never
+modifies the source.
+
+## Step 4: Generate plan and design artifacts
 
 After you have a Spec Kit `plan.md` for the feature (run `/speckit.plan` from
 core), you can generate the engineering and technical views:
@@ -114,7 +108,7 @@ By default each command reads the active feature pointer at
 `.specify/feature.json`. To override:
 
 ```text
-/speckit.product.info --feature-dir specs/002-some-other-feature
+/speckit.product.brief --feature-dir specs/002-some-other-feature
 ```
 
 ## What next

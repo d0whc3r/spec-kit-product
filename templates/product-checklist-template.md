@@ -7,13 +7,13 @@
 
 ## Info (`product/00-info.md`)
 
-> Not yet generated. Run `/speckit.product.info` to validate this section.
+> Not yet generated. Run `/speckit.product.brief` to validate this section.
 
 ---
 
 ## Spec (`product/10-spec.md`)
 
-> Not yet generated. Run `/speckit.product.spec` to validate this section.
+> Not yet generated. Run `/speckit.product.brief` to validate this section.
 
 ---
 

@@ -1,14 +1,13 @@
 # Commands Reference
 
-Four slash commands. All read from a feature directory under `specs/` and
+Three slash commands. All read from a feature directory under `specs/` and
 write into `product/` inside that directory. None modify the source files.
 
-| Command                                            | Reads                                                      | Writes                             | Audience                       |
-| -------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------- | ------------------------------ |
-| [`/speckit.product.info`](#speckitproductinfo)     | `spec.md`                                                  | `product/00-info.md` + checklist   | Any stakeholder, non-technical |
-| [`/speckit.product.spec`](#speckitproductspec)     | `spec.md`                                                  | `product/10-spec.md` + checklist   | Product managers, leadership   |
-| [`/speckit.product.plan`](#speckitproductplan)     | `plan.md` (required), `spec.md` (supplementary)            | `product/20-plan.md` + checklist   | PMs, engineering leads         |
-| [`/speckit.product.design`](#speckitproductdesign) | `plan.md`, `spec.md`, optional `tasks.md`, `data-model.md` | `product/30-design.md` + checklist | Tech leads, senior developers  |
+| Command                                            | Reads                                                      | Writes                                                 | Audience                         |
+| -------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------ | -------------------------------- |
+| [`/speckit.product.brief`](#speckitproductbrief)   | `spec.md`                                                  | `product/00-info.md`, `product/10-spec.md` + checklist | Any stakeholder, PMs, leadership |
+| [`/speckit.product.plan`](#speckitproductplan)     | `plan.md` (required), `spec.md` (supplementary)            | `product/20-plan.md` + checklist                       | PMs, engineering leads           |
+| [`/speckit.product.design`](#speckitproductdesign) | `plan.md`, `spec.md`, optional `tasks.md`, `data-model.md` | `product/30-design.md` + checklist                     | Tech leads, senior developers    |
 
 Every command accepts `--feature-dir specs/<feature-dir>` to target a specific
 feature directory. Without it, the active feature pointer at
@@ -24,15 +23,18 @@ summary.
 
 ---
 
-## `/speckit.product.info`
+## `/speckit.product.brief`
 
-Short, non-technical summary. One rendered page or less. Run this early to
-align stakeholders before committing to the full spec.
+Generates the two entry artifacts in a single pass: `product/00-info.md`, the
+one-page non-technical digest, and `product/10-spec.md`, the structured product
+spec a stakeholder reads after the digest. The spec is not fully legible without
+the info, so the two are generated together. Run this first, before any
+engineering plan exists.
 
 **Reads**: `spec.md`
-**Writes**: `product/00-info.md`, `product/checklist.md` (`## Info` section only)
+**Writes**: `product/00-info.md`, `product/10-spec.md`, `product/checklist.md` (`## Info` and `## Spec` sections only)
 
-### Output sections
+### `product/00-info.md` output sections
 
 1. **Overview** - two to four sentences on what the feature is and why.
 2. **What is Changing** - two to five customer-observable bullets.
@@ -44,6 +46,24 @@ align stakeholders before committing to the full spec.
 
 This is the one-page digest. Scope and risks are owned by the spec, plan, and
 design docs, so the info doc never carries an Out of Scope or Risks section.
+
+### `product/10-spec.md` output sections
+
+Mandatory unless marked optional:
+
+1. **Headline** - press release voice, merging the customer, the new outcome, and
+   the value versus the status quo.
+2. **Glossary** _(optional)_ - domain terms in plain language.
+3. **Users** - named roles and what each cares about.
+4. **Problem (Job to Be Done)** - Ulwick format: "When..., I want to..., so I can...".
+5. **Assumptions** _(optional)_ - conditions believed true but not confirmed.
+6. **Scope** - finite list of included capabilities.
+7. **Use Cases** - Gherkin scenarios, customer-observable only.
+8. **Success Metrics** - one north star, at least one supporting, both tech-agnostic.
+9. **Risks and Open Questions** - including any `[NEEDS CLARIFICATION]`
+   markers surfaced from `spec.md`.
+10. **Positioning** _(optional)_ - external users or competing alternatives.
+11. **Go to Market and Rollout** _(optional)_ - when a launch motion exists.
 
 ### Error codes
 
@@ -57,39 +77,6 @@ design docs, so the info doc never carries an Out of Scope or Risks section.
 | `E_USER_ABORT`   | You answered "no" at the overwrite or clarification prompt. |
 
 `E_NO_PROJECT` and `E_NO_POINTER` come from Spec Kit core's feature resolver and are surfaced verbatim. They are not codes this extension emits. The rest are emitted by the command.
-
----
-
-## `/speckit.product.spec`
-
-Full product spec following Working Backwards (PRFAQ), Jobs to Be Done,
-Gherkin BDD, and Lean PRD conventions. Use once direction is confirmed.
-
-**Reads**: `spec.md`
-**Writes**: `product/10-spec.md`, `product/checklist.md` (`## Spec` section only)
-
-### Output sections
-
-Mandatory unless marked optional:
-
-1. **Headline** - press release voice, customer and new outcome.
-2. **Glossary** _(optional)_ - domain terms in plain language.
-3. **Target Users and Personas** - named roles and what each cares about.
-4. **Problem Statement** - Ulwick format: "When..., I want to..., so I can...".
-5. **Assumptions** _(optional)_ - conditions believed true but not confirmed.
-6. **Value Proposition** - what changes in the user's life vs the status quo.
-7. **Scope** - finite list of included capabilities.
-8. **Out of Scope** - explicitly excluded with a one-phrase reason each.
-9. **Use Cases** - Gherkin scenarios, customer-observable only.
-10. **Success Metrics** - one north star, at least one supporting, both tech-agnostic.
-11. **Risks and Open Product Questions** - including any `[NEEDS CLARIFICATION]`
-    markers surfaced from `spec.md`.
-12. **Positioning** _(optional)_ - external users or competing alternatives.
-13. **Go to Market and Rollout** _(optional)_ - when a launch motion exists.
-
-### Error codes
-
-Same set as `/speckit.product.info`.
 
 ---
 
@@ -132,7 +119,7 @@ stay plain-language. See [Diagrams](Diagrams.md).
 | `E_LANGUAGE`     | `plan.md` is not in English.                             |
 | `E_USER_ABORT`   | You answered "no" at the overwrite prompt.               |
 
-Plus the project-resolution errors from `info`/`spec`.
+Plus the project-resolution errors listed under `brief`.
 
 ---
 
@@ -151,21 +138,22 @@ implementation detail.
 
 Mandatory unless marked optional or conditional:
 
-1. **Summary** - what is being built technically, layers affected.
-2. **Technical Context** - current state, affected layers, non-measurable constraints.
-3. **Non-Functional Requirements** _(conditional)_ - measurable quality targets
+1. **Summary** - what is being built technically and the key architectural
+   approach, then three fields: current state, affected layers, and
+   non-measurable constraints.
+2. **Non-Functional Requirements** _(conditional)_ - measurable quality targets
    mapped to ISO 25010 categories and how each is verified.
-4. **Architectural Approach** - components added, changed, removed.
-5. **Affected Modules** - table: module, change type, responsibility.
-6. **Data Design** _(conditional)_ - entity shapes and data flow.
-7. **API Design** _(conditional)_ - request/response shapes and error cases.
-8. **Spec Coverage** _(conditional)_ - table mapping each spec use case to
+3. **Architectural Approach** - components added, changed, removed.
+4. **Affected Modules** - table: module, change type, responsibility.
+5. **Data Design** _(conditional)_ - entity shapes and data flow.
+6. **API Design** _(conditional)_ - request/response shapes and error cases.
+7. **Spec Coverage** _(conditional)_ - table mapping each spec use case to
    its implementing component. Gaps marked explicitly.
-9. **Key Technical Decisions** _(optional)_ - ADR format.
-10. **Testing Strategy** - Unit, Integration, E2E/BDD, Observability.
-11. **Rollout and Migration** - strategy, data migration, rollback.
-12. **Risks and Mitigations** _(optional)_.
-13. **Open Questions** _(optional)_.
+8. **Key Technical Decisions** _(optional)_ - ADR format.
+9. **Testing Strategy** - Unit, Integration, E2E/BDD, Observability.
+10. **Rollout and Migration** - strategy, data migration, rollback.
+11. **Risks and Mitigations** _(optional)_.
+12. **Open Questions** _(optional)_.
 
 Diagrams (by default, subject to the value gate): a C4-level `flowchart` under
 Architectural Approach (this one always renders), a data-flow diagram under Data
@@ -187,10 +175,9 @@ when the source describes a lifecycle. Diagrams are reserved for flows. See
 
 ## The shared checklist
 
-Every command updates one section of `product/checklist.md`:
+Each command updates its section or sections of `product/checklist.md`:
 
-- `/speckit.product.info` writes `## Info`.
-- `/speckit.product.spec` writes `## Spec`.
+- `/speckit.product.brief` writes `## Info` and `## Spec`.
 - `/speckit.product.plan` writes `## Plan`.
 - `/speckit.product.design` writes `## Design`.
 
@@ -204,13 +191,12 @@ The extension registers three optional hook handlers, one per Spec Kit hook
 event (declared in `extension.yml`). The host agent asks before running each
 handler.
 
-| Hook            | Triggers after     | Command                 |
-| --------------- | ------------------ | ----------------------- |
-| `after_specify` | `/speckit.specify` | `/speckit.product.info` |
-| `after_clarify` | `/speckit.clarify` | `/speckit.product.info` |
-| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan` |
+| Hook            | Triggers after     | Command                  |
+| --------------- | ------------------ | ------------------------ |
+| `after_specify` | `/speckit.specify` | `/speckit.product.brief` |
+| `after_clarify` | `/speckit.clarify` | `/speckit.product.brief` |
+| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`  |
 
 Each hook is `optional: true`. The host agent prompts before running and the
-user can decline. Richer artifacts (`/speckit.product.spec`,
-`/speckit.product.design`) are not auto-prompted; run them explicitly when
-you need them.
+user can decline. The richer artifact (`/speckit.product.design`) is not
+auto-prompted; run it explicitly when you need it.

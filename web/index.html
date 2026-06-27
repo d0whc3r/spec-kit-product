@@ -122,7 +122,7 @@ specify extension add product</code></pre>
           </div>
 
           <ul class="hero-badges">
-            <li>4 commands</li>
+            <li>3 commands</li>
             <li>Requires Spec Kit &gt;= 0.2.0</li>
             <li>MIT licensed</li>
             <li>No em dashes, plain English</li>
@@ -171,7 +171,7 @@ specify extension add product</code></pre>
 
       <section class="section section-alt" id="commands">
         <div class="container">
-          <h2>The four commands</h2>
+          <h2>The commands</h2>
           <p class="section-lede">
             Each command stands alone and reads from a feature directory under
             <code>specs/</code>. Stop at the level of detail your audience needs.
@@ -189,16 +189,10 @@ specify extension add product</code></pre>
               </thead>
               <tbody>
                 <tr>
-                  <td><code>/speckit.product.info</code></td>
+                  <td><code>/speckit.product.brief</code></td>
                   <td><code>spec.md</code></td>
-                  <td><code>product/00-info.md</code></td>
-                  <td>Any stakeholder, non-technical</td>
-                </tr>
-                <tr>
-                  <td><code>/speckit.product.spec</code></td>
-                  <td><code>spec.md</code></td>
-                  <td><code>product/10-spec.md</code></td>
-                  <td>Product managers, leadership</td>
+                  <td><code>product/00-info.md</code>, <code>product/10-spec.md</code></td>
+                  <td>Any stakeholder, PMs, leadership</td>
                 </tr>
                 <tr>
                   <td><code>/speckit.product.plan</code></td>
@@ -216,7 +210,7 @@ specify extension add product</code></pre>
             </table>
           </div>
           <p class="note">
-            All four also update the shared <code>product/checklist.md</code>. None of them modify
+            All three also update the shared <code>product/checklist.md</code>. None of them modify
             <code>spec.md</code>, <code>plan.md</code>, or any other source file. Pass
             <code>--feature-dir specs/&lt;dir&gt;</code> to target a specific feature instead of the
             active one.
@@ -275,7 +269,7 @@ specify extension add product</code></pre>
                   aria-selected="true"
                   aria-controls="panel-ex-info"
                 >
-                  /speckit.product.info
+                  brief: 00-info.md
                 </button>
                 <button
                   id="tab-ex-spec"
@@ -284,7 +278,7 @@ specify extension add product</code></pre>
                   aria-selected="false"
                   aria-controls="panel-ex-spec"
                 >
-                  /speckit.product.spec
+                  brief: 10-spec.md
                 </button>
                 <button
                   id="tab-ex-plan"
@@ -494,22 +488,15 @@ The dashboard warns a customer once usage reaches 80% of the monthly quota.</cod
                         View full file
                       </button>
                     </div>
-                    <pre class="md-source"><code>## Problem Statement (Job to Be Done)
+                    <pre class="md-source"><code>## Users
 
-**Primary job**:
+- **Customer developer**: Builds on the platform API. Cares about predictable, uninterrupted access.
+- **Customer admin**: Watches their organization's usage. Wants to avoid surprise limits.
+- **Support or operations staff**: Manage customer limits. Want to resolve requests fast.
 
-> When my organization depends on a shared service for its daily work, I
-> want to keep steady access regardless of what other customers do, so I can
-> serve my own users without interruption.
+## Problem (Job to Be Done)
 
-## Target Users and Personas
-
-- **Customer organization developer**: Builds on our service. Cares about
-  predictable, uninterrupted access.
-- **Customer organization admin**: Manages the account. Cares about staying
-  within plan limits.
-- **Internal support staff**: Helps customers. Cares about resolving limit
-  requests without engineering.</code></pre>
+> When I depend on a shared platform for my organization's work, I want to keep my request capacity fair and predictable, so I can rely on the service even when other customers spike.</code></pre>
                     <p class="example-note">
                       A Job to Be Done statement and named personas. The PRD voice the checklist
                       enforces.
@@ -615,14 +602,14 @@ at a single choke point, no individual handler needs to know about limiting.
 
 ## Info (`product/00-info.md`)
 
-- [x] Overview is three sentences or fewer
+- [x] Overview is four sentences or fewer
 - [x] No em dash
 - [x] No AI tells
 - [x] No implementation detail
 
 ## Spec (`product/10-spec.md`)
 
-- [x] Problem Statement contains a Job to Be Done statement
+- [x] Problem section contains a Job to Be Done statement
 - [x] Use Cases follow Given/When/Then
 - [ ] No AI tell filler phrases</code></pre>
                     <p class="example-note">
@@ -650,7 +637,7 @@ at a single choke point, no individual handler needs to know about limiting.
                   aria-selected="true"
                   aria-controls="panel-ex2-info"
                 >
-                  /speckit.product.info
+                  brief: 00-info.md
                 </button>
                 <button
                   id="tab-ex2-spec"
@@ -659,7 +646,7 @@ at a single choke point, no individual handler needs to know about limiting.
                   aria-selected="false"
                   aria-controls="panel-ex2-spec"
                 >
-                  /speckit.product.spec
+                  brief: 10-spec.md
                 </button>
                 <button
                   id="tab-ex2-plan"
@@ -849,19 +836,15 @@ surprise bills by showing what is driving charges.
                         View full file
                       </button>
                     </div>
-                    <pre class="md-source"><code>## Problem Statement (Job to Be Done)
+                    <pre class="md-source"><code>## Users
 
-**Primary job**:
+- **Organization admin**: runs the account; wants no surprise bills.
+- **Billing owner**: holds the billing role; tracks spend and overages closely.
+- **Finance teammate**: reconciles invoices; needs exportable, accurate records.
 
-&gt; When my organization is using a billed product during the month, I want to
-&gt; understand expected charges and their causes, so I can prevent surprises and
-&gt; explain costs before the invoice arrives.
+## Problem (Job to Be Done)
 
-## Target Users and Personas
-
-- **Organization admin**: Owns account health and avoids billing surprises.
-- **Billing manager**: Reviews invoices and reconciles costs for finance.
-- **Team lead**: Explains why their team changed account usage.</code></pre>
+&gt; When I am responsible for my organization's bill, I want to understand and predict what we will owe, so I can avoid surprise charges and act before costs climb.</code></pre>
                     <p class="example-note">
                       A Job to Be Done statement and named personas. The PRD voice the checklist
                       enforces.
@@ -962,13 +945,13 @@ to services rather than reading upstream systems directly.</code></pre>
 
 ## Info (`product/00-info.md`)
 
-- [x] Overview is three sentences or fewer
+- [x] Overview is four sentences or fewer
 - [x] No em dash
 - [x] No implementation detail
 
 ## Spec (`product/10-spec.md`)
 
-- [x] Problem Statement contains a Job to Be Done
+- [x] Problem section contains a Job to Be Done
 - [x] Use Cases follow Given/When/Then
 - [x] No AI tells</code></pre>
                     <p class="example-note">
@@ -1043,22 +1026,21 @@ ls .specify/extensions/product      # extension files present</code></pre>
               <pre data-copy><code>/speckit.specify</code></pre>
             </li>
             <li>
-              <h3>Generate your first artifact</h3>
+              <h3>Generate your first artifacts</h3>
               <p>
-                Run the lightest command first to validate direction. It writes
-                <code>product/00-info.md</code> and <code>product/checklist.md</code>.
+                Run <code>/speckit.product.brief</code> first. It writes
+                <code>product/00-info.md</code>, <code>product/10-spec.md</code>, and
+                <code>product/checklist.md</code>.
               </p>
-              <pre data-copy><code>/speckit.product.info</code></pre>
+              <pre data-copy><code>/speckit.product.brief</code></pre>
             </li>
             <li>
               <h3>Generate the full set</h3>
               <p>
-                Once direction is confirmed, generate the spec. After you have a Spec Kit
-                <code>plan.md</code> (run <code>/speckit.plan</code>), add the plan and design
-                views.
+                After you have a Spec Kit <code>plan.md</code> (run <code>/speckit.plan</code>), add
+                the plan and design views.
               </p>
-              <pre data-copy><code>/speckit.product.spec
-/speckit.product.plan
+              <pre data-copy><code>/speckit.product.plan
 /speckit.product.design</code></pre>
             </li>
           </ol>
@@ -1075,13 +1057,13 @@ ls .specify/extensions/product      # extension files present</code></pre>
           <pre class="flow"><code>Spec Kit core               This extension
 ---------------             -----------------------------------------------
 
-/speckit.specify --> spec.md --> /speckit.product.info   -> product/00-info.md
-                            \--> /speckit.product.spec   -> product/10-spec.md
+/speckit.specify --> spec.md --> /speckit.product.brief  +-> product/00-info.md
+                                                         \-> product/10-spec.md
 
 /speckit.plan --> plan.md --> /speckit.product.plan      -> product/20-plan.md
                         \---> /speckit.product.design    -> product/30-design.md
 
-All four also write to:    product/checklist.md</code></pre>
+All three also write to:   product/checklist.md</code></pre>
           <p class="note">
             The <code>product/</code> folder is self-contained. Zip it, attach it to a doc, paste it
             into a slide deck. No engineering scaffolding needs to travel with it.
@@ -1168,12 +1150,11 @@ specify extension update product</code></pre>
               </p>
             </details>
             <details>
-              <summary>Do I have to run all four commands?</summary>
+              <summary>Do I have to run all three commands?</summary>
               <p>
-                No. Stop at the level of detail your audience needs. A small change that needs only
-                stakeholder buy-in is just
-                <code>/speckit.product.info</code>. A full feature definition is
-                <code>info</code> plus <code>spec</code>. A feature in active build adds
+                No. Stop at the level of detail your audience needs. A change that needs stakeholder
+                buy-in and a full product spec is just
+                <code>/speckit.product.brief</code>. A feature in active build adds
                 <code>plan</code> and <code>design</code>.
               </p>
             </details>

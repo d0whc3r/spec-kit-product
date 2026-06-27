@@ -22,8 +22,7 @@ body:
       label: Affected command
       description: Which extension command exposed the bug? Pick "Other" for hook, manifest, or template issues.
       options:
-        - /speckit.product.info
-        - /speckit.product.spec
+        - /speckit.product.brief
         - /speckit.product.plan
         - /speckit.product.design
         - Hook (after_specify, after_clarify, after_plan)
@@ -72,7 +71,7 @@ body:
       description: Exact steps a maintainer can follow. Include the source `spec.md` or `plan.md` snippets that triggered the bug if relevant.
       placeholder: |
         1. Install the extension at version X.
-        2. Run `/speckit.product.spec` against the attached `spec.md`.
+        2. Run `/speckit.product.brief` against the attached `spec.md`.
         3. Observe the generated `product/10-spec.md`.
     validations:
       required: true
