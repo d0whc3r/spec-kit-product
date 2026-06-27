@@ -14,7 +14,7 @@
     "speckit_version": ">=0.2.0"
   },
   "provides": {
-    "commands": 4,
+    "commands": 3,
     "hooks": 3
   },
   "tags": [

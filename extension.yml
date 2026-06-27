@@ -15,12 +15,9 @@ requires:
 
 provides:
   commands:
-    - name: speckit.product.spec
-      file: commands/speckit.product.spec.md
-      description: "Generate a product spec and quality checklist from the current feature's spec.md"
-    - name: speckit.product.info
-      file: commands/speckit.product.info.md
-      description: "Generate a short, stakeholder-readable product-info.md from the current feature's spec.md"
+    - name: speckit.product.brief
+      file: commands/speckit.product.brief.md
+      description: "Generate product/00-info.md and product/10-spec.md together from the current feature's spec.md, then update the shared quality checklist"
     - name: speckit.product.plan
       file: commands/speckit.product.plan.md
       description: "Generate a high-level, product-oriented plan from the current feature's plan.md"
@@ -30,15 +27,15 @@ provides:
 
 hooks:
   after_specify:
-    command: speckit.product.info
+    command: speckit.product.brief
     optional: true
-    prompt: "Generate the stakeholder summary product/00-info.md from the new spec.md?"
-    description: "Generate product/00-info.md from spec.md (recommended first artifact)"
+    prompt: "Generate the product brief (product/00-info.md + product/10-spec.md) from the new spec.md?"
+    description: "Generate product/00-info.md and product/10-spec.md from spec.md (recommended first artifacts)"
   after_clarify:
-    command: speckit.product.info
+    command: speckit.product.brief
     optional: true
-    prompt: "Regenerate the stakeholder summary after clarification?"
-    description: "Update product/00-info.md from the clarified spec.md"
+    prompt: "Regenerate the product brief after clarification?"
+    description: "Update product/00-info.md and product/10-spec.md from the clarified spec.md"
   after_plan:
     command: speckit.product.plan
     optional: true
