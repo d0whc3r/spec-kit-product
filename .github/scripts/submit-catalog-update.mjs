@@ -167,6 +167,14 @@ ${catalog.requires?.speckit_version}
 
 None. This extension is plain Markdown command and template text. It adds no external tool or runtime dependencies beyond Spec Kit itself.
 
+### Category
+
+${catalog.category ?? "docs"}
+
+### Effect
+
+${catalog.effect ?? "read-write"}
+
 ### Number of Commands
 
 ${catalog.provides?.commands}
@@ -217,11 +225,10 @@ ${features}
 # Install the extension from the release archive
 specify extension add ${id} --from ${url}
 
-# Generate the stakeholder summary from your spec.md
-/speckit.product.info
+# Generate the product brief (stakeholder summary + product spec) from your spec.md
+/speckit.product.brief
 
-# Generate the product spec, product plan, and technical design
-/speckit.product.spec
+# Generate the product plan and the technical design
 /speckit.product.plan
 /speckit.product.design
 \`\`\`

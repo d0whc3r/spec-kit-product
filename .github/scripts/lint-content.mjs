@@ -35,7 +35,7 @@ const CANONICAL_AITELLS =
 const TEMPLATES = [
   {
     template: "templates/product-spec-template.md",
-    command: "commands/speckit.product.spec.md",
+    command: "commands/speckit.product.brief.md",
     mandatory: [
       "Headline",
       "Users",
@@ -50,7 +50,7 @@ const TEMPLATES = [
   },
   {
     template: "templates/product-info-template.md",
-    command: "commands/speckit.product.info.md",
+    command: "commands/speckit.product.brief.md",
     mandatory: ["Overview", "What is Changing"],
     optional: ["Key Decisions", "References"],
     extraRefs: [CHECKLIST],

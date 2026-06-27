@@ -10,6 +10,8 @@
   "documentation": "https://github.com/d0whc3r/spec-kit-product/wiki",
   "changelog": "https://github.com/d0whc3r/spec-kit-product/blob/main/CHANGELOG.md",
   "license": "MIT",
+  "category": "docs",
+  "effect": "read-write",
   "requires": {
     "speckit_version": ">=0.2.0"
   },
