@@ -1,5 +1,25 @@
 # Changelog
 
+# [1.0.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.11.0...v1.0.0) (2026-06-27)
+
+
+### Bug Fixes
+
+* clean spec-kit ([3de094b](https://github.com/d0whc3r/spec-kit-product/commit/3de094b0a3bdcbc688d0d14a848968d1a1f56278))
+* gitignore spec-kit ([6cab932](https://github.com/d0whc3r/spec-kit-product/commit/6cab9324b2282f2879473cb30f827d02754521a7))
+* update community skill ([8abff83](https://github.com/d0whc3r/spec-kit-product/commit/8abff83b2e2d208ef4de3b6b0d0a7009f8fd1a15))
+* update content ([8888fa0](https://github.com/d0whc3r/spec-kit-product/commit/8888fa07d59a58cf8ba3531d21727257e60fa39e))
+
+
+### Features
+
+* simplify "brief" command ([314fb8f](https://github.com/d0whc3r/spec-kit-product/commit/314fb8f675ba073651dec28f60e875a90f3abead))
+
+
+### BREAKING CHANGES
+
+* now it is only one command instead of 2. info+spec=brief
+
 # [0.11.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.10.2...v0.11.0) (2026-06-23)
 
 

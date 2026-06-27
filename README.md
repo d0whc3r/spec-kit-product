@@ -41,7 +41,7 @@ All four commands also update their respective section of the shared `product/ch
 Install directly from the latest release. This needs no catalog setup and is the recommended path:
 
 ```bash
-specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v0.11.0/product-0.11.0.zip
+specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.0/product-1.0.0.zip
 ```
 
 Change the version in the URL to pin a different release.
