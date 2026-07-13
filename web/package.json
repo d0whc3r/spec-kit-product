@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "marked": "18.0.5",
+    "marked": "18.0.6",
     "mermaid": "11.16.0"
   },
   "devDependencies": {
