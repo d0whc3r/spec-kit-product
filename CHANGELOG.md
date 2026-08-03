@@ -7,7 +7,7 @@
 
 * update docs ([52b512f](https://github.com/d0whc3r/spec-kit-product/commit/52b512f3b971efc194e8bb7ad009beba2e152cab))
 
-# [1.0.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.11.0...v1.0.0) (2026-06-27)
+## [1.0.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.11.0...v1.0.0) (2026-06-27)
 
 
 ### Bug Fixes
@@ -27,7 +27,7 @@
 
 * now it is only one command instead of 2. info+spec=brief
 
-# [0.11.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.10.2...v0.11.0) (2026-06-23)
+## [0.11.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.10.2...v0.11.0) (2026-06-23)
 
 
 ### Bug Fixes
@@ -53,7 +53,7 @@
 
 * clarification concepts ([451801a](https://github.com/d0whc3r/spec-kit-product/commit/451801ae0663fc1e31671247dd758b322a0d313a))
 
-# [0.10.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.9.0...v0.10.0) (2026-06-19)
+## [0.10.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.9.0...v0.10.0) (2026-06-19)
 
 
 ### Bug Fixes
@@ -65,7 +65,7 @@
 
 * simplify docs ([8c5633d](https://github.com/d0whc3r/spec-kit-product/commit/8c5633d19a0d360e36ffc9ecfb2115bf6ee7e0e9))
 
-# [0.9.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.8.3...v0.9.0) (2026-06-19)
+## [0.9.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.8.3...v0.9.0) (2026-06-19)
 
 
 ### Features
@@ -94,7 +94,7 @@
 
 * clarify usage of optional markers in design, info, plan, and spec templates ([0a8441f](https://github.com/d0whc3r/spec-kit-product/commit/0a8441f10f08aedff596df21ed73be9a0d87ca59))
 
-# [0.8.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.7.1...v0.8.0) (2026-05-30)
+## [0.8.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.7.1...v0.8.0) (2026-05-30)
 
 
 ### Bug Fixes
@@ -114,7 +114,7 @@
 
 * update GitHub Pages workflow to deploy after release completion ([9b91490](https://github.com/d0whc3r/spec-kit-product/commit/9b91490a0ddfd6583ffcf2d55d3b3080bf2e3f1d))
 
-# [0.7.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.6.0...v0.7.0) (2026-05-30)
+## [0.7.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.6.0...v0.7.0) (2026-05-30)
 
 
 ### Bug Fixes
@@ -126,7 +126,7 @@
 
 * update documentation to include WORKFLOW.md and enhance troubleshooting details ([541dcf9](https://github.com/d0whc3r/spec-kit-product/commit/541dcf95c931fbbcaede0379bd46a75c9e4961ae))
 
-# [0.6.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.5.3...v0.6.0) (2026-05-30)
+## [0.6.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.5.3...v0.6.0) (2026-05-30)
 
 
 ### Bug Fixes
@@ -163,7 +163,7 @@
 * streamline tags formatting in catalog.json ([40b77eb](https://github.com/d0whc3r/spec-kit-product/commit/40b77eb261cf3b6ee1860a266d6418fe3683864b))
 * update deploy action to v5 in GitHub Pages workflow ([089d3bb](https://github.com/d0whc3r/spec-kit-product/commit/089d3bb4f0d16b2e56faf0aba5e203a920f24ff1))
 
-# [0.5.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.4.0...v0.5.0) (2026-05-29)
+## [0.5.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.4.0...v0.5.0) (2026-05-29)
 
 
 ### Bug Fixes
@@ -175,7 +175,7 @@
 
 * synchronize versioning across extension.yml and package.json, add pre-commit hook for linting ([9f19caa](https://github.com/d0whc3r/spec-kit-product/commit/9f19caa7e6f953524bfc157b097375e8951dfdbb))
 
-# [0.4.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.3.0...v0.4.0) (2026-05-29)
+## [0.4.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.3.0...v0.4.0) (2026-05-29)
 
 
 ### Bug Fixes
@@ -188,7 +188,7 @@
 * enhance documentation with Mermaid diagram integration and clarify catalog submission process ([1bf258e](https://github.com/d0whc3r/spec-kit-product/commit/1bf258e74a9f8380f10a2d91c71d691c4abbd105))
 * update artifact retention policy to 7 days and clarify documentation ([27945d7](https://github.com/d0whc3r/spec-kit-product/commit/27945d77e792443dd1dc36f1fb41fce803fd979b))
 
-# [0.3.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.2.0...v0.3.0) (2026-05-28)
+## [0.3.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.2.0...v0.3.0) (2026-05-28)
 
 
 ### Bug Fixes
@@ -200,7 +200,7 @@
 
 * enhance release workflow to submit upstream catalog issue and update documentation ([7a68b1c](https://github.com/d0whc3r/spec-kit-product/commit/7a68b1c481d4247d77db37539290488f192e0bc2))
 
-# [0.2.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.4...v0.2.0) (2026-05-28)
+## [0.2.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.1.4...v0.2.0) (2026-05-28)
 
 ### Bug Fixes
 
@@ -236,7 +236,7 @@
 
 - codegraph + deps update ([2bb2d82](https://github.com/d0whc3r/spec-kit-product/commit/2bb2d824ee0aab9ed23f9ac037ff7292b80f39c8))
 
-# [0.1.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.8...v0.1.0) (2026-05-13)
+## [0.1.0](https://github.com/d0whc3r/spec-kit-product/compare/v0.0.8...v0.1.0) (2026-05-13)
 
 ### Features
 
