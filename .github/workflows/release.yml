@@ -36,6 +36,9 @@ jobs:
       - name: Validate manifest
         run: pnpm run validate
 
+      - name: Check metadata sync
+        run: pnpm run sync:check
+
       - name: Lint
         run: pnpm run lint
 
