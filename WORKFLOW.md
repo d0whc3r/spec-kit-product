@@ -216,14 +216,12 @@ specs/<feature-dir>/
 
 ## Common Errors
 
-| Code             | Cause                                                            | Fix                                                          |
-| ---------------- | ---------------------------------------------------------------- | ------------------------------------------------------------ |
-| `E_NO_PROJECT`   | Not inside a Spec Kit project.                                   | `cd` into a project with `.specify/`, or run `specify init`. |
-| `E_NO_POINTER`   | No active feature and `--feature-dir` not passed.                | Run `/speckit.specify` first, or pass `--feature-dir`.       |
-| `E_NO_SPEC`      | No `spec.md` in the feature directory.                           | Run `/speckit.specify` to create one.                        |
-| `E_NO_PLAN`      | No `plan.md` in the feature directory.                           | Run `/speckit.plan` to generate it.                          |
-| `E_PLACEHOLDERS` | `spec.md` or `plan.md` still contains unfilled template markers. | Replace all `[PLACEHOLDER]` values with real content.        |
-| `E_LANGUAGE`     | Source files are not in English.                                 | Translate the source file to English and rerun.              |
-| `E_USER_ABORT`   | You answered "no" at the overwrite prompt.                       | Rerun when ready.                                            |
+| Code             | Cause                                                            | Fix                                                   |
+| ---------------- | ---------------------------------------------------------------- | ----------------------------------------------------- |
+| `E_NO_SPEC`      | No `spec.md` in the feature directory.                           | Run `/speckit.specify` to create one.                 |
+| `E_NO_PLAN`      | No `plan.md` in the feature directory.                           | Run `/speckit.plan` to generate it.                   |
+| `E_PLACEHOLDERS` | `spec.md` or `plan.md` still contains unfilled template markers. | Replace all `[PLACEHOLDER]` values with real content. |
+| `E_LANGUAGE`     | Source files are not in English.                                 | Translate the source file to English and rerun.       |
+| `E_USER_ABORT`   | You answered "no" at the overwrite prompt.                       | Rerun when ready.                                     |
 
-`E_NO_PROJECT` and `E_NO_POINTER` are Spec Kit core resolver errors, surfaced verbatim before the extension runs. They are not extension error codes. The rest are emitted by the product commands.
+Project and feature resolution failures (not inside a Spec Kit project, no active feature) come from Spec Kit core's resolver and surface verbatim before the extension runs; they carry no `E_*` code from this extension. The codes above are emitted by the product commands.

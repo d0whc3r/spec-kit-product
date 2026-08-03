@@ -127,7 +127,7 @@ Read these and build a picture of what the extension actually does:
 2. `catalog.json` — must match `extension.yml` on version, description,
    tags, requires, `provides.commands` count, `provides.hooks` count.
 3. `commands/speckit.*.md` — each filename maps 1:1 to a command name
-   (`speckit.product.spec.md` → `/speckit.product.spec`). Capture what
+   (`speckit.product.brief.md` → `/speckit.product.brief`). Capture what
    each reads, what it writes, the audience, the error codes, the output
    section list, and the `#### Diagram generation` block: the per-section
    diagram table, the value-gate paragraph (when a diagram earns its place
@@ -148,12 +148,11 @@ Output: a coverage map you carry in your head of the form:
 
 ```
 Commands actually shipped:
-  /speckit.product.info   reads spec.md          writes product/00-info.md
-  /speckit.product.spec   reads spec.md          writes product/10-spec.md
+  /speckit.product.brief  reads spec.md          writes product/00-info.md, product/10-spec.md
   /speckit.product.plan   reads plan.md, spec.md writes product/20-plan.md
   /speckit.product.design reads plan.md, spec.md writes product/30-design.md
 Hooks declared: after_specify, after_clarify, after_plan
-Version: 0.2.0  Requires: speckit >= 0.2.0
+Version: 1.0.1  Requires: speckit >= 0.2.0
 ```
 
 The manifests under `.specify/integrations/` are a contributor concern
@@ -207,11 +206,11 @@ After the script, do a second-pass semantic audit it cannot do:
    has the same paths and version pin.
 4. Confirm `docs/_Sidebar.md` lists every page that exists under `docs/`
    and nothing else.
-5. Confirm the "Command / Reads / Writes / Audience" table in `README.md`,
-   `docs/Home.md`, and `docs/Commands.md` is byte-equivalent. The same
-   table appears in `web/index.html` as HTML; it is not byte-equivalent
-   there, but it must list the same command names, reads, writes, and
-   audiences.
+5. Confirm the "Command / Reads / Writes / Audience" table in `README.md`
+   and `docs/Home.md` is byte-equivalent. The table in `docs/Commands.md`
+   lists the same command names, reads, writes, and audiences but adds
+   per-row anchor links and checklist notes; that is by design. The same
+   facts appear in `web/index.html` as an HTML table.
 6. Confirm `docs/Examples.md` references the same output filenames the
    templates produce (`00-info.md`, `10-spec.md`, etc.).
 7. Confirm `web/index.html` agrees with the wiki on the install and usage
@@ -253,9 +252,10 @@ Style rules every edit must obey (from `.specify/memory/constitution.md`
   repo URL to `CONTRIBUTING.md`.
 - Command names in prose are wrapped in backticks.
 - The "Command / Reads / Writes / Audience" table is copied verbatim
-  across `README.md`, `docs/Home.md`, and `docs/Commands.md`. The same
-  facts appear in `web/index.html` as an HTML table; keep its rows in
-  step, but it is HTML markup, not a byte copy.
+  between `README.md` and `docs/Home.md`. The `docs/Commands.md` table
+  lists the same facts with per-row anchor links and checklist notes.
+  The same facts appear in `web/index.html` as an HTML table; keep its
+  rows in step, but it is HTML markup, not a byte copy.
 - The website is content-only for this skill. Edit the text inside
   `web/index.html`; do not restyle `web/src/styles.css` or rewrite
   the TypeScript under `web/src/`.

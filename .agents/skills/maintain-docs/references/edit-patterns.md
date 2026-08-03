@@ -53,14 +53,12 @@ A `commands/*.md` adds an `E_NEW_CODE`. Update two places:
 ### Before (`docs/Troubleshooting.md`)
 
 ```markdown
-| `E_NO_PROJECT` | Not inside a Spec Kit project.                            |
 | `E_NO_SPEC`    | Feature directory has no `spec.md`.                       |
 ```
 
 ### After
 
 ```markdown
-| `E_NO_PROJECT` | Not inside a Spec Kit project.                            |
 | `E_NO_SPEC`    | Feature directory has no `spec.md`.                       |
 | `E_BAD_VERSION`| Spec Kit version below `0.2.0`.                           |
 ```
@@ -70,13 +68,16 @@ Preserve column alignment by hand if the surrounding table uses it.
 ## 3. Version bump
 
 `extension.yml.extension.version` and `catalog.json.version` were bumped
-by the release pipeline. The wiki references the version in two places:
+by the release pipeline. The user-facing version references live in:
 
-- `README.md` "Path 2: Direct release URL" snippet.
-- `docs/Getting-Started.md` "To pin a specific version" snippet.
+- `README.md`, the direct install snippet under "## Install".
+- `docs/Getting-Started.md`, the install snippet under "Step 1: Install
+  the extension".
+- `web/index.html`, the two direct-install snippets, the brand version
+  badge, and the "Requires Spec Kit" badge.
 
-Both snippets contain the literal version twice (in the URL path and in
-the zip filename). Update both occurrences in each file.
+Each install snippet contains the literal version twice (in the URL path
+and in the zip filename). Update both occurrences in each file.
 
 ### Before
 
@@ -92,8 +93,8 @@ specify extension add product --from \
   https://github.com/d0whc3r/spec-kit-product/releases/download/v0.1.3/product-0.1.3.zip
 ```
 
-Do not touch the rest of the install snippets. Path 1 (catalog) and
-Path 3 (dev install) do not pin a version.
+Do not touch the rest of the install snippets. The catalog install does
+not pin a version.
 
 ## 4. Renamed file
 

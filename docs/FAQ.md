@@ -50,7 +50,7 @@ the command body and by the constitution.
 
 They are surfaced in the generated output as open product questions,
 never silently resolved. The relevant artifact gets a "Key Decisions" or
-"Risks and Open Product Questions" section that lists them.
+"Risks and Open Questions" section that lists them.
 
 ## Can I keep two outputs side by side, like a v1 and a v2?
 

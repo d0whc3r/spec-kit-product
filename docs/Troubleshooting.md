@@ -48,12 +48,13 @@ the source before approving a catalog.
 ## Project resolution errors
 
 These come from Spec Kit core's feature resolver and are surfaced verbatim
-before the extension runs. They are not extension error codes.
+before the extension runs. They are not extension error codes; the message
+you see is core's own.
 
-| Code           | Cause                                                      | Fix                                                                |
-| -------------- | ---------------------------------------------------------- | ------------------------------------------------------------------ |
-| `E_NO_PROJECT` | Not inside a Spec Kit project.                             | `cd` into a project with `.specify/`, or run `specify init`.       |
-| `E_NO_POINTER` | No active feature recorded and `--feature-dir` not passed. | Run `/speckit.specify` first, or pass `--feature-dir specs/<dir>`. |
+- Not inside a Spec Kit project: `cd` into a project with `.specify/`, or
+  run `specify init`.
+- No active feature recorded and `--feature-dir` not passed: run
+  `/speckit.specify` first, or pass `--feature-dir specs/<dir>`.
 
 `.specify/feature.json` points to the active feature. If it is missing or
 stale, run any Spec Kit core command on the feature (`/speckit.specify`,

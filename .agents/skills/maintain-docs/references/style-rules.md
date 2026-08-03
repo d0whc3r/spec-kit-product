@@ -16,7 +16,7 @@ are judgment calls but consistent across the repo.
    command names are fine.
 4. **Markdown links to local pages use `Page-Name.md`.** The same link
    must work on the rendered repo and on GitHub Wiki. Anchor links
-   inside a page use lowercase, no punctuation: `#speckitproductinfo`.
+   inside a page use lowercase, no punctuation: `#speckitproductbrief`.
 
 ## Voice rules (apply by hand)
 
@@ -27,8 +27,8 @@ are judgment calls but consistent across the repo.
    extension does.
 3. **Active voice over passive.** "The command writes `00-info.md`",
    not "`00-info.md` is written by the command".
-4. **Imperative for instructions.** "Run `/speckit.product.info`",
-   not "You should run `/speckit.product.info`".
+4. **Imperative for instructions.** "Run `/speckit.product.brief`",
+   not "You should run `/speckit.product.brief`".
 5. **Concrete over abstract.** Use real paths, real filenames, real
    command outputs. Avoid placeholder phrasing like "the appropriate
    file".
@@ -44,8 +44,8 @@ are judgment calls but consistent across the repo.
 
 ## Conventions specific to this project
 
-1. **Refer to commands with the leading slash.** `/speckit.product.spec`,
-   not `speckit.product.spec` or `product.spec`. The slash makes the
+1. **Refer to commands with the leading slash.** `/speckit.product.brief`,
+   not `speckit.product.brief` or `product.brief`. The slash makes the
    command shape clear and matches how a user invokes it.
 2. **Refer to artifact files by their full name including the numeric
    prefix.** `00-info.md`, `10-spec.md`, `20-plan.md`, `30-design.md`.
@@ -78,10 +78,10 @@ are judgment calls but consistent across the repo.
    Audience" table appears in three files (`README.md`,
    `docs/Home.md`, `docs/Commands.md`). The columns are always in
    that order, and the rows are always in command-numeric order
-   (info, spec, plan, design).
+   (brief, plan, design).
 3. **Anchor links from the table use the section header form** with
-   punctuation stripped: `/speckit.product.spec` →
-   `#speckitproductspec`.
+   punctuation stripped: `/speckit.product.brief` →
+   `#speckitproductbrief`.
 
 ## Headings
 

@@ -1171,7 +1171,7 @@ specify extension update product</code></pre>
               <p>
                 They are surfaced in the generated output as open product questions, never silently
                 resolved. The relevant artifact lists them under a "Key Decisions" or "Risks and
-                Open Product Questions" section.
+                Open Questions" section.
               </p>
             </details>
             <details>
@@ -1193,8 +1193,10 @@ specify extension update product</code></pre>
             <details>
               <summary>Does this work in a brownfield codebase?</summary>
               <p>
-                Yes. The bundled brownfield extension helps reverse-engineer specs from existing
-                code. Once you have a <code>spec.md</code>, the product commands work the same way.
+                Yes. The product commands operate on a <code>spec.md</code>, so they work the same
+                way whether the spec describes a greenfield feature or an existing system. Produce
+                the <code>spec.md</code> however you like (for example with
+                <code>/speckit.specify</code>), then run the product commands against it.
               </p>
             </details>
           </div>

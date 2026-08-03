@@ -69,14 +69,15 @@ Mandatory unless marked optional:
 
 | Code             | Meaning                                                     |
 | ---------------- | ----------------------------------------------------------- |
-| `E_NO_PROJECT`   | Not inside a Spec Kit project.                              |
-| `E_NO_POINTER`   | No active feature and `--feature-dir` not passed.           |
 | `E_NO_SPEC`      | Feature directory has no `spec.md`.                         |
 | `E_PLACEHOLDERS` | `spec.md` still contains unfilled template placeholders.    |
 | `E_LANGUAGE`     | `spec.md` is not in English.                                |
 | `E_USER_ABORT`   | You answered "no" at the overwrite or clarification prompt. |
 
-`E_NO_PROJECT` and `E_NO_POINTER` come from Spec Kit core's feature resolver and are surfaced verbatim. They are not codes this extension emits. The rest are emitted by the command.
+Project and feature resolution failures (not inside a Spec Kit project, or no
+active feature and no `--feature-dir`) come from Spec Kit core's resolver. The
+command surfaces core's own error message verbatim before any of these codes
+can fire.
 
 ---
 
@@ -119,7 +120,8 @@ stay plain-language. See [Diagrams](Diagrams.md).
 | `E_LANGUAGE`     | `plan.md` is not in English.                             |
 | `E_USER_ABORT`   | You answered "no" at the overwrite prompt.               |
 
-Plus the project-resolution errors listed under `brief`.
+Spec Kit core resolution failures (no project, no active feature) surface
+verbatim before these codes, as noted under `brief`.
 
 ---
 

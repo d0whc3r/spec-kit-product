@@ -15,15 +15,16 @@ scope and are intentionally absent.
 
 ### `docs/Home.md`
 
-Documents: the extension purpose, the four commands at a glance, the
+Documents: the extension purpose, the three commands at a glance, the
 reading order, the source-of-truth contract.
 
 Asserts:
 
 - Extension purpose paragraph (matches `README.md` lead and
   `extension.yml.extension.description`).
-- The four-row command table (must be byte-equivalent to the same table
-  in `README.md` and `docs/Commands.md`).
+- The three-row command table (must be byte-equivalent to the same table
+  in `README.md`; the `docs/Commands.md` table lists the same facts with
+  per-row anchor links).
 - The links to every other wiki page.
 
 Re-check whenever: a command is added or removed; the description in
@@ -38,7 +39,7 @@ Asserts:
 - Spec Kit version requirement (must match `extension.yml.requires.speckit_version`).
 - Install URL with pinned version (must match
   `extension.yml.extension.version` and `catalog.json.version`).
-- The order of the four commands and what each writes.
+- The order of the three commands and what each writes.
 - The example output file paths.
 
 Scope rule: this page covers the user install paths (catalog install and
@@ -72,7 +73,7 @@ Documents: the input/output flow and recommended command order.
 
 Asserts:
 
-- The recommended order (info → spec → plan → design).
+- The recommended order (brief → plan → design).
 - The `product/` folder layout with the numeric prefixes.
 - The hook trigger points.
 
@@ -221,8 +222,7 @@ Asserts:
 
 - Description paragraph (must match `extension.yml.extension.description`
   in intent).
-- The four-row command table (must be byte-equivalent to `docs/Home.md`
-  and `docs/Commands.md`).
+- The three-row command table (must be byte-equivalent to `docs/Home.md`).
 - Install paths and pinned version (must match `extension.yml.extension.version`).
 - Links to every `docs/*.md` page that exists.
 - A single Contributing pointer to `CONTRIBUTING.md` at the repo root.
@@ -257,7 +257,7 @@ does not edit it unless explicitly asked.
 ### `web/index.html`
 
 Documents: the public, short front door to the extension. A single page
-covering the purpose, the four commands, getting started, the workflow,
+covering the purpose, the three commands, getting started, the workflow,
 and a FAQ subset. Deployed to GitHub Pages.
 
 Asserts:
@@ -265,7 +265,7 @@ Asserts:
 - The hero purpose paragraph (matches `extension.yml.extension.description`
   and the `README.md` lead).
 - The hero badges: command count, `Requires Spec Kit >= 0.2.0`, license.
-- The four-row command table (same command names, reads, writes, and
+- The three-row command table (same command names, reads, writes, and
   audiences as `docs/Home.md`; HTML form, not byte-equivalent).
 - The install snippets and the pinned release URL (must match the version
   in `README.md` and `docs/Getting-Started.md`).

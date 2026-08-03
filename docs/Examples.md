@@ -34,13 +34,15 @@ dashboards into one combined PDF or a zip of PDFs.
 
 ## Clarifications
 
-- 2026-04-12: confirmed that v1 supports up to 50 dashboards per export.
-  Above that, the export is queued and emailed.
+### Session 2026-04-12
 
-## [NEEDS CLARIFICATION]
+- Q: How many dashboards can one export include? → A: v1 supports up to
+  50 dashboards per export. Above that, the export is queued and emailed.
 
-- Branding. Should exports use the user's workspace logo, or a Lumen
-  logo, or both?
+## Requirements
+
+- Branding: [NEEDS CLARIFICATION: Should exports use the user's workspace
+  logo, or a Lumen logo, or both?]
 ```
 
 ## What `/speckit.product.brief` produces: `00-info.md`
