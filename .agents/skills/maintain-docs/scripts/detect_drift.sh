@@ -87,14 +87,16 @@ else
   ok "catalog.json provides.commands matches commands/ file count"
 fi
 
-# ---- 3. commands present in every manifest -------------------------
+# ---- 3. manifests present for every installed integration ------------
 #
 # The integrations manifests under .specify/integrations/ are written
-# by the Spec Kit install pipeline. Their shape varies (some list files
-# they own, some list command names). We only flag a manifest if it
-# exists and is empty, or if it is missing entirely. Per-command
-# coverage inside the manifest is too shape-dependent to lint reliably;
-# the human audit step handles it.
+# by the Spec Kit install pipeline, so only the integrations actually
+# installed (per .specify/integration.json installed_integrations) can be
+# required to have one; the speckit core manifest is always required.
+# Their shape varies (some list files they own, some list command names).
+# We only flag a manifest if it exists and is empty, or if it is missing
+# entirely. Per-command coverage inside the manifest is too shape-dependent
+# to lint reliably; the human audit step handles it.
 
 declare -a cmd_names=()
 for f in "${cmd_files[@]}"; do
@@ -102,17 +104,26 @@ for f in "${cmd_files[@]}"; do
   cmd_names+=("$base")
 done
 
-for manifest in .specify/integrations/claude.manifest.json \
-                .specify/integrations/copilot.manifest.json \
-                .specify/integrations/codex.manifest.json \
-                .specify/integrations/speckit.manifest.json; do
+declare -a manifests=(".specify/integrations/speckit.manifest.json")
+if [[ -f .specify/integration.json ]]; then
+  while IFS= read -r integ; do
+    [[ -n "$integ" ]] && manifests+=(".specify/integrations/${integ}.manifest.json")
+  done < <(awk '/"installed_integrations"/{f=1; next} f && /\]/{f=0} f {gsub(/[",[:space:]]/, ""); print}' \
+             .specify/integration.json)
+else
+  manifests+=(".specify/integrations/claude.manifest.json"
+              ".specify/integrations/copilot.manifest.json"
+              ".specify/integrations/codex.manifest.json")
+fi
+
+for manifest in "${manifests[@]}"; do
   if [[ ! -f "$manifest" ]]; then
     note "missing manifest: $manifest"
   elif [[ ! -s "$manifest" ]]; then
     note "empty manifest: $manifest"
   fi
 done
-ok "manifest presence check done"
+ok "manifest presence check done (${#manifests[@]} required)"
 
 # ---- 4. every command name appears in docs/Commands.md -------------
 

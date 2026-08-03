@@ -80,8 +80,11 @@ shell commands, and other important information, read the current plan at
 ## Agent Boundaries
 
 This repository ships a Spec Kit extension whose command surface is mirrored
-across multiple AI coding agents. Every public command must exist in all four
-integration surfaces (constitution §V).
+across multiple AI coding agents. Every public command must exist in every
+integration surface installed in this repository (constitution §V). The set of
+installed integrations is recorded in `.specify/integration.json`
+(`installed_integrations`); installing a new integration via the Spec Kit
+installer creates its manifest and mirror files.
 
 | Agent          | Skill / Prompt Surface                                                | Manifest                                      |
 | -------------- | --------------------------------------------------------------------- | --------------------------------------------- |
@@ -93,7 +96,7 @@ integration surfaces (constitution §V).
 Rules:
 
 1. Canonical command file lives at `commands/speckit.<area>.<verb>.md`. Mirrors derive from it; they must not diverge in intent.
-2. Adding a command requires updating: the canonical file, all four manifests, every mirror surface, `extension.yml` `provides.commands`, and `catalog.json` `provides.commands` count.
+2. Adding a command requires updating: the canonical file, the manifest of every installed integration, every installed mirror surface, `extension.yml` `provides.commands`, and `catalog.json` `provides.commands` count.
 3. Renaming or removing a command is a breaking change and requires a `feat!:` or `BREAKING CHANGE:` commit per constitution §Governance.
 4. All agents must emit output obeying constitution §III: no em dashes, plain English, PRFAQ + JTBD + Gherkin + Lean PRD conventions, `[NEEDS CLARIFICATION]` markers preserved.
 

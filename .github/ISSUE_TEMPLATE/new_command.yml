@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Adding a command touches the canonical file, all four agent manifests, every mirror surface, `extension.yml`, and `catalog.json`. Read `AGENTS.md` and the constitution before filing.
+        Adding a command touches the canonical file, the manifest and mirror surface of every installed integration (see `.specify/integration.json`), `extension.yml`, and `catalog.json`. Read `AGENTS.md` and the constitution before filing.
 
   - type: input
     id: command-name
@@ -48,7 +48,7 @@ body:
     id: agent-mirrors
     attributes:
       label: Agent mirror plan
-      description: Confirm you will update the canonical file and all four mirrors (Claude skill, Copilot agent + prompt, Codex manifest, Spec Kit manifest), plus `extension.yml` and `catalog.json`.
+      description: Confirm you will update the canonical file and the mirrors of every installed integration (Claude skill, Copilot agent + prompt, Codex manifest, Spec Kit manifest, as applicable), plus `extension.yml` and `catalog.json`.
       value: |
         - [ ] commands/speckit.product.<area>.<verb>.md (canonical)
         - [ ] .claude/skills/<slug>/SKILL.md
