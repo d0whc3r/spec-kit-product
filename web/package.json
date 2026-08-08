@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "marked": "18.0.7",
-    "mermaid": "11.16.0"
+    "mermaid": "11.16.1"
   },
   "devDependencies": {
     "typescript": "7.0.2",
