@@ -40,9 +40,9 @@ jobs:
           # ref is the commit that triggered release (pre-bump), so pin to main.
           ref: main
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v6.0.9
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: ".nvmrc"
           cache: "pnpm"
