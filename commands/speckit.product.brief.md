@@ -49,7 +49,9 @@ When this extension is installed under `.specify/extensions/product/`, the absol
 
 ### Step 1: Resolve the feature directory
 
-Run speckit's built-in resolver. If the user passed `--feature-dir <path>`, export `SPECIFY_FEATURE_DIRECTORY=<path>` in the environment first (resolve relative paths against the repo root).
+If the user passed `--feature-dir <path>`, use that path as `FEATURE_DIR` (resolve a relative path against the repo root) and skip the resolver. Do not export `SPECIFY_FEATURE_DIRECTORY` for this: Spec Kit persists that variable into `.specify/feature.json`, which this command must not modify.
+
+Otherwise, run speckit's built-in resolver:
 
 - **Bash**:
 
@@ -70,16 +72,13 @@ Capture the output as `FEATURE_DIR`. If the command exits non-zero, surface its 
 
 Refuse to proceed when:
 
-1. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `/speckit.specify` first.
+1. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `__SPECKIT_COMMAND_SPECIFY__` first.
 2. **E_PLACEHOLDERS**: `spec.md` still contains literal placeholders from the spec template. Detect these by looking for any of the following exact bracketed strings as substrings of the file (case sensitive):
    - `[FEATURE NAME]`
    - `[Brief Title]`
    - `[Describe this user journey in plain language]`
-   - `[#]` (in the form `### User Story [#]`)
-   - `[Describe the specific behavior in detail]`
-   - `[Describe the user interaction]`
-   - `[Describe what the user observes]`
-   - Any line that is exactly `### User Story [#] - [Brief Title] (Priority: PX)`.
+   - `[Explain the value and why it has this priority level]`
+   - `[Add more user stories as needed, each with an assigned priority]`
 
    These are unfilled template scaffolding. Refuse with a single line per detected placeholder.
 
@@ -142,7 +141,7 @@ Read `templates/product-info-template.md`. Replace every bracketed placeholder w
 
 - **Mandatory sections (Overview, What is Changing)**: always present, in canonical order, populated. If the source spec lacks information for a mandatory section, do NOT fabricate. Populate the section with what is known, and add a precise question to the Key Decisions "Still open" block. This document is the one-page digest; scope and risks live in the spec, plan, and design docs, so info never carries an Out of Scope or Risks section.
 - **Optional section (Key Decisions)**: include when the resolved decisions list OR the unresolved questions list is non-empty. Two parts:
-  1. Resolved decisions: synthesize by topic, not one entry per triple. Cluster triples whose questions decide the same area (the same threshold, the same audience, the same behavior) and merge each cluster into a single entry, even when its triples come from different sessions. A triple that shares no topic with any other stays its own entry. Each entry is a bold noun-phrase title (derived from the shared topic - not any full question), followed by one sentence stating the combined decision as a positive outcome. Do not repeat questions verbatim. On the next line, cite the contributing sessions: `*Session: YYYY-MM-DD*` for one, or `*Sessions: YYYY-MM-DD, YYYY-MM-DD*` (ascending, deduplicated) when several shaped it. Never merge triples that decide genuinely different things just to shorten the list; every distinct decision survives. Write the decision as a statement ("The feature will...", "Users with X will...", "This version does not..."). If the answers provide reasoning, include it in the same sentence.
+  1. Resolved decisions: synthesize by topic, not one entry per triple. Cluster triples whose questions decide the same area (the same threshold, the same audience, the same behavior) and merge each cluster into a single entry, even when its triples come from different sessions. A triple that shares no topic with any other stays its own entry. Each entry is a bold noun-phrase title (derived from the shared topic - not any full question), followed by one sentence stating the combined decision as a positive outcome. Do not repeat questions verbatim. On the next line, cite the contributing sessions: `_Session: YYYY-MM-DD_` for one, or `_Sessions: YYYY-MM-DD, YYYY-MM-DD_` (ascending, deduplicated) when several shaped it. Never merge triples that decide genuinely different things just to shorten the list; every distinct decision survives. Write the decision as a statement ("The feature will...", "Users with X will...", "This version does not..."). If the answers provide reasoning, include it in the same sentence.
   2. "Still open" block: rendered only when there are unresolved `[NEEDS CLARIFICATION]` markers. Use a blockquote: `> **Still open**: These questions were raised but not yet resolved. They should be answered before this feature is built.` followed by one bullet per marker as a single-sentence question. Never silently resolve a marker.
      If only one of the two parts has content, include only that part. Remove the entire section if both lists are empty.
 - **Optional section (References)**: include ONLY when `spec.md` cites external resources that a non-technical reader would benefit from accessing: user research reports, product briefs, customer interviews, analytics dashboards, external standards, or third-party documentation. NEVER link to spec-kit artifacts: `spec.md`, `plan.md`, `tasks.md`, `data-model.md`, `research.md`, or any file generated by this extension are inputs, not references. Each entry must be an external URL with a plain-language label. Omit the section when the source spec has no external references. This section appears last.
@@ -151,7 +150,7 @@ Read `templates/product-info-template.md`. Replace every bracketed placeholder w
 
 - **Overview**: one short paragraph, two to four sentences. State who this is for, the problem it addresses, what changes for them, and the new outcome they can reach. This is the higher-altitude digest, not a copy of the spec Headline. No jargon, no implementation detail, no feature lists.
 - **What is Changing**: two to five short bullets, or one short paragraph. State customer-observable differences after the feature ships. Each bullet is a single sentence ending with a period.
-- **Key Decisions (optional)**: open with one sentence: "These decisions were made while writing this spec. Review them to confirm they still reflect the right direction." Then list resolved decisions, one per topic. Merge clarifications that decide the same thing into a single entry, even across sessions, so the reader scans decisions, not raw questions. Each entry: bold noun-phrase title on its own line (e.g., `**Rollout audience**`), a single sentence that names the choice and gives the reason in plain product language, then a session citation on the next line (`*Session: YYYY-MM-DD*`, or `*Sessions: YYYY-MM-DD, YYYY-MM-DD*` when more than one session shaped it). Never merge decisions that are genuinely about different things. If unresolved questions exist, end with the "Still open" blockquote block. Do not fabricate decisions or questions.
+- **Key Decisions (optional)**: open with one sentence: "These decisions were made while writing this spec. Review them to confirm they still reflect the right direction, and flag any that have changed." Then list resolved decisions, one per topic. Merge clarifications that decide the same thing into a single entry, even across sessions, so the reader scans decisions, not raw questions. Each entry: bold noun-phrase title on its own line (e.g., `**Rollout audience**`), a single sentence that names the choice and gives the reason in plain product language, then a session citation on the next line (`_Session: YYYY-MM-DD_`, or `_Sessions: YYYY-MM-DD, YYYY-MM-DD_` when more than one session shaped it). Never merge decisions that are genuinely about different things. If unresolved questions exist, end with the "Still open" blockquote block. Do not fabricate decisions or questions.
 - **References (optional)**: each entry is formatted as `- [Plain-language label]: [URL]`. Only external URLs. Never internal spec-kit files.
 
 ### Step 7: Generate product/10-spec.md
@@ -214,7 +213,7 @@ After composing the full text of both `product/00-info.md` and `product/10-spec.
 | Every clarification covered, none dropped                         | Each parseable `## Clarifications` bullet maps to at least one Key Decisions entry; entries may merge several bullets, so entry count ≤ bullet count, but no decision is lost                                                                                                    | Yes - add a missing decision or fold it into the right entry                                     |
 | Related clarifications merged into one entry                      | Bullets that decide the same area (same threshold, audience, or behavior) appear as one synthesized entry, not several near-duplicate entries; merge holds even across sessions                                                                                                  | Yes - merge near-duplicate entries                                                               |
 | No unrelated decisions merged                                     | No single entry combines clarifications about clearly different decision areas                                                                                                                                                                                                   | No - semantic; flag for manual review                                                            |
-| Each decision cites its sessions                                  | Every entry ends with `*Session: YYYY-MM-DD*` (one) or `*Sessions: <dates>*` (several, ascending and deduplicated); every cited date is a real `### Session` date in source                                                                                                      | Yes - fix the citation                                                                           |
+| Each decision cites its sessions                                  | Every entry ends with `_Session: YYYY-MM-DD_` (one) or `_Sessions: <dates>_` (several, ascending and deduplicated); every cited date is a real `### Session` date in source                                                                                                      | Yes - fix the citation                                                                           |
 | Still open block present only when unresolved markers exist       | "Still open" blockquote present iff user confirmed ≥1 `[NEEDS CLARIFICATION]` marker                                                                                                                                                                                             | Yes - add or remove block                                                                        |
 | Still open count matches confirmed markers                        | Bullet count in "Still open" equals count of confirmed `[NEEDS CLARIFICATION]` markers                                                                                                                                                                                           | Yes - add missing bullets                                                                        |
 | Sections in canonical order                                       | Headings appear in sequence: Overview, What is Changing, [Key Decisions], [References] - brackets indicate optional                                                                                                                                                              | Yes - reorder                                                                                    |
@@ -272,6 +271,7 @@ If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
 
 - Read `templates/product-checklist-template.md`.
 - Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
+- The template names commands in dot form. In `checklist.md`, write each command name the way this agent invokes it, for example `__SPECKIT_COMMAND_PRODUCT_BRIEF__`.
 - Stage the file content in memory. All four sections (`## Info`, `## Spec`, `## Plan`, `## Design`) start with the "not yet generated" placeholder state, then the `## Info` and `## Spec` sections are replaced using the results of Step 8.
 
 If the file **already exists**, read its current content into memory. You will replace only the `## Info` section (between the `## Info` heading and the next `---` horizontal rule) and the `## Spec` section (between the `## Spec` heading and the next `---` horizontal rule) using the results of Step 8. All other sections and the `## Needs Review` section are preserved verbatim.

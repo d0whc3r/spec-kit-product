@@ -4,15 +4,15 @@ Thanks for considering a contribution. This repository hosts a single Spec Kit e
 
 ## Repo Layout
 
-The repo root IS the extension root, per the canonical Spec Kit extension layout. The release pipeline packages the repo root into a zip, excluding everything listed in `.extensionignore`.
+The repo root IS the extension root, per the canonical Spec Kit extension layout. The release pipeline packages only the runtime files (`extension.yml`, `README.md`, `LICENSE`, `commands/`, `templates/`) into a zip. The include list lives in `.github/scripts/build-zip.mjs`.
 
 - `extension.yml`, `README.md`, `LICENSE`, `CHANGELOG.md` at the repo root.
-- `commands/`, `templates/`, `scripts/{bash,powershell}/` at the repo root.
-- `.extensionignore` lists files at the root that are NOT part of the extension (specs, CI, repo metadata).
+- `commands/` and `templates/` at the repo root.
+- `.extensionignore` makes `specify extension add --dev` copy the same runtime files as the zip.
 - `catalog.json` is the single-entry catalog file. Pipeline-owned fields (`version`, `download_url`, `requires.speckit_version`, `updated_at`, `created_at`) are updated by CI on every release; do not edit them by hand.
-- `.github/workflows/release.yml` is the tag-driven release pipeline.
-- `.github/scripts/` holds pipeline helpers (`validate-manifest.mjs`, `build-zip.mjs`, `update-catalog.sh`, `lint-content.mjs`).
-- `specs/` holds the design artifacts for the extension itself (this repo dogfoods Spec Kit). It is excluded from the release zip.
+- `.github/workflows/release.yml` runs semantic-release on every push to `main`.
+- `.github/scripts/` holds pipeline helpers (`validate-manifest.mjs`, `build-zip.mjs`, `update-catalog.mjs`, `lint-content.mjs`).
+- `specs/` and `.specify/` are local dogfood state (this repo dogfoods Spec Kit). Both are gitignored.
 
 ## Developer Install (Self-Dogfood)
 
@@ -26,21 +26,19 @@ The CLI installs the extension under `.specify/extensions/product/` of the targe
 
 ## Iterating on the Slash Command
 
-The slash command is a markdown prompt at `commands/speckit.product.brief.md`. Edit it, then dogfood:
+Each slash command is a markdown prompt under `commands/`. For example, edit `commands/speckit.product.brief.md`, then dogfood:
 
 1. Run `/speckit.product.brief` against any feature in this repo or another Spec Kit project.
 2. Walk the generated `product/00-info.md` and `product/10-spec.md` through `product/checklist.md`. Any failed Required item is an iteration signal on the prompt.
 3. Repeat until the first generation passes the checklist on a representative spec.
 
-When iterating on the templates (`templates/*.md`), keep them in sync with the contracts under `specs/001-product-spec-extension/contracts/`. The contract files are the reviewable source of truth; the runtime files are deployed copies.
-
 ## Local Pipeline Checks
 
-Before opening a PR, run:
+Before opening a PR, run the same checks as CI:
 
 ```bash
-node .github/scripts/validate-manifest.mjs
-node .github/scripts/lint-content.mjs
+pnpm check       # validate, sync:check, lint, lint:content
+pnpm web:build   # type-check and build the website
 ```
 
 To exercise the build path locally (requires `zip` and `unzip`):
@@ -57,7 +55,7 @@ Releases are automatic. The `release` workflow at `.github/workflows/release.yml
 1. Write commits using [Conventional Commits](https://www.conventionalcommits.org/). Examples:
    - `fix: ...` triggers a patch bump.
    - `feat: ...` triggers a minor bump.
-   - `feat!: ...` or any commit body containing `BREAKING CHANGE:` triggers a major bump.
+   - A `BREAKING CHANGE:` footer in the commit body triggers a major bump. The default angular preset ignores a `feat!:` header.
    - `chore:`, `docs:`, `refactor:`, `test:`, `ci:` do not trigger a release.
 2. Land your work on `main` with CI green. The release workflow fires on push.
 3. `semantic-release` runs the plugin chain in `.releaserc.json`:
@@ -153,7 +151,7 @@ The extension's whole reason to exist is the canonical product spec voice. Style
 
 If you change these rules, update the template, the checklist template, the command prompt, and the lint script in the same commit.
 
-The AI-tell banlist has one source: `templates/humanization-guide.md`, section "The enforced minimum". Each product command copies that subset verbatim in two places, the Plain English style rule and the "No AI tells" validation row. `lint:content` (`lintHumanization`) fails when a command drifts from the guide or its siblings, or when a command body contains an em dash. To change the banlist, edit the guide's "The enforced minimum" block and re-copy it into all four commands in the same commit.
+The AI-tell banlist has one source: `templates/humanization-guide.md`, section "The enforced minimum". Each product command copies that subset verbatim in two places, the Plain English style rule and the "No AI tells" validation row. `lint:content` (`lintHumanization`) fails when a command drifts from the guide or its siblings, or when a command body contains an em dash. To change the banlist, edit the guide's "The enforced minimum" block and re-copy it into all three commands in the same commit.
 
 ## Reporting Issues
 

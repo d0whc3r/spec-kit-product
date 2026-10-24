@@ -5,6 +5,8 @@ stakeholder-facing artifacts. Output follows Amazon Working Backwards (PRFAQ),
 Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain
 English with a strict no em dash style.
 
+This page uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
+
 ## Start here
 
 | Page                                  | When to read                                                                                     |

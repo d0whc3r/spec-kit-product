@@ -3,6 +3,8 @@
 Every artifact this extension generates obeys the same voice rules. The
 shared `product/checklist.md` lets you verify them after generation.
 
+This page uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
+
 ## The rules
 
 1. **English only.**

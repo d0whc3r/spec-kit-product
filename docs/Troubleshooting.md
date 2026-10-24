@@ -2,48 +2,28 @@
 
 Error codes the commands emit, with cause and fix.
 
+This page uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
+
 ## Installation errors
 
-### "installation is not allowed from that catalog"
+### "found in the 'community' catalog, which is discovery-only"
 
 ```text
-Error: 'product' is available in the 'community' catalog but installation is
-not allowed from that catalog.
-
-To enable installation, add 'product' to an approved catalog
-(install_allowed: true) in .specify/extension-catalogs.yml.
+Error: 'product' was found in the 'community' catalog, which is discovery-only
 ```
 
-This is expected behavior, not a broken release. Spec Kit ships the community
-catalog as **discovery only**. It carries `install_allowed: false` by design,
-so the CLI can list community extensions but will not install one until you opt
-in. You have two ways to opt in.
+This is expected behavior. Spec Kit lists community extensions in a discovery-only catalog (`install_allowed: false`) and does not install from it. Spec Kit advises against setting that catalog to `install_allowed`.
 
-**Option A: install directly (recommended).** No catalog config, always works,
-and it is the only way to pin a specific version:
+Install the extension directly from the release archive. This is also how you pin a version:
 
 ```bash
 specify extension add product --from \
   https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.2/product-1.0.2.zip
 ```
 
-To update later, rerun the same command with a newer version URL.
+To update later, run the same command with a newer release URL and add `--force`.
 
-**Option B: approve the community catalog.** Do this once if you want to
-install and update by name. It adds the catalog with `install_allowed: true`
-to `.specify/extension-catalogs.yml`:
-
-```bash
-specify extension catalog add \
-  https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json \
-  --name community --install-allowed
-
-specify extension add product
-specify extension update product
-```
-
-Community extensions are author-maintained and not reviewed by Spec Kit. Review
-the source before approving a catalog.
+Community extensions are author-maintained, and Spec Kit does not review them. Review the source before you install.
 
 ## Project resolution errors
 

@@ -60,7 +60,7 @@ A `commands/*.md` adds an `E_NEW_CODE`. Update two places:
 
 ```markdown
 | `E_NO_SPEC`    | Feature directory has no `spec.md`.                       |
-| `E_BAD_VERSION`| Spec Kit version below `0.2.0`.                           |
+| `E_BAD_VERSION`| Spec Kit version below `0.12.17`.                           |
 ```
 
 Preserve column alignment by hand if the surrounding table uses it.

@@ -13,14 +13,13 @@
   "category": "docs",
   "effect": "read-write",
   "requires": {
-    "speckit_version": ">=0.2.0"
+    "speckit_version": ">=0.12.17"
   },
   "provides": {
     "commands": 3,
-    "hooks": 3
+    "hooks": 4
   },
   "tags": [
-    "design",
     "documentation",
     "jtbd",
     "lean-prd",
@@ -29,10 +28,6 @@
     "prfaq",
     "product",
     "product-management",
-    "requirements",
-    "spec",
-    "spec-kit",
-    "spec-kit-extension",
     "stakeholder",
     "technical-design"
   ],

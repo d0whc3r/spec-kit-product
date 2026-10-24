@@ -5,6 +5,8 @@ their output by default, and `/speckit.product.design` can add a Non-Functional
 Requirements table. None of these are decorative. Each one renders only when it
 earns its place. This page explains what gets drawn, when, and what is left out.
 
+This page uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
+
 ## The value gate
 
 A diagram or optional section is emitted only when it shows the reader something

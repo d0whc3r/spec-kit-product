@@ -3,6 +3,8 @@
 How input flows into the three commands, what each one writes, and the order
 to run them in.
 
+This page uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
+
 ## Input and output flow
 
 ```
@@ -17,6 +19,8 @@ Spec Kit core               This extension
                                        ↑
                          tasks.md ─────┘ (optional)
                          data-model.md ─┘ (optional)
+                         research.md ──┘ (optional)
+                         contracts/ ───┘ (optional)
 
 All three also write to:   product/checklist.md
 ```
@@ -37,6 +41,8 @@ three for every feature.
 `brief` needs only `spec.md`. `plan` and `design` need `plan.md`,
 so run `/speckit.plan` from Spec Kit core first.
 
+Spec Kit offers the commands as optional hooks, so you can also accept each one when the core command finishes. After `/speckit.specify` and `/speckit.clarify`, Spec Kit offers `/speckit.product.brief`. After `/speckit.plan`, it offers `/speckit.product.plan`, then `/speckit.product.design`. See [Commands](Commands.md#hooks).
+
 ## The `product/` folder
 
 All generated artifacts live in `product/` inside the feature directory:
@@ -47,6 +53,8 @@ specs/<feature-dir>/
 ├── plan.md                  source of truth, never modified
 ├── tasks.md                 optional input to /speckit.product.design
 ├── data-model.md            optional input to /speckit.product.design
+├── research.md              optional input to /speckit.product.design
+├── contracts/               optional input to /speckit.product.design
 └── product/
     ├── 00-info.md           from /speckit.product.brief
     ├── 10-spec.md           from /speckit.product.brief

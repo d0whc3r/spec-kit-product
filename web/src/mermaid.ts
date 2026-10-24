@@ -16,6 +16,11 @@ function ensureMermaid(): typeof mermaid {
       startOnLoad: false,
       securityLevel: "strict",
       theme: dark ? "dark" : "default",
+      // mermaid 12 defaults to the ELK layout and the "neo" look. Pin the
+      // mermaid 11 rendering so the diagrams keep their look and a plain
+      // flowchart does not fetch the large ELK chunk.
+      layout: "dagre",
+      look: "classic",
     });
     initialized = true;
   }

@@ -23,6 +23,8 @@ The wiki is generated from [`docs/`](docs/) on every push to `main`. To browse t
 
 ## At a glance
 
+This README uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
+
 | Command                   | Reads                               | Writes                                     | Audience                         |
 | ------------------------- | ----------------------------------- | ------------------------------------------ | -------------------------------- |
 | `/speckit.product.brief`  | `spec.md`                           | `product/00-info.md`, `product/10-spec.md` | Any stakeholder, PMs, leadership |
@@ -31,28 +33,25 @@ The wiki is generated from [`docs/`](docs/) on every push to `main`. To browse t
 
 All three commands also update their section of the shared `product/checklist.md` (`/speckit.product.brief` writes both the Info and Spec sections). No command modifies `spec.md` or `plan.md`.
 
+Spec Kit offers each command as an optional hook. After `/speckit.specify` and `/speckit.clarify` it offers `/speckit.product.brief`. After `/speckit.plan` it offers `/speckit.product.plan`, then `/speckit.product.design`.
+
 ## Source of truth
 
 `spec.md` and `plan.md` are canonical. Everything under `product/` is a derived view, regenerated on demand by rerunning the matching command and choosing overwrite. `[NEEDS CLARIFICATION]` markers in `spec.md` are surfaced as open product questions in the generated output, never silently resolved.
 
 ## Install
 
-Install directly from the latest release. This needs no catalog setup and is the recommended path:
+Requires Spec Kit `>= 0.12.17` initialized in the project (`specify init`).
+
+Install directly from the latest release:
 
 ```bash
 specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.2/product-1.0.2.zip
 ```
 
-Change the version in the URL to pin a different release.
+Change the version in the URL to pin a different release. To update, run the same command with a newer release URL and add `--force`.
 
-Want to install by name with `specify extension add product`? That resolves the extension from Spec Kit's community catalog, which ships as discovery only (`install_allowed: false`). Approve it once:
-
-```bash
-specify extension catalog add https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json --name community --install-allowed
-specify extension add product
-```
-
-If `specify extension add product` fails with `installation is not allowed from that catalog`, that is why. See [Troubleshooting](https://github.com/d0whc3r/spec-kit-product/wiki/Troubleshooting#installation-errors).
+Spec Kit lists the extension in its community catalog. Run `specify extension search product` or `specify extension info product` to see the entry. That catalog is discovery only, so install by name (`specify extension add product`) does not work. See [Troubleshooting](https://github.com/d0whc3r/spec-kit-product/wiki/Troubleshooting#installation-errors).
 
 For prerequisites and the first-run walkthrough see [Getting Started](https://github.com/d0whc3r/spec-kit-product/wiki/Getting-Started).
 

@@ -86,6 +86,18 @@ const read = (rel) => fs.readFileSync(path.join(repoRoot, rel), "utf8");
 const exists = (rel) => fs.existsSync(path.join(repoRoot, rel));
 const occurrences = (haystack, needle) => haystack.split(needle).length - 1;
 
+// Shipped commands name Spec Kit commands only through __SPECKIT_COMMAND_<NAME>__
+// tokens, which Spec Kit resolves per agent at install time. oxfmt turns a token
+// outside backticks into bold text, so check for that too.
+function lintCommandRefs(rel, text, fail) {
+  if (/(^|[\s`(])\/speckit\.[a-z]/m.test(text)) {
+    fail(`literal Spec Kit command name in ${rel}: use a __SPECKIT_COMMAND_<NAME>__ token`);
+  }
+  if (text.includes("**SPECKIT_COMMAND_")) {
+    fail(`token formatted as bold in ${rel}: keep each token inside backticks`);
+  }
+}
+
 // 1-based line of the first heading line, or 0 if absent.
 function headingLine(lines, heading) {
   const idx = lines.findIndex((l) => l === `## ${heading}` || l === `## ${heading} _(optional)_`);
@@ -180,6 +192,9 @@ export async function lintContent() {
 
   for (const spec of TEMPLATES) lintTemplate(spec, fail);
   lintHumanization(fail);
+  for (const cmd of new Set(TEMPLATES.map((spec) => spec.command))) {
+    if (exists(cmd)) lintCommandRefs(cmd, read(cmd), fail);
+  }
 
   // oxfmt pass over the shipped markdown.
   const oxfmt = path.join(repoRoot, "node_modules/.bin/oxfmt");

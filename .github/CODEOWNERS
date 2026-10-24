@@ -5,13 +5,10 @@
 # Fallback owner for everything not explicitly listed below.
 *                                       @d0whc3r
 
-# Canonical command surface and agent mirrors. Changes here must respect the
-# agent-boundary rule in AGENTS.md / constitution §V.
+# Canonical command surface and contributor skills.
 /commands/                              @d0whc3r
+/.agents/skills/                        @d0whc3r
 /.claude/skills/                        @d0whc3r
-/.github/agents/                        @d0whc3r
-/.github/prompts/                       @d0whc3r
-/.specify/integrations/                 @d0whc3r
 
 # Extension manifest, catalog, and release tooling.
 /extension.yml                          @d0whc3r
@@ -25,7 +22,6 @@
 
 # Project-wide policy documents.
 /AGENTS.md                              @d0whc3r
-/CLAUDE.md                              @d0whc3r
 /CONTRIBUTING.md                        @d0whc3r
 /CODE_OF_CONDUCT.md                     @d0whc3r
 /SECURITY.md                            @d0whc3r

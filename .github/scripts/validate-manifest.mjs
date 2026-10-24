@@ -6,6 +6,8 @@
 //   - extension.version present, and equals the release version on a tag run
 //     (RELEASE_VERSION env, or a refs/tags/v* GITHUB_REF)
 //   - all required runtime files exist and are non-empty
+//   - catalog.json (when present) matches the manifest version,
+//     requires.speckit_version, and command and hook counts
 //
 // Usage:
 //   node validate-manifest.mjs                 # validate the repo root
@@ -76,6 +78,30 @@ export function validateManifest({ root = repoRoot } = {}) {
     if (version !== expected) {
       log.fail(`version mismatch: tag ${ref}, manifest ${version}`);
       ok = false;
+    }
+  }
+
+  // catalog.json lives only in the repo (not in the zip). When present it must
+  // agree with the manifest on the fields the upstream catalog entry carries.
+  const catalogPath = path.join(root, "catalog.json");
+  if (fs.existsSync(catalogPath)) {
+    const catalog = JSON.parse(fs.readFileSync(catalogPath, "utf8"));
+    const hooks = Object.values(manifest.hooks ?? {}).flat().length;
+    const pairs = [
+      ["version", catalog.version, version],
+      [
+        "requires.speckit_version",
+        catalog.requires?.speckit_version,
+        manifest.requires?.speckit_version,
+      ],
+      ["provides.commands", catalog.provides?.commands, manifest.provides?.commands?.length ?? 0],
+      ["provides.hooks", catalog.provides?.hooks, hooks],
+    ];
+    for (const [field, got, want] of pairs) {
+      if (got !== want) {
+        log.fail(`catalog.json ${field} is ${got}, extension.yml says ${want}`);
+        ok = false;
+      }
     }
   }
 

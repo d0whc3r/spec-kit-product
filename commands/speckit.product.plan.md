@@ -1,5 +1,5 @@
 ---
-description: "Generate a high-level technical plan from the current feature's plan.md and update the shared quality checklist"
+description: "Generate a high-level, product-oriented plan from the current feature's plan.md and update the shared quality checklist"
 ---
 
 # Generate Product Plan
@@ -47,7 +47,9 @@ When this extension is installed under `.specify/extensions/product/`, the absol
 
 ### Step 1: Resolve the feature directory
 
-Run speckit's built-in resolver. If the user passed `--feature-dir <path>`, export `SPECIFY_FEATURE_DIRECTORY=<path>` in the environment first (resolve relative paths against the repo root).
+If the user passed `--feature-dir <path>`, use that path as `FEATURE_DIR` (resolve a relative path against the repo root) and skip the resolver. Do not export `SPECIFY_FEATURE_DIRECTORY` for this: Spec Kit persists that variable into `.specify/feature.json`, which this command must not modify.
+
+Otherwise, run speckit's built-in resolver:
 
 - **Bash**:
 
@@ -68,7 +70,7 @@ Capture the output as `FEATURE_DIR`. If the command exits non-zero, surface its 
 
 Refuse to proceed when:
 
-1. **E_NO_PLAN**: `${FEATURE_DIR}/plan.md` does not exist. Tell the user to run `/speckit.plan` first.
+1. **E_NO_PLAN**: `${FEATURE_DIR}/plan.md` does not exist. Tell the user to run `__SPECKIT_COMMAND_PLAN__` first.
 2. **E_PLACEHOLDERS**: `plan.md` still contains literal placeholders from the plan template. Detect these by looking for any of the following exact bracketed strings as substrings of the file (case sensitive):
    - `[FEATURE]`
    - `[DATE]`
@@ -220,6 +222,7 @@ If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
 
 - Read `templates/product-checklist-template.md`.
 - Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
+- The template names commands in dot form. In `checklist.md`, write each command name the way this agent invokes it, for example `__SPECKIT_COMMAND_PRODUCT_BRIEF__`.
 - Stage the file content in memory. All four sections (`## Info`, `## Spec`, `## Plan`, `## Design`) start with the "not yet generated" placeholder state.
 
 If the file **already exists**, read its current content into memory. You will replace only the `## Plan` section (between the `## Plan` heading and the next `---` horizontal rule) using the results of Step 7. All other sections and the `## Needs Review` section are preserved verbatim.
@@ -253,12 +256,12 @@ When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholde
 
 ## Error Codes
 
-| Code           | Condition                                                              |
-| -------------- | ---------------------------------------------------------------------- |
-| E_NO_PLAN      | `plan.md` missing in the feature directory. Run `/speckit.plan` first. |
-| E_PLACEHOLDERS | `plan.md` still contains template placeholders.                        |
-| E_LANGUAGE     | `plan.md` is not in English.                                           |
-| E_USER_ABORT   | User chose abort at the overwrite prompt.                              |
+| Code           | Condition                                                                         |
+| -------------- | --------------------------------------------------------------------------------- |
+| E_NO_PLAN      | `plan.md` missing in the feature directory. Run `__SPECKIT_COMMAND_PLAN__` first. |
+| E_PLACEHOLDERS | `plan.md` still contains template placeholders.                                   |
+| E_LANGUAGE     | `plan.md` is not in English.                                                      |
+| E_USER_ABORT   | User chose abort at the overwrite prompt.                                         |
 
 ## Idempotence
 

@@ -51,10 +51,14 @@ body:
       required: true
 
   - type: textarea
-    id: agent-coverage
+    id: files-touched
     attributes:
-      label: Agent surfaces touched
-      description: Per constitution §V, command-level changes must mirror across Claude Code, GitHub Copilot, OpenAI Codex, and Spec Kit core. Confirm whether this proposal requires changes to all four, or is documentation-only.
+      label: Files that change
+      description: List the command file in `commands/`, the template in `templates/`, and the docs that this proposal changes. Spec Kit generates the per-agent files at install time, so do not list them.
+      placeholder: |
+        Command: commands/speckit.product.brief.md
+        Template: templates/product-spec-template.md
+        Docs: docs/Commands.md, README.md
     validations:
       required: true
 
@@ -67,5 +71,5 @@ body:
           required: true
         - label: I read the README and confirmed this is in scope for the extension.
           required: true
-        - label: The proposal respects the no em dash, plain English style required by the constitution.
+        - label: The proposal respects the no em dash, plain English style in `templates/humanization-guide.md`.
           required: true

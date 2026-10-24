@@ -1,12 +1,12 @@
 name: New command proposal
-description: Propose a new /speckit.product.* command. Adding a command is a breaking change and requires updates across all agent surfaces.
+description: Propose a new /speckit.product.* command. Adding a command is a breaking change.
 title: "feat(command): <command name>"
 labels: ["enhancement", "command", "needs-triage", "breaking"]
 body:
   - type: markdown
     attributes:
       value: |
-        Adding a command touches the canonical file, the manifest and mirror surface of every installed integration (see `.specify/integration.json`), `extension.yml`, and `catalog.json`. Read `AGENTS.md` and the constitution before filing.
+        Adding a command touches the command file, its template, `extension.yml`, `catalog.json`, and the docs. Spec Kit generates the per-agent files at install time. Read `AGENTS.md` before filing.
 
   - type: input
     id: command-name
@@ -45,21 +45,16 @@ body:
       required: false
 
   - type: textarea
-    id: agent-mirrors
+    id: files-touched
     attributes:
-      label: Agent mirror plan
-      description: Confirm you will update the canonical file and the mirrors of every installed integration (Claude skill, Copilot agent + prompt, Codex manifest, Spec Kit manifest, as applicable), plus `extension.yml` and `catalog.json`.
+      label: Files that change
+      description: Confirm the command file, the template, and the docs that you will add or change.
       value: |
-        - [ ] commands/speckit.product.<area>.<verb>.md (canonical)
-        - [ ] .claude/skills/<slug>/SKILL.md
-        - [ ] .github/agents/<name>.agent.md
-        - [ ] .github/prompts/<name>.prompt.md
-        - [ ] .specify/integrations/claude.manifest.json
-        - [ ] .specify/integrations/copilot.manifest.json
-        - [ ] .specify/integrations/codex.manifest.json
-        - [ ] .specify/integrations/speckit.manifest.json
-        - [ ] extension.yml provides.commands
-        - [ ] catalog.json provides.commands count
+        - [ ] commands/speckit.product.<area>.<verb>.md
+        - [ ] templates/product-<area>-template.md
+        - [ ] extension.yml provides.commands (and hooks, if any)
+        - [ ] catalog.json provides counts
+        - [ ] README.md, WORKFLOW.md, docs/, and web/index.html
     validations:
       required: true
 
@@ -70,5 +65,5 @@ body:
       options:
         - label: I confirm this command does not duplicate an existing one.
           required: true
-        - label: I understand a new command is a breaking change requiring a `feat!` or `BREAKING CHANGE` commit.
+        - label: I understand a new command is a breaking change requiring a `BREAKING CHANGE:` footer in the commit.
           required: true

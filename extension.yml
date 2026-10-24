@@ -9,9 +9,11 @@ extension:
   repository: https://github.com/d0whc3r/spec-kit-product
   homepage: https://d0whc3r.github.io/spec-kit-product/
   license: MIT
+  category: docs
+  effect: read-write
 
 requires:
-  speckit_version: ">=0.2.0"
+  speckit_version: ">=0.12.17"
 
 provides:
   commands:
@@ -37,13 +39,18 @@ hooks:
     prompt: "Regenerate the product brief after clarification?"
     description: "Update product/00-info.md and product/10-spec.md from the clarified spec.md"
   after_plan:
-    command: speckit.product.plan
-    optional: true
-    prompt: "Generate the product-facing plan product/20-plan.md from plan.md?"
-    description: "Generate product/20-plan.md from plan.md"
+    - command: speckit.product.plan
+      optional: true
+      priority: 10
+      prompt: "Generate the product-facing plan product/20-plan.md from plan.md?"
+      description: "Generate product/20-plan.md from plan.md"
+    - command: speckit.product.design
+      optional: true
+      priority: 20
+      prompt: "Generate the technical design product/30-design.md from plan.md, research.md, and contracts/?"
+      description: "Generate product/30-design.md from plan.md, spec.md, and the optional plan outputs (research.md, data-model.md, contracts/)"
 
 tags:
-  - design
   - documentation
   - jtbd
   - lean-prd
@@ -52,9 +59,5 @@ tags:
   - prfaq
   - product
   - product-management
-  - requirements
-  - spec
-  - spec-kit
-  - spec-kit-extension
   - stakeholder
   - technical-design

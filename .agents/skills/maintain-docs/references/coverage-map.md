@@ -8,7 +8,7 @@ The reverse direction (canonical file → which pages depend on it) is at
 the bottom.
 
 Only user-facing pages appear here. Contributor and tooling docs
-(`CONTRIBUTING.md`, `AGENTS.md`/`CLAUDE.md`) are out of this skill's
+(`CONTRIBUTING.md`, `AGENTS.md`) are out of this skill's
 scope and are intentionally absent.
 
 ## Wiki pages
@@ -264,7 +264,7 @@ Asserts:
 
 - The hero purpose paragraph (matches `extension.yml.extension.description`
   and the `README.md` lead).
-- The hero badges: command count, `Requires Spec Kit >= 0.2.0`, license.
+- The hero badges: command count, `Requires Spec Kit >= 0.12.17`, license.
 - The three-row command table (same command names, reads, writes, and
   audiences as `docs/Home.md`; HTML form, not byte-equivalent).
 - The install snippets and the pinned release URL (must match the version
@@ -288,8 +288,8 @@ Re-check whenever: a command is added or removed; the description in
   pipeline checks, release procedure, catalog submission, style coupling,
   branch naming. User-facing pages link here for contributor questions;
   the skill does not edit it.
-- `AGENTS.md` / `CLAUDE.md` — agent behavioral guidelines and the
-  four-agent boundary rule. Repo governance, not user docs.
+- `AGENTS.md` — agent instructions: commands, layout, conventions, and
+  gotchas. Repo governance, not user docs.
 - `SECURITY.md`, `SUPPORT.md`, `CODE_OF_CONDUCT.md` — standard repo
   files. Leave alone unless explicitly asked.
 

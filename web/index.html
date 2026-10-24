@@ -69,13 +69,13 @@
                   Direct install
                 </button>
                 <button
-                  id="tab-install-catalog"
+                  id="tab-install-update"
                   class="tab"
                   role="tab"
                   aria-selected="false"
-                  aria-controls="panel-install-catalog"
+                  aria-controls="panel-install-update"
                 >
-                  Via catalog
+                  Update
                 </button>
               </div>
             </div>
@@ -89,26 +89,22 @@
               <pre data-copy><code>specify extension add product \
   --from https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.2/product-1.0.2.zip</code></pre>
               <p class="install-hint">
-                Works with zero configuration. This is the most reliable path and the same one you
-                use to pin a version.
+                Works with zero configuration. Change the version in the URL to pin a release.
               </p>
             </div>
 
             <div
-              id="panel-install-catalog"
+              id="panel-install-update"
               class="tab-panel"
               role="tabpanel"
-              aria-labelledby="tab-install-catalog"
+              aria-labelledby="tab-install-update"
               hidden
             >
-              <pre data-copy><code>specify extension catalog add \
-  https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json \
-  --name community --install-allowed
-specify extension add product</code></pre>
+              <pre data-copy><code>specify extension add product --force \
+  --from https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.2/product-1.0.2.zip</code></pre>
               <p class="install-hint">
-                Prefer installing and updating by name? Approve the community catalog once, then
-                <code>add</code> and <code>update</code> resolve <code>product</code> automatically.
-                See <a href="#install-help">install help</a> for why this is needed.
+                Run the install command again with <code>--force</code> to replace an installed
+                version. Your generated <code>product/</code> files do not change.
               </p>
             </div>
           </div>
@@ -123,7 +119,7 @@ specify extension add product</code></pre>
 
           <ul class="hero-badges">
             <li>3 commands</li>
-            <li>Requires Spec Kit &gt;= 0.2.0</li>
+            <li>Requires Spec Kit &gt;= 0.12.17</li>
             <li>MIT licensed</li>
             <li>No em dashes, plain English</li>
           </ul>
@@ -176,6 +172,11 @@ specify extension add product</code></pre>
             Each command stands alone and reads from a feature directory under
             <code>specs/</code>. Stop at the level of detail your audience needs.
           </p>
+          <p>
+            This page uses the slash-command names, such as <code>/speckit.product.brief</code>.
+            Skills agents, such as Claude Code, use hyphens instead:
+            <code>/speckit-product-brief</code>.
+          </p>
 
           <div class="table-wrap">
             <table class="cmd-table">
@@ -214,6 +215,12 @@ specify extension add product</code></pre>
             <code>spec.md</code>, <code>plan.md</code>, or any other source file. Pass
             <code>--feature-dir specs/&lt;dir&gt;</code> to target a specific feature instead of the
             active one.
+          </p>
+          <p class="note">
+            Spec Kit offers each command as an optional hook. After
+            <code>/speckit.specify</code> and <code>/speckit.clarify</code> it offers
+            <code>/speckit.product.brief</code>. After <code>/speckit.plan</code> it offers
+            <code>/speckit.product.plan</code>, then <code>/speckit.product.design</code>.
           </p>
         </div>
       </section>
@@ -1004,8 +1011,8 @@ to services rather than reading upstream systems directly.</code></pre>
             <li>
               <h3>Install the extension</h3>
               <p>
-                Install directly from the latest release. This needs no catalog setup and is the
-                recommended path:
+                You need Spec Kit &gt;= 0.12.17 initialized (<code>specify init</code>). Install
+                directly from the latest release:
               </p>
               <pre data-copy><code>specify extension add product \
   --from https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.2/product-1.0.2.zip</code></pre>
@@ -1013,8 +1020,10 @@ to services rather than reading upstream systems directly.</code></pre>
               <pre data-copy><code>cat .specify/extensions/.registry   # 'product' entry present
 ls .specify/extensions/product      # extension files present</code></pre>
               <p class="step-aside">
-                Prefer <code>specify extension add product</code> by name? That needs the community
-                catalog approved first. See <a href="#install-help">install help</a>.
+                Skills-based agents, such as Claude Code and Copilot, name the commands
+                <code>/speckit-product-brief</code>, <code>/speckit-product-plan</code>, and
+                <code>/speckit-product-design</code>. Codex uses a <code>$</code> prefix, such as
+                <code>$speckit-product-brief</code>.
               </p>
             </li>
             <li>
@@ -1081,48 +1090,43 @@ All three also write to:   product/checklist.md</code></pre>
 
           <div class="callout callout-error">
             <p class="callout-title">The error you may see</p>
-            <pre><code>Error: 'product' is available in the 'community' catalog but installation
-is not allowed from that catalog.
-
-To enable installation, add 'product' to an approved catalog
-(install_allowed: true) in .specify/extension-catalogs.yml.</code></pre>
+            <pre><code>Error: 'product' was found in the 'community' catalog, which is discovery-only
+...
+Don't flip such a catalog to install_allowed.</code></pre>
           </div>
 
           <p>
-            Spec Kit ships the community catalog as <strong>discovery only</strong>. It carries
-            <code>install_allowed: false</code> by design, so the CLI can list community extensions
-            but will not install one until you opt in. You have two ways to opt in.
+            Spec Kit lists community extensions in a <strong>discovery-only</strong> catalog. That
+            catalog has <code>install_allowed: false</code>, so Spec Kit does not install from it.
+            Spec Kit also advises against changing that setting. Run
+            <code>specify extension search product</code> or
+            <code>specify extension info product</code> to see the entry, then install from the
+            release archive.
           </p>
 
           <div class="install-options">
             <article class="card">
-              <h3>Option A: Direct install (recommended)</h3>
+              <h3>Install a release</h3>
               <p>
-                Install straight from the release archive. No catalog config, always works, and it
-                is the only way to pin a specific version.
+                Install straight from the release archive. Spec Kit asks you to confirm the source.
+                Change the version in the URL to pin a release.
               </p>
               <pre data-copy><code>specify extension add product \
   --from https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.2/product-1.0.2.zip</code></pre>
               <p class="example-note">
-                To update later, run the same command with a newer version URL.
+                Community extensions are author-maintained, and Spec Kit does not review them.
+                Review the source before you install.
               </p>
             </article>
             <article class="card">
-              <h3>Option B: Approve the community catalog</h3>
+              <h3>Update to a newer release</h3>
               <p>
-                Do this once if you want to install and update by name. It adds the catalog with
-                <code>install_allowed: true</code> to <code>.specify/extension-catalogs.yml</code>.
+                Run the install command with the newer release URL and add <code>--force</code> to
+                replace the installed version.
               </p>
-              <pre data-copy><code>specify extension catalog add \
-  https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json \
-  --name community --install-allowed
-
-specify extension add product
-specify extension update product</code></pre>
-              <p class="example-note">
-                Community extensions are author-maintained and not reviewed by Spec Kit. Review the
-                source before approving a catalog.
-              </p>
+              <pre data-copy><code>specify extension add product --force \
+  --from &lt;newer-release-zip-url&gt;</code></pre>
+              <p class="example-note">Your generated <code>product/</code> files do not change.</p>
             </article>
           </div>
 
@@ -1142,11 +1146,11 @@ specify extension update product</code></pre>
             <details>
               <summary>Why does <code>specify extension add product</code> fail?</summary>
               <p>
-                The extension lives in Spec Kit's community catalog, which is discovery only and
-                carries <code>install_allowed: false</code>. The CLI can list it but will not
-                install until you opt in. Either install directly with
-                <code>--from &lt;release-zip-url&gt;</code>, or approve the community catalog once.
-                Full steps are in <a href="#install-help">install help</a>.
+                The extension is listed in Spec Kit's community catalog, which is discovery only and
+                carries <code>install_allowed: false</code>. Spec Kit shows the extension but does
+                not install it from that catalog. Install directly with
+                <code>--from &lt;release-zip-url&gt;</code>. Full steps are in
+                <a href="#install-help">install help</a>.
               </p>
             </details>
             <details>

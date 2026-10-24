@@ -4,7 +4,7 @@ Five minutes from zero to a generated product artifact.
 
 ## Prerequisites
 
-- Spec Kit `>= 0.2.0` initialized in your project. Verify with:
+- Spec Kit `>= 0.12.17` initialized in your project. Verify with:
   ```bash
   specify --version
   ls .specify
@@ -22,29 +22,29 @@ cd my-project
 
 ## Step 1: Install the extension
 
-The recommended install resolves a release directly from the download URL. This
-needs no catalog setup and always works:
+Install a release from its download URL:
 
 ```bash
 specify extension add product --from \
   https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.2/product-1.0.2.zip
 ```
 
-Change the version in the URL to pin a different release.
+Spec Kit shows the source URL and asks you to confirm. Change the version in the URL to pin a different release.
 
-Prefer to install and update by name with `specify extension add product`?
-That resolves the extension from Spec Kit's community catalog, which ships as
-discovery only (`install_allowed: false`). Approve it once:
+Spec Kit lists the extension in its community catalog. To see the entry, run:
 
 ```bash
-specify extension catalog add \
-  https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json \
-  --name community --install-allowed
-specify extension add product
+specify extension search product
+specify extension info product
 ```
 
-See [Troubleshooting](Troubleshooting.md#installation-errors) for the full
-explanation of the community catalog error.
+Install by name (`specify extension add product`) does not work. Spec Kit lists community extensions in a discovery-only catalog and does not install from it. Spec Kit also advises against setting that catalog to `install_allowed`. See [Troubleshooting](Troubleshooting.md#installation-errors).
+
+To update later, run the install command with a newer release URL and add `--force`:
+
+```bash
+specify extension add product --from <newer-release-zip-url> --force
+```
 
 Confirm install:
 
@@ -52,6 +52,16 @@ Confirm install:
 cat .specify/extensions/.registry        # 'product' entry should be present
 ls .specify/extensions/product           # extension files present
 ```
+
+After install, the commands are available in your host agent. Their names depend on how the agent loads Spec Kit commands:
+
+| Host agent                                           | Command                  |
+| ---------------------------------------------------- | ------------------------ |
+| Agents that load commands as files                   | `/speckit.product.brief` |
+| Skills-based agents, such as Claude Code and Copilot | `/speckit-product-brief` |
+| Codex with skills                                    | `$speckit-product-brief` |
+
+These docs use the dot form, `/speckit.product.brief`. The same rule applies to `plan`, `design`, and the core commands, for example `/speckit-specify`.
 
 ## Step 2: Create a feature
 

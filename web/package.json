@@ -10,11 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "marked": "18.0.9",
-    "mermaid": "11.16.1"
+    "marked": "18.1.1",
+    "mermaid": "12.2.0"
   },
   "devDependencies": {
     "typescript": "7.0.2",
-    "vite": "8.2.1"
+    "vite": "8.3.5"
   }
 }

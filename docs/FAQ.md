@@ -1,22 +1,17 @@
 # Frequently Asked Questions
 
+This page uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
+
 ## Why does `specify extension add product` fail with a catalog error?
 
-If you see `'product' is available in the 'community' catalog but installation
-is not allowed from that catalog`, that is expected. Spec Kit ships the
-community catalog as discovery only (`install_allowed: false`), so it can list
-the extension but will not install it until you opt in.
-
-The quickest fix is a direct install:
+Spec Kit lists community extensions in a discovery-only catalog (`install_allowed: false`). It shows the extension but does not install it, and it advises against changing that setting. Install directly from the release archive:
 
 ```bash
 specify extension add product --from \
   https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.2/product-1.0.2.zip
 ```
 
-To install and update by name instead, approve the community catalog once. See
-[Troubleshooting](Troubleshooting.md#installation-errors) for both paths in
-full.
+See [Getting Started](Getting-Started.md#step-1-install-the-extension) for the full install step.
 
 ## Why does this extension exist when Spec Kit already produces `spec.md`?
 
@@ -104,22 +99,14 @@ hand-wavy for engineers.
 
 ## How do I update the extension?
 
-If you installed directly with `--from`, rerun the same command with a newer
-release URL:
+Run the install command with a newer release URL and add `--force`:
 
 ```bash
-specify extension add product --from \
-  https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.2/product-1.0.2.zip
+specify extension add product --from <newer-release-zip-url> --force
 ```
 
-If you approved the community catalog, you can update by name:
-
-```bash
-specify extension update product
-```
-
-Either way, your generated `product/*.md` files are not touched; they are in
-your feature directories, not the extension directory.
+Your generated `product/*.md` files do not change. They are in your feature
+directories, not in the extension directory.
 
 ## Where do I report a bug or request a feature?
 

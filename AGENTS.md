@@ -1,137 +1,67 @@
 # AGENTS.md
 
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+This repository is the `product` extension for [Spec Kit](https://github.com/github/spec-kit). The extension adds three agent commands. Each command reads the `spec.md` or `plan.md` of a feature and writes stakeholder documents to `<feature-dir>/product/`.
 
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+## Commands
 
-## 1. Think Before Coding
+Use the pnpm version in `package.json` (`packageManager`) and the Node version in `.nvmrc`.
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+| Task                                         | Command                           |
+| -------------------------------------------- | --------------------------------- |
+| Install dependencies                         | `pnpm install`                    |
+| Run the CI checks                            | `pnpm check` and `pnpm web:build` |
+| Format all files                             | `pnpm format`                     |
+| Copy the identity fields from `package.json` | `pnpm sync`                       |
+| Build the release zip into `dist/`           | `pnpm build`                      |
+| Run the website on a local server            | `pnpm web:dev`                    |
 
-Before implementing:
+`pnpm check` runs `validate`, `sync:check`, `lint`, and `lint:content`. Run it before you finish a change.
 
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
+## Layout
 
-## 2. Simplicity First
+- `extension.yml`: the extension manifest. It declares the commands, the hooks, and `requires.speckit_version` (`>=0.12.17`).
+- `catalog.json`: the entry for the Spec Kit community catalog.
+- `commands/speckit.product.{brief,plan,design}.md`: one agent prompt for each command.
+- `templates/`: the output skeletons and `humanization-guide.md`. After install, the commands read them from `.specify/extensions/product/templates/`.
+- `examples/specs/`: real Spec Kit inputs and the `product/` documents that the commands made from them. The website shows these files.
+- `docs/`: the source of the GitHub Wiki. A workflow publishes it on each push to `main`.
+- `web/`: the GitHub Pages site (Vite, TypeScript, `marked`, and `mermaid`).
+- `.github/scripts/`: the release, validation, and lint scripts (Node ESM with `zx`).
+- `.agents/skills/`: contributor skills. `.claude/skills/` holds symlinks to them.
 
-**Minimum code that solves the problem. Nothing speculative.**
+## Conventions
 
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
+- `package.json` owns the identity fields: `description`, `author`, `homepage`, `repository`, `license`, and `keywords` (the catalog `tags`). Edit them there, then run `pnpm sync`.
+- semantic-release owns the version. Do not edit `version` in `extension.yml`, `catalog.json`, or `package.json`.
+- Use Conventional Commits. Only `feat:`, `fix:`, and `perf:` commits cause a release. To rename or remove a command, use a `BREAKING CHANGE:` footer. The release preset (angular) ignores a `feat!:` header.
+- A command writes only to `<feature-dir>/product/`. All other Spec Kit files are read-only inputs, `.specify/feature.json` included.
+- Generated documents obey `templates/humanization-guide.md`: no em dash, plain English, no AI-tell phrases, and every `[NEEDS CLARIFICATION]` marker kept.
 
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+## When you change a command or a template
 
-## 3. Surgical Changes
+- Keep `version`, `requires.speckit_version`, and the `provides` counts in `catalog.json` equal to `extension.yml`. `pnpm validate` fails when they differ.
+- Add each new runtime file to `REQUIRED` in `.github/scripts/validate-manifest.mjs`.
+- Update the heading lists in `.github/scripts/lint-content.mjs` when a template adds, removes, or reorders a `##` section.
+- Each command copies the AI-tell list from the "The enforced minimum" block of the guide two times. `pnpm lint:content` fails when a copy drifts.
+- In a command body, refer to extension files as `templates/<file>`. At install, Spec Kit rewrites them to `.specify/extensions/product/templates/<file>`.
+- In a command body, write each Spec Kit command as a token, for example `__SPECKIT_COMMAND_PLAN__` or `__SPECKIT_COMMAND_PRODUCT_BRIEF__`. At install, Spec Kit replaces the token with `/speckit.plan` or `/speckit-plan`, as the agent needs. The token includes the `/`, so do not write `/__SPECKIT_COMMAND_...`.
+- Spec Kit does not replace tokens in `templates/`. A template that becomes part of a generated document keeps plain command names.
+- `extension.yml` declares four optional hooks: `after_specify` and `after_clarify` offer `speckit.product.brief`. `after_plan` is a list that offers `speckit.product.plan` (priority 10), then `speckit.product.design` (priority 20). A hook change also changes `provides.hooks` in `catalog.json`.
+- Update the user docs in `README.md`, `WORKFLOW.md`, `docs/`, and `web/index.html`. The `maintain-docs` skill covers this.
 
-**Touch only what you must. Clean up only your own mess.**
+## Gotchas
 
-When editing existing code:
-
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request.
-
-## 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-
----
-
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
-
-<!-- SPECKIT START -->
-
-For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan at
-`specs/002-billing-usage-dashboard/plan.md`.
-
-<!-- SPECKIT END -->
-
-## Agent Boundaries
-
-This repository ships a Spec Kit extension whose command surface is mirrored
-across multiple AI coding agents. Every public command must exist in every
-integration surface installed in this repository (constitution §V). The set of
-installed integrations is recorded in `.specify/integration.json`
-(`installed_integrations`); installing a new integration via the Spec Kit
-installer creates its manifest and mirror files.
-
-| Agent          | Skill / Prompt Surface                                                | Manifest                                      |
-| -------------- | --------------------------------------------------------------------- | --------------------------------------------- |
-| Claude Code    | `.claude/skills/<skill-slug>/SKILL.md`                                | `.specify/integrations/claude.manifest.json`  |
-| GitHub Copilot | `.github/agents/<name>.agent.md` + `.github/prompts/<name>.prompt.md` | `.specify/integrations/copilot.manifest.json` |
-| OpenAI Codex   | manifest-only (no per-skill file)                                     | `.specify/integrations/codex.manifest.json`   |
-| Spec Kit core  | `commands/speckit.<area>.<verb>.md` (canonical)                       | `.specify/integrations/speckit.manifest.json` |
-
-Rules:
-
-1. Canonical command file lives at `commands/speckit.<area>.<verb>.md`. Mirrors derive from it; they must not diverge in intent.
-2. Adding a command requires updating: the canonical file, the manifest of every installed integration, every installed mirror surface, `extension.yml` `provides.commands`, and `catalog.json` `provides.commands` count.
-3. Renaming or removing a command is a breaking change and requires a `feat!:` or `BREAKING CHANGE:` commit per constitution §Governance.
-4. All agents must emit output obeying constitution §III: no em dashes, plain English, PRFAQ + JTBD + Gherkin + Lean PRD conventions, `[NEEDS CLARIFICATION]` markers preserved.
+- `specs/` and `.specify/` are local dogfood state. Git ignores both, so do not refer to them from tracked files.
+- The release zip holds only `extension.yml`, `README.md`, `LICENSE`, `commands/`, and `templates/`. `.extensionignore` gives `specify extension add --dev` the same set.
+- `pnpm web:build` copies `examples/` into `web/public/examples/`. Edit `examples/`, never the copy.
+- semantic-release writes `CHANGELOG.md`. Do not edit it.
+- A husky pre-commit hook runs oxfmt on the staged files.
+- Renovate updates the dependencies (`renovate.json`). Each update uses `chore`, because no npm dependency ships in the release zip.
 
 <!-- CODEGRAPH_START -->
 
 ## CodeGraph
 
-This project has a CodeGraph MCP server (`codegraph_*` tools) configured. CodeGraph is a tree-sitter-parsed knowledge graph of every symbol, edge, and file. Reads are sub-millisecond and return structural information grep cannot.
-
-### When to prefer codegraph over native search
-
-Use codegraph for **structural** questions — what calls what, what would break, where is X defined, what is X's signature. Use native grep/read only for **literal text** queries (string contents, comments, log messages) or after you already have a specific file open.
-
-| Question                                                       | Tool                                         |
-| -------------------------------------------------------------- | -------------------------------------------- |
-| "How does X work? / trace X / explain a system / architecture" | `codegraph_explore` (seed with symbol names) |
-| "Where is X defined?" / "Find symbol named X"                  | `codegraph_search`                           |
-| "What calls function Y?"                                       | `codegraph_callers`                          |
-| "What does Y call?"                                            | `codegraph_callees`                          |
-| "What would break if I changed Z?"                             | `codegraph_impact`                           |
-| "Show me Y's signature / source / docstring"                   | `codegraph_node`                             |
-| "Give me focused context for a task/area"                      | `codegraph_context`                          |
-| "What files exist under path/"                                 | `codegraph_files`                            |
-| "Is the index healthy?"                                        | `codegraph_status`                           |
-
-### Rules of thumb
-
-- **`codegraph_explore` is the workhorse for understanding questions** ("how does X work", "trace…", "explain the Y system"). Feed it the key symbol/file names and read its output (line-numbered source from many files in one call). If the question names nothing concrete, do one quick `codegraph_search`/`codegraph_context` to surface the names, then explore with them. Fill gaps with `codegraph_node`/Read — don't grep-and-read your way through; that's the loop explore replaces.
-- **Delegating exploration to a subagent?** Tell it to call `codegraph_explore` first and trust the result. A generic "explore"-style agent defaults to grep+Read and treats codegraph as just a search index, throwing away the token savings.
-- **Trust codegraph results.** They come from a full AST parse. Do NOT re-verify them with grep — that's slower, less accurate, and wastes context.
-- **Don't grep first** when looking up a symbol by name. `codegraph_search` is faster and returns kind + location + signature in one call.
-- **Index lag**: the file watcher debounces ~500ms behind writes; don't re-query immediately after editing a file in the same turn.
-
-### If `.codegraph/` doesn't exist
-
-The MCP server returns "not initialized." Ask the user: _"I notice this project doesn't have CodeGraph initialized. Want me to run `codegraph init -i` to build the index?"_
+`.mcp.json` configures the CodeGraph MCP server. For structural questions (where a symbol is, what calls it, what a change breaks), call `codegraph_explore` before you use grep.
 
 <!-- CODEGRAPH_END -->

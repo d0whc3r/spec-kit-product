@@ -128,7 +128,7 @@ sequenceDiagram
 
 ## Key Technical Decisions _(optional)_
 
-> One subsection per significant decision. Omit when plan.md has no explicit design choices.
+> One subsection per significant decision, from `plan.md` or `research.md`. Omit when neither has explicit design choices.
 
 ### [Decision title]
 

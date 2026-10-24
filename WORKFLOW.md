@@ -2,11 +2,13 @@
 
 This document explains how to install the extension, what each command needs as input, what it produces as output, and in what order to run them.
 
+This document uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
+
 ---
 
 ## Prerequisites
 
-- Spec Kit `>=0.2.0` initialized in your project (`specify init`).
+- Spec Kit `>=0.12.17` initialized in your project (`specify init`).
 - A feature directory under `specs/` created by `/speckit.specify`.
 - The feature's `spec.md` filled in (no unfilled `[PLACEHOLDER]` markers).
 
@@ -14,35 +16,46 @@ This document explains how to install the extension, what each command needs as 
 
 ## Install
 
-Install directly from the latest release. This needs no catalog setup and is the recommended path:
+Install directly from the latest release:
 
 ```bash
 specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.2/product-1.0.2.zip
 ```
 
-Change the version in the URL to pin a different release.
-
-Prefer to install and update by name with `specify extension add product`? That resolves the extension from Spec Kit's community catalog, which ships as discovery only (`install_allowed: false`). Approve it once, then add and update by name:
+Change the version in the URL to pin a different release. To update, run the same command with a newer release URL and add `--force`:
 
 ```bash
-specify extension catalog add https://raw.githubusercontent.com/github/spec-kit/main/extensions/catalog.community.json --name community --install-allowed
-specify extension add product
-specify extension update product
+specify extension add product --from <newer-release-zip-url> --force
 ```
 
-If `specify extension add product` fails with `installation is not allowed from that catalog`, that is why.
+Spec Kit lists the extension in its community catalog. Run `specify extension search product` or `specify extension info product` to see the entry. That catalog is discovery only, so install by name (`specify extension add product`) does not work.
 
-After install, three slash commands become available in your assistant.
+After install, three commands become available in your assistant.
+
+---
+
+## Hooks
+
+Spec Kit offers the commands as optional hooks after its core commands. You can accept or decline each offer.
+
+| Hook            | Triggers after     | Command offered           |
+| --------------- | ------------------ | ------------------------- |
+| `after_specify` | `/speckit.specify` | `/speckit.product.brief`  |
+| `after_clarify` | `/speckit.clarify` | `/speckit.product.brief`  |
+| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`   |
+| `after_plan`    | `/speckit.plan`    | `/speckit.product.design` |
+
+After `/speckit.plan`, Spec Kit offers `/speckit.product.plan` first and `/speckit.product.design` second.
 
 ---
 
 ## The Commands
 
-| Command                   | Reads                                                                                         | Writes                                                             | Audience                                           |
-| ------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------------- |
-| `/speckit.product.brief`  | `spec.md`                                                                                     | `product/00-info.md`, `product/10-spec.md`, `product/checklist.md` | Any stakeholder, PMs, leadership                   |
-| `/speckit.product.plan`   | `plan.md` (required), `spec.md` (supplementary)                                               | `product/20-plan.md`, `product/checklist.md`                       | PMs, engineering leads, cross-functional reviewers |
-| `/speckit.product.design` | `plan.md` (required), `spec.md` (required), `tasks.md` (optional), `data-model.md` (optional) | `product/30-design.md`, `product/checklist.md`                     | Tech leads, senior developers                      |
+| Command                   | Reads                                                                                                                                            | Writes                                                             | Audience                                           |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ | -------------------------------------------------- |
+| `/speckit.product.brief`  | `spec.md`                                                                                                                                        | `product/00-info.md`, `product/10-spec.md`, `product/checklist.md` | Any stakeholder, PMs, leadership                   |
+| `/speckit.product.plan`   | `plan.md` (required), `spec.md` (supplementary)                                                                                                  | `product/20-plan.md`, `product/checklist.md`                       | PMs, engineering leads, cross-functional reviewers |
+| `/speckit.product.design` | `plan.md` (required), `spec.md` (required), `tasks.md` (optional), `data-model.md` (optional), `research.md` (optional), `contracts/` (optional) | `product/30-design.md`, `product/checklist.md`                     | Tech leads, senior developers                      |
 
 None of the commands modify `spec.md`, `plan.md`, `tasks.md`, or any other source file. All output lands under `product/` inside the active feature directory. All three commands update `product/checklist.md`: the first command to run creates it; subsequent commands update only their own sections, preserving the rest.
 
@@ -62,6 +75,8 @@ Spec Kit core commands                This extension
                                        ↑
                          tasks.md ─────┘ (optional)
                          data-model.md ─┘ (optional)
+                         research.md ──┘ (optional)
+                         contracts/ ───┘ (optional)
 
 All three commands also write to:  product/checklist.md
 ```
@@ -165,7 +180,7 @@ Technical design document for tech leads and senior developers. Goes deeper than
 
 **Requires**: `plan.md` and `spec.md` - run `/speckit.plan` and `/speckit.specify` first.
 
-**Reads**: `plan.md` (required), `spec.md` (required), `tasks.md` (optional), `data-model.md` (optional)
+**Reads**: `plan.md` (required), `spec.md` (required), `tasks.md` (optional), `data-model.md` (optional), `research.md` (optional), `contracts/` (optional)
 **Writes**: `product/30-design.md`, `product/checklist.md`
 
 ```text

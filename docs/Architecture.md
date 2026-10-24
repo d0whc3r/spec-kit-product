@@ -2,6 +2,8 @@
 
 How the extension works when you run a command.
 
+This page uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
+
 ## What the extension is
 
 The extension has no runtime of its own: no daemon, no compiled code, no
@@ -45,18 +47,13 @@ constitution-level rule and the checklist enforces it.
 
 ## Hooks
 
-The extension declares three hook handlers in `extension.yml`, one per Spec
-Kit hook event. Each handler runs optionally after the matching Spec Kit
-core command:
+The extension declares four hook handlers in `extension.yml` on three Spec Kit hook events. Each handler runs optionally after the matching Spec Kit core command:
 
-| Hook            | Triggers after     | Command                  |
-| --------------- | ------------------ | ------------------------ |
-| `after_specify` | `/speckit.specify` | `/speckit.product.brief` |
-| `after_clarify` | `/speckit.clarify` | `/speckit.product.brief` |
-| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`  |
+| Hook            | Triggers after     | Command                   |
+| --------------- | ------------------ | ------------------------- |
+| `after_specify` | `/speckit.specify` | `/speckit.product.brief`  |
+| `after_clarify` | `/speckit.clarify` | `/speckit.product.brief`  |
+| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`   |
+| `after_plan`    | `/speckit.plan`    | `/speckit.product.design` |
 
-Each hook is `optional: true`. The host agent prompts before the handler
-runs and the user can decline; source files remain unchanged either way.
-The hook surfaces the stakeholder artifacts for each event; the technical
-design (`/speckit.product.design`) is produced on demand by running the
-matching command.
+Each hook is `optional: true`. The host agent prompts before the handler runs and the user can decline. Source files stay unchanged either way. The `after_plan` event holds a list of two handlers. Spec Kit runs them in `priority` order: `/speckit.product.plan` (10), then `/speckit.product.design` (20).

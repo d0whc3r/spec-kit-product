@@ -4,7 +4,7 @@ description: "Generate a high-level technical design document from the current f
 
 # Generate Technical Design
 
-Derive a `product/30-design.md` from the `plan.md` and `spec.md` of the active feature, then auto-validate and update the `## Design` section of the shared `product/checklist.md`. The artifact answers "how are we building this technically?" for tech leads and senior developers. It covers architectural approach, affected modules and layers, data model and API shapes, spec coverage mapping, key technical decisions, testing strategy, and rollout plan. Unlike the product-facing `product/plan.md`, this document is allowed to reference component names, module boundaries, file-level granularity, API surface shapes, and data schemas at a conceptual level. No runnable code, no full ORM definitions, no line-by-line implementation detail.
+Derive a `product/30-design.md` from the `plan.md` and `spec.md` of the active feature, then auto-validate and update the `## Design` section of the shared `product/checklist.md`. The artifact answers "how are we building this technically?" for tech leads and senior developers. It covers architectural approach, affected modules and layers, data model and API shapes, spec coverage mapping, key technical decisions, testing strategy, and rollout plan. Unlike the product-facing `product/20-plan.md`, this document is allowed to reference component names, module boundaries, file-level granularity, API surface shapes, and data schemas at a conceptual level. No runnable code, no full ORM definitions, no line-by-line implementation detail.
 
 ## User Input
 
@@ -25,6 +25,8 @@ The command reads (does not modify):
 - `<feature-dir>/spec.md` as required supplementary context for use cases, acceptance criteria, and personas.
 - `<feature-dir>/tasks.md` as optional supplementary context for implementation hints (read silently if present).
 - `<feature-dir>/data-model.md` as optional supplementary context for existing data shapes (read silently if present).
+- `<feature-dir>/research.md` as optional supplementary context for technical decisions, their rationale, and the alternatives considered (read silently if present).
+- `<feature-dir>/contracts/` as optional supplementary context for interface contracts (read every file silently if the directory is present).
 
 The command writes:
 
@@ -49,7 +51,9 @@ When this extension is installed under `.specify/extensions/product/`, the absol
 
 ### Step 1: Resolve the feature directory
 
-Run speckit's built-in resolver. If the user passed `--feature-dir <path>`, export `SPECIFY_FEATURE_DIRECTORY=<path>` in the environment first (resolve relative paths against the repo root).
+If the user passed `--feature-dir <path>`, use that path as `FEATURE_DIR` (resolve a relative path against the repo root) and skip the resolver. Do not export `SPECIFY_FEATURE_DIRECTORY` for this: Spec Kit persists that variable into `.specify/feature.json`, which this command must not modify.
+
+Otherwise, run speckit's built-in resolver:
 
 - **Bash**:
 
@@ -70,8 +74,8 @@ Capture the output as `FEATURE_DIR`. If the command exits non-zero, surface its 
 
 Refuse to proceed when:
 
-1. **E_NO_PLAN**: `${FEATURE_DIR}/plan.md` does not exist. Tell the user to run `/speckit.plan` first.
-2. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `/speckit.specify` first.
+1. **E_NO_PLAN**: `${FEATURE_DIR}/plan.md` does not exist. Tell the user to run `__SPECKIT_COMMAND_PLAN__` first.
+2. **E_NO_SPEC**: `${FEATURE_DIR}/spec.md` does not exist. Tell the user to run `__SPECKIT_COMMAND_SPECIFY__` first.
 3. **E_PLACEHOLDERS**: `plan.md` or `spec.md` still contain literal placeholders from their templates. Detect these by looking for any of the following exact bracketed strings as substrings of either file (case sensitive):
    - `[FEATURE]`
    - `[DATE]`
@@ -89,6 +93,8 @@ Read the following files silently if they exist. Do not warn or error if absent.
 
 - `${FEATURE_DIR}/tasks.md` - use for implementation hints to populate Affected Modules and Spec Coverage.
 - `${FEATURE_DIR}/data-model.md` - use to ground the Data Design section in existing schemas.
+- `${FEATURE_DIR}/research.md` - use to ground the Key Technical Decisions section: each recorded decision, its rationale, and the alternatives considered.
+- `${FEATURE_DIR}/contracts/` - use to ground the API Design section in the documented request, response, and error shapes.
 
 ### Step 4: Check for sparse sources
 
@@ -140,7 +146,7 @@ Before writing, read `templates/humanization-guide.md` (relative to this command
 - **Data Design**: always present when `plan.md`, `spec.md`, or `data-model.md` contains any data model information. Two subsections: Data Model (entities and key fields as plain text blocks) and Data Flow (how data moves). Omit the entire section when no data model information exists in any source.
 - **API Design**: always present when the feature exposes or modifies any API surface. Show request/response shapes and error cases at a conceptual level using plain `text` blocks. Omit the entire section when the feature has no API surface.
 - **Spec Coverage**: always present when `spec.md` exists and contains use cases or Gherkin scenarios. A table mapping each scenario to the component or operation that implements it. Gaps (scenarios not yet covered by the design) MUST be listed with "GAP" in the Notes column.
-- **Key Technical Decisions**: always present when `plan.md` contains explicit design decisions. Each decision gets a subsection with: Context, Options considered, Decision, Consequences (positive and negative). Omit the entire section when plan.md has no explicit decisions.
+- **Key Technical Decisions**: always present when `plan.md` or `research.md` contains explicit design decisions. Each decision gets a subsection with: Context, Options considered, Decision, Consequences (positive and negative). Omit the entire section when neither file has explicit decisions.
 - **Testing Strategy**: always present. Four labeled bullets: Unit, Integration, E2E / BDD, Observability. Derive from `spec.md` use cases for E2E targets. If a bullet has no content derivable from the source, write "Not specified in source."
 - **Rollout and Migration**: always present. Three labeled fields: Strategy, Data migration, Rollback. Derive from `plan.md`. If a field has no content, write "Not specified in source."
 - **Risks and Mitigations (optional)**: include only when `plan.md` or `spec.md` contains concrete technical risk signals. Pre-mortem lens: two to four entries. Each entry has: What could go wrong, Probability (Low/Medium/High), Impact (Low/Medium/High), Mitigation. Scope to technical and architectural risks; product risks are owned by the spec and delivery risks by the plan, so do not restate them. No generic or speculative risks. Omit otherwise.
@@ -239,6 +245,7 @@ If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
 
 - Read `templates/product-checklist-template.md`.
 - Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
+- The template names commands in dot form. In `checklist.md`, write each command name the way this agent invokes it, for example `__SPECKIT_COMMAND_PRODUCT_BRIEF__`.
 - Stage the file content in memory. All four sections (`## Info`, `## Spec`, `## Plan`, `## Design`) start with the "not yet generated" placeholder state.
 
 If the file **already exists**, read its current content into memory. You will replace only the `## Design` section (between the `## Design` heading and the next `---` horizontal rule) using the results of Step 7. All other sections and the `## Needs Review` section are preserved verbatim.
@@ -274,13 +281,13 @@ When `E_PLACEHOLDERS` lists multiple placeholders, print one line per placeholde
 
 ## Error Codes
 
-| Code           | Condition                                                                 |
-| -------------- | ------------------------------------------------------------------------- |
-| E_NO_PLAN      | `plan.md` missing in the feature directory. Run `/speckit.plan` first.    |
-| E_NO_SPEC      | `spec.md` missing in the feature directory. Run `/speckit.specify` first. |
-| E_PLACEHOLDERS | A source file still contains template placeholders.                       |
-| E_LANGUAGE     | A source file is not in English.                                          |
-| E_USER_ABORT   | User chose abort at the overwrite prompt.                                 |
+| Code           | Condition                                                                            |
+| -------------- | ------------------------------------------------------------------------------------ |
+| E_NO_PLAN      | `plan.md` missing in the feature directory. Run `__SPECKIT_COMMAND_PLAN__` first.    |
+| E_NO_SPEC      | `spec.md` missing in the feature directory. Run `__SPECKIT_COMMAND_SPECIFY__` first. |
+| E_PLACEHOLDERS | A source file still contains template placeholders.                                  |
+| E_LANGUAGE     | A source file is not in English.                                                     |
+| E_USER_ABORT   | User chose abort at the overwrite prompt.                                            |
 
 ## Idempotence
 

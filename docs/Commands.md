@@ -3,11 +3,13 @@
 Three slash commands. All read from a feature directory under `specs/` and
 write into `product/` inside that directory. None modify the source files.
 
-| Command                                            | Reads                                                      | Writes                                                 | Audience                         |
-| -------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------ | -------------------------------- |
-| [`/speckit.product.brief`](#speckitproductbrief)   | `spec.md`                                                  | `product/00-info.md`, `product/10-spec.md` + checklist | Any stakeholder, PMs, leadership |
-| [`/speckit.product.plan`](#speckitproductplan)     | `plan.md` (required), `spec.md` (supplementary)            | `product/20-plan.md` + checklist                       | PMs, engineering leads           |
-| [`/speckit.product.design`](#speckitproductdesign) | `plan.md`, `spec.md`, optional `tasks.md`, `data-model.md` | `product/30-design.md` + checklist                     | Tech leads, senior developers    |
+This page uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
+
+| Command                                            | Reads                                                                                   | Writes                                                 | Audience                         |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------ | -------------------------------- |
+| [`/speckit.product.brief`](#speckitproductbrief)   | `spec.md`                                                                               | `product/00-info.md`, `product/10-spec.md` + checklist | Any stakeholder, PMs, leadership |
+| [`/speckit.product.plan`](#speckitproductplan)     | `plan.md` (required), `spec.md` (supplementary)                                         | `product/20-plan.md` + checklist                       | PMs, engineering leads           |
+| [`/speckit.product.design`](#speckitproductdesign) | `plan.md`, `spec.md`, optional `tasks.md`, `data-model.md`, `research.md`, `contracts/` | `product/30-design.md` + checklist                     | Tech leads, senior developers    |
 
 Every command accepts `--feature-dir specs/<feature-dir>` to target a specific
 feature directory. Without it, the active feature pointer at
@@ -133,7 +135,7 @@ conceptual level. No runnable code, no full ORM definitions, no line-by-line
 implementation detail.
 
 **Reads**: `plan.md` (required), `spec.md` (required), `tasks.md` (optional),
-`data-model.md` (optional)
+`data-model.md` (optional), `research.md` (optional), `contracts/` (optional)
 **Writes**: `product/30-design.md`, `product/checklist.md` (`## Design` section only)
 
 ### Output sections
@@ -189,16 +191,13 @@ item is a regenerate signal.
 
 ## Hooks
 
-The extension registers three optional hook handlers, one per Spec Kit hook
-event (declared in `extension.yml`). The host agent asks before running each
-handler.
+The extension registers four optional hook handlers on three Spec Kit hook events (declared in `extension.yml`). The host agent asks before running each handler.
 
-| Hook            | Triggers after     | Command                  |
-| --------------- | ------------------ | ------------------------ |
-| `after_specify` | `/speckit.specify` | `/speckit.product.brief` |
-| `after_clarify` | `/speckit.clarify` | `/speckit.product.brief` |
-| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`  |
+| Hook            | Triggers after     | Command                   |
+| --------------- | ------------------ | ------------------------- |
+| `after_specify` | `/speckit.specify` | `/speckit.product.brief`  |
+| `after_clarify` | `/speckit.clarify` | `/speckit.product.brief`  |
+| `after_plan`    | `/speckit.plan`    | `/speckit.product.plan`   |
+| `after_plan`    | `/speckit.plan`    | `/speckit.product.design` |
 
-Each hook is `optional: true`. The host agent prompts before running and the
-user can decline. The richer artifact (`/speckit.product.design`) is not
-auto-prompted; run it explicitly when you need it.
+Each hook is `optional: true`. The host agent prompts before running and the user can decline. After `/speckit.plan`, Spec Kit offers `/speckit.product.plan` first (priority 10) and `/speckit.product.design` second (priority 20). The design reads `plan.md` and the optional files that `/speckit.plan` writes, such as `research.md` and `contracts/`.

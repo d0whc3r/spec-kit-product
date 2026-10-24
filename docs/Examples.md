@@ -3,6 +3,8 @@
 A worked example. The fictional feature is **bulk export of dashboards to
 PDF** in a fictional product called Lumen.
 
+This page uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
+
 ## Source: `spec.md` (excerpt)
 
 ```markdown
