@@ -1,5 +1,17 @@
 # Changelog
 
+# [2.0.0](https://github.com/d0whc3r/spec-kit-product/compare/v1.0.2...v2.0.0) (2026-10-24)
+
+
+### Features
+
+* require Spec Kit 0.12.17, add a design hook and per-agent command names ([233ddfc](https://github.com/d0whc3r/spec-kit-product/commit/233ddfcf84daa6ad6512b40f3a996cdaa92cc4aa))
+
+
+### BREAKING CHANGES
+
+* the extension now requires Spec Kit 0.12.17 or later.
+
 ## [1.0.2](https://github.com/d0whc3r/spec-kit-product/compare/v1.0.1...v1.0.2) (2026-08-03)
 
 

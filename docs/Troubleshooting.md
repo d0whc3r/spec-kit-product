@@ -18,7 +18,7 @@ Install the extension directly from the release archive. This is also how you pi
 
 ```bash
 specify extension add product --from \
-  https://github.com/d0whc3r/spec-kit-product/releases/download/v1.0.2/product-1.0.2.zip
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v2.0.0/product-2.0.0.zip
 ```
 
 To update later, run the same command with a newer release URL and add `--force`.
