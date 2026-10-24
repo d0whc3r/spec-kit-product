@@ -52,6 +52,12 @@ This page uses the slash-command names, such as `/speckit.product.brief`. Skills
    duplicate another view, or collapse to a trivial shape is omitted. See
    [Diagrams](Diagrams.md) for the full rule.
 
+10. **Answer first.**
+    The first sentence of each document's opening section (Overview, Headline, or Summary) says what the feature is and what it does for whom. Each paragraph opens with its point. A reader who stops after the first lines still has the main idea.
+
+11. **Short sentences and scannable structure.**
+    No prose sentence runs past 25 words. Items in one list share one grammatical form, use case titles are verb phrases, and a table never leaves a cell empty.
+
 ## Why these rules
 
 Generated product artifacts are read by people who do not have time to
@@ -65,6 +71,9 @@ we hit in the prototype phase:
 - "Robust", "seamless", "leverage" carry no information.
 - A diagram that only repeats the prose is noise, not signal. The value gate
   keeps the output lean and the diagrams meaningful.
+- Readers scan, and many stop after the first lines. A document that opens with background loses them before the point.
+
+The structure rules (10 and 11) come from the inverted pyramid ([NN/g](https://www.nngroup.com/articles/inverted-pyramid/)), [BLUF](<https://en.wikipedia.org/wiki/BLUF_(communication)>), the [Wikipedia lead section](https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style/Lead_section) guideline, the Microsoft Style Guide on [scannable content](https://learn.microsoft.com/en-us/style-guide/scannable-content/), [Diátaxis reference](https://diataxis.fr/reference/), and [progressive disclosure](https://deviq.com/principles/progressive-disclosure/). The humanization guide in `templates/humanization-guide.md` holds the full practice.
 
 ## Surfacing clarifications instead of resolving them
 

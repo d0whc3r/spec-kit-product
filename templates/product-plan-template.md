@@ -8,7 +8,7 @@
 
 ## Summary
 
-> One short paragraph on the main approach and how the work is structured. Do not restate the problem or who it is for; those live in the spec. No code, no file paths, no time estimates. Technical terms glossed on first use.
+> One short paragraph. The first sentence states the main approach; the rest says how the work is structured. Do not restate the problem or who it is for; those live in the spec. No code, no file paths, no time estimates. Technical terms glossed on first use.
 
 [One paragraph.]
 

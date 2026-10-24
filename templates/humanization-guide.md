@@ -44,12 +44,57 @@ Human, for a product document, means:
 - **No scaffolding.** Drop "Furthermore", "It is worth noting", "In essence",
   "This document will", and the "not just X, but Y" shape. They are connective
   tissue a person would not type.
-- **Broken parallelism.** Three bullets that all open with "If" or all open
-  with the same noun read like a generated list. Vary the openers and shapes.
+- **Distinct openers, same form.** Three bullets that all open with "If" or with the same noun read like a generated list, and the repeated word hides what makes each bullet different. Open each bullet with its distinguishing words. Keep one grammatical form across the list, so the reader can compare items at a glance.
 - **One voice.** Pick "you" or "the admin" and hold it.
 
 Fewer words, not more. The naturalness comes from rhythm and specificity, never
 from padding.
+
+## Structure: answer first, then detail
+
+Readers decide in the first lines whether a document matters to them, and many stop there. The rules below make sure a reader who stops early still leaves with the point. They work inside the template: never rename, reorder, or merge its sections to apply them.
+
+**Lead with the answer.** The first sentence of the opening section (Overview, Headline, or Summary) says what the feature is and what it does for whom. Background, the problem today, and the reasons come after it, never before it.
+
+Before:
+
+> For organization admins, the bill is a black box until the invoice arrives, which means surprise charges and support tickets.
+
+After:
+
+> The billing dashboard shows organization admins what this period will cost before the invoice arrives.
+
+**Make the opening section stand alone.** A reader who reads only the opening section knows what changes, for whom, and why it matters. It summarizes the document: each of its facts appears again later with more detail, and the body never holds a headline fact the opening section left out. Do not tease ("one change stands out") without saying what it is.
+
+**Put the point of each paragraph first.** The first sentence carries the claim, and the next sentences support it. A reader who scans only first sentences still follows the argument.
+
+**Front-load every line.** Start each sentence, bullet, table cell, and composed heading with the words that carry the information. When sibling bullets open with the same word ("Admins see...", "Admins can..."), that word tells the reader nothing; open each one with what makes it different.
+
+**Order by importance.** Inside a list, a table, or a section, put first what the broadest reader needs most, and leave fine detail for last. Sequences are the exception: phases, steps, and rollout stages keep their order.
+
+**Keep paragraphs and sentences short.** A paragraph holds one idea in three to five sentences; a one-sentence paragraph is fine now and then. No sentence runs past 25 words. The Job to Be Done sentence and the Positioning statement are exempt, because their form is fixed.
+
+**Use lists for parallel items only.**
+
+- Number a list only when order matters, as in a sequence or a ranking.
+- Aim for two to seven items. When the source gives more, merge related items or split the list under two short bold labels. Never drop an item to hit the number.
+- Give every item in a list the same grammatical form: all full sentences, or all noun phrases. Vary the words and the length, not the form.
+- Make the items distinct and complete: no two items say the same thing, and together they cover what the heading names.
+
+**Use tables for items with two or more attributes.**
+
+- A list of similar items stays a list. A table earns its place only when each row has two or more attributes to compare.
+- The leftmost column names the row: the module, the quality attribute, or the use case.
+- Keep each cell to one short line, and move explanation into the prose around the table.
+- Never leave a cell empty, and never fill it with a dash. Write "None" or "Not applicable".
+
+**Write composed headings as summaries.** Template headings are fixed. Headings you write (use case titles, phase names, decision titles, risk titles) are short, start with the keyword, and tell the reader what sits under them. Siblings share one form: use case titles are verb phrases in the user's words ("Export past invoices"), and decision and risk titles are noun phrases. Use sentence case and no end period. Never skip a heading level.
+
+**Disclose detail progressively.** Each document runs from summary to detail, and the template order already does that. Keep detail out of the opening section: no lists of components, endpoints, or fields in the first paragraph. The four documents form one ladder: `00-info.md` says what changes and why, `10-spec.md` says for whom and how success is measured, `20-plan.md` says in what order, and `30-design.md` says how. State each fact in the document that owns it; the others summarize it or leave it out. One diagram shows one level of detail, so do not mix services and functions in one flowchart.
+
+**Keep reference parts plain.** In `30-design.md`, the tables, data model blocks, and API shapes are reference material. State their facts in a fixed pattern, with no rationale, opinion, or selling. Rationale belongs in Architectural Approach and Key Technical Decisions. Order rows the way the system is built: Affected Modules follows the layers of the architecture diagram, top to bottom.
+
+**Use bold for labels only.** Bold marks run-in labels (`**Why now**:`) and defined terms. Do not bold words inside a sentence for emphasis.
 
 ## 1. Banned phrases
 
@@ -138,7 +183,7 @@ Before:
 - Admins can review and export past invoices.
 ```
 
-After (vary the opening, keep each bullet at twelve words or fewer):
+After (each bullet opens with what makes it different; all stay full sentences of twelve words or fewer):
 
 ```
 - One screen shows the current plan and this period's usage.
@@ -146,9 +191,7 @@ After (vary the opening, keep each bullet at twelve words or fewer):
 - Past invoices export to CSV for the finance team.
 ```
 
-**Uniform bullet length and shape.** When every bullet is a flat declarative of
-the same length, the list reads mechanical even with varied openers. Mix a
-short bullet with a longer one.
+**Uniform bullet length.** When every bullet has the same length, the list reads mechanical even with varied openers. Let the content set the length, so a short bullet can sit next to a longer one. Vary length, never grammatical form: a list of full sentences stays a list of full sentences.
 
 **Listicle-itis.** Prose broken into bullets that did not need to be a list.
 Three short related statements often read better as two sentences. Bullets are
@@ -170,8 +213,7 @@ subject three times, then with a question.
 The fix is mechanical to start: after a long sentence, write a short one. Find
 the two sentences in a paragraph that are the same length and the same shape,
 and change one of them. You are not adding words; you are redistributing them.
-Keep any single sentence under twenty-five words, which the style rules want
-anyway.
+Keep every sentence at 25 words or fewer; the style rules enforce it.
 
 ## 5. Per-document guidance
 

@@ -82,7 +82,7 @@ Default is medium. Pass it when the user asks, for example "humanize
 | --- | --- |
 | `light` | Mechanical only: em dashes, the AI-tell banlist, obvious hedging. Leaves cadence and structure as written. Use on a doc that is already close. |
 | `medium` (default) | Light, plus cadence: vary sentence length, break parallel openers, swap abstract phrasings for concrete ones. |
-| `aggressive` | Medium, plus reshaping: rewrite monotonous bullet lists into mixed shapes, restructure flat paragraphs, vary every formulaic opener. Stays inside the gated shape; never invents facts to add texture. |
+| `aggressive` | Medium, plus reshaping: rewrite monotonous bullet lists with distinct openers and varied length (one grammatical form per list), restructure flat paragraphs, vary every formulaic opener. Stays inside the gated shape; never invents facts to add texture. |
 
 No level may add a claim the source document does not support. Humanizing is a
 style pass, not a content pass.

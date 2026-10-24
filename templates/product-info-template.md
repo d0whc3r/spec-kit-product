@@ -8,7 +8,7 @@
 
 ## Overview
 
-> One short paragraph, two to four sentences. Who this is for, the problem it addresses, what changes for them, and the new outcome they can reach. No jargon, no implementation detail, no feature lists.
+> One short paragraph, two to four sentences. Open with one sentence that names the feature and what it does for whom. Then the problem it addresses today and the new outcome they can reach. No jargon, no implementation detail, no feature lists.
 
 [Paragraph here.]
 

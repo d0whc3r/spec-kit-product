@@ -8,7 +8,7 @@
 
 ## Summary
 
-> Two to four sentences (what is being built technically and the key architectural approach), then the context fields. Enough for a tech lead to grasp scope at a glance.
+> Two to four sentences, then the context fields. The first sentence states what is being built and the key architectural approach; lists of components, endpoints, or fields belong in Architectural Approach. Enough for a tech lead to grasp scope at a glance.
 
 [Paragraph.]
 
@@ -63,6 +63,8 @@ stateDiagram-v2
 ```
 
 ## Affected Modules
+
+> One row per module, ordered by layer as the architecture diagram shows them. One short line per cell. Never leave a cell empty; write "None" or "Not applicable".
 
 | Module / Component | Change                           | Responsibility                                   |
 | ------------------ | -------------------------------- | ------------------------------------------------ |

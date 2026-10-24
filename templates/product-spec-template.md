@@ -59,13 +59,13 @@
 
 > Gherkin Given/When/Then: one of each per scenario, full sentences, behavior not implementation. Aim for fewer than six.
 
-### Use Case 1: [Short title in plain language]
+### Use Case 1: [Short verb phrase in the user's words]
 
 **Given** [one sentence describing the starting context].
 **When** [one sentence describing the action the user takes].
 **Then** [one sentence describing the outcome the user observes].
 
-### Use Case 2: [Short title in plain language]
+### Use Case 2: [Short verb phrase in the user's words]
 
 **Given** [one sentence describing the starting context].
 **When** [one sentence describing the action the user takes].
