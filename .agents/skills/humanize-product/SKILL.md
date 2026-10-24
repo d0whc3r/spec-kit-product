@@ -60,7 +60,10 @@ which are gated shape to leave alone.
    ```
    It flags em dashes, banned AI-tell phrases, hedging, formulaic openers,
    over-long sentences, and runs of bullets that share an opening word. The
-   detector mirrors the guide's mechanical entries.
+   detector mirrors the guide's mechanical entries. Only the em dash check
+   works in every language; the phrase, length, and opener checks read
+   English. For a document in another language, apply the guide's "Writing
+   in other languages" section by reading.
 3. **Rewrite the prose sections only.** Fix every detector finding, then read
    the prose in your head and break any uniform cadence, applying the guide.
    Respect the chosen intensity (below).

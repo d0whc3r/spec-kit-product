@@ -143,7 +143,7 @@ Use feature branches named `NNN-short-description` (sequential numbering, matchi
 
 The extension's whole reason to exist is the canonical product spec voice. Style rules are pinned in `templates/product-spec-template.md` and enforced by `.github/scripts/lint-content.mjs`:
 
-1. English only.
+1. One output language per document: the language the user names, or else the dominant language of the source prose. Headings and labels are translated; code, identifiers, file names, markers, and the `product/checklist.md` section anchors are not.
 2. No em dash character.
 3. Each Use Case scenario has exactly one Given line, one When line, and one Then line, each a full sentence beginning with the keyword.
 4. Mandatory sections in canonical order; optional sections only when populated.
@@ -151,7 +151,7 @@ The extension's whole reason to exist is the canonical product spec voice. Style
 
 If you change these rules, update the template, the checklist template, the command prompt, and the lint script in the same commit.
 
-The AI-tell banlist has one source: `templates/humanization-guide.md`, section "The enforced minimum". Each product command copies that subset verbatim in two places, the Plain English style rule and the "No AI tells" validation row. `lint:content` (`lintHumanization`) fails when a command drifts from the guide or its siblings, or when a command body contains an em dash. To change the banlist, edit the guide's "The enforced minimum" block and re-copy it into all three commands in the same commit.
+The AI-tell banlist has one source: `templates/humanization-guide.md`, section "The enforced minimum". Each product command copies that subset verbatim in two places, the Plain language style rule and the "No AI tells" validation row. `lint:content` (`lintHumanization`) fails when a command drifts from the guide or its siblings, or when a command body contains an em dash. To change the banlist, edit the guide's "The enforced minimum" block and re-copy it into all three commands in the same commit.
 
 ## Reporting Issues
 

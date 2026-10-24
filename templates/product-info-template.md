@@ -4,7 +4,7 @@
 **Created**: [DATE]
 **Status**: Draft
 
-> Authoring note (not emitted in the generated document): write every prose section to follow the humanization guide at `templates/humanization-guide.md` - plain English, varied cadence, no AI-tell phrases, no em dash.
+> Authoring note (not emitted in the generated document): write every prose section to follow the humanization guide at `templates/humanization-guide.md` - plain language in the output language, varied cadence, no AI-tell phrases, no em dash.
 
 ## Overview
 

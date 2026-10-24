@@ -76,6 +76,10 @@ including GitHub's markdown view and the
 [project website](https://d0whc3r.github.io/spec-kit-product/). If a viewer does
 not support Mermaid, the block stays as readable text.
 
+Labels use the output language of the document. Node ids stay short ASCII
+words, and a label with non-ASCII text goes in double quotes, for example
+`P1["第一阶段"]`. Mermaid fails to parse an unquoted label that holds a `(`.
+
 See [Commands](Commands.md) for the full per-command output, [Examples](Examples.md)
 for sample artifacts, and [Style Guide](Style-Guide.md) for the voice rules. The
 [project website](https://d0whc3r.github.io/spec-kit-product/) renders a full

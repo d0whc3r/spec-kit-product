@@ -47,7 +47,6 @@ stale, run any Spec Kit core command on the feature (`/speckit.specify`,
 | `E_NO_SPEC`      | Feature directory has no `spec.md`.                                         | Run `/speckit.specify` to create one.                                    |
 | `E_NO_PLAN`      | Feature directory has no `plan.md`.                                         | Run `/speckit.plan` to generate it.                                      |
 | `E_PLACEHOLDERS` | Source file still contains unfilled template markers like `[FEATURE NAME]`. | Open the file and replace every bracketed placeholder with real content. |
-| `E_LANGUAGE`     | Source file is not in English.                                              | Translate the source file. The command does not auto-translate.          |
 
 The placeholder check is strict on purpose. A spec with unfilled placeholders
 will produce garbage downstream, so the command refuses early.
@@ -90,14 +89,22 @@ item is the regenerate signal. Common causes:
   engineering plan) and out of `spec.md` (the product spec).
 - Optional sections appeared as empty stubs. Remove them, or regenerate.
 
-## "detected non English content"
+## Output is in the wrong language
 
-v1 of the extension is English only. The command refuses to operate on a
-non-English source file. To proceed, translate the source file to English
-and rerun. There is no auto-translate.
+The commands write in the dominant language of the prose in `spec.md`. They
+skip headings, code, and identifiers when they judge it, because Spec Kit often
+keeps template headings in English. `/speckit.product.plan` and
+`/speckit.product.design` also follow `spec.md`, so all four documents share
+one language. The status report prints the language it chose.
 
-This is enforced because the voice rules (PRFAQ, Ulwick, Gherkin, no em dash,
-no AI tell filler) are pinned to English in the templates.
+To choose the language yourself, pass it to the command:
+
+```text
+/speckit.product.brief --lang zh-CN
+/speckit.product.plan --lang Spanish
+```
+
+A plain request, such as "write it in Japanese", works too.
 
 ## "output file already exists"
 

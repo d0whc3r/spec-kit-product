@@ -137,9 +137,9 @@ minimum: every product command carries the two blocks below, so the rule
 applies even when this guide has not been read. These are the hard-enforced
 phrases. Never emit them, in any document.
 
-Numbered style rule (the command's "Plain English" rule):
+Numbered style rule (the command's "Plain language" rule):
 
-`3. **Plain English.** Active voice, short sentences, human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb), "robust" (without a measurable target), "it is worth noting", "it should be noted", "as previously mentioned".`
+`3. **Plain language.** Active voice, short sentences, human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb), "robust" (without a measurable target), "it is worth noting", "it should be noted", "as previously mentioned".`
 
 Validation row (the command's "No AI tells" auto-check):
 
@@ -244,7 +244,7 @@ Working Backwards, Jobs to Be Done, Gherkin, Lean PRD. The most gated document.
 ### product/20-plan.md
 
 Delivery plan: goals and non-goals, phase breakdown, delivery risks. Technical
-terms appear but are glossed in plain English on first use. Architecture,
+terms appear but are glossed in plain language on first use. Architecture,
 principles, and design decisions are owned by the design doc, so they do not
 appear here.
 
@@ -263,6 +263,21 @@ into marketing or vagueness is highest here.
   decision, risk and trade-off descriptions.
 - **Leave the shape:** the NFR table if present, component-description
   structure, Mermaid blocks (same rule as the plan).
+
+## 6. Writing in other languages
+
+The commands write in the output language: the language the user names, or else the dominant language of the source prose. Every rule in this guide holds in that language. This section says how to apply the rules that assume English.
+
+These rules hold in every language: answer first, one idea per sentence, short sentences, active voice, concrete subjects, no filler, no stacked hedges, varied cadence, and no em dash.
+
+- **Banned phrases.** The lists above are English. In another language, avoid their direct translations and the same kinds of filler and marketing words, for example 值得注意的是, 无缝, and 赋能 in Chinese, or "cabe destacar" and "sin fisuras" in Spanish.
+- **Length.** In a language that puts spaces between words, count words as written. In Chinese and Japanese, count characters instead, at two characters for each English word: at most 50 characters in a sentence and 24 in a bullet. Punctuation does not count.
+- **Punctuation.** Use the marks of the language. Chinese and Japanese use full-width marks (，。：；？！（）). Spanish opens a question or an exclamation with ¿ or ¡. French puts a space before ; : ! ? and inside « ». A rule that says a sentence ends with a period means the sentence-ending mark of the language, such as 。.
+- **Em dash.** The ban holds in every language. It covers the Chinese dash, which is two em dashes, and the em dash that Spanish uses for asides. Use a comma, a colon, or parentheses.
+- **Fixed forms.** Translate the template headings and labels, and keep their order and structure. Each Gherkin scenario keeps one line each for Given, When, and Then, with the official Gherkin keywords of the language: 假如, 当, 那么 in Chinese; Dado, Cuando, Entonces in Spanish; Soit, Quand, Alors in French. The Job to Be Done keeps its three parts in order with natural connectors, for example 当……时，我想要……，以便…….
+- **Right-to-left languages.** In Arabic, Hebrew, or Persian, keep the Markdown syntax as it is. Start each heading, bullet, and table cell with a word in the document language, not with a Latin name or a number. Viewers that set the direction from the first letter, such as GitHub, then align the line to the right.
+- **Kept as written.** Code, identifiers, file names, paths, product names, quoted UI text, `[NEEDS CLARIFICATION: ...]` markers, and `YYYY-MM-DD` dates stay as they are in the source. In a Mermaid diagram, ids stay short ASCII words, and a label with non-ASCII text goes in double quotes.
+- **Mixed sources.** A source can mix languages, for example Chinese prose with English headings and technical terms. Write each document in one language. Keep a technical term in English when the source uses it untranslated, and gloss it on first use when a reader may not know it.
 
 ## A worked example
 

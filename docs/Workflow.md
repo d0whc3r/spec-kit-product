@@ -86,5 +86,5 @@ No engineering scaffolding needs to travel with it.
 
 If a stakeholder asks for a PDF, you can render the markdown with any
 standard tool (`pandoc`, `make-pdf`, or any markdown-to-PDF service). The
-voice rules (plain English, no em dash, no implementation detail) make the
+voice rules (plain language, no em dash, no implementation detail) make the
 output safe to hand to non-technical readers as is.

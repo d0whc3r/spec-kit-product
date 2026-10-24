@@ -3,7 +3,8 @@
 A Spec Kit extension that turns engineering `spec.md` and `plan.md` into four
 stakeholder-facing artifacts. Output follows Amazon Working Backwards (PRFAQ),
 Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain
-English with a strict no em dash style.
+language with a strict no em dash style. The artifacts follow the language of
+your spec.
 
 This page uses the slash-command names, such as `/speckit.product.brief`. Skills agents, such as Claude Code, use hyphens instead: `/speckit-product-brief`.
 

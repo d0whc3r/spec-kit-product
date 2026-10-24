@@ -35,7 +35,7 @@ Use the pnpm version in `package.json` (`packageManager`) and the Node version i
 - semantic-release owns the version. Do not edit `version` in `extension.yml`, `catalog.json`, or `package.json`.
 - Use Conventional Commits. Only `feat:`, `fix:`, and `perf:` commits cause a release. To rename or remove a command, use a `BREAKING CHANGE:` footer. The release preset (angular) ignores a `feat!:` header.
 - A command writes only to `<feature-dir>/product/`. All other Spec Kit files are read-only inputs, `.specify/feature.json` included.
-- Generated documents obey `templates/humanization-guide.md`: no em dash, plain English, no AI-tell phrases, and every `[NEEDS CLARIFICATION]` marker kept.
+- Generated documents obey `templates/humanization-guide.md`: no em dash, plain language, no AI-tell phrases, and every `[NEEDS CLARIFICATION]` marker kept. They are written in the language the user names with `--lang`, or else in the dominant language of the `spec.md` prose. Keep machine-read text stable in every language: file names, `[NEEDS CLARIFICATION` markers, and the `product/checklist.md` section headings that each command finds its section by.
 
 ## When you change a command or a template
 

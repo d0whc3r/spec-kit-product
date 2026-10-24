@@ -15,6 +15,12 @@ Every command accepts `--feature-dir specs/<feature-dir>` to target a specific
 feature directory. Without it, the active feature pointer at
 `.specify/feature.json` is used.
 
+Every command also accepts `--lang <language>`, such as `--lang zh-CN` or
+`--lang Spanish`, to choose the output language. Without it, the commands write
+in the dominant language of the prose in `spec.md`, so all four documents share
+one language. A source in any language, or in a mix of languages, is valid
+input. The status report prints the language each command used.
+
 `/speckit.product.plan` and `/speckit.product.design` embed Mermaid diagrams in
 their output by default. A diagram renders only when it earns its place: when it
 shows structure the prose cannot convey at a glance, and is not a restatement, a
@@ -73,7 +79,6 @@ Mandatory unless marked optional:
 | ---------------- | ----------------------------------------------------------- |
 | `E_NO_SPEC`      | Feature directory has no `spec.md`.                         |
 | `E_PLACEHOLDERS` | `spec.md` still contains unfilled template placeholders.    |
-| `E_LANGUAGE`     | `spec.md` is not in English.                                |
 | `E_USER_ABORT`   | You answered "no" at the overwrite or clarification prompt. |
 
 Project and feature resolution failures (not inside a Spec Kit project, or no
@@ -105,7 +110,7 @@ Mandatory unless marked optional:
 6. **Validation** _(optional)_ - observable post-ship conditions.
 7. **Open Questions** _(optional)_ - open delivery questions.
 
-Technical terms are glossed in plain English on first use. Architecture, design
+Technical terms are glossed in plain language on first use. Architecture, design
 principles, and key technical decisions are owned by the design doc; the problem
 and audience by the spec. The plan does not repeat them.
 
@@ -119,7 +124,6 @@ stay plain-language. See [Diagrams](Diagrams.md).
 | ---------------- | -------------------------------------------------------- |
 | `E_NO_PLAN`      | Feature directory has no `plan.md`.                      |
 | `E_PLACEHOLDERS` | `plan.md` still contains unfilled template placeholders. |
-| `E_LANGUAGE`     | `plan.md` is not in English.                             |
 | `E_USER_ABORT`   | You answered "no" at the overwrite prompt.               |
 
 Spec Kit core resolution failures (no project, no active feature) surface
@@ -172,7 +176,6 @@ when the source describes a lifecycle. Diagrams are reserved for flows. See
 | `E_NO_PLAN`      | Feature directory has no `plan.md`.                        |
 | `E_NO_SPEC`      | Feature directory has no `spec.md`.                        |
 | `E_PLACEHOLDERS` | Source files still contain unfilled template placeholders. |
-| `E_LANGUAGE`     | Source files are not in English.                           |
 | `E_USER_ABORT`   | You answered "no" at the overwrite prompt.                 |
 
 ---

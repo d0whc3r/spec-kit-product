@@ -7,14 +7,19 @@ This page uses the slash-command names, such as `/speckit.product.brief`. Skills
 
 ## The rules
 
-1. **English only.**
-   v1 ships English templates. The command refuses to run if the source file
-   is detected as non-English.
+1. **One output language.**
+   The commands accept a source in any language. They write in the dominant
+   language of the source prose, or in the language you pass with
+   `--lang <language>`. Code, identifiers, file names, product names, and
+   `[NEEDS CLARIFICATION]` markers stay as they are. Headings, labels, and
+   Gherkin keywords are translated. The rules below apply in every language;
+   `templates/humanization-guide.md` says how to adapt the English ones.
 
 2. **No em dash character.**
-   The em dash character (U+2014) is banned in generated output. Use a period or
-   a semicolon or a comma. This is the single strongest "AI tell" cue we
-   filter against.
+   The em dash character (U+2014) is banned in generated output, in every
+   language. This includes the Chinese dash, which is two em dashes. Use a
+   period, a semicolon, or a comma. This is the single strongest "AI tell" cue
+   we filter against.
 
 3. **Gherkin scenarios have exactly three lines.**
    One `Given`, one `When`, one `Then`. Each line is a full sentence
@@ -38,12 +43,14 @@ This page uses the slash-command names, such as `/speckit.product.brief`. Skills
 7. **No AI tell filler phrases.**
    Words and phrases like "delve", "tapestry", "in essence", "seamless",
    "navigate the complexities of", "leverage" (as a verb), "in today's
-   landscape", "robust", "cutting edge" are blocked. The voice should read
-   as if a senior PM wrote it.
+   landscape", "robust", "cutting edge" are blocked. In another language,
+   their direct translations are blocked too. The voice should read as if a
+   senior PM wrote it.
 
 8. **Short bullets.**
    Twelve words or fewer per bullet, ideally one short sentence ending with
-   a period.
+   a period. Chinese and Japanese have no spaces between words, so a bullet
+   there holds 24 characters or fewer.
 
 9. **Diagrams and optional sections earn their place.**
    `/speckit.product.plan` and `/speckit.product.design` embed Mermaid diagrams
@@ -56,7 +63,7 @@ This page uses the slash-command names, such as `/speckit.product.brief`. Skills
     The first sentence of each document's opening section (Overview, Headline, or Summary) says what the feature is and what it does for whom. Each paragraph opens with its point. A reader who stops after the first lines still has the main idea.
 
 11. **Short sentences and scannable structure.**
-    No prose sentence runs past 25 words. Items in one list share one grammatical form, use case titles are verb phrases, and a table never leaves a cell empty.
+    No prose sentence runs past 25 words (50 characters in Chinese and Japanese). Items in one list share one grammatical form, use case titles are verb phrases, and a table never leaves a cell empty.
 
 ## Why these rules
 

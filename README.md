@@ -1,6 +1,6 @@
 # Product Spec Extension for Spec Kit
 
-A Spec Kit extension that derives four stakeholder-facing artifacts from a technical `spec.md` and `plan.md`. Output follows Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain English, with a strict no em dash style.
+A Spec Kit extension that derives four stakeholder-facing artifacts from a technical `spec.md` and `plan.md`. Output follows Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain language, with a strict no em dash style. The artifacts follow the language of your spec, so a spec in Chinese, Spanish, or Arabic gives artifacts in that language.
 
 ## Documentation
 

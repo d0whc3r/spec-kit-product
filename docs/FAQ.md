@@ -67,11 +67,15 @@ runtime of its own.
 
 ## My team writes specs in Spanish. Can the extension help?
 
-Not in v1. The commands refuse non-English sources because the templates
-and voice rules are pinned to English. Translate the source file first.
+Yes. The commands accept a source in any language, including mixed-language
+specs. They write each document in the dominant language of the spec prose,
+so a Spanish spec gives Spanish documents. Headings, labels, and Gherkin
+keywords are translated too. Code, identifiers, file names, and
+`[NEEDS CLARIFICATION]` markers stay as they are.
 
-The extension's design does not preclude future localized templates. See
-the open discussion on the repo if you want to advocate for this.
+To write in another language, pass `--lang <language>`, for example
+`/speckit.product.brief --lang Spanish`. See
+[Style Guide](Style-Guide.md) for how the voice rules apply outside English.
 
 ## Does this work in a brownfield codebase?
 

@@ -4,7 +4,7 @@ description: "Generate product/00-info.md and product/10-spec.md together from t
 
 # Generate Product Brief
 
-Derive two stakeholder-facing artifacts in a single pass from the populated `spec.md` of the active feature, then auto-validate and update the `## Info` and `## Spec` sections of the shared `product/checklist.md`. The two artifacts are companions: `product/00-info.md` is the one-page plain-language digest that answers "what is changing and why" for a non-technical reader, and `product/10-spec.md` is the structured product spec a stakeholder reads after the digest. The spec is not fully legible without the info, so the two are generated together. The artifacts follow Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain English, with strict style rules.
+Derive two stakeholder-facing artifacts in a single pass from the populated `spec.md` of the active feature, then auto-validate and update the `## Info` and `## Spec` sections of the shared `product/checklist.md`. The two artifacts are companions: `product/00-info.md` is the one-page plain-language digest that answers "what is changing and why" for a non-technical reader, and `product/10-spec.md` is the structured product spec a stakeholder reads after the digest. The spec is not fully legible without the info, so the two are generated together. The artifacts follow Amazon Working Backwards (PRFAQ), Jobs to Be Done (Ulwick), Gherkin BDD, and Lean PRD conventions, in plain language, with strict style rules. They are written in the language of the source spec, or in the language the user names.
 
 ## User Input
 
@@ -12,7 +12,7 @@ Derive two stakeholder-facing artifacts in a single pass from the populated `spe
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty). The user MAY pass `--feature-dir <path>` to override the pointer in `.specify/feature.json`.
+You **MUST** consider the user input before proceeding (if not empty). The user MAY pass `--feature-dir <path>` to override the pointer in `.specify/feature.json`. The user MAY pass `--lang <language>` (a name or a tag such as `zh-CN`) to choose the output language; a plain request in the input, such as "write it in Spanish", counts the same.
 
 ## Inputs
 
@@ -84,13 +84,17 @@ Refuse to proceed when:
 
    **Important distinction**: `[NEEDS CLARIFICATION: ...]` markers are NOT placeholders. They are intentional questions left by the spec author and are handled in Step 3.
 
-3. **E_LANGUAGE**: `spec.md` is not written in English. Detect non-English content by sampling the prose paragraphs (skip code fences and metadata) and checking that the dominant language is English. If the dominant language is not English, refuse with a single line naming the detected language. Do not auto-translate.
+**Output language.** `spec.md` can be in any language, and a mix of languages is valid. Never refuse a source because of its language. Pick the output language once and use it for both artifacts:
+
+1. The language the user names with `--lang` or in plain words in the input.
+2. Otherwise, the dominant language of the prose in `spec.md`. Judge it from sentences only. Skip headings, code fences, inline code, identifiers, URLs, product names, and `[NEEDS CLARIFICATION: ...]` markers, because Spec Kit often keeps template headings in English in a spec written in another language.
+3. When no language clearly dominates, use the language of the first prose paragraph.
 
 ### Step 3: Extract decisions and surface clarifications
 
 This step gathers material shared by both artifacts. Each artifact uses it differently: the info surfaces resolved decisions in its `## Key Decisions` section and unresolved markers in its "Still open" block; the spec surfaces unresolved markers in its `## Risks and Open Questions` section.
 
-**3a - Resolved decisions**: Scan `spec.md` for the `## Clarifications` section. If present, collect every `### Session YYYY-MM-DD` subheading and its bullet lines. Each bullet has the form `- Q: <question text> → A: <answer text>`. Parse each bullet into a `(session_date, question, answer)` triple - strip the `Q:` and `A:` prefixes. Skip lines that do not match the pattern. Store the list ordered by session date. If the section is absent or empty, store an empty list.
+**3a - Resolved decisions**: Scan `spec.md` for the `## Clarifications` section. If present, collect every `### Session YYYY-MM-DD` subheading and its bullet lines. Each bullet has the form `- Q: <question text> → A: <answer text>`. Parse each bullet into a `(session_date, question, answer)` triple - strip the `Q:` and `A:` prefixes. Skip lines that do not match the pattern. Store the list ordered by session date. If the section is absent or empty, store an empty list. Spec Kit writes this heading, the `Session` subheadings, and the `Q:` and `A:` prefixes in English in every language; also accept a translated heading with the same meaning (for example `## 澄清`) and full-width colons (`Q：`).
 
 **3b - Unresolved questions**: Scan `spec.md` for occurrences of `[NEEDS CLARIFICATION` (case sensitive prefix). For each occurrence, capture the full marker text and its surrounding sentence as context.
 
@@ -120,9 +124,9 @@ If `${FEATURE_DIR}/product/` does not exist yet, create it before writing.
 
 Before writing either artifact, read `templates/humanization-guide.md` (relative to this command's extension root) and apply it as you compose and again during each rewrite loop: varied cadence, the full AI-tell banlist, and the structural tells it lists. The numbered rules below are the enforced minimum; the guide is the complete practice.
 
-1. **English only.** All output is in English.
-2. **No em dash.** The character `—` MUST NOT appear in the output. Use commas, parentheses, colons, semicolons, or sentence breaks. Hyphens (`-`) are allowed.
-3. **Plain English.** Active voice, short sentences, human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb), "robust" (without a measurable target), "it is worth noting", "it should be noted", "as previously mentioned".
+1. **Output language.** Write every word a reader reads in the output language from Step 2: prose, headings, labels, and table headers. Keep code, identifiers, file names, product names, quoted text, `[NEEDS CLARIFICATION: ...]` markers, and `YYYY-MM-DD` dates as they are. The guide's "Writing in other languages" section adapts the rules below to a language other than English.
+2. **No em dash.** The character `—` MUST NOT appear in the output, in any language. This includes the Chinese dash, which is two em dashes. Use commas, parentheses, colons, semicolons, or sentence breaks. Hyphens (`-`) are allowed.
+3. **Plain language.** Active voice, short sentences, human tone. Do not use AI-tell phrases: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb), "robust" (without a measurable target), "it is worth noting", "it should be noted", "as previously mentioned".
 4. **No implementation detail.** No frameworks, languages, APIs, data stores, code, or file paths.
 5. **Bullets are short. Prose is full sentences.**
 6. **`_(optional)_` is a marker, not title text.** In the templates, a heading like `## Glossary _(optional)_` or `## Risks _(optional)_` uses `_(optional)_` only to flag that the section is optional. It is an authoring marker, never part of the title. When you keep the section, emit the heading clean (`## Glossary`, `## Risks`) with no `_(optional)_`. When the source has no real content that earns the section, omit the whole section, heading included. The string `_(optional)_`, and a bare `(optional)` suffix on any heading, must never appear in either generated document.
@@ -179,7 +183,7 @@ Each scenario MUST contain exactly three lines, in this order:
 **Then** [one full sentence beginning with "Then" describing the observable outcome].
 ```
 
-Each line is a single complete sentence ending with a period. Do not bullet sub conditions; if a scenario needs more, split it into two scenarios. Aim for fewer than six scenarios across the document.
+Each line is a single complete sentence ending with a period. Do not bullet sub conditions; if a scenario needs more, split it into two scenarios. Aim for fewer than six scenarios across the document. In another language, use the official Gherkin keywords for that language, for example `**假如**`, `**当**`, and `**那么**` in Chinese, or `**Dado**`, `**Cuando**`, and `**Entonces**` in Spanish.
 
 Map source spec User Stories and Acceptance Scenarios into Use Cases by translating the engineering language into customer observable behavior. Drop implementation specifics.
 
@@ -191,7 +195,7 @@ Write the primary job in the Ulwick form, exactly:
 When [situation], I want to [motivation], so I can [expected outcome].
 ```
 
-Use an action verb. Do NOT name a solution (avoid "When I open the app", "I want to click the button"). Frame the situation, motivation, and outcome at the level the user experiences them.
+Use an action verb. Do NOT name a solution (avoid "When I open the app", "I want to click the button"). Frame the situation, motivation, and outcome at the level the user experiences them. In another language, keep the three parts in this order with that language's natural connectors, for example `当……时，我想要……，以便……。` in Chinese.
 
 #### Success Metrics
 
@@ -202,6 +206,8 @@ Provide exactly one north star metric and at least one supporting metric. Each m
 **Goal: all checklist items checked for both artifacts. Zero manual items if possible.**
 
 After composing the full text of both `product/00-info.md` and `product/10-spec.md` in memory (before writing), run validation pass 1 against each. For each failing item that is auto-fixable: rewrite the affected portion of the corresponding in-memory artifact (never the source `spec.md`), then re-evaluate. Repeat until all fixable items pass (max 2 additional passes per item to prevent loops). Only classify an item as requiring manual review when rewriting cannot fix it because the criterion is inherently semantic or subjective.
+
+When the output language is not English, read each heading, label, keyword, and sentence-ending mark named in the rules below as its counterpart in the output language (for example `## 概述` for `## Overview`, `**假如**` for `**Given**`, and `。` for `.`). Count sentence and bullet length with the guide's "Writing in other languages" section. The English phrase lists (AI tells, metric terms) also cover their direct translations.
 
 #### Validation rules for `product/00-info.md` (Info section)
 
@@ -221,7 +227,7 @@ After composing the full text of both `product/00-info.md` and `product/10-spec.
 | Still open block present only when unresolved markers exist       | "Still open" blockquote present iff user confirmed ≥1 `[NEEDS CLARIFICATION]` marker                                                                                                                                                                                             | Yes - add or remove block                                                                        |
 | Still open count matches confirmed markers                        | Bullet count in "Still open" equals count of confirmed `[NEEDS CLARIFICATION]` markers                                                                                                                                                                                           | Yes - add missing bullets                                                                        |
 | Sections in canonical order                                       | Headings appear in sequence: Overview, What is Changing, [Key Decisions], [References] - brackets indicate optional                                                                                                                                                              | Yes - reorder                                                                                    |
-| Written entirely in English                                       | Dominant language of prose is English                                                                                                                                                                                                                                            | No - source was validated in Step 2                                                              |
+| Written in the output language                                    | All prose, headings, and labels use the output language from Step 2; names, identifiers, quoted text, and markers stay as in the source                                                                                                                                          | Yes - rewrite stray text in the output language                                                  |
 | No em dash (`—`)                                                  | Character `—` absent from entire file                                                                                                                                                                                                                                            | Yes - replace with comma, colon, or semicolon                                                    |
 | No AI tells                                                       | File does not contain: "delve", "tapestry", "in essence", "navigate the landscape", "seamless", "intuitive", "leverage" (as a standalone verb), "robust" (without a measurable target), "it is worth noting", "it should be noted", "as previously mentioned" (case-insensitive) | Yes - rewrite sentence                                                                           |
 | Bullets are short (≤12 words each)                                | Every `-` line contains ≤12 words                                                                                                                                                                                                                                                | Yes - split or shorten                                                                           |
@@ -245,7 +251,7 @@ After composing the full text of both `product/00-info.md` and `product/10-spec.
 | Success Metrics has one north star + ≥1 supporting metric         | `## Success Metrics` exists; exactly one item marked or labelled as north star; ≥1 additional metric                                                                                                                                                                             | Yes - restructure list                                                                            |
 | Risks and Open Questions present                                  | `## Risks and Open Questions` exists                                                                                                                                                                                                                                             | Yes - add section                                                                                 |
 | Sections in canonical order                                       | H2 headings appear in canonical sequence: Headline, [Glossary], Users, Problem (Job to Be Done), [Assumptions], Scope, Use Cases, Success Metrics, Risks and Open Questions, [Positioning], [Go to Market and Rollout] - brackets indicate optional                              | Yes - reorder                                                                                     |
-| Written entirely in English                                       | Dominant language of prose is English                                                                                                                                                                                                                                            | No - source spec was checked in Step 2; flag if mismatch                                          |
+| Written in the output language                                    | All prose, headings, and labels use the output language from Step 2; names, identifiers, quoted text, and markers stay as in the source                                                                                                                                          | Yes - rewrite stray text in the output language                                                   |
 | No em dash (`—`)                                                  | Character `—` absent from entire file                                                                                                                                                                                                                                            | Yes - replace with comma, colon, or semicolon                                                     |
 | Every use case has exactly one Given, When, Then                  | Each scenario block under `## Use Cases` has exactly one `**Given**`, one `**When**`, one `**Then**` line                                                                                                                                                                        | Yes - rewrite malformed scenarios                                                                 |
 | Each Given/When/Then is a full sentence starting with the keyword | Line starts with `**Given**`/`**When**`/`**Then**` and ends with `.`                                                                                                                                                                                                             | Yes - rewrite line                                                                                |
@@ -270,7 +276,7 @@ After composing the full text of both `product/00-info.md` and `product/10-spec.
 3. Re-evaluate all previously failing items. If any still fail, apply the fix again (max 2 additional passes per item to prevent loops).
 4. After the final pass, classify remaining failures per artifact:
    - If a fix was applied but the item still fails: mark `- [ ]` in the checklist and record the specific failure reason.
-   - Items that cannot be evaluated (e.g., source spec in English was already confirmed): mark `- [x]`.
+   - Items that cannot be evaluated (e.g., a check on an optional section that was correctly omitted): mark `- [x]`.
 
 ### Step 9: Prepare and update product/checklist.md
 
@@ -280,6 +286,8 @@ If `${FEATURE_DIR}/product/checklist.md` does **not** exist:
 - Replace `[FEATURE NAME]` with the feature title and `[DATE]` with today's date.
 - The template names commands in dot form. In `checklist.md`, write each command name the way this agent invokes it, for example `__SPECKIT_COMMAND_PRODUCT_BRIEF__`.
 - Stage the file content in memory. All four sections (`## Info`, `## Spec`, `## Plan`, `## Design`) start with the "not yet generated" placeholder state, then the `## Info` and `## Spec` sections are replaced using the results of Step 8.
+
+In every language, keep the section headings (`## Info`, `## Spec`, `## Plan`, `## Design`, `## Needs Review`), the `---` rules, the `**Validated**` line, and the `- [x]` and `- [ ]` boxes exactly as the template and the structures below give them: each product command finds its section by them. Write the item text and the Needs Review explanations in the output language.
 
 If the file **already exists**, read its current content into memory. You will replace only the `## Info` section (between the `## Info` heading and the next `---` horizontal rule) and the `## Spec` section (between the `## Spec` heading and the next `---` horizontal rule) using the results of Step 8. All other sections and the `## Needs Review` section are preserved verbatim.
 
@@ -327,6 +335,7 @@ Print a short status report to the user:
 Wrote: <abs path>/product/00-info.md
 Wrote: <abs path>/product/10-spec.md
 Updated: <abs path>/product/checklist.md  §Info, §Spec
+Output language: <language>
 Info sections populated: Overview + What is Changing[, Key Decisions (<M> decisions[, <N> still open])][, References]
 Spec sections populated: 7 mandatory[, Glossary][, Assumptions][, Positioning][, Go to Market and Rollout]
 Open questions surfaced: <N>
@@ -358,5 +367,4 @@ The command never modifies `spec.md`.
 | -------------- | ------------------------------------------------------------------------------- |
 | E_NO_SPEC      | `spec.md` missing in the feature directory.                                     |
 | E_PLACEHOLDERS | `spec.md` still contains template placeholders.                                 |
-| E_LANGUAGE     | `spec.md` is not in English.                                                    |
 | E_USER_ABORT   | User chose abort at the overwrite prompt or declined to surface clarifications. |

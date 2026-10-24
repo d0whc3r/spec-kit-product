@@ -137,7 +137,7 @@ The info doc is the one-page digest. Scope and risks are owned by the spec, plan
 10. **Positioning** _(optional)_ - for features with external users or competing alternatives.
 11. **Go to Market and Rollout** _(optional)_ - when a launch motion exists.
 
-The checklist validates mandatory sections, Gherkin scenario shape, style rules (no em dash, English only, no implementation detail), and section order. Walk the checklist after generation - any failed Required item means regenerate.
+The checklist validates mandatory sections, Gherkin scenario shape, style rules (no em dash, one output language, no implementation detail), and section order. Walk the checklist after generation - any failed Required item means regenerate.
 
 If `product/00-info.md` or `product/10-spec.md` already exists, the command prompts for overwrite or abort.
 
@@ -168,7 +168,7 @@ Output sections (mandatory unless marked optional):
 6. **Validation** _(optional)_ - observable conditions a reviewer can verify after shipping.
 7. **Open Questions** _(optional)_ - open delivery questions, as single-sentence questions.
 
-Technical terms are glossed in plain English on first use. Architecture, design principles, and key technical decisions are owned by the design doc; the problem and audience by the spec. No code, no file paths.
+Technical terms are glossed in plain language on first use. Architecture, design principles, and key technical decisions are owned by the design doc; the problem and audience by the spec. No code, no file paths.
 
 Mermaid diagrams are embedded by default, and each one appears only when it earns its place: it shows how parts connect, the order or dependencies between steps, or transitions between states, and prose conveys that poorly. The plan gets a dependency `flowchart` under Delivery Phases when two or more phases have dependencies that branch. Diagrams are reserved for flows, never for fixed charts like a matrix or quadrant.
 
@@ -236,7 +236,6 @@ specs/<feature-dir>/
 | `E_NO_SPEC`      | No `spec.md` in the feature directory.                           | Run `/speckit.specify` to create one.                 |
 | `E_NO_PLAN`      | No `plan.md` in the feature directory.                           | Run `/speckit.plan` to generate it.                   |
 | `E_PLACEHOLDERS` | `spec.md` or `plan.md` still contains unfilled template markers. | Replace all `[PLACEHOLDER]` values with real content. |
-| `E_LANGUAGE`     | Source files are not in English.                                 | Translate the source file to English and rerun.       |
 | `E_USER_ABORT`   | You answered "no" at the overwrite prompt.                       | Rerun when ready.                                     |
 
 Project and feature resolution failures (not inside a Spec Kit project, no active feature) come from Spec Kit core's resolver and surface verbatim before the extension runs; they carry no `E_*` code from this extension. The codes above are emitted by the product commands.

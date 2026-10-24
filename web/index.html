@@ -121,7 +121,8 @@
             <li>3 commands</li>
             <li>Requires Spec Kit &gt;= 0.12.17</li>
             <li>MIT licensed</li>
-            <li>No em dashes, plain English</li>
+            <li>Writes in the language of your spec</li>
+            <li>No em dashes, plain language</li>
           </ul>
         </div>
       </section>
@@ -156,7 +157,7 @@
               <h3>Proven conventions</h3>
               <p>
                 Output follows Working Backwards (PRFAQ), Jobs to Be Done, Gherkin BDD, and Lean PRD
-                conventions, in plain English with a strict no em dash style. The plan and design
+                conventions, in plain language with a strict no em dash style. The plan and design
                 views embed Mermaid diagrams that render only when they earn their place, never as
                 decoration.
               </p>
@@ -215,6 +216,11 @@
             <code>spec.md</code>, <code>plan.md</code>, or any other source file. Pass
             <code>--feature-dir specs/&lt;dir&gt;</code> to target a specific feature instead of the
             active one.
+          </p>
+          <p class="note">
+            The commands accept a spec in any language and write in the language of its prose. Pass
+            <code>--lang &lt;language&gt;</code>, such as <code>--lang zh-CN</code>, to choose
+            another one.
           </p>
           <p class="note">
             Spec Kit offers each command as an optional hook. After
@@ -1192,6 +1198,16 @@ Don't flip such a catalog to install_allowed.</code></pre>
                 <code>specify extension update product</code>. Otherwise rerun the direct install
                 with the newer release URL. Your generated <code>product/*.md</code> files are not
                 touched.
+              </p>
+            </details>
+            <details>
+              <summary>Does it work with a spec that is not in English?</summary>
+              <p>
+                Yes. The commands accept a spec in any language, or in a mix of languages, and write
+                each document in the dominant language of the spec prose. Headings, labels, and
+                Gherkin keywords are translated. Code, file names, and
+                <code>[NEEDS CLARIFICATION]</code> markers stay as they are. Pass
+                <code>--lang &lt;language&gt;</code> to choose the output language yourself.
               </p>
             </details>
             <details>
