@@ -8,7 +8,7 @@ Spec Kit lists community extensions in a discovery-only catalog (`install_allowe
 
 ```bash
 specify extension add product --from \
-  https://github.com/d0whc3r/spec-kit-product/releases/download/v2.0.0/product-2.0.0.zip
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v2.1.0/product-2.1.0.zip
 ```
 
 See [Getting Started](Getting-Started.md#step-1-install-the-extension) for the full install step.

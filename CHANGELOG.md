@@ -1,5 +1,12 @@
 # Changelog
 
+# [2.1.0](https://github.com/d0whc3r/spec-kit-product/compare/v2.0.0...v2.1.0) (2026-10-24)
+
+
+### Features
+
+* answer-first structure rules for generated documents ([578b169](https://github.com/d0whc3r/spec-kit-product/commit/578b169a4678cbd5b761b46c9dd10684f316d500))
+
 # [2.0.0](https://github.com/d0whc3r/spec-kit-product/compare/v1.0.2...v2.0.0) (2026-10-24)
 
 

@@ -26,7 +26,7 @@ Install a release from its download URL:
 
 ```bash
 specify extension add product --from \
-  https://github.com/d0whc3r/spec-kit-product/releases/download/v2.0.0/product-2.0.0.zip
+  https://github.com/d0whc3r/spec-kit-product/releases/download/v2.1.0/product-2.1.0.zip
 ```
 
 Spec Kit shows the source URL and asks you to confirm. Change the version in the URL to pin a different release.
