@@ -1,5 +1,12 @@
 # Changelog
 
+# [2.2.0](https://github.com/d0whc3r/spec-kit-product/compare/v2.1.0...v2.2.0) (2026-10-24)
+
+
+### Features
+
+* accept specs in any language and write product docs in that language ([236d991](https://github.com/d0whc3r/spec-kit-product/commit/236d991efc49905609bacc3769fdf7c0141559ca)), closes [#61](https://github.com/d0whc3r/spec-kit-product/issues/61)
+
 # [2.1.0](https://github.com/d0whc3r/spec-kit-product/compare/v2.0.0...v2.1.0) (2026-10-24)
 
 

@@ -19,7 +19,7 @@ This document uses the slash-command names, such as `/speckit.product.brief`. Sk
 Install directly from the latest release:
 
 ```bash
-specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v2.1.0/product-2.1.0.zip
+specify extension add product --from https://github.com/d0whc3r/spec-kit-product/releases/download/v2.2.0/product-2.2.0.zip
 ```
 
 Change the version in the URL to pin a different release. To update, run the same command with a newer release URL and add `--force`:
