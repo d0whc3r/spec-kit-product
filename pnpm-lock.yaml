@@ -197,8 +197,8 @@ importers:
   web:
     dependencies:
       marked:
-        specifier: 18.1.1
-        version: 18.1.1
+        specifier: 18.2.0
+        version: 18.2.0
       mermaid:
         specifier: 12.2.0
         version: 12.2.0
@@ -1654,8 +1654,8 @@ packages:
     engines: {node: '>= 20'}
     hasBin: true
 
-  marked@18.1.1:
-    resolution: {integrity: sha512-zEGgrtUG8crk+TrMacJSVABU4DYDDkS8uqgU3ohrn/2fW9C2AEfUrO3m6IhpIpQpl7YcVpiXXC9cSMWDANT3dg==}
+  marked@18.2.0:
+    resolution: {integrity: sha512-KaeL+tAbtvI930q7HE2PN5lYXYdT8EiSmxHlN6F3rsfb57wd5mp5W5TLazpdj4inTQBJdgjYwbs40W/0VUGU+Q==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -3701,7 +3701,7 @@ snapshots:
 
   marked@16.4.2: {}
 
-  marked@18.1.1: {}
+  marked@18.2.0: {}
 
   meow@13.2.0: {}
 
