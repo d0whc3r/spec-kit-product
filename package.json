@@ -52,7 +52,7 @@
     "husky": "9.1.7",
     "lint-staged": "17.6.0",
     "oxfmt": "0.74.0",
-    "semantic-release": "25.0.9",
+    "semantic-release": "26.0.1",
     "zx": "8.8.5"
   },
   "lint-staged": {
